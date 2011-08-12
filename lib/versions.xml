@@ -2491,6 +2491,18 @@
 			</license>
 		</licenses>
 	</library>
+
+	<library>
+		<file-name>portal/osgi.core.jar</file-name>
+		<version>4.2</version>
+		<project-name>OSGi Service Platform</project-name>
+		<project-url>http://www.osgi.org</project-url>
+		<licenses>
+			<license>
+				<license-name>Apache License 2.0</license-name>
+			</license>
+		</licenses>
+	</library>
 	<library>
 		<file-name>portal/pdfbox.jar</file-name>
 		<version>1.4.0</version>

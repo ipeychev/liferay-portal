@@ -58,9 +58,9 @@ import javax.servlet.jsp.PageContext;
  * @author Raymond Augé
  * @author Shuyang Zhou
  */
-public class RuntimePortletUtil {
+public class RuntimePortletImpl implements RuntimePortlet {
 
-	public static String processCustomizationSettings(
+	public String processCustomizationSettings(
 			ServletContext servletContext, HttpServletRequest request,
 			HttpServletResponse response, PageContext pageContext,
 			String velocityTemplateId, String velocityTemplateContent)
@@ -112,7 +112,7 @@ public class RuntimePortletUtil {
 		return unsyncStringWriter.toString();
 	}
 
-	public static String processPortlet(
+	public String processPortlet(
 			ServletContext servletContext, HttpServletRequest request,
 			HttpServletResponse response, RenderRequest renderRequest,
 			RenderResponse renderResponse, String portletId, String queryString,
@@ -124,7 +124,7 @@ public class RuntimePortletUtil {
 			portletId, queryString, null, null, null, writeOutput);
 	}
 
-	public static String processPortlet(
+	public String processPortlet(
 			ServletContext servletContext, HttpServletRequest request,
 			HttpServletResponse response, RenderRequest renderRequest,
 			RenderResponse renderResponse, String portletId, String queryString,
@@ -138,7 +138,7 @@ public class RuntimePortletUtil {
 			null, writeOutput);
 	}
 
-	public static String processPortlet(
+	public String processPortlet(
 			ServletContext servletContext, HttpServletRequest request,
 			HttpServletResponse response, Portlet portlet, String queryString,
 			String columnId, Integer columnPos, Integer columnCount,
@@ -151,7 +151,7 @@ public class RuntimePortletUtil {
 			columnCount, path, writeOutput);
 	}
 
-	public static String processPortlet(
+	public String processPortlet(
 			ServletContext servletContext, HttpServletRequest request,
 			HttpServletResponse response, RenderRequest renderRequest,
 			RenderResponse renderResponse, Portlet portlet, String portletId,
@@ -225,7 +225,7 @@ public class RuntimePortletUtil {
 		}
 	}
 
-	public static void processTemplate(
+	public void processTemplate(
 			ServletContext servletContext, HttpServletRequest request,
 			HttpServletResponse response, PageContext pageContext,
 			JspWriter jspWriter, String velocityTemplateId,
@@ -237,7 +237,7 @@ public class RuntimePortletUtil {
 			velocityTemplateId, velocityTemplateContent);
 	}
 
-	public static void processTemplate(
+	public void processTemplate(
 			ServletContext servletContext, HttpServletRequest request,
 			HttpServletResponse response, PageContext pageContext,
 			JspWriter jspWriter, String portletId, String velocityTemplateId,
@@ -322,7 +322,7 @@ public class RuntimePortletUtil {
 		sb.writeTo(jspWriter);
 	}
 
-	public static String processXML(
+	public String processXML(
 			HttpServletRequest request, String content,
 			RuntimeLogic runtimeLogic)
 		throws Exception {

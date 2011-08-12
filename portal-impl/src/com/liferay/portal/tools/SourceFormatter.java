@@ -702,7 +702,7 @@ public class SourceFormatter {
 			String content = _fileUtil.read(file);
 
 			if (_isGenerated(content)) {
-				return;
+				continue;
 			}
 
 			String className = file.getName();
@@ -843,10 +843,6 @@ public class SourceFormatter {
 					fileName, "package: " + fileName);
 			}
 
-			if (newContent.indexOf("  {") != -1) {
-				_sourceFormatterHelper.printError(fileName, "{:" + fileName);
-			}
-
 			if (!newContent.endsWith("\n\n}") &&
 				!newContent.endsWith("{\n}")) {
 
@@ -912,6 +908,11 @@ public class SourceFormatter {
 					_sourceFormatterHelper.printError(
 						fileName, "tab: " + fileName + " " + lineCount);
 				}
+			}
+
+			if (line.contains("  {") && !line.matches("\\s*\\*.*")) {
+				_sourceFormatterHelper.printError(
+					fileName, "{:" + fileName + " " + lineCount);
 			}
 
 			StringBuilder lineSB = new StringBuilder();

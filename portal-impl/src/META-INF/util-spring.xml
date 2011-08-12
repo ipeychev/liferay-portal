@@ -592,6 +592,10 @@
 	<bean id="com.liferay.portlet.journalcontent.util.JournalContentUtil" class="com.liferay.portlet.journalcontent.util.JournalContentUtil">
 		<property name="journalContent" ref="com.liferay.portlet.journalcontent.util.JournalContent" />
 	</bean>
+	<bean id="com.liferay.portlet.layoutconfiguration.util.RuntimePortlet" class="com.liferay.portlet.layoutconfiguration.util.RuntimePortletImpl" />
+	<bean id="com.liferay.portlet.layoutconfiguration.util.RuntimePortletUtil" class="com.liferay.portlet.layoutconfiguration.util.RuntimePortletUtil">
+		<property name="runtimePortlet" ref="com.liferay.portlet.layoutconfiguration.util.RuntimePortlet" />
+	</bean>
 	<bean id="com.liferay.portlet.passwordpoliciesadmin.util.PasswordPoliciesAdmin" class="com.liferay.portlet.passwordpoliciesadmin.util.PasswordPoliciesAdminImpl" />
 	<bean id="com.liferay.portlet.passwordpoliciesadmin.util.PasswordPoliciesAdminUtil" class="com.liferay.portlet.passwordpoliciesadmin.util.PasswordPoliciesAdminUtil">
 		<property name="passwordPoliciesAdmin" ref="com.liferay.portlet.passwordpoliciesadmin.util.PasswordPoliciesAdmin" />

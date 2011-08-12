@@ -522,10 +522,12 @@ Liferay.Service.registerClass(
 		getCategories: true,
 		getCategory: true,
 		getChildCategories: true,
+		getJSONVocabularyCategories: true,
 		getVocabularyCategories: true,
+		getVocabularyCategoriesCount: true,
 		getVocabularyRootCategories: true,
-		search: true,
 		moveCategory: true,
+		search: true,
 		updateCategory: true
 	}
 );

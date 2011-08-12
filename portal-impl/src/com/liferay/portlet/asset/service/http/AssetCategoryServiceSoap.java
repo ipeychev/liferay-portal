@@ -151,6 +151,23 @@ public class AssetCategoryServiceSoap {
 		}
 	}
 
+	public static java.lang.String getJSONVocabularyCategories(long groupId,
+		long vocabularyId, java.lang.String name, int start, int end,
+		com.liferay.portal.kernel.util.OrderByComparator obc)
+		throws RemoteException {
+		try {
+			com.liferay.portal.kernel.json.JSONObject returnValue = AssetCategoryServiceUtil.getJSONVocabularyCategories(groupId,
+					vocabularyId, name, start, end, obc);
+
+			return returnValue.toString();
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
 	public static com.liferay.portlet.asset.model.AssetCategorySoap[] getVocabularyCategories(
 		long vocabularyId, int start, int end,
 		com.liferay.portal.kernel.util.OrderByComparator obc)
@@ -159,6 +176,24 @@ public class AssetCategoryServiceSoap {
 			java.util.List<com.liferay.portlet.asset.model.AssetCategory> returnValue =
 				AssetCategoryServiceUtil.getVocabularyCategories(vocabularyId,
 					start, end, obc);
+
+			return com.liferay.portlet.asset.model.AssetCategorySoap.toSoapModels(returnValue);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static com.liferay.portlet.asset.model.AssetCategorySoap[] getVocabularyCategories(
+		long groupId, long vocabularyId, java.lang.String name, int start,
+		int end, com.liferay.portal.kernel.util.OrderByComparator obc)
+		throws RemoteException {
+		try {
+			java.util.List<com.liferay.portlet.asset.model.AssetCategory> returnValue =
+				AssetCategoryServiceUtil.getVocabularyCategories(groupId,
+					vocabularyId, name, start, end, obc);
 
 			return com.liferay.portlet.asset.model.AssetCategorySoap.toSoapModels(returnValue);
 		}
@@ -187,6 +222,36 @@ public class AssetCategoryServiceSoap {
 		}
 	}
 
+	public static int getVocabularyCategoriesCount(long groupId,
+		long vocabularyId) throws RemoteException {
+		try {
+			int returnValue = AssetCategoryServiceUtil.getVocabularyCategoriesCount(groupId,
+					vocabularyId);
+
+			return returnValue;
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static int getVocabularyCategoriesCount(long groupId,
+		long vocabularyId, java.lang.String name) throws RemoteException {
+		try {
+			int returnValue = AssetCategoryServiceUtil.getVocabularyCategoriesCount(groupId,
+					vocabularyId, name);
+
+			return returnValue;
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
 	public static com.liferay.portlet.asset.model.AssetCategorySoap[] getVocabularyRootCategories(
 		long vocabularyId, int start, int end,
 		com.liferay.portal.kernel.util.OrderByComparator obc)
@@ -205,22 +270,6 @@ public class AssetCategoryServiceSoap {
 		}
 	}
 
-	public static java.lang.String search(long groupId, java.lang.String name,
-		java.lang.String[] categoryProperties, int start, int end)
-		throws RemoteException {
-		try {
-			com.liferay.portal.kernel.json.JSONArray returnValue = AssetCategoryServiceUtil.search(groupId,
-					name, categoryProperties, start, end);
-
-			return returnValue.toString();
-		}
-		catch (Exception e) {
-			_log.error(e, e);
-
-			throw new RemoteException(e.getMessage());
-		}
-	}
-
 	public static com.liferay.portlet.asset.model.AssetCategorySoap moveCategory(
 		long categoryId, long parentCategoryId, long vocabularyId,
 		com.liferay.portal.service.ServiceContext serviceContext)
@@ -230,6 +279,22 @@ public class AssetCategoryServiceSoap {
 					parentCategoryId, vocabularyId, serviceContext);
 
 			return com.liferay.portlet.asset.model.AssetCategorySoap.toSoapModel(returnValue);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static java.lang.String search(long groupId, java.lang.String name,
+		java.lang.String[] categoryProperties, int start, int end)
+		throws RemoteException {
+		try {
+			com.liferay.portal.kernel.json.JSONArray returnValue = AssetCategoryServiceUtil.search(groupId,
+					name, categoryProperties, start, end);
+
+			return returnValue.toString();
 		}
 		catch (Exception e) {
 			_log.error(e, e);
