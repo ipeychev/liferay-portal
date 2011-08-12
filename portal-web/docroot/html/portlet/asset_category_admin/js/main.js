@@ -755,9 +755,9 @@ AUI().add(
 										}
 
 										var auxItem = A.clone(item);
-										
+
 										auxItem.name = Liferay.Util.escapeHTML(auxItem.name);
-											
+
 										buffer.push(Lang.sub(TPL_VOCABULARY_LIST, auxItem));
 									}
 								);
@@ -793,10 +793,73 @@ AUI().add(
 
 						instance._getVocabularyCategories(
 							vocabularyId,
-							function(categories) {
-								instance._displayVocabularyCategoriesImpl(categories, callback);
+							function(result) {
+								instance._displayVocabularyCategoriesImpl(result.categories, callback);
 							}
 						);
+					},
+
+					_getCategoriesPaginator: function() {
+						var instance = this;
+
+						var categoriesPaginator = instance._categoriesPaginator;
+
+						if (!categoriesPaginator) {
+							var instanceConfig = instance._config;
+
+							var config = {
+								alwaysVisible: false,
+								containers: '.categories-paginator',
+								firstPageLinkLabel: '<<',
+								lastPageLinkLabel: '>>',
+								nextPageLinkLabel: '>',
+								prevPageLinkLabel: '<',
+								rowsPerPageOptions: instanceConfig.itemsPerPageOptions
+							};
+
+							var paginatorMap = instance._getCategoriesPaginatorMap();
+
+							AObject.each(
+								paginatorMap,
+								function(item, index, collection) {
+									config[index] = Number(HistoryManager.get(item.historyEntry)) || item.defaultValue;
+								}
+							);
+
+							categoriesPaginator = new A.Paginator(config).render();
+
+							categoriesPaginator.on('changeRequest', instance._onCategoriesPaginatorChangeRequest, instance);
+
+							instance._categoriesPaginator = categoriesPaginator;
+						}
+
+						return categoriesPaginator;
+					},
+
+					_getCategoriesPaginatorMap: function() {
+						var instance = this;
+
+						var paginatorMap = instance._categoriesPaginatorMap;
+
+						if (!paginatorMap) {
+							paginatorMap = {
+								page: {
+									historyEntry: instance._prefixedPortletId + 'c_page',
+									defaultValue: 1,
+									formatter: Number
+								},
+
+								rowsPerPage: {
+									historyEntry: instance._prefixedPortletId + 'c_rowsPerPage',
+									defaultValue: instance._config.itemsPerPage,
+									formatter: Number
+								}
+							};
+
+							instance._categoriesPaginatorMap = paginatorMap;
+						}
+
+						return paginatorMap;
 					},
 
 					_getIOCategory: function() {
@@ -981,23 +1044,24 @@ AUI().add(
 					_getVocabulariesPaginatorMap: function() {
 						var instance = this;
 
-						var paginatorMap = instance._paginatorMap;
+						var paginatorMap = instance._vocabulariesPaginatorMap;
 
 						if (!paginatorMap) {
 							paginatorMap = {
 								page: {
-									historyEntry: instance._prefixedPortletId + 'page',
+									historyEntry: instance._prefixedPortletId + 'v_page',
 									defaultValue: 1,
 									formatter: Number
 								},
+
 								rowsPerPage: {
-									historyEntry: instance._prefixedPortletId + 'rowsPerPage',
+									historyEntry: instance._prefixedPortletId + 'v_rowsPerPage',
 									defaultValue: instance._config.itemsPerPage,
 									formatter: Number
 								}
 							};
 
-							instance._paginatorMap = paginatorMap;
+							instance._vocabulariesPaginatorMap = paginatorMap;
 						}
 
 						return paginatorMap;
@@ -1268,14 +1332,47 @@ AUI().add(
 
 						instance._showLoading(instance._categoryContainerSelector);
 
-						Liferay.Service.Asset.AssetCategory.getVocabularyCategories(
+						var paginator = instance._getCategoriesPaginator();
+
+						var currentPage = 0;
+
+						var query = instance._liveSearch.get('query');
+
+						if (!instance._restartSearch) {
+							currentPage = paginator.get('page');
+
+							if (!currentPage) {
+								var paginatorMap = instance._getCategoriesPaginatorMap();
+
+								currentPage = paginatorMap['page'].defaultValue;
+							}
+
+							currentPage -= 1;
+						}
+
+						var rowsPerPage = paginator.get('rowsPerPage');
+
+						var start = currentPage * rowsPerPage;
+						var end = start + rowsPerPage;
+
+						Liferay.Service.Asset.AssetCategory.getJSONVocabularyCategories(
 							{
+								groupId: themeDisplay.getParentGroupId(),
 								vocabularyId: vocabularyId,
-								start: -1,
-								end: -1,
+								name: query,
+								start: start,
+								end: end,
 								obc: null
 							},
-							callback
+							function(result) {
+								instance._restartSearch = false;
+
+								paginator.setState(result);
+
+								if (callback) {
+									callback.apply(instance, arguments);
+								}
+							}
 						);
 					},
 
@@ -1536,6 +1633,18 @@ AUI().add(
 						}
 					},
 
+					_onCategoriesPaginatorChangeRequest: function(event) {
+						var instance = this;
+
+						var paginatorMap = instance._getCategoriesPaginatorMap();
+
+						instance._onPaginatorChangeRequest(
+							event,
+							paginatorMap,
+							A.bind(instance._displayVocabularyCategories, instance, instance._selectedVocabularyId)
+						);
+					},
+
 					_onCategoryViewContainerClick: function(event) {
 						var instance = this;
 
@@ -1620,38 +1729,20 @@ AUI().add(
 					_onStateChange: function(event) {
 						var instance = this;
 
-						var changed = event.changed;
-						var removed = event.removed;
-
-						var paginatorState = {};
-
+						var paginator = instance._getVocabulariesPaginator();
 						var paginatorMap = instance._getVocabulariesPaginatorMap();
 
-						AObject.each(
+						instance._updatePaginatorState(event, paginator, paginatorMap, instance._loadData);
+
+						paginator = instance._getCategoriesPaginator();
+						paginatorMap = instance._getCategoriesPaginatorMap();
+
+						instance._updatePaginatorState(
+							event,
+							paginator,
 							paginatorMap,
-							function(item, index, collection) {
-								var historyEntry = item.historyEntry;
-
-								var value;
-
-								if (owns(changed, historyEntry)) {
-									value = item.formatter(changed[historyEntry].newVal);
-								}
-								else if (owns(removed, historyEntry)) {
-									value = item.defaultValue;
-								}
-
-								if (value) {
-									paginatorState[index] = value;
-								}
-							}
+							A.bind(instance._displayVocabularyCategories, instance, instance._selectedVocabularyId)
 						);
-
-						if (AObject.size(paginatorState)) {
-							instance._vocabulariesPaginator.setState(paginatorState);
-
-							instance._loadData();
-						}
 					},
 
 					_onVocabularyAddFailure: function(response) {
@@ -1753,12 +1844,18 @@ AUI().add(
 					_onVocabulariesPaginatorChangeRequest: function(event) {
 						var instance = this;
 
+						var paginatorMap = instance._getVocabulariesPaginatorMap();
+
+						instance._onPaginatorChangeRequest(event, paginatorMap, instance._loadData);
+					},
+
+					_onPaginatorChangeRequest: function(event, paginatorMap, callback) {
+						var instance = this;
+
 						var stateBefore = event.state.before;
 						var state = event.state;
 
 						var historyState = {};
-
-						var paginatorMap = instance._getVocabulariesPaginatorMap();
 
 						AObject.each(
 							paginatorMap,
@@ -1790,7 +1887,9 @@ AUI().add(
 							HistoryManager.add(historyState);
 						}
 
-						instance._loadData();
+						if (callback) {
+							callback.call(instance);
+						}
 					},
 
 					_processCategoryDeletion: function(result) {
@@ -2160,6 +2259,43 @@ AUI().add(
 						var instance = this;
 
 						A.all(instance._vocabularyItemSelector).removeClass('selected');
+					},
+
+					_updatePaginatorState: function(state, paginator, paginatorMap, callback) {
+						var instance = this;
+
+						var changed = state.changed;
+						var removed = state.removed;
+
+						var paginatorState = {};
+
+						AObject.each(
+							paginatorMap,
+							function(item, index, collection) {
+								var historyEntry = item.historyEntry;
+
+								var value;
+
+								if (owns(changed, historyEntry)) {
+									value = item.formatter(changed[historyEntry].newVal);
+								}
+								else if (owns(removed, historyEntry)) {
+									value = item.defaultValue;
+								}
+
+								if (value) {
+									paginatorState[index] = value;
+								}
+							}
+						);
+
+						if (AObject.size(paginatorState)) {
+							paginator.setState(paginatorState);
+
+							if (callback) {
+								callback.call(instance);
+							}
+						}
 					},
 
 					_updateCategory: function(categoryId, parentCategoryId, vocabularyId) {

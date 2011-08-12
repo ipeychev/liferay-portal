@@ -117,6 +117,8 @@
 				<div class="results-header"><liferay-ui:message key="categories" /></div>
 
 				<div class="vocabulary-categories"></div>
+
+				<div class="categories-paginator"></div>
 			</aui:column>
 
 			<aui:column columnWidth="35" cssClass="aui-helper-hidden vocabulary-edit-category">
