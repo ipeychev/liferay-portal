@@ -5,6 +5,7 @@ AUI().add(
 		var HistoryManager = Liferay.HistoryManager;
 		var Lang = A.Lang;
 		var Node = A.Node;
+		var Widget = A.Widget;
 
 		var owns = AObject.owns;
 
@@ -2271,25 +2272,30 @@ AUI().add(
 						var dragNode = event.drag.get(NODE).get(PARENT_NODE);
 						var dropNode = event.drop.get(NODE).get(PARENT_NODE);
 
-						var dragTreeNode = A.Widget.getByNode(dragNode);
-						var dropTreeNode = A.Widget.getByNode(dropNode);
+						var dragTreeNode = Widget.getByNode(dragNode);
+						var dropTreeNode = Widget.getByNode(dropNode);
 
 						var categoryName = dragTreeNode.get(LABEL);
 
 						var children = dropTreeNode.get('children');
 
-						var categoryExists = A.some(
+						return A.some(
 							children,
 							function(item, index, collection){
-								if (item.get(LABEL) === categoryName) {
-									return true;
-								}
-
-								return false;
+								return (item.get(LABEL) === categoryName);
 							}
 						);
+					},
 
-						return categoryExists;
+					_onDropHit: function(event) {
+						var instance = this;
+
+						if (instance._findCategoryByName(event)) {
+							event.halt();
+						}
+						else {
+							CategoriesTree.superclass._onDropHit.apply(instance, arguments);
+						}
 					},
 
 					_updateNodeState: function(event) {
@@ -2307,17 +2313,6 @@ AUI().add(
 							else {
 								CategoriesTree.superclass._updateNodeState.apply(instance, arguments);
 							}
-						}
-					},
-
-					_onDropHit: function(event) {
-						var instance = this;
-
-						if (instance._findCategoryByName(event)) {
-							event.halt();
-						}
-						else {
-							CategoriesTree.superclass._onDropHit.apply(instance, arguments);
 						}
 					}
 				}
