@@ -498,12 +498,8 @@ public class EditServerAction extends PortletAction {
 		String dlFileExtensions = getFileExtensions(
 			actionRequest, "dlFileExtensions");
 		long dlFileMaxSize = ParamUtil.getLong(actionRequest, "dlFileMaxSize");
-		String igImageExtensions = getFileExtensions(
-			actionRequest, "igImageExtensions");
-		long igImageMaxSize = ParamUtil.getLong(
-			actionRequest, "igImageMaxSize");
-		long igThumbnailMaxDimension = ParamUtil.getLong(
-			actionRequest, "igImageThumbnailMaxDimensions");
+		long dlThumbnailMaxDimension = ParamUtil.getLong(
+			actionRequest, "dlImageThumbnailMaxDimensions");
 		String journalImageExtensions = getFileExtensions(
 			actionRequest, "journalImageExtensions");
 		long journalImageSmallMaxSize = ParamUtil.getLong(
@@ -534,12 +530,8 @@ public class EditServerAction extends PortletAction {
 		preferences.setValue(
 			PropsKeys.DL_FILE_MAX_SIZE, String.valueOf(dlFileMaxSize));
 		preferences.setValue(
-			PropsKeys.IG_IMAGE_EXTENSIONS, igImageExtensions);
-		preferences.setValue(
-			PropsKeys.IG_IMAGE_MAX_SIZE, String.valueOf(igImageMaxSize));
-		preferences.setValue(
-			PropsKeys.IG_IMAGE_THUMBNAIL_MAX_DIMENSION,
-			String.valueOf(igThumbnailMaxDimension));
+			PropsKeys.DL_IMAGE_THUMBNAIL_MAX_DIMENSION,
+			String.valueOf(dlThumbnailMaxDimension));
 		preferences.setValue(
 			PropsKeys.JOURNAL_IMAGE_EXTENSIONS, journalImageExtensions);
 		preferences.setValue(

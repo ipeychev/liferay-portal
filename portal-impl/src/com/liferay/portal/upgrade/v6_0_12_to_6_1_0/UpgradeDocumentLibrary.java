@@ -229,6 +229,6 @@ public class UpgradeDocumentLibrary extends UpgradeProcess {
 	}
 
 	private static Set<String> _imageMimeTypes = SetUtil.fromArray(
-		PropsValues.IG_IMAGE_THUMBNAIL_MIME_TYPES);
+		PropsValues.DL_IMAGE_THUMBNAIL_MIME_TYPES);
 
 }

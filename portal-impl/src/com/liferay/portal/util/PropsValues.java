@@ -477,6 +477,14 @@ public class PropsValues {
 
 	public static final int DL_FILE_RANK_MAX_SIZE = GetterUtil.getInteger(PropsUtil.get(PropsKeys.DL_FILE_RANK_MAX_SIZE));
 
+	public static final int DL_IMAGE_CUSTOM_1_MAX_DIMENSION = GetterUtil.getInteger(PropsUtil.get(PropsKeys.DL_IMAGE_CUSTOM_1_MAX_DIMENSION));
+
+	public static final int DL_IMAGE_CUSTOM_2_MAX_DIMENSION = GetterUtil.getInteger(PropsUtil.get(PropsKeys.DL_IMAGE_CUSTOM_2_MAX_DIMENSION));
+
+	public static final int DL_IMAGE_THUMBNAIL_MAX_DIMENSION = GetterUtil.getInteger(PropsUtil.get(PropsKeys.DL_IMAGE_THUMBNAIL_MAX_DIMENSION));
+
+	public static final String[] DL_IMAGE_THUMBNAIL_MIME_TYPES = PropsUtil.getArray(PropsKeys.DL_IMAGE_THUMBNAIL_MIME_TYPES);
+
 	public static final boolean DL_PUBLISH_TO_LIVE_BY_DEFAULT = GetterUtil.getBoolean(PropsUtil.get(PropsKeys.DL_PUBLISH_TO_LIVE_BY_DEFAULT));
 
 	public static final int DL_REPOSITORY_CMIS_DELETE_DEPTH = GetterUtil.getInteger(PropsUtil.get(PropsKeys.DL_REPOSITORY_CMIS_DELETE_DEPTH));
@@ -598,20 +606,6 @@ public class PropsValues {
 	public static final String HTTP_HEADER_VERSION_VERBOSITY = PropsUtil.get(PropsKeys.HTTP_HEADER_VERSION_VERBOSITY);
 
 	public static final String IFRAME_PASSWORD_PASSWORD_TOKEN_ROLE = PropsUtil.get(PropsKeys.IFRAME_PASSWORD_PASSWORD_TOKEN_ROLE);
-
-	public static final int IG_IMAGE_CUSTOM_1_MAX_DIMENSION = GetterUtil.getInteger(PropsUtil.get(PropsKeys.IG_IMAGE_CUSTOM_1_MAX_DIMENSION));
-
-	public static final int IG_IMAGE_CUSTOM_2_MAX_DIMENSION = GetterUtil.getInteger(PropsUtil.get(PropsKeys.IG_IMAGE_CUSTOM_2_MAX_DIMENSION));
-
-	public static final String[] IG_IMAGE_EXTENSIONS = PropsUtil.getArray(PropsKeys.IG_IMAGE_EXTENSIONS);
-
-	public static final int IG_IMAGE_MAX_SIZE = GetterUtil.getInteger(PropsUtil.get(PropsKeys.IG_IMAGE_MAX_SIZE));
-
-	public static final int IG_IMAGE_THUMBNAIL_MAX_DIMENSION = GetterUtil.getInteger(PropsUtil.get(PropsKeys.IG_IMAGE_THUMBNAIL_MAX_DIMENSION));
-
-	public static final String[] IG_IMAGE_THUMBNAIL_MIME_TYPES = PropsUtil.getArray(PropsKeys.IG_IMAGE_THUMBNAIL_MIME_TYPES);
-
-	public static final boolean IG_PUBLISH_TO_LIVE_BY_DEFAULT = GetterUtil.getBoolean(PropsUtil.get(PropsKeys.IG_PUBLISH_TO_LIVE_BY_DEFAULT));
 
 	public static final boolean IMAGE_AUTO_SCALE = GetterUtil.getBoolean(PropsUtil.get(PropsKeys.IMAGE_AUTO_SCALE));
 

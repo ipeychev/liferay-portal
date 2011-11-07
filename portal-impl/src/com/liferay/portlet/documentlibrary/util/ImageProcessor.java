@@ -169,24 +169,24 @@ public class ImageProcessor extends DLPreviewableProcessor {
 
 			_saveThumbnailImage(
 				fileVersion, renderedImage,
-				PropsKeys.IG_IMAGE_THUMBNAIL_MAX_DIMENSION,
+				PropsKeys.DL_IMAGE_THUMBNAIL_MAX_DIMENSION,
 				getThumbnailFilePath(fileVersion, type));
 
 			if (PrefsPropsUtil.getInteger(
-					PropsKeys.IG_IMAGE_CUSTOM_1_MAX_DIMENSION) > 0) {
+					PropsKeys.DL_IMAGE_CUSTOM_1_MAX_DIMENSION) > 0) {
 
 				_saveThumbnailImage(
 					fileVersion, renderedImage,
-					PropsKeys.IG_IMAGE_CUSTOM_1_MAX_DIMENSION,
+					PropsKeys.DL_IMAGE_CUSTOM_1_MAX_DIMENSION,
 					_getCustom1FilePath(fileVersion, type));
 			}
 
 			if (PrefsPropsUtil.getInteger(
-					PropsKeys.IG_IMAGE_CUSTOM_2_MAX_DIMENSION) > 0) {
+					PropsKeys.DL_IMAGE_CUSTOM_2_MAX_DIMENSION) > 0) {
 
 				_saveThumbnailImage(
 					fileVersion, renderedImage,
-					PropsKeys.IG_IMAGE_CUSTOM_2_MAX_DIMENSION,
+					PropsKeys.DL_IMAGE_CUSTOM_2_MAX_DIMENSION,
 					_getCustom2FilePath(fileVersion, type));
 			}
 		}
@@ -276,7 +276,7 @@ public class ImageProcessor extends DLPreviewableProcessor {
 
 		try {
 			if (PrefsPropsUtil.getInteger(
-					PropsKeys.IG_IMAGE_CUSTOM_1_MAX_DIMENSION) > 0) {
+					PropsKeys.DL_IMAGE_CUSTOM_1_MAX_DIMENSION) > 0) {
 
 				if (!_hasCustomImage(fileVersion, 1)) {
 					return false;
@@ -284,7 +284,7 @@ public class ImageProcessor extends DLPreviewableProcessor {
 			}
 
 			if (PrefsPropsUtil.getInteger(
-					PropsKeys.IG_IMAGE_CUSTOM_2_MAX_DIMENSION) > 0) {
+					PropsKeys.DL_IMAGE_CUSTOM_2_MAX_DIMENSION) > 0) {
 
 				if (!_hasCustomImage(fileVersion, 2)) {
 					return false;
@@ -404,6 +404,6 @@ public class ImageProcessor extends DLPreviewableProcessor {
 
 	private static List<Long> _fileVersionIds = new Vector<Long>();
 	private static Set<String> _imageMimeTypes = SetUtil.fromArray(
-		PropsValues.IG_IMAGE_THUMBNAIL_MIME_TYPES);
+		PropsValues.DL_IMAGE_THUMBNAIL_MIME_TYPES);
 
 }

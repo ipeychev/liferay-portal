@@ -46,8 +46,8 @@ String thumbnailURL = themeDisplay.getPortalURL() + themeDisplay.getPathContext(
 String custom1URL = themeDisplay.getPortalURL() + themeDisplay.getPathContext() + "/documents/" + themeDisplay.getScopeGroupId() + StringPool.SLASH + fileEntry.getFolderId() + StringPool.SLASH + HttpUtil.encodeURL(HtmlUtil.unescape(fileEntry.getTitle())) + "?version=" + fileEntry.getVersion() + "&imageThumbnail=2&t=" + WebServerServletTokenUtil.getToken(fileEntry.getFileEntryId());
 String custom2URL = themeDisplay.getPortalURL() + themeDisplay.getPathContext() + "/documents/" + themeDisplay.getScopeGroupId() + StringPool.SLASH + fileEntry.getFolderId() + StringPool.SLASH + HttpUtil.encodeURL(HtmlUtil.unescape(fileEntry.getTitle())) + "?version=" + fileEntry.getVersion() + "&imageThumbnail=3&t=" + WebServerServletTokenUtil.getToken(fileEntry.getFileEntryId());
 
-int custom1MaxDimension = PrefsPropsUtil.getInteger(PropsKeys.IG_IMAGE_CUSTOM_1_MAX_DIMENSION);
-int custom2MaxDimension = PrefsPropsUtil.getInteger(PropsKeys.IG_IMAGE_CUSTOM_2_MAX_DIMENSION);
+int custom1MaxDimension = PrefsPropsUtil.getInteger(PropsKeys.DL_IMAGE_CUSTOM_1_MAX_DIMENSION);
+int custom2MaxDimension = PrefsPropsUtil.getInteger(PropsKeys.DL_IMAGE_CUSTOM_2_MAX_DIMENSION);
 %>
 
 <table class="lfr-table">

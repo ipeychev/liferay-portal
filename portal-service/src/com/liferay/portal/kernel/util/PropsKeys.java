@@ -575,6 +575,14 @@ public interface PropsKeys {
 
 	public static final String DL_FILE_RANK_MAX_SIZE = "dl.file.rank.max.size";
 
+	public static final String DL_IMAGE_CUSTOM_1_MAX_DIMENSION = "dl.image.custom1.max.dimension";
+
+	public static final String DL_IMAGE_CUSTOM_2_MAX_DIMENSION = "dl.image.custom2.max.dimension";
+
+	public static final String DL_IMAGE_THUMBNAIL_MAX_DIMENSION = "dl.image.thumbnail.max.dimension";
+
+	public static final String DL_IMAGE_THUMBNAIL_MIME_TYPES = "dl.image.thumbnail.mime.types";
+
 	public static final String DL_PUBLISH_TO_LIVE_BY_DEFAULT = "dl.publish.to.live.by.default";
 
 	public static final String DL_REPOSITORY_CMIS_DELETE_DEPTH = "dl.repository.cmis.delete.depth";
@@ -742,20 +750,6 @@ public interface PropsKeys {
 	public static final String ICQ_PASSWORD = "icq.password";
 
 	public static final String IFRAME_PASSWORD_PASSWORD_TOKEN_ROLE = "iframe.password.token.role";
-
-	public static final String IG_IMAGE_CUSTOM_1_MAX_DIMENSION = "ig.image.custom1.max.dimension";
-
-	public static final String IG_IMAGE_CUSTOM_2_MAX_DIMENSION = "ig.image.custom2.max.dimension";
-
-	public static final String IG_IMAGE_EXTENSIONS = "ig.image.extensions";
-
-	public static final String IG_IMAGE_MAX_SIZE = "ig.image.max.size";
-
-	public static final String IG_IMAGE_THUMBNAIL_MAX_DIMENSION = "ig.image.thumbnail.max.dimension";
-
-	public static final String IG_IMAGE_THUMBNAIL_MIME_TYPES = "ig.image.thumbnail.mime.types";
-
-	public static final String IG_PUBLISH_TO_LIVE_BY_DEFAULT = "ig.publish.to.live.by.default";
 
 	public static final String IMAGE_AUTO_SCALE = "image.auto.scale";
 

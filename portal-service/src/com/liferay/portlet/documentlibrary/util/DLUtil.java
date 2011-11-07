@@ -459,7 +459,7 @@ public class DLUtil {
 					PropsKeys.DL_FILE_ENTRY_PREVIEW_VIDEO_MIME_TYPES)));
 		_allMediaGalleryMimeTypes.addAll(
 			SetUtil.fromArray(
-				PropsUtil.getArray(PropsKeys.IG_IMAGE_THUMBNAIL_MIME_TYPES)));
+				PropsUtil.getArray(PropsKeys.DL_IMAGE_THUMBNAIL_MIME_TYPES)));
 
 		_allMediaGalleryMimeTypesString = StringUtil.merge(
 			_allMediaGalleryMimeTypes);
