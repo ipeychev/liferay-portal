@@ -28,11 +28,11 @@ private static final String _getFileEntryImage(FileEntry fileEntry, ThemeDisplay
 }
 
 private static final String _getPreviewURL(FileEntry fileEntry, FileVersion fileVersion, ThemeDisplay themeDisplay, String queryString) {
-	return _getPreviewURL(fileEntry, fileVersion, themeDisplay, queryString, true);
+	return _getPreviewURL(fileEntry, fileVersion, themeDisplay, queryString, false);
 }
 
-private static final String _getPreviewURL(FileEntry fileEntry, FileVersion fileVersion, ThemeDisplay themeDisplay, String queryString, boolean appendToken) {
-	StringBundler sb = new StringBundler(13);
+private static final String _getPreviewURL(FileEntry fileEntry, FileVersion fileVersion, ThemeDisplay themeDisplay, String queryString, boolean mediaGallery) {
+	StringBundler sb = new StringBundler(7);
 
 	sb.append(themeDisplay.getPortalURL());
 	sb.append(themeDisplay.getPathContext());
@@ -41,20 +41,36 @@ private static final String _getPreviewURL(FileEntry fileEntry, FileVersion file
 	sb.append(StringPool.SLASH);
 	sb.append(fileEntry.getFolderId());
 	sb.append(StringPool.SLASH);
+
+	String preface = sb.toString();
+
+	sb = new StringBundler(6);
+
 	sb.append(HttpUtil.encodeURL(HtmlUtil.unescape(fileEntry.getTitle())));
 	sb.append("?version=");
 	sb.append(fileVersion.getVersion());
+	sb.append(queryString);
 
-	if (appendToken) {
+	if (mediaGallery) {
+		String media = HtmlUtil.escapeURL(sb.toString());
+
+		if (queryString.contains("audio")) {
+			media += "&supportedAudio=1&mediaGallery=1";
+		}
+		else {
+			media += "&supportedVideo=1&mediaGallery=1";
+		}
+
+		return preface + media;
+	}
+	else {
 		sb.append("&t=");
 
 		Date modifiedDate = fileVersion.getModifiedDate();
 
 		sb.append(modifiedDate.getTime());
+
+		return preface + sb.toString();
 	}
-
-	sb.append(queryString);
-
-	return sb.toString();
 }
 %>
