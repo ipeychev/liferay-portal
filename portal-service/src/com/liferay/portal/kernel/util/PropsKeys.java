@@ -535,6 +535,8 @@ public interface PropsKeys {
 
 	public static final String DL_FILE_ENTRY_PREVIEW_IMAGE_MIME_TYPES = "dl.file.entry.preview.image.mime.types";
 
+	public static final String DL_FILE_ENTRY_PREVIEW_VIDEO_CONTAINERS = "dl.file.entry.preview.video.containers";
+
 	public static final String DL_FILE_ENTRY_PREVIEW_VIDEO_HEIGHT = "dl.file.entry.preview.video.height";
 
 	public static final String DL_FILE_ENTRY_PREVIEW_VIDEO_MIME_TYPES = "dl.file.entry.preview.video.mime.types";
@@ -2126,6 +2128,8 @@ public interface PropsKeys {
 	public static final String XML_VALIDATION_ENABLED = "xml.validation.enabled";
 
 	public static final String XUGGLER_ENABLED = "xuggler.enabled";
+
+	public static final String XUGGLER_FFPRESET = "xuggler.ffpreset.";
 
 	public static final String YM_LOGIN = "ym.login";
 
