@@ -264,9 +264,20 @@ AUI().add(
 							instance._addHistoryState(data);
 						}
 
-						var ioRequest = instance._getIORequest();
+						var ioRequest = A.io.request(
+							instance._config.mainUrl,
+							{
+								autoLoad: false
+							}
+						);
+
+						var sendIOResponse = A.bind(instance._sendIOResponse, instance, ioRequest);
+
+						ioRequest.after(['failure', 'success'], sendIOResponse);
 
 						ioRequest.set(STR_DATA, data);
+
+						instance._lastRequestData = data;
 
 						ioRequest.start();
 					},
@@ -334,9 +345,9 @@ AUI().add(
 						var requestParams = {};
 
 						requestParams[instance.ns(STRUTS_ACTION)] = config.strutsAction;
-						requestParams[instance.ns(STR_ENTRY_END)] = config.entryRowsPerPage || instance._entryPaginator.get('rowsPerPage');
+						requestParams[instance.ns(STR_ENTRY_END)] = config.entryRowsPerPage || instance._entryPaginator.get(ROWS_PER_PAGE);
 						requestParams[instance.ns(STR_ENTRY_START)] = 0;
-						requestParams[instance.ns(STR_FOLDER_END)] = config.folderRowsPerPage || instance._folderPaginator.get('rowsPerPage');
+						requestParams[instance.ns(STR_FOLDER_END)] = config.folderRowsPerPage || instance._folderPaginator.get(ROWS_PER_PAGE);
 						requestParams[instance.ns(STR_FOLDER_START)] = 0;
 						requestParams[instance.ns('refreshEntries')] = dataRefreshEntries;
 						requestParams[instance.ns(VIEW_ADD_BUTTON)] = true;
@@ -391,31 +402,6 @@ AUI().add(
 						}
 
 						return displayStyle;
-					},
-
-					_getIORequest: function() {
-						var instance = this;
-
-						var ioRequest = instance._ioRequest;
-
-						if (!ioRequest) {
-							var sendIOResponse = A.bind(instance._sendIOResponse, instance);
-
-							ioRequest = A.io.request(
-								instance._config.mainUrl,
-								{
-									after: {
-										success: sendIOResponse,
-										failure: sendIOResponse
-									},
-									autoLoad: false
-								}
-							);
-
-							instance._ioRequest = ioRequest;
-						}
-
-						return ioRequest;
 					},
 
 					_getMoveText: function(selectedItemsCount, targetAvailable) {
@@ -781,8 +767,8 @@ AUI().add(
 						var instance = this;
 
 						var startEndParams = instance._getResultsStartEnd(instance._entryPaginator);
-
-						var requestParams = instance._getIORequest().get(STR_DATA) || {};
+						
+						var requestParams = instance._lastRequestData || {};
 
 						var customParams = {};
 
@@ -808,7 +794,7 @@ AUI().add(
 
 						var startEndParams = instance._getResultsStartEnd(instance._folderPaginator);
 
-						var requestParams = instance._getIORequest().get(STR_DATA) || {};
+						var requestParams = instance._lastRequestData || {};
 
 						var customParams = {};
 
@@ -1011,22 +997,20 @@ AUI().add(
 
 						var searchInfo = instance.one('#searchInfo', content);
 
+						var entriesContainer = instance._entriesContainer;
+
+						entriesContainer.plug(A.Plugin.ParseContent);
+
 						if (searchInfo) {
-							var entriesContainer = instance._entriesContainer;
-
-							entriesContainer.plug(A.Plugin.ParseContent);
-
 							entriesContainer.setContent(searchInfo);
 						}
 
 						var searchResults = instance.one('.local-search-results', content);
 
+						var repositorySearchResultsContainer;
+
 						if (searchResults) {
-							var repositorySearchResultsContainer = instance.one('#' + instance.ns('searchResultsContainer'), content);
-
-							var entriesContainer = instance._entriesContainer;
-
-							entriesContainer.plug(A.Plugin.ParseContent);
+							repositorySearchResultsContainer = instance.one('#' + instance.ns('searchResultsContainer'), content);
 
 							entriesContainer.append(repositorySearchResultsContainer);
 						}
@@ -1036,9 +1020,7 @@ AUI().add(
 						if (repositorySearchResults) {
 							var repositoryId = instance.one('#' + instance.ns('repositoryId'), content);
 
-							var entriesContainer = instance._entriesContainer;
-
-							var repositorySearchResultsContainer = entriesContainer.one('#' + instance.ns('repositorySearchResultsContainer') + repositoryId.val());
+							repositorySearchResultsContainer = entriesContainer.one('#' + instance.ns('repositorySearchResultsContainer') + repositoryId.val());
 
 							repositorySearchResultsContainer.plug(A.Plugin.ParseContent);
 
@@ -1046,10 +1028,8 @@ AUI().add(
 						}
 					},
 
-					_sendIOResponse: function(event) {
+					_sendIOResponse: function(ioRequest, event) {
 						var instance = this;
-
-						var ioRequest = instance._getIORequest();
 
 						var data = ioRequest.get(STR_DATA);
 						var reponseData = ioRequest.get('responseData');
