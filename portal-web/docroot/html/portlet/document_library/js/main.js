@@ -22,6 +22,8 @@ AUI().add(
 
 		var CSS_DOCUMENT_DISPLAY_STYLE_SELECTED = '.document-display-style.selected';
 
+		var CSS_HIDDEN = 'aui-helper-hidden';
+
 		var CSS_RESULT_ROW = '.results-row';
 
 		var CSS_SELECTED = 'selected';
@@ -79,6 +81,10 @@ AUI().add(
 		var SRC_ENTRIES_PAGINATOR = 1;
 
 		var SRC_HISTORY = 2;
+
+		var SRC_SEARCH = 3;
+
+		var SRC_SEARCH_END = 4;
 
 		var VIEW_ADD_BREADCRUMB = 'viewBreadcrumb';
 
@@ -215,6 +221,8 @@ AUI().add(
 
 						instance._initToggleSelect();
 
+						instance._repositoriesData = {};
+
 						instance._restoreState();
 					},
 
@@ -258,7 +266,9 @@ AUI().add(
 
 						instance._documentLibraryContainer.loadingmask.show();
 
-						if (event.src !== SRC_HISTORY) {
+						var src = event.src;
+
+						if (src !== SRC_HISTORY) {
 							instance._addHistoryState(data);
 						}
 
@@ -792,12 +802,25 @@ AUI().add(
 						var instance = this;
 
 						var paginatorData = event.paginator;
-
+						
 						if (paginatorData) {
-							var paginator = instance['_' + paginatorData.name];
+							if (event.src == SRC_SEARCH) {
+								var repositoryData = instance._repositoriesData[event.repositoryId] || {};
 
-							if (A.instanceOf(paginator, A.Paginator)) {
-								paginator.setState(paginatorData.state);
+								repositoryData.paginatorData = paginatorData;
+
+								var resultsContainer = instance.byId('repositorySearchResults' + event.repositoryId);
+
+								if (resultsContainer && !(resultsContainer.get('parentNode').hasClass(CSS_HIDDEN))) {
+									console.log('setting paginator data');
+									instance._setPaginatorData(paginatorData);
+								}
+								else {
+									console.log('not setting paginator data');
+								}
+							}
+							else {
+								instance._setPaginatorData(paginatorData);
 							}
 						}
 					},
@@ -950,6 +973,16 @@ AUI().add(
 							if (refreshFolders) {
 								instance._listView.set(STR_DATA, folders.html());
 							}
+						}
+					},
+
+					_setPaginatorData: function(paginatorData) {
+						var instance = this;
+
+						var paginator = instance['_' + paginatorData.name];
+
+						if (A.instanceOf(paginator, A.Paginator)) {
+							paginator.setState(paginatorData.state);
 						}
 					},
 
