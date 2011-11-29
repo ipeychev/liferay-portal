@@ -26,7 +26,6 @@ import com.liferay.portal.kernel.messaging.DestinationNames;
 import com.liferay.portal.kernel.messaging.MessageBusUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HtmlUtil;
-import com.liferay.portal.kernel.util.Http;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.ObjectValuePair;
 import com.liferay.portal.kernel.util.StringPool;
@@ -34,14 +33,13 @@ import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.Company;
 import com.liferay.portal.model.Group;
-import com.liferay.portal.model.LayoutSet;
 import com.liferay.portal.model.Subscription;
 import com.liferay.portal.model.User;
 import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.security.permission.PermissionCheckerFactoryUtil;
 import com.liferay.portal.service.CompanyLocalServiceUtil;
 import com.liferay.portal.service.GroupLocalServiceUtil;
-import com.liferay.portal.service.LayoutSetLocalServiceUtil;
+import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.SubscriptionLocalServiceUtil;
 import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.service.permission.SubscriptionPermissionUtil;
@@ -211,8 +209,7 @@ public class SubscriptionSender implements Serializable {
 		setContextAttribute("[$COMPANY_ID$]", company.getCompanyId());
 		setContextAttribute("[$COMPANY_MX$]", company.getMx());
 		setContextAttribute("[$COMPANY_NAME$]", company.getName());
-		setContextAttribute(
-			"[$PORTAL_URL$]", getPortalURL(company.getVirtualHostname()));
+		setContextAttribute("[$PORTAL_URL$]", getPortalURL(company));
 
 		if (groupId > 0) {
 			Group group = GroupLocalServiceUtil.getGroup(groupId);
@@ -334,6 +331,10 @@ public class SubscriptionSender implements Serializable {
 		this.scopeGroupId = scopeGroupId;
 	}
 
+	public void setServiceContext(ServiceContext serviceContext) {
+		this.serviceContext = serviceContext;
+	}
+
 	public void setSMTPAccount(SMTPAccount smtpAccount) {
 		this.smtpAccount = smtpAccount;
 	}
@@ -353,36 +354,16 @@ public class SubscriptionSender implements Serializable {
 			subscription.getSubscriptionId());
 	}
 
-	protected String getPortalURL(String virtualHostname) throws Exception {
-		String portalURL = PortalUtil.getPortalURL(
-			virtualHostname, Http.HTTP_PORT, false);
+	protected String getPortalURL(Company company) throws Exception {
+		if (serviceContext != null) {
+			String portalURL = serviceContext.getPortalURL();
 
-		if (groupId <= 0) {
-			return portalURL;
-		}
-
-		Group group = GroupLocalServiceUtil.getGroup(groupId);
-
-		if (group.hasPublicLayouts()) {
-			LayoutSet layoutSet = LayoutSetLocalServiceUtil.getLayoutSet(
-				groupId, false);
-
-			if (Validator.isNotNull(layoutSet.getVirtualHostname())) {
-				portalURL = PortalUtil.getPortalURL(
-					layoutSet.getVirtualHostname(), Http.HTTP_PORT, false);
-			}
-		}
-		else if (group.hasPrivateLayouts()) {
-			LayoutSet layoutSet = LayoutSetLocalServiceUtil.getLayoutSet(
-				groupId, true);
-
-			if (Validator.isNotNull(layoutSet.getVirtualHostname())) {
-				portalURL = PortalUtil.getPortalURL(
-					layoutSet.getVirtualHostname(), Http.HTTP_PORT, false);
+			if (Validator.isNotNull(portalURL)) {
+				return portalURL;
 			}
 		}
 
-		return portalURL;
+		return company.getPortalURL(groupId);
 	}
 
 	protected boolean hasPermission(Subscription subscription, User user)
@@ -647,6 +628,7 @@ public class SubscriptionSender implements Serializable {
 	protected String mailId;
 	protected String portletId;
 	protected String replyToAddress;
+	protected ServiceContext serviceContext;
 	protected long scopeGroupId;
 	protected SMTPAccount smtpAccount;
 	protected String subject;

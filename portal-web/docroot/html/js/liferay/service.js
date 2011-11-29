@@ -100,6 +100,7 @@ Liferay.Service.registerClass(
 		getDefaultPlid: true,
 		getLayoutName: true,
 		getLayoutReferences: true,
+		getLayouts: true,
 		setLayouts: true,
 		unschedulePublishToLive: true,
 		unschedulePublishToRemote: true,

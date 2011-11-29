@@ -88,9 +88,9 @@ public class JSONWebServiceServlet extends JSONServlet {
 		}
 
 		RequestDispatcher requestDispatcher = request.getRequestDispatcher(
-			"/jsonws.jsp");
+			"/WEB-INF/jsp/jsonws/index.jsp");
 
-		requestDispatcher.forward(request, response);
+		requestDispatcher.include(request, response);
 	}
 
 	@Override

@@ -28,7 +28,7 @@ import org.apache.struts.action.ActionMapping;
 /**
  * @author Edward Han
  */
-public class SiteResourceAction extends PortletAction {
+public class SiteURLLayoutsAction extends PortletAction {
 
 	@Override
 	public void serveResource(
@@ -39,12 +39,12 @@ public class SiteResourceAction extends PortletAction {
 		PortletContext portletContext = portletConfig.getPortletContext();
 
 		PortletRequestDispatcher portletRequestDispatcher =
-			portletContext.getRequestDispatcher(_SITE_URL_ACTION_LAYOUTS_JSP);
+			portletContext.getRequestDispatcher(_SITE_URL_LAYOUTS_JSP);
 
 		portletRequestDispatcher.include(resourceRequest, resourceResponse);
 	}
 
-	private static final String _SITE_URL_ACTION_LAYOUTS_JSP =
-		"/html/portlet/mobile_device_rules/action/site_url_action_layouts.jsp";
+	private static final String _SITE_URL_LAYOUTS_JSP =
+		"/html/portlet/mobile_device_rules/action/site_url_layouts.jsp";
 
 }
