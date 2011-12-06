@@ -158,6 +158,8 @@ AUI().add(
 
 						node.placeAfter(clone);
 
+						instance._syncCloneUI(clone);
+						
 						Liferay.Util.focusFormField(clone.one('input[type=text], input[type=password], textarea'));
 
 						instance.fire(
@@ -431,6 +433,21 @@ AUI().add(
 						);
 					},
 
+					_syncCloneUI: function(clone) {
+						var instance = this;
+
+						clone.all('input, select, textarea, span').each(
+							function(item, index, collection) {
+								var inputType = item.attr('type');
+
+								if (inputType.indexOf('select') == 0) {
+									item.set('selectedIndex', 0);
+								}
+								
+							}
+						);
+					},
+					
 					_guid: 0
 				}
 			}
