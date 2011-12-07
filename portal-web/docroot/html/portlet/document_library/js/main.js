@@ -34,6 +34,8 @@ AUI().add(
 
 		var DISPLAY_STYLE_TOOLBAR = 'displayStyleToolbar';
 
+		var DOCUMENT_DRAGGABLE = '[data-draggable]';
+
 		var DOCUMENT_LIBRARY_GROUP = 'document-library';
 
 		var REFRESH_FOLDERS = 'refreshFolders';
@@ -468,8 +470,8 @@ AUI().add(
 						var ddHandler = new A.DD.Delegate(
 							{
 								container: instance._documentLibraryContainer,
-								nodes: CSS_DOCUMENT_DISPLAY_STYLE_SELECTABLE,
-								on: {
+								nodes: DOCUMENT_DRAGGABLE,
+								after: {
 									'drag:drophit': A.bind(instance._onDragDropHit, instance),
 									'drag:enter': A.bind(instance._onDragEnter, instance),
 									'drag:exit': A.bind(instance._onDragExit, instance),
@@ -690,6 +692,8 @@ AUI().add(
 					_onDragEnter: function(event) {
 						var instance = this;
 
+						console.log('_onDragEnter');
+
 						var dragNode = event.drag.get('node');
 						var dropTarget = event.drop.get('node');
 
@@ -706,30 +710,11 @@ AUI().add(
 
 							var moveText = instance._getMoveText(selectedItemsCount, true);
 
-							var itemTitle = Lang.trim(dropTarget.one('.entry-title').text());
+							var itemTitle = Lang.trim(dropTarget.attr('data-title'));
 
 							proxyNode.html(Lang.sub(moveText, [selectedItemsCount, itemTitle]));
 						}
 					},
-
-					_onDragExit: function(event) {
-						var instance = this;
-
-						var dropTarget = event.drop.get('node');
-
-						dropTarget = dropTarget.ancestor(CSS_DOCUMENT_DISPLAY_STYLE) || dropTarget;
-
-						dropTarget.removeClass(CSS_ACTIVE_AREA);
-
-						var proxyNode = event.target.get(STR_DRAG_NODE);
-
-						var selectedItemsCount = instance._ddHandler.dd.get(STR_DATA).selectedItemsCount;
-
-						var moveText = instance._getMoveText(selectedItemsCount);
-
-						proxyNode.html(Lang.sub(moveText, [selectedItemsCount]));
-					},
-
 					_onDragStart: function(event) {
 						var instance = this;
 
@@ -775,6 +760,27 @@ AUI().add(
 								selectedItems: selectedItems
 							}
 						);
+					},
+
+
+					_onDragExit: function(event) {
+						var instance = this;
+
+						console.log('_onDragExit');
+
+						var dropTarget = event.drop.get('node');
+
+						dropTarget = dropTarget.ancestor(CSS_DOCUMENT_DISPLAY_STYLE) || dropTarget;
+
+						dropTarget.removeClass(CSS_ACTIVE_AREA);
+
+						var proxyNode = event.target.get(STR_DRAG_NODE);
+
+						var selectedItemsCount = instance._ddHandler.dd.get(STR_DATA).selectedItemsCount;
+
+						var moveText = instance._getMoveText(selectedItemsCount);
+
+						proxyNode.html(Lang.sub(moveText, [selectedItemsCount]));
 					},
 
 					_onEntryPaginatorChangeRequest: function(event) {
@@ -1095,7 +1101,11 @@ AUI().add(
 						var instance = this;
 
 						if (instance._getDisplayStyle(DISPLAY_STYLE_LIST)) {
-							node.attr(ATTR_CHECKED, !node.attr(ATTR_CHECKED));
+							if (!preventUpdate) {
+								var input = node.one('input') || node;
+
+								input.attr(ATTR_CHECKED, !node.attr(ATTR_CHECKED));
+							}
 						}
 						else {
 							node = node.ancestor(CSS_DOCUMENT_DISPLAY_STYLE) || node;
@@ -1107,9 +1117,9 @@ AUI().add(
 
 								Liferay.Util.updateCheckboxValue(selectElement);
 							}
-
-							node.toggleClass(CSS_SELECTED);
 						}
+
+						node.toggleClass(CSS_SELECTED);
 					},
 
 					_unselectAllEntries: function() {
