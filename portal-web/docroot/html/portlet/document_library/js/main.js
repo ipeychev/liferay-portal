@@ -1030,20 +1030,22 @@ AUI().add(
 
 						var searchInfo = instance.one('#searchInfo', content);
 
-						var entriesContainer = instance._entriesContainer;
-
-						entriesContainer.plug(A.Plugin.ParseContent);
-
 						if (searchInfo) {
+							var entriesContainer = instance._entriesContainer;
+
+							entriesContainer.plug(A.Plugin.ParseContent);
+
 							entriesContainer.setContent(searchInfo);
 						}
 
 						var searchResults = instance.one('.local-search-results', content);
 
-						var repositorySearchResultsContainer;
-
 						if (searchResults) {
-							repositorySearchResultsContainer = instance.one('#' + instance.ns('searchResultsContainer'), content);
+							var repositorySearchResultsContainer = instance.one('#' + instance.ns('searchResultsContainer'), content);
+
+							var entriesContainer = instance._entriesContainer;
+
+							entriesContainer.plug(A.Plugin.ParseContent);
 
 							entriesContainer.append(repositorySearchResultsContainer);
 						}
@@ -1053,7 +1055,9 @@ AUI().add(
 						if (repositorySearchResults) {
 							var repositoryId = instance.one('#' + instance.ns('repositoryId'), content);
 
-							repositorySearchResultsContainer = entriesContainer.one('#' + instance.ns('repositorySearchResultsContainer') + repositoryId.val());
+							var entriesContainer = instance._entriesContainer;
+
+							var repositorySearchResultsContainer = entriesContainer.one('#' + instance.ns('repositorySearchResultsContainer') + repositoryId.val());
 
 							repositorySearchResultsContainer.plug(A.Plugin.ParseContent);
 

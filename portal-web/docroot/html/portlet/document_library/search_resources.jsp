@@ -88,7 +88,7 @@ int total = 0;
 </c:if>
 
 <liferay-util:buffer var="results">
-	<div class='<%= (repositoryId == scopeGroupId) ? "local-search-results" : "repository-search-results" %>' id='<%= liferayPortletResponse.getNamespace() + "repositorySearchResults" + repositoryId %>'>
+	<div class='<%= (repositoryId == scopeGroupId) ? "local-search-results" : "repository-search-results" %>' id='<%= (repositoryId == scopeGroupId) ? liferayPortletResponse.getNamespace() + "localSearchResults" : liferayPortletResponse.getNamespace() + "repositorySearchResults" + repositoryId %>'>
 		<liferay-portlet:renderURL varImpl="searchURL">
 			<portlet:param name="struts_action" value="/document_library/search" />
 		</liferay-portlet:renderURL>
@@ -191,7 +191,7 @@ int total = 0;
 						}
 					}
 
-					total = hits.getLength();
+					total = results.size();
 
 					searchContainer.setResults(results);
 					searchContainer.setTotal(total);
@@ -309,10 +309,6 @@ int total = 0;
 			</aui:script>
 		</c:if>
 
-		<%
-		PortalUtil.addPortletBreadcrumbEntry(request, LanguageUtil.get(pageContext, "search") + ": " + keywords, currentURL);
-		%>
-
 		<aui:script>
 			function <portlet:namespace />changeSearchFolder() {
 				Liferay.fire(
@@ -323,8 +319,7 @@ int total = 0;
 							'<portlet:namespace />folderId': '<%= String.valueOf(folderId) %>',
 							'<portlet:namespace />searchFolderId': '<%= (folder != null) ? String.valueOf(DLFolderConstants.DEFAULT_PARENT_FOLDER_ID) : String.valueOf(folderId) %>',
 							'<portlet:namespace />keywords': document.<portlet:namespace />fm1.<portlet:namespace />keywords.value
-						},
-						src: 3
+						}
 					}
 				);
 			}
@@ -339,9 +334,7 @@ int total = 0;
 							rowsPerPage: <%= (entryEnd - entryStart) %>,
 							total: <%= total %>
 						}
-					},
-					src: 3,
-					repositoryId: '<%= repositoryId %>'
+					}
 				}
 			);
 		</aui:script>
@@ -359,8 +352,7 @@ int total = 0;
 									'<portlet:namespace />folderId': '<%= String.valueOf(folderId) %>',
 									'<portlet:namespace />viewDisplayStyleButtons': <%= Boolean.TRUE.toString() %>,
 									'<portlet:namespace />viewEntries': <%= Boolean.TRUE.toString() %>
-								},
-								src: 4
+								}
 							}
 						);
 					}
