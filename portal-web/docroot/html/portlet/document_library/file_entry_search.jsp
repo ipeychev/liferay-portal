@@ -81,7 +81,8 @@ List<Folder> mountFolders = DLAppServiceUtil.getMountFolders(repositoryId, DLFol
 						'<portlet:namespace />searchFolderId': '<%= String.valueOf(mountFolder.getFolderId()) %>',
 						'<portlet:namespace />keywords': document.<portlet:namespace />fm1.<portlet:namespace />keywords.value,
 						'<portlet:namespace />viewDisplayStyleButtons': <%= Boolean.TRUE.toString() %>
-					}
+					},
+					src: 3
 				}
 			);
 

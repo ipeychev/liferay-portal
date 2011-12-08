@@ -42,6 +42,8 @@ AUI().add(
 
 		var ROWS_PER_PAGE = 'rowsPerPage';
 
+		var SEARCH_TYPE = 'searchType';
+
 		var SHOW_SIBLINGS = 'showSiblings';
 
 		var STR_ACTIVE = 'active';
@@ -83,6 +85,12 @@ AUI().add(
 		var SRC_HISTORY = 2;
 
 		var SRC_SEARCH = 3;
+
+		var SRC_GLOBAL = 0;
+
+		var SRC_SEARCH_FRAGMENT = 2;
+
+		var SRC_SEARCH_SINGLE = 1;
 
 		var SRC_SEARCH_END = 4;
 
@@ -206,6 +214,8 @@ AUI().add(
 
 						History.after('stateChange', instance._afterStateChange, instance);
 
+						Liferay.on('showTab', instance._onShowTab, instance);
+
 						documentLibraryContainer.plug(A.LoadingMask);
 
 						instance._config = config;
@@ -287,7 +297,23 @@ AUI().add(
 
 						ioRequest.set(STR_DATA, data);
 
-						instance._lastRequestData = data;
+						if (src === SRC_SEARCH) {
+							var repositoryId = event.requestParams[instance.NS + 'repositoryId'];
+
+							var repositoriesData = instance._repositoriesData;
+
+							var repositoryData = repositoriesData[repositoryId];
+
+							if (!repositoryData) {
+								repositoryData = {};
+
+								repositoriesData[repositoryId] = repositoryData;
+							}
+
+							repositoryData.dataRequest = data;
+						}
+
+						instance._lastDataRequest = data;
 
 						ioRequest.start();
 					},
@@ -778,7 +804,7 @@ AUI().add(
 
 						var startEndParams = instance._getResultsStartEnd(instance._entryPaginator);
 						
-						var requestParams = instance._lastRequestData || {};
+						var requestParams = instance._lastDataRequest || {};
 
 						var customParams = {};
 
@@ -787,6 +813,10 @@ AUI().add(
 						customParams[instance.ns(REFRESH_FOLDERS)] = false;
 						customParams[instance.ns(VIEW_ADD_BUTTON)] = true;
 						customParams[instance.ns(VIEW_ENRTIES)] = true;
+
+						if (requestParams.src === SRC_SEARCH) {
+							customParams[SEARCH_TYPE] = SRC_SEARCH_FRAGMENT;
+						}
 
 						A.mix(requestParams, customParams, true);
 
@@ -804,7 +834,7 @@ AUI().add(
 
 						var startEndParams = instance._getResultsStartEnd(instance._folderPaginator);
 
-						var requestParams = instance._lastRequestData || {};
+						var requestParams = instance._lastDataRequest || {};
 
 						var customParams = {};
 
@@ -830,18 +860,26 @@ AUI().add(
 
 						if (paginatorData) {
 							if (event.src == SRC_SEARCH) {
-								var repositoryData = instance._repositoriesData[event.repositoryId] || {};
+								var repositoriesData = instance._repositoriesData;
+
+								var repositoryData = repositoriesData[event.repositoryId];
+
+								if (!repositoryData) {
+									repositoryData = {};
+
+									instance._repositoriesData[event.repositoryId] = repositoryData;
+								}
 
 								repositoryData.paginatorData = paginatorData;
 
-								var resultsContainer = instance.byId('repositorySearchResults' + event.repositoryId);
+								var resultsContainer = instance.byId('searchResults' + event.repositoryId);
 
 								if (resultsContainer && !(resultsContainer.get('parentNode').hasClass(CSS_HIDDEN))) {
-									console.log('setting paginator data');
+									console.log('setting paginator data for repository: ' + event.repositoryId);
 									instance._setPaginatorData(paginatorData);
 								}
 								else {
-									console.log('not setting paginator data');
+									console.log('NOT setting paginator data for repository: ' + event.repositoryId);
 								}
 							}
 							else {
@@ -854,6 +892,31 @@ AUI().add(
 						var instance = this;
 
 						instance._toggleEntriesSelection();
+					},
+
+					_onShowTab: function(event) {
+						var instance = this;
+
+						var tabSection = event.tabSection;
+
+						var namespace = instance.NS;
+
+						A.some(
+							instance._repositoriesData,
+							function(repositoryData, repositoryId, collection) {
+								var repositoryNode = tabSection.one('#' + namespace + 'searchResults' + repositoryId);
+
+								if (repositoryNode) {
+									var paginatorData = collection[repositoryId].paginatorData;
+
+									instance._setPaginatorData(paginatorData);
+
+									instance._lastDataRequest = repositoryData.dataRequest;
+								}
+
+								return repositoryNode;
+							}
+						);
 					},
 
 					_processDefaultParams: function(event) {
@@ -1028,11 +1091,14 @@ AUI().add(
 					_setSearchResults: function(content) {
 						var instance = this;
 
+						console.log('setting: _setSearchResults');
+
 						var searchInfo = instance.one('#searchInfo', content);
 
-						if (searchInfo) {
-							var entriesContainer = instance._entriesContainer;
+						var entriesContainer = instance._entriesContainer;
 
+						if (searchInfo) {
+							console.log('setting' + 'search info');
 							entriesContainer.plug(A.Plugin.ParseContent);
 
 							entriesContainer.setContent(searchInfo);
@@ -1041,21 +1107,19 @@ AUI().add(
 						var searchResults = instance.one('.local-search-results', content);
 
 						if (searchResults) {
-							var repositorySearchResultsContainer = instance.one('#' + instance.ns('searchResultsContainer'), content);
-
-							var entriesContainer = instance._entriesContainer;
+							console.log('setting' + 'searchResults');
+							var searchResultsContainer = instance.one('#' + instance.ns('searchResultsContainer'), content);
 
 							entriesContainer.plug(A.Plugin.ParseContent);
 
-							entriesContainer.append(repositorySearchResultsContainer);
+							entriesContainer.append(searchResultsContainer);
 						}
 
 						var repositorySearchResults = instance.one('.repository-search-results', content);
 
 						if (repositorySearchResults) {
+							console.log('setting' + 'repositorySearchResults');
 							var repositoryId = instance.one('#' + instance.ns('repositoryId'), content);
-
-							var entriesContainer = instance._entriesContainer;
 
 							var repositorySearchResultsContainer = entriesContainer.one('#' + instance.ns('repositorySearchResultsContainer') + repositoryId.val());
 
