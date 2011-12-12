@@ -1012,14 +1012,40 @@ AUI().add(
 					_setSearchResults: function(content) {
 						var instance = this;
 
-						var searchResults = instance.one('#searchResults', content);
+						var searchInfo = instance.one('#searchInfo', content);
 
-						if (searchResults) {
+						if (searchInfo) {
 							var entriesContainer = instance._entriesContainer;
 
 							entriesContainer.plug(A.Plugin.ParseContent);
 
-							entriesContainer.setContent(searchResults);
+							entriesContainer.setContent(searchInfo);
+						}
+
+						var searchResults = instance.one('.local-search-results', content);
+
+						if (searchResults) {
+							var repositorySearchResultsContainer = instance.one('#' + instance.ns('searchResultsContainer'), content);
+
+							var entriesContainer = instance._entriesContainer;
+
+							entriesContainer.plug(A.Plugin.ParseContent);
+
+							entriesContainer.append(repositorySearchResultsContainer);
+						}
+
+						var repositorySearchResults = instance.one('.repository-search-results', content);
+
+						if (repositorySearchResults) {
+							var repositoryId = instance.one('#' + instance.ns('repositoryId'), content);
+
+							var entriesContainer = instance._entriesContainer;
+
+							var repositorySearchResultsContainer = entriesContainer.one('#' + instance.ns('repositorySearchResultsContainer') + repositoryId.val());
+
+							repositorySearchResultsContainer.plug(A.Plugin.ParseContent);
+
+							repositorySearchResultsContainer.append(repositorySearchResults);
 						}
 					},
 
