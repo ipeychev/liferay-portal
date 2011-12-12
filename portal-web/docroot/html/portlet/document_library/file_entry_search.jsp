@@ -82,23 +82,23 @@ List<Folder> mountFolders = DLAppServiceUtil.getMountFolders(repositoryId, DLFol
 			for (Folder mountFolder : mountFolders) {
 			%>
 
-			Liferay.fire(
-				'<portlet:namespace />dataRequest',
-				{
-					requestParams: {
-						'<portlet:namespace />struts_action': '/document_library/search',
-						'<portlet:namespace />repositoryId': '<%= String.valueOf(mountFolder.getRepositoryId()) %>',
-						'<portlet:namespace />searchRepositoryId': '<%= String.valueOf(mountFolder.getRepositoryId()) %>',
-						'<portlet:namespace />folderId': '<%= String.valueOf(mountFolder.getFolderId()) %>',
-						'<portlet:namespace />searchFolderId': '<%= String.valueOf(mountFolder.getFolderId()) %>',
-						'<portlet:namespace />keywords': document.<portlet:namespace />fm1.<portlet:namespace />keywords.value,
-						'<portlet:namespace />viewDisplayStyleButtons': <%= Boolean.TRUE.toString() %>,
-						'<portlet:namespace />searchType': <%= String.valueOf(DLSearchConstants.MULTIPLE) %>
+				Liferay.fire(
+					'<portlet:namespace />dataRequest',
+					{
+						requestParams: {
+							'<portlet:namespace />struts_action': '/document_library/search',
+							'<portlet:namespace />repositoryId': '<%= String.valueOf(mountFolder.getRepositoryId()) %>',
+							'<portlet:namespace />searchRepositoryId': '<%= String.valueOf(mountFolder.getRepositoryId()) %>',
+							'<portlet:namespace />folderId': '<%= String.valueOf(mountFolder.getFolderId()) %>',
+							'<portlet:namespace />searchFolderId': '<%= String.valueOf(mountFolder.getFolderId()) %>',
+							'<portlet:namespace />keywords': document.<portlet:namespace />fm1.<portlet:namespace />keywords.value,
+							'<portlet:namespace />viewDisplayStyleButtons': <%= Boolean.TRUE.toString() %>,
+							'<portlet:namespace />searchType': <%= String.valueOf(DLSearchConstants.MULTIPLE) %>
 
-					},
-					src: 3
-				}
-			);
+						},
+						src: 3
+					}
+				);
 
 			<%
 			}
