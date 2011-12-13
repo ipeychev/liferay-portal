@@ -58,11 +58,11 @@ if (!selectableTree) {
 			loadingEl.hide();
 
 			<c:choose>
-				<c:when test="<%= saveState %>">
-					TreeUtil.restoreNodeState(rootNode);
-				</c:when>
 				<c:when test="<%= expandFirstNode %>">
 					rootNode.expand();
+				</c:when>
+				<c:when test="<%= saveState %>">
+					TreeUtil.restoreNodeState(rootNode);
 				</c:when>
 			</c:choose>
 		},
