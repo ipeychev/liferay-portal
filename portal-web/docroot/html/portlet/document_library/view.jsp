@@ -19,6 +19,8 @@
 <%
 Folder folder = (com.liferay.portal.kernel.repository.model.Folder)request.getAttribute(WebKeys.DOCUMENT_LIBRARY_FOLDER);
 
+List<Folder> mountFolders = DLAppServiceUtil.getMountFolders(scopeGroupId, DLFolderConstants.DEFAULT_PARENT_FOLDER_ID, QueryUtil.ALL_POS, QueryUtil.ALL_POS);
+
 long folderId = BeanParamUtil.getLong(folder, request, "folderId", rootFolderId);
 
 if ((folder == null) && (folderId != DLFolderConstants.DEFAULT_PARENT_FOLDER_ID)) {
@@ -199,6 +201,32 @@ if (folder != null) {
 <aui:script use="liferay-document-library">
 	<liferay-portlet:resourceURL copyCurrentRenderParameters="<%= false %>" varImpl="mainURL" />
 
+	var repositories = [];
+
+	repositories.push(
+		{
+			name: '<%= UnicodeLanguageUtil.get(pageContext, "local") %>',
+			id: <%= scopeGroupId %>,
+			remote: false
+		}
+	);
+
+	<%
+	for (Folder mountFolder : mountFolders) {
+	%>
+
+		repositories.push(
+			{
+				name: '<%= mountFolder.getName() %>',
+				id: <%= mountFolder.getRepositoryId() %>,
+				remote: true
+			}
+		);
+
+	<%
+	}
+	%>
+
 	new Liferay.Portlet.DocumentLibrary(
 		{
 			defaultParams: {
@@ -221,6 +249,7 @@ if (folder != null) {
 			foldersTotal: <%= foldersTotal %>,
 			mainUrl: '<%= mainURL %>',
 			namespace: '<portlet:namespace />',
+			repositories: repositories,
 			showSiblings: true,
 			strutsAction: '/document_library/view',
 			viewBreadcrumb: true,

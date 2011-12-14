@@ -22,6 +22,8 @@ AUI().add(
 
 		var CSS_DOCUMENT_DISPLAY_STYLE_SELECTED = '.document-display-style.selected';
 
+		var CSS_HIDDEN = 'aui-helper-hidden';
+
 		var CSS_RESULT_ROW = '.results-row';
 
 		var CSS_SELECTED = 'selected';
@@ -38,9 +40,13 @@ AUI().add(
 
 		var DOCUMENT_LIBRARY_GROUP = 'document-library';
 
+		var PARENT_NODE = 'parentNode';
+
 		var REFRESH_FOLDERS = 'refreshFolders';
 
 		var ROWS_PER_PAGE = 'rowsPerPage';
+
+		var SEARCH_TYPE = 'searchType';
 
 		var SHOW_SIBLINGS = 'showSiblings';
 
@@ -68,11 +74,15 @@ AUI().add(
 
 		var STR_TOGGLE_ACTIONS_BUTTON = 'toggleActionsButton';
 
+		var STR_REPOSITORY_ID = 'repositoryId';
+
 		var STR_ROW_IDS_FILE_SHORTCUT_CHECKBOX = 'rowIdsDLFileShortcutCheckbox';
 
 		var STR_ROW_IDS_FOLDER_CHECKBOX = 'rowIdsFolderCheckbox';
 
 		var STR_ROW_IDS_FILE_ENTRY_CHECKBOX = 'rowIdsFileEntryCheckbox';
+
+		var STR_SEARCH_REPOSITORY_ID = 'searchRepositoryId';
 
 		var STRUTS_ACTION = 'struts_action';
 
@@ -80,9 +90,34 @@ AUI().add(
 
 		var SRC_ENTRIES_PAGINATOR = 1;
 
+		var SRC_GLOBAL = 0;
+
 		var SRC_HISTORY = 2;
 
+		var SRC_SEARCH = 3;
+
+		var SRC_SEARCH_END = 4;
+
+		var SRC_SEARCH_FRAGMENT = 2;
+
+		var SRC_SEARCH_MULTIPLE = 0;
+
+		var SRC_SEARCH_SINGLE = 1;
+
 		var TOUCH = A.UA.touch;
+
+		var TPL_SEARCH_MULTIPLE =
+			'<div class="search-info">' +
+				'<span class="keywords">' +
+					'searched-for-x-in-x' +
+				'</span>' +
+
+				'<img cssClass="close-search" id="{closeSearchId}" src="../aui/closethick" />' +
+			'</div>' +
+			'<div id="tabsSearch">' +
+			'</div>';
+
+		var TPL_SEARCH_SINGLE = '<div id="{id}"></div>';
 
 		var VIEW_ADD_BREADCRUMB = 'viewBreadcrumb';
 
@@ -202,6 +237,8 @@ AUI().add(
 
 						History.after('stateChange', instance._afterStateChange, instance);
 
+						Liferay.on('showTab', instance._onShowTab, instance);
+
 						documentLibraryContainer.plug(A.LoadingMask);
 
 						instance._config = config;
@@ -218,6 +255,8 @@ AUI().add(
 						instance._initSelectAllCheckbox();
 
 						instance._initToggleSelect();
+
+						instance._repositoriesData = {};
 
 						instance._restoreState();
 					},
@@ -262,13 +301,42 @@ AUI().add(
 
 						instance._documentLibraryContainer.loadingmask.show();
 
-						if (event.src !== SRC_HISTORY) {
+						var src = event.src;
+
+						if (src !== SRC_HISTORY) {
 							instance._addHistoryState(data);
 						}
 
-						var ioRequest = instance._getIORequest();
+						var ioRequest = A.io.request(
+							instance._config.mainUrl,
+							{
+								autoLoad: false
+							}
+						);
+
+						var sendIOResponse = A.bind(instance._sendIOResponse, instance, ioRequest);
+
+						ioRequest.after(['failure', 'success'], sendIOResponse);
 
 						ioRequest.set(STR_DATA, data);
+
+						if (src === SRC_SEARCH) {
+							var repositoryId = event.requestParams[instance.NS + 'repositoryId'];
+
+							var repositoriesData = instance._repositoriesData;
+
+							var repositoryData = repositoriesData[repositoryId];
+
+							if (!repositoryData) {
+								repositoryData = {};
+
+								repositoriesData[repositoryId] = repositoryData;
+							}
+
+							repositoryData.dataRequest = data;
+						}
+
+						instance._lastDataRequest = data;
 
 						ioRequest.start();
 					},
@@ -291,15 +359,13 @@ AUI().add(
 							}
 						);
 
-						if (!AObject.isEmpty(requestParams)) {
-							Liferay.fire(
-								instance._eventDataRequest,
-								{
-									requestParams: requestParams,
-									src: SRC_HISTORY
-								}
-							);
-						}
+						Liferay.fire(
+							instance._eventDataRequest,
+							{
+								requestParams: requestParams,
+								src: SRC_HISTORY
+							}
+						);
 					},
 
 					_afterListViewItemChange: function(event) {
@@ -336,9 +402,9 @@ AUI().add(
 						var requestParams = {};
 
 						requestParams[instance.ns(STRUTS_ACTION)] = config.strutsAction;
-						requestParams[instance.ns(STR_ENTRY_END)] = config.entryRowsPerPage || instance._entryPaginator.get('rowsPerPage');
+						requestParams[instance.ns(STR_ENTRY_END)] = config.entryRowsPerPage || instance._entryPaginator.get(ROWS_PER_PAGE);
 						requestParams[instance.ns(STR_ENTRY_START)] = 0;
-						requestParams[instance.ns(STR_FOLDER_END)] = config.folderRowsPerPage || instance._folderPaginator.get('rowsPerPage');
+						requestParams[instance.ns(STR_FOLDER_END)] = config.folderRowsPerPage || instance._folderPaginator.get(ROWS_PER_PAGE);
 						requestParams[instance.ns(STR_FOLDER_START)] = 0;
 						requestParams[instance.ns('refreshEntries')] = dataRefreshEntries;
 						requestParams[instance.ns(VIEW_ADD_BUTTON)] = true;
@@ -383,6 +449,56 @@ AUI().add(
 						);
 					},
 
+					_createRepositoriesTabView: function(event) {
+						var instance = this;
+
+						if (!instance._isTabViewRendered()) {
+							var instance = this;
+
+							var entriesContainer = instance._entriesContainer;
+
+							entriesContainer.purge(true);
+
+							entriesContainer.setContent(
+								Lang.sub(
+									TPL_SEARCH_MULTIPLE,
+									{
+										closeSearchId: instance.NS + 'closeSearch'
+									}
+								)
+							);
+
+							var repositories = instance._config.repositories;
+
+							var repositoriesData = [];
+
+							for (var i = 0, len = repositories.length; i < len; i++) {
+								var repository = repositories[i];
+
+								repositoriesData.push(
+									{
+										content: '<div id="' + instance.NS + 'searchResults' + repository.id + '"></div>',
+										label: repository.name,
+										repositoryId: repository.id
+									}
+								);
+							}
+
+							instance._tabViewSearch = new A.TabView(
+								{
+									children: repositoriesData,
+									srcNode: '#tabsSearch'
+								}
+							).render();
+						}
+					},
+					
+					_isTabViewRendered: function() {
+						var instance = this;
+
+						return instance._tabViewSearch && instance._tabViewSearch.get('boundingBox').inDoc();
+					},
+
 					_getDisplayStyle: function(style) {
 						var instance = this;
 
@@ -393,31 +509,6 @@ AUI().add(
 						}
 
 						return displayStyle;
-					},
-
-					_getIORequest: function() {
-						var instance = this;
-
-						var ioRequest = instance._ioRequest;
-
-						if (!ioRequest) {
-							var sendIOResponse = A.bind(instance._sendIOResponse, instance);
-
-							ioRequest = A.io.request(
-								instance._config.mainUrl,
-								{
-									after: {
-										success: sendIOResponse,
-										failure: sendIOResponse
-									},
-									autoLoad: false
-								}
-							);
-
-							instance._ioRequest = ioRequest;
-						}
-
-						return ioRequest;
 					},
 
 					_getMoveText: function(selectedItemsCount, targetAvailable) {
@@ -462,6 +553,32 @@ AUI().add(
 						var end = start + rowsPerPage;
 
 						return [start, end];
+					},
+
+					_handleSearch: function(event) {
+						var instance = this;
+
+						var requestParams = event.requestParams;
+
+						var searchTypeNS = instance.ns(SEARCH_TYPE);
+
+						if (AObject.owns(requestParams, searchTypeNS)) {
+							var requestType = requestParams[searchTypeNS];
+
+							if (requestType === SRC_SEARCH_MULTIPLE) {
+								instance._createRepositoriesTabView(event);
+							}
+							else if (requestType === SRC_SEARCH_SINGLE) {
+								entriesContainer.setContent(
+									Lang.sub(
+										TPL_SEARCH_SINGLE,
+										{
+											id: instance.NS + 'searchResults' + requestParams[instance.ns(STR_SEARCH_REPOSITORY_ID)]
+										}
+									)
+								);
+							}
+						}
 					},
 
 					_initDragDrop: function() {
@@ -610,6 +727,9 @@ AUI().add(
 							if (selectedEntries.size()) {
 								instance._selectedEntries = selectedEntries.val();
 							}
+						}
+						else if (src === SRC_SEARCH) {
+							instance._handleSearch(event);
 						}
 
 						instance._processDefaultParams(event);
@@ -785,7 +905,7 @@ AUI().add(
 
 						var startEndParams = instance._getResultsStartEnd(instance._entryPaginator);
 
-						var requestParams = instance._getIORequest().get(STR_DATA) || {};
+						var requestParams = instance._lastDataRequest || {};
 
 						var customParams = {};
 
@@ -794,6 +914,10 @@ AUI().add(
 						customParams[instance.ns(REFRESH_FOLDERS)] = false;
 						customParams[instance.ns(VIEW_ADD_BUTTON)] = true;
 						customParams[instance.ns(VIEW_ENRTIES)] = true;
+
+						if (AObject.owns(requestParams, instance.ns('searchType'))) {
+							customParams[instance.ns(SEARCH_TYPE)] = SRC_SEARCH_FRAGMENT;
+						}
 
 						A.mix(requestParams, customParams, true);
 
@@ -811,7 +935,7 @@ AUI().add(
 
 						var startEndParams = instance._getResultsStartEnd(instance._folderPaginator);
 
-						var requestParams = instance._getIORequest().get(STR_DATA) || {};
+						var requestParams = instance._lastDataRequest || {};
 
 						var customParams = {};
 
@@ -836,10 +960,45 @@ AUI().add(
 						var paginatorData = event.paginator;
 
 						if (paginatorData) {
-							var paginator = instance['_' + paginatorData.name];
+							if (event.src == SRC_SEARCH) {
+								var repositoriesData = instance._repositoriesData;
 
-							if (A.instanceOf(paginator, A.Paginator)) {
-								paginator.setState(paginatorData.state);
+								var repositoryData = repositoriesData[event.repositoryId];
+
+								if (!repositoryData) {
+									repositoryData = {};
+
+									instance._repositoriesData[event.repositoryId] = repositoryData;
+								}
+
+								repositoryData.paginatorData = paginatorData;
+
+								var dataRequest = repositoryData.dataRequest;
+
+								var searchType = dataRequest[instance.NS + SEARCH_TYPE];
+
+								if (searchType === SRC_SEARCH_SINGLE || searchType === SRC_SEARCH_FRAGMENT) {
+									instance._setPaginatorData(paginatorData);
+								}
+								else {
+									var resultsContainer = instance.byId('searchResults' + event.repositoryId);
+
+									var children = instance._tabViewSearch.get('children');
+
+									for (var i = 0, len = children.length; i < len; i++) {
+										var tab = children.items(i);
+
+										console.log(tab.get('label'));
+										console.log(tab.get('repositoryId'));
+									}
+
+									if (resultsContainer && !(resultsContainer.get(PARENT_NODE).hasClass('yui3-tab-panel-selected'))) {
+										instance._setPaginatorData(paginatorData);
+									}
+								}
+							}
+							else {
+								instance._setPaginatorData(paginatorData);
 							}
 						}
 					},
@@ -848,6 +1007,31 @@ AUI().add(
 						var instance = this;
 
 						instance._toggleEntriesSelection();
+					},
+
+					_onShowTab: function(event) {
+						var instance = this;
+
+						var tabSection = event.tabSection;
+
+						var namespace = instance.NS;
+
+						A.some(
+							instance._repositoriesData,
+							function(repositoryData, repositoryId, collection) {
+								var repositoryNode = tabSection.one('#' + namespace + 'searchResults' + repositoryId);
+
+								if (repositoryNode) {
+									var paginatorData = collection[repositoryId].paginatorData;
+
+									instance._setPaginatorData(paginatorData);
+
+									instance._lastDataRequest = repositoryData.dataRequest;
+								}
+
+								return repositoryNode;
+							}
+						);
 					},
 
 					_processDefaultParams: function(event) {
@@ -972,6 +1156,8 @@ AUI().add(
 							var fileEntrySearchContainer = instance.byId('fileEntrySearchContainer');
 
 							if (fileEntrySearchContainer) {
+						        fileEntrySearchContainer.purge(true);
+
 								fileEntrySearchContainer.plug(A.Plugin.ParseContent);
 
 								fileEntrySearchContainer.setContent(fileEntrySearch);
@@ -997,6 +1183,16 @@ AUI().add(
 						}
 					},
 
+					_setPaginatorData: function(paginatorData) {
+						var instance = this;
+
+						var paginator = instance['_' + paginatorData.name];
+
+						if (A.instanceOf(paginator, A.Paginator)) {
+							paginator.setState(paginatorData.state);
+						}
+					},
+
 					_setParentFolderTitle: function(content) {
 						var instance = this;
 
@@ -1012,21 +1208,29 @@ AUI().add(
 					_setSearchResults: function(content) {
 						var instance = this;
 
-						var searchResults = instance.one('#searchResults', content);
+						var repositoryIdNode = instance.one('#' + instance.ns('repositoryId'), content);
 
-						if (searchResults) {
-							var entriesContainer = instance._entriesContainer;
+						if (repositoryIdNode) {
+							var repositoryId = repositoryIdNode.val();
 
-							entriesContainer.plug(A.Plugin.ParseContent);
+							var fragmentSearchResults = instance.one('#' + instance.ns('fragmentSearchResults') + repositoryId, content);
 
-							entriesContainer.setContent(searchResults);
+							if (fragmentSearchResults) {
+								var repositoryResultsContainer = instance.one('#' + instance.NS + 'searchResults' + repositoryId);
+
+								repositoryResultsContainer.plug(A.Plugin.ParseContent);
+
+								repositoryResultsContainer.setContent(fragmentSearchResults);
+
+								var repositoryData = instance._repositoriesData[repositoryId];
+
+								repositoryData.content = fragmentSearchResults;
+							}
 						}
 					},
 
-					_sendIOResponse: function(event) {
+					_sendIOResponse: function(ioRequest, event) {
 						var instance = this;
-
-						var ioRequest = instance._getIORequest();
 
 						var data = ioRequest.get(STR_DATA);
 						var reponseData = ioRequest.get('responseData');
@@ -1186,6 +1390,6 @@ AUI().add(
 	},
 	'',
 	{
-		requires: ['aui-paginator', 'dd-constrain', 'dd-delegate', 'dd-drag', 'dd-drop', 'dd-proxy', 'liferay-history-manager', 'liferay-list-view', 'liferay-portlet-base']
+		requires: ['aui-paginator', 'dd-constrain', 'dd-delegate', 'dd-drag', 'dd-drop', 'dd-proxy', 'liferay-history-manager', 'liferay-list-view', 'liferay-portlet-base', 'tabview']
 	}
 );
