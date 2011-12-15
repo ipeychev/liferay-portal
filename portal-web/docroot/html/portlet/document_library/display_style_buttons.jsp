@@ -76,7 +76,7 @@ String keywords = ParamUtil.getString(request, "keywords");
 				'<portlet:namespace />dataRequest',
 				{
 					requestParams: config,
-					src: 0
+					src: Liferay.DL_ENTRIES_PAGINATOR
 				}
 			);
 		}

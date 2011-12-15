@@ -117,7 +117,7 @@ int total = 0;
 								</c:otherwise>
 							</c:choose>
 						},
-						src: 3
+						src: Liferay.DL_SEARCH
 					}
 				);
 
@@ -139,7 +139,7 @@ int total = 0;
 									'<portlet:namespace />viewDisplayStyleButtons': <%= Boolean.TRUE.toString() %>,
 									'<portlet:namespace />searchType': <%= String.valueOf(DLSearchConstants.MULTIPLE) %>
 								},
-								src: 3
+								src: Liferay.DL_SEARCH
 							}
 
 						);
@@ -165,7 +165,7 @@ int total = 0;
 									'<portlet:namespace />viewDisplayStyleButtons': <%= Boolean.TRUE.toString() %>,
 									'<portlet:namespace />viewEntries': <%= Boolean.TRUE.toString() %>
 								},
-								src: 4
+								src: Liferay.DL_SEARCH_END
 							}
 						);
 					}
@@ -409,7 +409,7 @@ int total = 0;
 					}
 				},
 				repositoryId: '<%= repositoryId %>',
-				src: 3
+				src: Liferay.DL_SEARCH
 			}
 		);
 	</aui:script>

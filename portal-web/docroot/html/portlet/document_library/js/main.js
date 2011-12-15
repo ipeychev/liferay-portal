@@ -114,6 +114,24 @@ AUI().add(
 
 		var VIEW_SORT_BUTTON = 'viewSortButton';
 
+		Liferay.DL_DISPLAY_STYLE_BUTTONS = SRC_DISPLAY_STYLE_BUTTONS;
+
+		Liferay.DL_ENTRIES_PAGINATOR = SRC_ENTRIES_PAGINATOR;
+
+		Liferay.DL_GLOBAL = SRC_GLOBAL;
+
+		Liferay.DL_HISTORY = SRC_HISTORY;
+
+		Liferay.DL_SEARCH = SRC_SEARCH;
+
+		Liferay.DL_SEARCH_END = SRC_SEARCH_END;
+
+		Liferay.DL_SEARCH_FRAGMENT = SRC_SEARCH_FRAGMENT;
+
+		Liferay.DL_SEARCH_MULTIPLE = SRC_SEARCH_MULTIPLE;
+
+		Liferay.DL_SEARCH_SINGLE = SRC_SEARCH_SINGLE;
+
 		var DocumentLibrary = A.Component.create(
 			{
 				AUGMENTS: [Liferay.PortletBase],
@@ -1058,7 +1076,7 @@ AUI().add(
 							var fileEntrySearchContainer = instance.byId('fileEntrySearchContainer');
 
 							if (fileEntrySearchContainer) {
-						        fileEntrySearchContainer.purge(true);
+								fileEntrySearchContainer.purge(true);
 
 								fileEntrySearchContainer.plug(A.Plugin.ParseContent);
 
