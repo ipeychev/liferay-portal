@@ -203,7 +203,7 @@ SitesUtil.addPortletBreadcrumbEntries(group, pagesName, redirectURL, request, re
 </aui:layout>
 
 <c:if test="<%= !group.isLayoutPrototype() %>">
-	<aui:script use="aui-io-plugin">
+	<aui:script use="aui-io-plugin,liferay-history-manager">
 		var layoutsContainer = A.one('#<portlet:namespace />layoutsContainer');
 
 		layoutsContainer.plug(
@@ -219,9 +219,9 @@ SitesUtil.addPortletBreadcrumbEntries(group, pagesName, redirectURL, request, re
 				event.preventDefault();
 
 				var requestUri = A.Lang.sub(
-					event.currentTarget.get('href'),
+					event.currentTarget.attr('href'),
 					{
-						historyKey: location.hash.replace('#_LFR_FN_<portlet:namespace />', '')
+						section: Liferay.HistoryManager.get('<portlet:namespace />section')
 					}
 				);
 

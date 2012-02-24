@@ -43,7 +43,7 @@ if (!selectableTree) {
 
 	var Util = Liferay.Util;
 
-	var LAYOUT_URL = '<%= portletURL + StringPool.AMPERSAND + portletDisplay.getNamespace() + "selPlid={selPlid}" + StringPool.AMPERSAND + portletDisplay.getNamespace() + "historyKey={historyKey}" %>';
+	var LAYOUT_URL = '<%= portletURL + StringPool.AMPERSAND + portletDisplay.getNamespace() + "selPlid={selPlid}" + StringPool.AMPERSAND + portletDisplay.getNamespace() + "section={section}" %>';
 
 	var TreeUtil = {
 		DEFAULT_PARENT_LAYOUT_ID: <%= LayoutConstants.DEFAULT_PARENT_LAYOUT_ID %>,
@@ -108,7 +108,7 @@ if (!selectableTree) {
 			var href = Lang.sub(
 				LAYOUT_URL,
 				{
-					historyKey: data.historyKey,
+					section: data.section,
 					selPlid: data.plid
 				}
 			);
@@ -496,7 +496,7 @@ if (!selectableTree) {
 						var uri = Lang.sub(
 							LAYOUT_URL,
 							{
-								historyKey: '',
+								section: '',
 								selPlid: nodePlid
 							}
 						);

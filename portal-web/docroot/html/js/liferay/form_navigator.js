@@ -1,11 +1,15 @@
 AUI.add(
 	'liferay-form-navigator',
 	function(A) {
+		var AObject = A.Object;
+
 		var CSS_HIDDEN = 'aui-helper-hidden-accessible';
 
 		var CSS_SECTION_ERROR = 'section-error';
 
 		var CSS_SELECTED = 'selected';
+
+		var History = Liferay.HistoryManager;
 
 		var SELECTOR_FORM_SECTION = '.form-section';
 
@@ -53,7 +57,7 @@ AUI.add(
 				instance._modifiedSectionsArray = [];
 			}
 
-			instance._revealSection(location.href);
+			instance._revealSection();
 
 			A.on('formNavigator:trackChanges', instance._trackChanges, instance);
 
@@ -76,9 +80,46 @@ AUI.add(
 					}
 				}
 			);
+
+			History.after('stateChange', instance._afterStateChange, instance);
 		};
 
 		FormNavigator.prototype = {
+			constructor: FormNavigator,
+
+			_addHistoryState: function(data) {
+				var instance = this;
+
+				var historyState = A.clone(data);
+
+				var currentHistoryState = History.get();
+
+				var owns = AObject.owns;
+
+				AObject.each(
+					currentHistoryState,
+					function(index, item, collection) {
+						if (!owns(historyState, item)) {
+							historyState[item] = null;
+						}
+					}
+				);
+
+				if (!AObject.isEmpty(historyState)) {
+					History.add(historyState);
+				}
+			},
+
+			_afterStateChange: function(event) {
+				var instance = this;
+
+				var section = History.get(instance._namespace + instance._sectionParam);
+
+				if (section) {
+					instance._revealSection(section);
+				}
+			},
+
 			_addModifiedSection: function (section) {
 				var instance = this;
 
@@ -101,31 +142,16 @@ AUI.add(
 				}
 			},
 
-			_getId: function(id) {
-				var instance = this;
+			_getSectionName: function(elementHref) {
+				var sectionMatch = elementHref.split('#');
 
-				var namespace = instance._namespace;
+				var sectionName;
 
-				id = id || '';
-
-				if (id.indexOf('#') > -1) {
-					id = id.split('#')[1] || '';
-
-					id = id.replace(instance._hashKey, '');
-				}
-				else if (id.indexOf('historyKey=') > -1) {
-					id = id.match(/historyKey=([^&#]+)/);
-					id = id && id[1];
-				}
-				else {
-					id = '';
+				if (sectionMatch) {
+					sectionName = sectionMatch[1];
 				}
 
-				if (id && namespace && (id.indexOf(namespace) == -1)) {
-					id = namespace + id;
-				}
-
-				return id;
+				return sectionName;
 			},
 
 			_onClick: function(event) {
@@ -140,49 +166,53 @@ AUI.add(
 				if (li && !li.test('.selected')) {
 					var href = target.attr(STR_HREF);
 
-					instance._revealSection(href, li);
+					var sectionName = instance._getSectionName(href);
 
-					var hash = href.split('#');
+					instance._revealSection(sectionName, li);
 
-					var hashValue = hash[1];
+					var data = {};
 
-					if (hashValue) {
-						A.later(0, instance, instance._updateHash, [hashValue]);
-					}
+					data[instance._namespace + instance._sectionParam] = sectionName;
+
+					instance._addHistoryState(data);
 				}
 			},
 
-			_revealSection: function(id, currentNavItem) {
+			_revealSection: function(sectionName, currentNavItem) {
 				var instance = this;
 
-				id = instance._getId(id);
+				if (!sectionName) {
+					sectionName = History.get(instance._namespace + instance._sectionParam);
+				}
 
-				if (id) {
-					id = id.charAt(0) != '#' ? '#' + id : id;
+				if (sectionName) {
+					var li = currentNavItem || instance._navigation.one('[href$=' + sectionName + ']').get('parentNode');
 
-					var li = currentNavItem || instance._navigation.one('[href$=' + id + ']').get('parentNode');
+					var section = A.one('#' + sectionName);
+					var selected = instance._navigation.one(SELECTOR_LIST_ITEM_SELECTED);
 
-					id = id.split('#');
+					var revealed = false;
 
-					var namespacedId = id[1];
-
-					if (namespacedId) {
-						Liferay.fire('formNavigator:reveal' + namespacedId);
-
-						var section = A.one('#' + namespacedId);
-						var selected = instance._navigation.one(SELECTOR_LIST_ITEM_SELECTED);
-
+					if (li && (!selected || selected !== li)) {
 						if (selected) {
 							selected.removeClass(CSS_SELECTED);
 						}
 
 						li.addClass(CSS_SELECTED);
 
+						revealed = true;
+					}
+
+					if (section && !section.hasClass(CSS_SELECTED)) {
 						instance._sections.removeClass(CSS_SELECTED).addClass(CSS_HIDDEN);
 
-						if (section) {
-							section.addClass(CSS_SELECTED).removeClass(CSS_HIDDEN);
-						}
+						section.addClass(CSS_SELECTED).removeClass(CSS_HIDDEN);
+
+						revealed = true;
+					}
+
+					if (revealed) {
+						Liferay.fire('formNavigator:reveal' + sectionName);
 					}
 				}
 			},
@@ -247,13 +277,15 @@ AUI.add(
 				}
 			},
 
-			_hashKey: '_LFR_FN_'
+			_hashKey: '_LFR_FN_',
+
+			_sectionParam: 'section'
 		};
 
 		Liferay.FormNavigator = FormNavigator;
 	},
 	'',
 	{
-		requires: ['aui-base']
+		requires: ['aui-base', 'liferay-history-manager']
 	}
 );

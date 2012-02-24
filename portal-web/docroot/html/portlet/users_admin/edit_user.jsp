@@ -268,11 +268,19 @@ if (selUser != null) {
 
 		var redirect = "<portlet:renderURL><portlet:param name="struts_action" value="/users_admin/edit_user" /><portlet:param name="backURL" value="<%= backURL %>"></portlet:param></portlet:renderURL>";
 
-		redirect += Liferay.Util.getHistoryParam('<portlet:namespace />');
+		AUI().use('liferay-history-manager', function(A) {
+			var namespacedSection = '<portlet:namespace />' + 'section';
 
-		document.<portlet:namespace />fm.<portlet:namespace />redirect.value = redirect;
+			var sectionName = Liferay.HistoryManager.get(namespacedSection);
 
-		submitForm(document.<portlet:namespace />fm, "<portlet:actionURL><portlet:param name="struts_action" value="/users_admin/edit_user" /></portlet:actionURL>");
+			if (sectionName) {
+				redirect += '&' + namespacedSection + '=' + sectionName;
+			}
+
+			document.<portlet:namespace />fm.<portlet:namespace />redirect.value = redirect;
+
+			submitForm(document.<portlet:namespace />fm, "<portlet:actionURL><portlet:param name="struts_action" value="/users_admin/edit_user" /></portlet:actionURL>");
+		});
 	}
 
 	<c:if test="<%= windowState.equals(WindowState.MAXIMIZED) %>">

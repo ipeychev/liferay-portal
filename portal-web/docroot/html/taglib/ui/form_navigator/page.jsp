@@ -34,10 +34,10 @@ for (String[] categorySection : categorySections) {
 
 String curSection = categorySections[0][0];
 
-String historyKey = ParamUtil.getString(request, "historyKey");
+String sectionName = ParamUtil.getString(request, "section");
 
-if (Validator.isNotNull(historyKey)) {
-	curSection = historyKey;
+if (Validator.isNotNull(sectionName) && !sectionName.equals("{section}")) {
+	curSection = sectionName;
 }
 %>
 
@@ -180,7 +180,7 @@ if (Validator.isNotNull(historyKey)) {
 	%>
 
 	<c:if test="<%= Validator.isNotNull(errorSection) %>">
-		<portlet:namespace />formNavigator._revealSection('#<%= namespace + errorSection %>', '');
+		<portlet:namespace />formNavigator._revealSection('<%= namespace + errorSection %>', '');
 	</c:if>
 </aui:script>
 

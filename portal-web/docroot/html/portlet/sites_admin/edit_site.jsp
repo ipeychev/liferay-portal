@@ -158,49 +158,55 @@ else if (layoutSetPrototype != null) {
 
 		var redirect = "<portlet:renderURL><portlet:param name="struts_action" value="/sites_admin/edit_site" /><portlet:param name="backURL" value="<%= backURL %>"></portlet:param></portlet:renderURL>";
 
-		redirect += Liferay.Util.getHistoryParam('<portlet:namespace />');
+		AUI().use('liferay-history-manager', function(A) {
+			var namespacedSection = '<portlet:namespace />' + 'section';
 
-		document.<portlet:namespace />fm.<portlet:namespace />redirect.value = redirect;
+			var sectionName = Liferay.HistoryManager.get(namespacedSection);
 
-		var ok = true;
-
-		<c:if test="<%= liveGroup != null %>">
-			A = AUI();
-
-			var selectEl = A.one('#<portlet:namespace />stagingType');
-
-			<c:choose>
-				<c:when test="<%= liveGroup.isStaged() && !liveGroup.isStagedRemotely() %>">
-					var oldValue = 1;
-				</c:when>
-				<c:when test="<%= liveGroup.isStaged() && liveGroup.isStagedRemotely() %>">
-					var oldValue = 2;
-				</c:when>
-				<c:otherwise>
-					var oldValue = 0;
-				</c:otherwise>
-			</c:choose>
-
-			if (selectEl && (selectEl.val() != oldValue)) {
-				var currentValue = selectEl.val();
-
-				ok = false;
-
-				if (0 == currentValue) {
-					ok = confirm('<%= UnicodeLanguageUtil.format(pageContext, "are-you-sure-you-want-to-deactivate-staging-for-x", liveGroup.getDescriptiveName(locale)) %>');
-				}
-				else if (1 == currentValue) {
-					ok = confirm('<%= UnicodeLanguageUtil.format(pageContext, "are-you-sure-you-want-to-activate-local-staging-for-x", liveGroup.getDescriptiveName(locale)) %>');
-				}
-				else if (2 == currentValue) {
-					ok = confirm('<%= UnicodeLanguageUtil.format(pageContext, "are-you-sure-you-want-to-activate-remote-staging-for-x", liveGroup.getDescriptiveName(locale)) %>');
-				}
+			if (sectionName) {
+				redirect += '&' + namespacedSection + '=' + sectionName;
 			}
-		</c:if>
 
-		if (ok) {
-			submitForm(document.<portlet:namespace />fm);
-		}
+			document.<portlet:namespace />fm.<portlet:namespace />redirect.value = redirect;
+
+			var ok = true;
+
+			<c:if test="<%= liveGroup != null %>">
+				var selectEl = A.one('#<portlet:namespace />stagingType');
+
+				<c:choose>
+					<c:when test="<%= liveGroup.isStaged() && !liveGroup.isStagedRemotely() %>">
+						var oldValue = 1;
+					</c:when>
+					<c:when test="<%= liveGroup.isStaged() && liveGroup.isStagedRemotely() %>">
+						var oldValue = 2;
+					</c:when>
+					<c:otherwise>
+						var oldValue = 0;
+					</c:otherwise>
+				</c:choose>
+
+				if (selectEl && (selectEl.val() != oldValue)) {
+					var currentValue = selectEl.val();
+
+					ok = false;
+
+					if (0 == currentValue) {
+						ok = confirm('<%= UnicodeLanguageUtil.format(pageContext, "are-you-sure-you-want-to-deactivate-staging-for-x", liveGroup.getDescriptiveName(locale)) %>');
+					}
+					else if (1 == currentValue) {
+						ok = confirm('<%= UnicodeLanguageUtil.format(pageContext, "are-you-sure-you-want-to-activate-local-staging-for-x", liveGroup.getDescriptiveName(locale)) %>');
+					}
+					else if (2 == currentValue) {
+						ok = confirm('<%= UnicodeLanguageUtil.format(pageContext, "are-you-sure-you-want-to-activate-remote-staging-for-x", liveGroup.getDescriptiveName(locale)) %>');
+					}
+				}
+			</c:if>
+
+			if (ok) {
+				submitForm(document.<portlet:namespace />fm);
+			}
+		});
 	}
 
 	<c:if test="<%= windowState.equals(WindowState.MAXIMIZED) %>">

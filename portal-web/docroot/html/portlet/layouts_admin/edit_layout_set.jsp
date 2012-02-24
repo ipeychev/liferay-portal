@@ -293,9 +293,17 @@ String[][] categorySections = {mainSections};
 			document.<portlet:namespace />fm.<portlet:namespace /><%= Constants.CMD %>.value = 'update';
 		}
 
-		document.<portlet:namespace />fm.<portlet:namespace />redirect.value += Liferay.Util.getHistoryParam('<portlet:namespace />');
+		AUI().use('liferay-history-manager', function(A) {
+			var namespacedSection = '<portlet:namespace />' + 'section';
 
-		submitForm(document.<portlet:namespace />fm);
+			var sectionName = Liferay.HistoryManager.get(namespacedSection);
+
+			if (sectionName) {
+				document.<portlet:namespace />fm.<portlet:namespace />redirect.value += '&' + namespacedSection + '=' + sectionName;
+			}
+
+			submitForm(document.<portlet:namespace />fm);
+		});
 	}
 
 	function <portlet:namespace />updateLogo() {

@@ -33,7 +33,7 @@ String rootNodeName = (String)request.getAttribute("edit_pages.jsp-rootNodeName"
 
 PortletURL redirectURL = (PortletURL)request.getAttribute("edit_pages.jsp-redirectURL");
 
-redirectURL.setParameter("historyKey", "mobileRuleGroups");
+redirectURL.setParameter("section", "mobileRuleGroups");
 
 int mdrRuleGroupInstancesCount = MDRRuleGroupInstanceServiceUtil.getRuleGroupInstancesCount(className, classPK);
 %>

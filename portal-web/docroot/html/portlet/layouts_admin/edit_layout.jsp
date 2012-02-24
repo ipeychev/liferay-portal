@@ -349,14 +349,20 @@ String[][] categorySections = {mainSections};
 				</c:if>
 			}
 			else {
-				document.<portlet:namespace />fm.<portlet:namespace />redirect.value += Liferay.Util.getHistoryParam('<portlet:namespace />');
+				var namespacedSection = '<portlet:namespace />' + 'section';
+
+				var sectionName = Liferay.HistoryManager.get(namespacedSection);
+
+				if (sectionName) {
+					document.<portlet:namespace />fm.<portlet:namespace />redirect.value += '&' + namespacedSection + '=' + sectionName;
+				}
 			}
 
 			document.<portlet:namespace />fm.<portlet:namespace /><%= Constants.CMD %>.value = action;
 
 			submitForm(document.<portlet:namespace />fm);
 		},
-		['aui-base']
+		['aui-base', 'liferay-history-manager']
 	);
 </aui:script>
 

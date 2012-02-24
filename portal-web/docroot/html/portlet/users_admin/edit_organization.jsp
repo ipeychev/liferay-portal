@@ -105,13 +105,19 @@ String[][] categorySections = {mainSections, identificationSections, miscellaneo
 
 		var redirect = "<portlet:renderURL><portlet:param name="struts_action" value="/users_admin/edit_organization" /><portlet:param name="backURL" value="<%= backURL %>"></portlet:param></portlet:renderURL>";
 
-		if (location.hash) {
-			redirect += location.hash.replace('#_LFR_FN_', '&<portlet:namespace />historyKey=');
-		}
+		AUI().use('liferay-history-manager', function(A) {
+			var namespacedSection = '<portlet:namespace />' + 'section';
 
-		document.<portlet:namespace />fm.<portlet:namespace />redirect.value = redirect;
+			var sectionName = Liferay.HistoryManager.get(namespacedSection);
 
-		submitForm(document.<portlet:namespace />fm);
+			if (sectionName) {
+				redirect += '&' + namespacedSection + '=' + sectionName;
+			}
+
+			document.<portlet:namespace />fm.<portlet:namespace />redirect.value = redirect;
+
+			submitForm(document.<portlet:namespace />fm);
+		});
 	}
 
 	<c:if test="<%= windowState.equals(WindowState.MAXIMIZED) %>">

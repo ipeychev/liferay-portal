@@ -73,14 +73,22 @@ request.setAttribute("websites.classPK", company.getAccountId());
 
 		var redirect = "<portlet:renderURL><portlet:param name="struts_action" value="/portal_settings/edit_company" /></portlet:renderURL>";
 
-		redirect += Liferay.Util.getHistoryParam('<portlet:namespace />');
+		AUI().use('liferay-history-manager', function(A) {
+			var namespacedSection = '<portlet:namespace />' + 'section';
 
-		document.<portlet:namespace />fm.<portlet:namespace />redirect.value = redirect;
+			var sectionName = Liferay.HistoryManager.get(namespacedSection);
 
-		<portlet:namespace />saveLdap();
-		<portlet:namespace />saveEmails();
+			if (sectionName) {
+				redirect += '&' + namespacedSection + '=' + sectionName;
+			}
 
-		submitForm(document.<portlet:namespace />fm, "<portlet:actionURL><portlet:param name="struts_action" value="/portal_settings/edit_company" /></portlet:actionURL>");
+			document.<portlet:namespace />fm.<portlet:namespace />redirect.value = redirect;
+
+			<portlet:namespace />saveLdap();
+			<portlet:namespace />saveEmails();
+
+			submitForm(document.<portlet:namespace />fm, "<portlet:actionURL><portlet:param name="struts_action" value="/portal_settings/edit_company" /></portlet:actionURL>");
+		});
 	}
 </aui:script>
 
