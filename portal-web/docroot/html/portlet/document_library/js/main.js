@@ -174,7 +174,7 @@ AUI.add(
 								boundingBox: instance.byId('syncNotification'),
 								contentBox: instance.byId('syncNotificationContent'),
 								id: instance.NS + 'show-sync-message',
-								trigger: A.one('#' + instance.ns('showSyncMessageIcon')),
+								trigger: A.one('#' + instance.ns('showSyncMessageIconContainer')),
 								visible: instance.byId('syncNotification').test(':visible')
 							}
 						).render();
@@ -1011,6 +1011,8 @@ AUI.add(
 							else {
 								instance._setPaginatorData(paginatorData);
 							}
+
+							instance._toggleSyncNotification(paginatorData);
 						}
 					},
 
@@ -1445,6 +1447,24 @@ AUI.add(
 						}
 
 						node.toggleClass(CSS_SELECTED);
+					},
+
+					_toggleSyncNotification: function(paginatorData) {
+						var instance = this;
+
+						if (paginatorData.name == 'entryPaginator') {
+							var showSyncMessageIcon = A.one('#' + instance.ns('showSyncMessageIcon'));
+
+							if (paginatorData.state.total > 0) {
+								instance.byId('syncNotification').show();
+								showSyncMessageIcon.show();
+							}
+							else {
+								instance.byId('syncNotification').hide();
+								showSyncMessageIcon.hide();
+
+							}
+						}
 					},
 
 					_unselectAllEntries: function() {
