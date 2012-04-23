@@ -157,6 +157,14 @@ public class SearchContainer<R> {
 		_emptyResultsMessage = emptyResultsMessage;
 	}
 
+	public void addGlobalButton(GlobalButton globalButton) {
+		if (_globalButtons == null) {
+			_globalButtons = new ArrayList<GlobalButton>();
+		}
+
+		_globalButtons.add(globalButton);
+	}
+
 	public String getClassName() {
 		return _className;
 	}
@@ -186,6 +194,10 @@ public class SearchContainer<R> {
 
 	public DisplayTerms getDisplayTerms() {
 		return _displayTerms;
+	}
+
+	public List<GlobalButton> getGlobalButtons() {
+		return _globalButtons;
 	}
 
 	public String getEmptyResultsMessage() {
@@ -451,6 +463,7 @@ public class SearchContainer<R> {
 	private DisplayTerms _displayTerms;
 	private String _emptyResultsMessage;
 	private int _end;
+	private List<GlobalButton> _globalButtons;
 	private List<String> _headerNames;
 	private boolean _hover = true;
 	private String _id;

@@ -97,6 +97,57 @@ portletURL.setParameter("tabs1", tabs1);
 			viewFullContentURL.setParameter("showEditURL", String.valueOf(Boolean.FALSE));
 			%>
 
+			<liferay-ui:search-container-button
+				name="delete"
+			    image="close"
+			    id="delete"
+			    show="<%= assetRendererFactory.hasPermission(permissionChecker, entry.getClassPK(), ActionKeys.DELETE)  %>"
+			>
+				function() {
+					var deleteEntryIds = Liferay.Util.listCheckedExcept(document.<portlet:namespace />fm, "<portlet:namespace />allRowIds");
+
+					if (confirm('<%= UnicodeLanguageUtil.get(pageContext, "are-you-sure-you-want-to-delete-the-selected-entries") %>')) {
+						document.<portlet:namespace />fm.method = "post";
+						document.<portlet:namespace />fm.<portlet:namespace /><%= Constants.CMD %>.value = "<%= Constants.DELETE %>";
+						document.<portlet:namespace />fm.<portlet:namespace />deleteEntryIds.value = Liferay.Util.listCheckedExcept(document.<portlet:namespace />fm, "<portlet:namespace />allRowIds");
+						submitForm(document.<portlet:namespace />fm);
+					}
+				}
+			</liferay-ui:search-container-button>
+
+			<liferay-ui:search-container-button
+				name="restore"
+			    image="arrowrefresh-1-t"
+			    id="restore"
+			    show="<%= assetRendererFactory.hasPermission(permissionChecker, entry.getClassPK(), ActionKeys.UPDATE)  %>"
+			>
+				function() {
+					var restoreEntryIds = Liferay.Util.listCheckedExcept(document.<portlet:namespace />fm, "<portlet:namespace />allRowIds");
+
+					if (confirm('<%= UnicodeLanguageUtil.get(pageContext, "are-you-sure-you-want-to-restore-the-selected-entries") %>')) {
+						document.<portlet:namespace />fm.method = "post";
+						document.<portlet:namespace />fm.<portlet:namespace /><%= Constants.CMD %>.value = "<%= Constants.RESTORE %>";
+						document.<portlet:namespace />fm.<portlet:namespace />restoreEntryIds.value = Liferay.Util.listCheckedExcept(document.<portlet:namespace />fm, "<portlet:namespace />allRowIds");
+						submitForm(document.<portlet:namespace />fm);
+					}
+				}
+			</liferay-ui:search-container-button>
+
+			<liferay-ui:search-container-button
+				name="empty"
+			    image="trash"
+			    id="empty"
+			    show="<%= true  %>"
+			>
+				function() {
+					if (confirm('<%= UnicodeLanguageUtil.get(pageContext, "are-you-sure-you-want-to-empty-the-recycle-bin") %>')) {
+						document.<portlet:namespace />fm.method = "post";
+						document.<portlet:namespace />fm.<portlet:namespace /><%= Constants.CMD %>.value = "<%= Constants.EMPTY_TRASH %>";
+						submitForm(document.<portlet:namespace />fm);
+					}
+				}
+			</liferay-ui:search-container-button>
+
 			<liferay-ui:search-container-column-text
 				href="<%= viewFullContentURL.toString() %>"
 				name="name"

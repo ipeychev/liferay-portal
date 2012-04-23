@@ -17,9 +17,12 @@ package com.liferay.portal.kernel.dao.search;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.kernel.util.Tuple;
 import com.liferay.portal.kernel.util.Validator;
 
 import javax.portlet.PortletResponse;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Brian Wing Shun Chan
@@ -97,7 +100,16 @@ public class RowChecker {
 
 		return getRowCheckBox(
 			checked, disabled, _rowIds, primaryKey, StringUtil.quote(_rowIds),
-			StringUtil.quote(_allRowIds), StringPool.BLANK);
+			StringUtil.quote(_allRowIds), StringPool.BLANK, null);
+	}
+
+	public String getRowCheckBox(
+		boolean checked, boolean disabled, String primaryKey,
+		List<Tuple> permissions) {
+
+		return getRowCheckBox(
+			checked, disabled, _rowIds, primaryKey, StringUtil.quote(_rowIds),
+			StringUtil.quote(_allRowIds), StringPool.BLANK, permissions);
 	}
 
 	public String getRowId() {
@@ -164,7 +176,7 @@ public class RowChecker {
 	protected String getRowCheckBox(
 		boolean checked, boolean disabled, String name, String value,
 		String checkBoxRowIds, String checkBoxAllRowIds,
-		String checkBoxPostOnClick) {
+		String checkBoxPostOnClick, List<Tuple> permissions) {
 
 		StringBundler sb = new StringBundler();
 
@@ -174,9 +186,29 @@ public class RowChecker {
 			sb.append("checked ");
 		}
 
+		if (permissions != null) {
+			String permissionsFinal = StringPool.BLANK;
+			int bitWisePermission = 1;
+
+			sb.append("data-permissions=\"");
+
+			for (Tuple permission : permissions) {
+				String permissionName = (String)permission.getObject(0);
+				boolean hasPermission = (Boolean)permission.getObject(1);
+
+				sb.append(hasPermission ? "1" : "0");
+			}
+
+			sb.append("\" ");
+		}
+
+
+
 		if (disabled) {
 			sb.append("disabled ");
 		}
+
+		sb.append("class=\"search-container-checkbox\" ");
 
 		sb.append("name=\"");
 		sb.append(name);

@@ -14,6 +14,8 @@
 
 package com.liferay.portal.kernel.dao.search;
 
+import com.liferay.portal.kernel.util.Tuple;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -185,6 +187,14 @@ public class ResultRow {
 		addJSP(
 			_searchEntries.size(), align, valign, SearchEntry.DEFAULT_COLSPAN,
 			path, servletContext, request, response);
+	}
+
+	public void addPermission(String actionName, boolean hasPermission) {
+		if (_permissions == null) {
+			_permissions = new ArrayList<Tuple>();
+		}
+
+		_permissions.add(new Tuple(actionName, hasPermission));
 	}
 
 	public void addSearchEntry(int index, SearchEntry searchEntry) {
@@ -361,6 +371,10 @@ public class ResultRow {
 		return _params.get(param);
 	}
 
+	public List<Tuple> getPermissions() {
+		return _permissions;
+	}
+
 	public int getPos() {
 		return _pos;
 	}
@@ -445,5 +459,6 @@ public class ResultRow {
 	private String _rowId;
 	private List<SearchEntry> _searchEntries;
 	private boolean _skip;
+	private List<Tuple> _permissions;
 
 }

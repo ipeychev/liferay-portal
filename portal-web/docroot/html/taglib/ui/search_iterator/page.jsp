@@ -1,3 +1,4 @@
+<%@ page import="com.liferay.portal.kernel.dao.search.GlobalButton" %>
 <%--
 /**
  * Copyright (c) 2000-2012 Liferay, Inc. All rights reserved.
@@ -33,6 +34,7 @@ List<String> normalizedHeaderNames = searchContainer.getNormalizedHeaderNames();
 Map orderableHeaders = searchContainer.getOrderableHeaders();
 String emptyResultsMessage = searchContainer.getEmptyResultsMessage();
 RowChecker rowChecker = searchContainer.getRowChecker();
+List<GlobalButton> globalButtons = searchContainer.getGlobalButtons();
 
 if (end > total) {
 	end = total;
@@ -65,6 +67,10 @@ int sortColumnIndex = -1;
 	<div class="portlet-msg-info">
 		<%= LanguageUtil.get(pageContext, emptyResultsMessage) %>
 	</div>
+</c:if>
+
+<c:if test="<%= globalButtons != null %>">
+	<div id="<%= namespace %>Toolbar"></div>
 </c:if>
 
 <div class="lfr-search-container <%= resultRows.isEmpty() ? "aui-helper-hidden" : StringPool.BLANK %>">
@@ -270,7 +276,7 @@ int sortColumnIndex = -1;
 				textSearchEntry.setAlign(rowChecker.getAlign());
 				textSearchEntry.setColspan(rowChecker.getColspan());
 				textSearchEntry.setCssClass(rowChecker.getCssClass());
-				textSearchEntry.setName(rowChecker.getRowCheckBox(rowIsChecked, rowIsDisabled, row.getPrimaryKey()));
+				textSearchEntry.setName(rowChecker.getRowCheckBox(rowIsChecked, rowIsDisabled, row.getPrimaryKey(), row.getPermissions()));
 				textSearchEntry.setValign(rowChecker.getValign());
 
 				row.addSearchEntry(0, textSearchEntry);
@@ -372,6 +378,39 @@ int sortColumnIndex = -1;
 				rowClassNameAlternateHover: '<%= _ROW_CLASS_NAME_ALTERNATE_HOVER %>',
 				rowClassNameBody: '<%= _ROW_CLASS_NAME_BODY %>',
 				rowClassNameBodyHover: '<%= _ROW_CLASS_NAME_BODY %>'
+			}
+		).render();
+	</aui:script>
+</c:if>
+
+<c:if test="<%= globalButtons != null %>">
+	<aui:script use="aui-toolbar,liferay-util-list-fields">
+		var toolbarHolder = A.one('#<%= namespace %>Toolbar');
+
+		var toolbarChildren = [];
+
+		<%
+		for (GlobalButton globalButton : globalButtons) {
+		%>
+
+		toolbarChildren.push(
+			{
+				handler: <%= globalButton.getBody() %>,
+				id: '<%= globalButton.getId()%>',
+				icon: '<%= globalButton.getImage() %>',
+				label: '<%= UnicodeLanguageUtil.get(pageContext, globalButton.getName()) %>'
+			}
+		);
+
+		<%
+		}
+		%>
+
+		var toolbar = new A.Toolbar(
+			{
+				activeState: false,
+				boundingBox: toolbarHolder,
+				children: toolbarChildren
 			}
 		).render();
 	</aui:script>
