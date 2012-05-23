@@ -88,8 +88,29 @@ if (folder != null) {
 <div class="lfr-header-row">
 	<div class="lfr-header-row-content" id="<portlet:namespace />parentFolderTitleContainer">
 		<div class="parent-folder-title" id="<portlet:namespace />parentFolderTitle">
+			<%
+			boolean showFolderName = false;
+			boolean showHome = false;
+
+			if ((folderId != rootFolderId) && (parentFolderId > 0)) {
+				if (expandFolder) {
+					showFolderName = true;
+				}
+				else if ((folder != null) && (!folder.isRoot())) {
+					showFolderName = true;
+				}
+			}
+			else if (parentFolderId == 0) {
+				if (folderId != rootFolderId) {
+					showHome = true;
+				}
+				else if ((folderId == rootFolderId) && expandFolder) {
+					showHome = true;
+				}
+			}
+			%>
 			<c:choose>
-				<c:when test="<%= (folderId != rootFolderId) && (parentFolderId > 0) && (folder != null) && (!folder.isMountPoint() || expandFolder) %>">
+				<c:when test="<%= showFolderName %>">
 
 					<%
 					Folder grandParentFolder = DLAppServiceUtil.getFolder(parentFolderId);
@@ -99,7 +120,7 @@ if (folder != null) {
 						<%= grandParentFolder.getName() %>
 					</span>
 				</c:when>
-				<c:when test="<%= ((folderId != rootFolderId) && (parentFolderId == 0)) || ((folderId == rootFolderId) && (parentFolderId == 0) && expandFolder) %>">
+				<c:when test="<%= showHome %>">
 					<span>
 						<liferay-ui:message key="home" />
 					</span>
