@@ -34,6 +34,8 @@ import com.liferay.portal.kernel.executor.PortalExecutorManagerUtil;
 import com.liferay.portal.kernel.image.ImageMagickUtil;
 import com.liferay.portal.kernel.io.unsync.UnsyncByteArrayOutputStream;
 import com.liferay.portal.kernel.io.unsync.UnsyncPrintWriter;
+import com.liferay.portal.kernel.json.JSONFactoryUtil;
+import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.mail.Account;
@@ -333,15 +335,23 @@ public class EditServerAction extends PortletAction {
 
 		try {
 			XugglerUtil.installNativeLibraries(jarName, progressTracker);
+
+			JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
+
+			jsonObject.put("success", Boolean.TRUE);
+
+			writeJSON(actionRequest, actionResponse, jsonObject);
 		}
 		catch (Exception e) {
-			progressTracker.addProgress(
-				ProcessStatusConstants.ERROR, 0,
-				"an-unexpected-error-occurred-while-installing-xuggler"
-					+ e.getMessage());
+			JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
 
-			progressTracker.setStatus(ProcessStatusConstants.ERROR);
+			jsonObject.put("exception", e.getMessage());
+			jsonObject.put("success", Boolean.FALSE);
+
+			writeJSON(actionRequest, actionResponse, jsonObject);
 		}
+
+		progressTracker.finish();
 	}
 
 	protected void reindex(ActionRequest actionRequest) throws Exception {
