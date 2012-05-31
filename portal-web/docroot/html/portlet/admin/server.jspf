@@ -638,6 +638,12 @@ serverURL.setParameter("tabs3", tabs3);
 
 									<div class="aui-helper-hidden portlet-msg-progress" id="<portlet:namespace />xugglerProgressInfo"></div>
 
+									<liferay-ui:progress
+										id='<%= renderResponse.getNamespace() + "xugglerProgressInfo" %>'
+										message="preparing-the-installation"
+										sessionKey="<%= LiferayFileUpload.PERCENT + WebKeys.XUGGLER_INSTALL_STATUS %>"
+									/>
+
 									<aui:select label="jar-file" name="jarName">
 
 										<%
