@@ -12,23 +12,23 @@
  * details.
  */
 
-package com.liferay.portal.kernel.xuggler;
-
-import com.liferay.portal.kernel.util.ProgressTracker;
+package com.liferay.portal.kernel.util;
 
 /**
- * @author Alexander Chow
+ * @author Sergio González
  */
-public interface Xuggler {
+public class ProgressStatusConstants {
 
-	public void installNativeLibraries(
-			String name, ProgressTracker progressTracker)
-		throws Exception;
+	public static final int COMPLETED = 1;
 
-	public boolean isEnabled();
+	public static final int COPYING = 3;
 
-	public boolean isEnabled(boolean checkNativeLibraries);
+	public static final int DOWNLOADING = 2;
 
-	public boolean isNativeLibraryInstalled();
+	public static final int ERROR = -1;
+
+	public static final int PREPARED = 0;
+
+	public static final int UPLOADING = 4;
 
 }
