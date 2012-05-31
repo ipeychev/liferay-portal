@@ -34,8 +34,6 @@ import com.liferay.portal.kernel.executor.PortalExecutorManagerUtil;
 import com.liferay.portal.kernel.image.ImageMagickUtil;
 import com.liferay.portal.kernel.io.unsync.UnsyncByteArrayOutputStream;
 import com.liferay.portal.kernel.io.unsync.UnsyncPrintWriter;
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.mail.Account;
@@ -45,6 +43,7 @@ import com.liferay.portal.kernel.messaging.DestinationNames;
 import com.liferay.portal.kernel.messaging.MessageBus;
 import com.liferay.portal.kernel.messaging.MessageBusUtil;
 import com.liferay.portal.kernel.messaging.proxy.MessageValuesThreadLocal;
+import com.liferay.portal.kernel.process.ProcessStatusConstants;
 import com.liferay.portal.kernel.scripting.ScriptingException;
 import com.liferay.portal.kernel.scripting.ScriptingUtil;
 import com.liferay.portal.kernel.search.Indexer;
@@ -57,6 +56,7 @@ import com.liferay.portal.kernel.util.InstancePool;
 import com.liferay.portal.kernel.util.MethodHandler;
 import com.liferay.portal.kernel.util.MethodKey;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.ProgressTracker;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
@@ -66,7 +66,6 @@ import com.liferay.portal.kernel.util.Time;
 import com.liferay.portal.kernel.util.UnsyncPrintWriterPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.webcache.WebCachePoolUtil;
-import com.liferay.portal.kernel.xuggler.XugglerInstallStatus;
 import com.liferay.portal.kernel.xuggler.XugglerUtil;
 import com.liferay.portal.model.Portlet;
 import com.liferay.portal.search.lucene.LuceneHelperUtil;
@@ -316,32 +315,32 @@ public class EditServerAction extends PortletAction {
 
 		HttpSession session = request.getSession();
 
-		XugglerInstallStatus xugglerInstallStatus = new XugglerInstallStatus();
+		ProgressTracker progressTracker = new ProgressTracker(
+			actionRequest, WebKeys.XUGGLER_INSTALL_STATUS);
 
-		session.setAttribute(
-			WebKeys.XUGGLER_INSTALL_STATUS, xugglerInstallStatus);
+		progressTracker.addProgress(
+			ProcessStatusConstants.DOWNLOADING, 15, "downloading-xuggler");
+		progressTracker.addProgress(
+			ProcessStatusConstants.COPYING, 70, "copying-xuggler-files");
+		progressTracker.addProgress(
+			ProcessStatusConstants.COMPLETED, 100,
+			"xuggler-has-been-installed-you-need-to-reboot-your-server-to-" +
+				"apply-changes");
+
+		progressTracker.initialize();
 
 		String jarName = ParamUtil.getString(actionRequest, "jarName");
 
 		try {
-			XugglerUtil.installNativeLibraries(jarName, xugglerInstallStatus);
-
-			JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
-
-			jsonObject.put("success", Boolean.TRUE);
-
-			writeJSON(actionRequest, actionResponse, jsonObject);
+			XugglerUtil.installNativeLibraries(jarName, progressTracker);
 		}
 		catch (Exception e) {
-			JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
+			progressTracker.addProgress(
+				ProcessStatusConstants.ERROR, 0,
+				"an-unexpected-error-occurred-while-installing-xuggler"
+					+ e.getMessage());
 
-			jsonObject.put("exception", e.getMessage());
-			jsonObject.put("success", Boolean.FALSE);
-
-			writeJSON(actionRequest, actionResponse, jsonObject);
-		}
-		finally {
-			session.removeAttribute(WebKeys.XUGGLER_INSTALL_STATUS);
+			progressTracker.setStatus(ProcessStatusConstants.ERROR);
 		}
 	}
 
