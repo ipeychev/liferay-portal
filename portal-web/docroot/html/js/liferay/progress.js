@@ -13,7 +13,7 @@ AUI.add(
 
 		var TPL_URL_UPDATE = themeDisplay.getPathMain() + '/portal/progress_poller?progressId={0}&sessionKey={1}&updatePeriod={2}';
 
-		var ProcessProgress = A.Component.create(
+		var Progress = A.Component.create(
 			{
 				ATTRS: {
 					message: {
@@ -56,6 +56,7 @@ AUI.add(
 
 						ProcessProgress.superclass.bindUI.call(instance, arguments);
 
+						instance.after('complete', instance._afterComplete);
 						instance.after('valueChange', instance._afterValueChange);
 					},
 
@@ -91,6 +92,11 @@ AUI.add(
 						instance._frame.set('src', url);
 					},
 
+					_afterComplete: function(event) {
+						var instance = this;
+
+					},
+
 					_afterValueChange: function(event) {
 						var instance = this;
 
@@ -106,7 +112,7 @@ AUI.add(
 			}
 		);
 
-		Liferay.ProcessProgress = ProcessProgress;
+		Liferay.Progress = Progress;
 	},
 	'',
 	{
