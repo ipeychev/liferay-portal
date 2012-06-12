@@ -1013,7 +1013,6 @@ public class ServicePreAction extends Action {
 					"groupId", String.valueOf(scopeGroupId));
 				pageSettingsURL.setParameter("selPlid", String.valueOf(plid));
 				pageSettingsURL.setPortletMode(PortletMode.VIEW);
-				pageSettingsURL.setWindowState(LiferayWindowState.POP_UP);
 
 				themeDisplay.setURLPageSettings(pageSettingsURL);
 
