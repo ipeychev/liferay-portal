@@ -88,7 +88,6 @@ AUI.add(
 					},
 
 					_editEntry: function(event) {
-debugger;
 						var instance = this;
 
 						var action = event.action;
@@ -189,7 +188,6 @@ debugger;
 					},
 
 					_initDropTargets: function() {
-debugger;
 						var instance = this;
 
 						if (themeDisplay.isSignedIn()) {
