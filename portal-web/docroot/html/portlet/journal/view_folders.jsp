@@ -110,7 +110,7 @@ request.setAttribute("view_folders.jsp-total", String.valueOf(total));
 
 						String navigation = ParamUtil.getString(request, "navigation", "home");
 
-						String structureId = ParamUtil.getString(liferayPortletRequest, "structureId");
+						String structureId = ParamUtil.getString(request, "structureId");
 
 						request.setAttribute("view_entries.jsp-folder", folder);
 						request.setAttribute("view_entries.jsp-folderId", String.valueOf(folderId));
@@ -143,6 +143,10 @@ request.setAttribute("view_folders.jsp-total", String.valueOf(total));
 							<portlet:param name="struts_action" value="/journal/view" />
 							<portlet:param name="navigation" value="recent" />
 							<portlet:param name="folderId" value="<%= String.valueOf(JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID) %>" />
+							<portlet:param name="entryStart" value="0" />
+							<portlet:param name="entryEnd" value="<%= String.valueOf(entryEnd - entryStart) %>" />
+							<portlet:param name="folderStart" value="0" />
+							<portlet:param name="folderEnd" value="<%= String.valueOf(folderEnd - folderStart) %>" />
 						</liferay-portlet:renderURL>
 
 						<li class="folder <%= navigation.equals("recent") && Validator.isNull(structureId) ? "selected" : StringPool.BLANK %>">
@@ -159,6 +163,7 @@ request.setAttribute("view_folders.jsp-total", String.valueOf(total));
 							<liferay-portlet:renderURL varImpl="viewMyArticlesURL">
 								<portlet:param name="struts_action" value="/journal/view" />
 								<portlet:param name="navigation" value="mine" />
+								<portlet:param name="folderId" value="<%= String.valueOf(JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID) %>" />
 								<portlet:param name="entryStart" value="0" />
 								<portlet:param name="entryEnd" value="<%= String.valueOf(entryEnd - entryStart) %>" />
 								<portlet:param name="folderStart" value="0" />
@@ -183,6 +188,7 @@ request.setAttribute("view_folders.jsp-total", String.valueOf(total));
 						<c:if test="<%= !structures.isEmpty() %>">
 							<liferay-portlet:renderURL varImpl="viewBasicJournalStructureArticlesURL">
 								<portlet:param name="struts_action" value="/journal/view" />
+								<portlet:param name="folderId" value="<%= String.valueOf(JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID) %>" />
 								<portlet:param name="structureId" value="0" />
 								<portlet:param name="entryStart" value="0" />
 								<portlet:param name="entryEnd" value="<%= String.valueOf(entryEnd - entryStart) %>" />
@@ -207,6 +213,7 @@ request.setAttribute("view_folders.jsp-total", String.valueOf(total));
 
 							<liferay-portlet:renderURL varImpl="viewJournalStructureArticlesURL">
 								<portlet:param name="struts_action" value="/journal/view" />
+								<portlet:param name="folderId" value="<%= String.valueOf(JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID) %>" />
 								<portlet:param name="structureId" value="<%= structure.getStructureId() %>" />
 								<portlet:param name="entryStart" value="0" />
 								<portlet:param name="entryEnd" value="<%= String.valueOf(entryEnd - entryStart) %>" />
