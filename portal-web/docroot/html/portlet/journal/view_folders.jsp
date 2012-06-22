@@ -110,10 +110,18 @@ request.setAttribute("view_folders.jsp-total", String.valueOf(total));
 
 						String navigation = ParamUtil.getString(request, "navigation", "home");
 
-						String structureId = ParamUtil.getString(request, "structureId");
+						String structureId = ParamUtil.getString(liferayPortletRequest, "structureId");
+
+						request.setAttribute("view_entries.jsp-folder", folder);
+						request.setAttribute("view_entries.jsp-folderId", String.valueOf(folderId));
 						%>
 
 						<li class="folder <%= (navigation.equals("home") && (folderId == JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID)) && Validator.isNull(structureId) ? "selected" : StringPool.BLANK %>">
+
+							<%
+							request.removeAttribute(WebKeys.SEARCH_CONTAINER_RESULT_ROW);
+							%>
+
 							<liferay-util:include page="/html/portlet/journal/folder_action.jsp" />
 
 							<c:if test="<%= (foldersCount > 0) %>">
@@ -275,6 +283,11 @@ request.setAttribute("view_folders.jsp-total", String.valueOf(total));
 							%>
 
 							<li class="folder <%= (curFolder.getFolderId() == folderId) ? "selected" : StringPool.BLANK %>">
+
+								<%
+								request.removeAttribute(WebKeys.SEARCH_CONTAINER_RESULT_ROW);
+								%>
+
 								<liferay-util:include page="/html/portlet/journal/folder_action.jsp" />
 
 								<c:if test="<%= foldersCount > 0 %>">
