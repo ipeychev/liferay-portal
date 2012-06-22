@@ -163,7 +163,6 @@ AUI.add(
 
 						instance._selectAjaxNavigation = selectAjaxNavigation;
 
-debugger;
 						var dragAndDropNavigation = new DragAndDropNavigation(
 							{
 								'actions' : config.actions,

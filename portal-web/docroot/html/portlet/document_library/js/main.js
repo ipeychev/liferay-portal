@@ -179,7 +179,6 @@ AUI.add(
 							}
 						);
 
-						debugger;
 						instance._selectAjaxNavigation = selectAjaxNavigation;
 
 						var dragAndDropNavigation = new DragAndDropNavigation(
