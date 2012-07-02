@@ -1,5 +1,5 @@
 AUI.add(
-	'liferay-drag-and-drop-navigation',
+	'liferay-app-view-dd-navigation',
 	function(A) {
 		var AObject = A.Object;
 		var History = Liferay.HistoryManager;
@@ -24,13 +24,13 @@ AUI.add(
 
 		var TOUCH = UA.touch;
 
-		var DragAndDropNavigation = A.Component.create(
+		var AppViewDDNavigation = A.Component.create(
 			{
 				AUGMENTS: [Liferay.PortletBase],
 
 				EXTENDS: A.Base,
 
-				NAME: 'liferaydraganddropnavigation',
+				NAME: 'liferayappviewddnavigation',
 
 				prototype: {
 					initializer: function(config) {
@@ -384,7 +384,7 @@ AUI.add(
 			}
 		);
 
-		Liferay.DragAndDropNavigation = DragAndDropNavigation;
+		Liferay.AppViewDDNavigation = AppViewDDNavigation;
 	},
 	'',
 	{

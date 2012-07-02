@@ -2,12 +2,13 @@ AUI.add(
 	'liferay-journal-navigation',
 	function(A) {
 		var AObject = A.Object;
-		var History = Liferay.HistoryManager;
-		var DragAndDropNavigation = Liferay.DragAndDropNavigation;
-		var FoldersNavigation = Liferay.FoldersNavigation;
-		var PaginatorAjaxNavigation = Liferay.PaginatorAjaxNavigation;
-		var SelectAjaxNavigation = Liferay.SelectAjaxNavigation;
 		var Lang = A.Lang;
+		var History = Liferay.HistoryManager;
+
+		var AppViewDDNavigation = Liferay.AppViewDDNavigation;
+		var AppViewFoldersNavigation = Liferay.AppViewFoldersNavigation;
+		var AppViewPageNavigation = Liferay.AppViewPageNavigation;
+		var AppViewSelectNavigation = Liferay.AppViewSelectNavigation;
 
 		var formatSelectorNS = A.Node.formatSelectorNS;
 
@@ -127,7 +128,7 @@ AUI.add(
 
 						instance._displayViews = config.displayViews;
 
-						var paginatorAjaxNavigation = new PaginatorAjaxNavigation(
+						var pageNavigation = new AppViewPageNavigation(
 							{
 								'entriesTotal' : config.entriesTotal,
 								'entryEnd' : config.entryEnd,
@@ -143,9 +144,9 @@ AUI.add(
 							}
 						);
 
-						instance._paginatorAjaxNavigation = paginatorAjaxNavigation;
+						instance._pageNavigation = pageNavigation;
 
-						var selectAjaxNavigation = new SelectAjaxNavigation(
+						var selectAjaxNavigation = new AppViewSelectNavigation(
 							{
 								'checkBoxesId' :
 									[
@@ -163,7 +164,7 @@ AUI.add(
 
 						instance._selectAjaxNavigation = selectAjaxNavigation;
 
-						var dragAndDropNavigation = new DragAndDropNavigation(
+						var ddNavigation = new AppViewDDNavigation(
 							{
 								'actions' : config.actions,
 								'allRowIds' : config.allRowIds,
@@ -195,9 +196,9 @@ AUI.add(
 							}
 						);
 
-						instance._dragAndDropNavigation = dragAndDropNavigation;
+						instance._ddNavigation = ddNavigation;
 
-						var foldersNavigation = new FoldersNavigation(
+						var foldersNavigation = new AppViewFoldersNavigation(
 							{
 								'defaultParams' : config.defaultParams,
 								'defaultParentFolderId' : config.defaultParentFolderId,
@@ -205,11 +206,11 @@ AUI.add(
 								'displayStyleCssClass' : 'article-display-style',
 								'displayStyleToolbarId' : DISPLAY_STYLE_TOOLBAR,
 								'displayViews' : instance._displayViews,
-								'dragAndDropNavigation' : instance._dragAndDropNavigation,
+								'ddNavigation' : instance._ddNavigation,
 								'listView' : instance._listView,
 								'mainUrl': config.mainUrl,
 								'namespace': instance.NS,
-								'paginatorAjaxNavigation': paginatorAjaxNavigation,
+								'pageNavigation': pageNavigation,
 								'portletContainerId': instance.ns('journalContainer'),
 								'selectAjaxNavigation' : selectAjaxNavigation
 							}
@@ -217,7 +218,7 @@ AUI.add(
 
 						instance._foldersNavigation = foldersNavigation;
 
-						instance._listView.after('transitionComplete', A.bind(instance._dragAndDropNavigation._initDropTargets, instance._dragAndDropNavigation), instance);
+						instance._listView.after('transitionComplete', A.bind(instance._ddNavigation._initDropTargets, instance._ddNavigation), instance);
 
 						instance._listView.after('itemChange', instance._afterListViewItemChange, instance);
 
@@ -407,7 +408,7 @@ AUI.add(
 						var paginatorData = event.paginator;
 
 						if (paginatorData) {
-							instance._paginatorAjaxNavigation._setPaginatorData(paginatorData);
+							instance._pageNavigation._setPaginatorData(paginatorData);
 						}
 					},
 
@@ -530,6 +531,6 @@ AUI.add(
 	},
 	'',
 	{
-		requires: ['aui-loading-mask', 'aui-paginator', 'aui-parse-content', 'event-simulate', 'liferay-drag-and-drop-navigation', 'liferay-folders-navigation', 'liferay-history-manager', 'liferay-list-view', 'liferay-message', 'liferay-paginator-ajax-navigation', 'liferay-portlet-base', 'liferay-select-ajax-navigation', 'liferay-util-list-fields', 'querystring-parse-simple']
+		requires: ['aui-loading-mask', 'aui-paginator', 'aui-parse-content', 'event-simulate', 'liferay-app-view-dd-navigation', 'liferay-app-view-folders-navigation', 'liferay-history-manager', 'liferay-list-view', 'liferay-message', 'liferay-app-view-page-navigation', 'liferay-portlet-base', 'liferay-app-view-select-navigation', 'liferay-util-list-fields', 'querystring-parse-simple']
 	}
 );

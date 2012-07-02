@@ -1,5 +1,5 @@
 AUI.add(
-	'liferay-select-ajax-navigation',
+	'liferay-app-view-select-navigation',
 	function(A) {
 		var History = Liferay.HistoryManager;
 
@@ -23,7 +23,7 @@ AUI.add(
 
 		var STR_TOGGLE_ACTIONS_BUTTON = 'toggleActionsButton';
 
-		var SelectAjaxNavigation = A.Component.create(
+		var AppViewSelectNavigation = A.Component.create(
 			{
 				AUGMENTS: [Liferay.PortletBase],
 
@@ -250,10 +250,10 @@ AUI.add(
 			}
 		);
 
-		Liferay.SelectAjaxNavigation = SelectAjaxNavigation;
+		Liferay.AppViewSelectNavigation = AppViewSelectNavigation;
 	},
 	'',
 	{
-		requires: ['aui-base', 'liferay-drag-and-drop-navigation', 'liferay-history-manager', 'liferay-portlet-base', 'liferay-util-list-fields']
+		requires: ['aui-base', 'liferay-app-view-dd-navigation', 'liferay-history-manager', 'liferay-portlet-base', 'liferay-util-list-fields']
 	}
 );

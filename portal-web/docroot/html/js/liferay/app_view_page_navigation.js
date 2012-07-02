@@ -1,5 +1,5 @@
 AUI.add(
-	'liferay-paginator-ajax-navigation',
+	'liferay-app-view-page-navigation',
 	function(A) {
 		var AObject = A.Object;
 		var History = Liferay.HistoryManager;
@@ -36,13 +36,13 @@ AUI.add(
 
 		var VIEW_FOLDERS = 'viewFolders';
 
-		var PaginatorAjaxNavigation = A.Component.create(
+		var AppViewPageNavigation = A.Component.create(
 			{
 				AUGMENTS: [Liferay.PortletBase],
 
 				EXTENDS: A.Base,
 
-				NAME: 'liferaypaginatorajaxnavigation',
+				NAME: 'liferayappviewpagingnavigation',
 
 				prototype: {
 					initializer: function(config) {
@@ -272,7 +272,7 @@ AUI.add(
 			}
 		);
 
-		Liferay.PaginatorAjaxNavigation = PaginatorAjaxNavigation;
+		Liferay.AppViewPageNavigation = AppViewPageNavigation;
 	},
 	'',
 	{
