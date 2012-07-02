@@ -2,12 +2,14 @@ AUI.add(
 	'liferay-document-library',
 	function(A) {
 		var AObject = A.Object;
-		var History = Liferay.HistoryManager;
-		var DragAndDropNavigation = Liferay.DragAndDropNavigation;
-		var FoldersNavigation = Liferay.FoldersNavigation;
-		var PaginatorAjaxNavigation = Liferay.PaginatorAjaxNavigation;
-		var SelectAjaxNavigation = Liferay.SelectAjaxNavigation;
 		var Lang = A.Lang;
+		
+		var AppViewDDNavigation = Liferay.AppViewDDNavigation;
+		var AppViewFoldersNavigation = Liferay.AppViewFoldersNavigation;
+		var History = Liferay.HistoryManager;
+		var AppViewPageNavigation = Liferay.AppViewPageNavigation;
+		var AppViewSelectNavigation = Liferay.AppViewSelectNavigation;
+		
 		var formatSelectorNS = A.Node.formatSelectorNS;
 
 		var UA = A.UA;
@@ -143,7 +145,7 @@ AUI.add(
 							}
 						).render();
 
-						var paginatorAjaxNavigation = new PaginatorAjaxNavigation(
+						var pageNavigation = new AppViewPageNavigation(
 							{
 								'entriesTotal' : config.entriesTotal,
 								'entryEnd' : config.entryEnd,
@@ -159,9 +161,9 @@ AUI.add(
 							}
 						);
 
-						instance._paginatorAjaxNavigation = paginatorAjaxNavigation;
+						instance._pageNavigation = pageNavigation;
 
-						var selectAjaxNavigation = new SelectAjaxNavigation(
+						var selectAjaxNavigation = new AppViewSelectNavigation(
 							{
 								'checkBoxesId' :
 									[
@@ -181,7 +183,7 @@ AUI.add(
 
 						instance._selectAjaxNavigation = selectAjaxNavigation;
 
-						var dragAndDropNavigation = new DragAndDropNavigation(
+						var ddNavigation = new AppViewDDNavigation(
 							{
 								'actions' : config.actions,
 								'allRowIds' : config.allRowIds,
@@ -215,9 +217,9 @@ AUI.add(
 							}
 						);
 
-						instance._dragAndDropNavigation = dragAndDropNavigation;
+						instance._ddNavigation = ddNavigation;
 
-						var foldersNavigation = new FoldersNavigation(
+						var foldersNavigation = new AppViewFoldersNavigation(
 							{
 								'defaultParams' : config.defaultParams,
 								'defaultParentFolderId' : config.defaultParentFolderId,
@@ -225,11 +227,11 @@ AUI.add(
 								'displayStyleCssClass' : 'document-display-style',
 								'displayStyleToolbarId' : DISPLAY_STYLE_TOOLBAR,
 								'displayViews' : config.displayViews,
-								'dragAndDropNavigation' : instance._dragAndDropNavigation,
+								'ddNavigation' : instance._ddNavigation,
 								'listView' : instance._listView,
 								'mainUrl': config.mainUrl,
 								'namespace': instance.NS,
-								'paginatorAjaxNavigation': paginatorAjaxNavigation,
+								'pageNavigation': pageNavigation,
 								'portletContainerId': instance.ns('documentLibraryContainer'),
 								'selectAjaxNavigation' : selectAjaxNavigation
 							}
@@ -237,7 +239,7 @@ AUI.add(
 
 						instance._foldersNavigation = foldersNavigation;
 
-						instance._listView.after('transitionComplete', instance._dragAndDropNavigation._initDropTargets, instance._dragAndDropNavigation);
+						instance._listView.after('transitionComplete', instance._ddNavigation._initDropTargets, instance._ddNavigation);
 
 						instance._listView.after('itemChange', instance._afterListViewItemChange, instance);
 
@@ -411,10 +413,10 @@ AUI.add(
 
 								repositoryData.paginatorData = paginatorData;
 
-								instance._paginatorAjaxNavigation._setPaginatorData(paginatorData);
+								instance._pageNavigation._setPaginatorData(paginatorData);
 							}
 							else {
-								instance._paginatorAjaxNavigation._setPaginatorData(paginatorData);
+								instance._pageNavigation._setPaginatorData(paginatorData);
 							}
 
 							instance._toggleSyncNotification();
@@ -458,7 +460,7 @@ AUI.add(
 							var paginatorData = repositoryData.paginatorData;
 
 							if (paginatorData) {
-								instance._paginatorAjaxNavigation._setPaginatorData(paginatorData);
+								instance._pageNavigation._setPaginatorData(paginatorData);
 							}
 						}
 
@@ -656,7 +658,7 @@ AUI.add(
 						var instance = this;
 
 						if (instance._syncMessage) {
-							var entryPaginator = instance._paginatorAjaxNavigation.getEntryPaginator()
+							var entryPaginator = instance._pageNavigation.getEntryPaginator()
 
 							var entriesPaginatorState = entryPaginator.get('state');
 
@@ -673,6 +675,6 @@ AUI.add(
 	},
 	'',
 	{
-		requires: ['aui-loading-mask', 'aui-parse-content', 'event-simulate', 'liferay-drag-and-drop-navigation', 'liferay-folders-navigation', 'liferay-history-manager', 'liferay-list-view', 'liferay-message', 'liferay-paginator-ajax-navigation', 'liferay-portlet-base', 'liferay-select-ajax-navigation', 'querystring-parse-simple', 'liferay-util-list-fields']
+		requires: ['aui-loading-mask', 'aui-parse-content', 'event-simulate', 'liferay-app-view-dd-navigation', 'liferay-app-view-folders-navigation', 'liferay-history-manager', 'liferay-list-view', 'liferay-message', 'liferay-app-view-page-navigation', 'liferay-portlet-base', 'liferay-app-view-select-navigation', 'querystring-parse-simple', 'liferay-util-list-fields']
 	}
 );

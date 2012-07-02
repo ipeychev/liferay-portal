@@ -1,9 +1,10 @@
 AUI.add(
-	'liferay-folders-navigation',
+	'liferay-app-view-folders-navigation',
 	function(A) {
 		var AObject = A.Object;
-		var History = Liferay.HistoryManager;
 		var Lang = A.Lang;
+		
+		var History = Liferay.HistoryManager;
 		var formatSelectorNS = A.Node.formatSelectorNS;
 
 		var owns = AObject.owns;
@@ -66,13 +67,13 @@ AUI.add(
 
 		var VIEW_FOLDERS = 'viewFolders';
 
-		var FoldersNavigation = A.Component.create(
+		var AppViewFoldersNavigation = A.Component.create(
 			{
 				AUGMENTS: [Liferay.PortletBase],
 
 				EXTENDS: A.Base,
 
-				NAME: 'liferayfoldersnavigation',
+				NAME: 'liferayappviewfoldersnavigation',
 
 				prototype: {
 					initializer: function(config) {
@@ -88,12 +89,12 @@ AUI.add(
 
 						instance._listView = config.listView;
 
-						instance._dragAndDropNavigation = config.dragAndDropNavigation;
+						instance._ddNavigation = config.ddNavigation;
 
-						instance._paginatorAjaxNavigation = config.paginatorAjaxNavigation;
+						instance._pageNavigation = config.pageNavigation;
 
-						instance._entryPaginator = instance._paginatorAjaxNavigation.getEntryPaginator();
-						instance._folderPaginator = instance._paginatorAjaxNavigation.getFolderPaginator();
+						instance._entryPaginator = instance._pageNavigation.getEntryPaginator();
+						instance._folderPaginator = instance._pageNavigation.getFolderPaginator();
 
 						instance._portletContainer = portletContainer;
 
@@ -311,7 +312,7 @@ AUI.add(
 						var initialState = History.get();
 
 						if (AObject.isEmpty(initialState)) {
-							initialState = instance._paginatorAjaxNavigation._getDefaultParams();
+							initialState = instance._pageNavigation._getDefaultParams();
 						}
 
 						return initialState;
@@ -347,7 +348,7 @@ AUI.add(
 
 						instance._processDefaultParams(event);
 
-						instance._paginatorAjaxNavigation._updatePaginatorValues(event);
+						instance._pageNavigation._updatePaginatorValues(event);
 					},
 
 					_onDataRetrieveFailure: function(event) {
@@ -565,7 +566,7 @@ AUI.add(
 
 							entriesContainer.setContent(entries);
 
-							instance._dragAndDropNavigation._initDropTargets();
+							instance._ddNavigation._initDropTargets();
 
 							instance._selectAjaxNavigation._updateSelectedEntriesStatus();
 
@@ -619,10 +620,10 @@ AUI.add(
 			}
 		);
 
-		Liferay.FoldersNavigation = FoldersNavigation;
+		Liferay.AppViewFoldersNavigation = AppViewFoldersNavigation;
 	},
 	'',
 	{
-		requires: ['aui-base', 'aui-parse-content', 'liferay-drag-and-drop-navigation', 'liferay-history-manager', 'liferay-portlet-base']
+		requires: ['aui-base', 'aui-parse-content', 'liferay-app-view-dd-navigation', 'liferay-history-manager', 'liferay-portlet-base']
 	}
 );
