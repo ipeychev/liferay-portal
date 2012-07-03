@@ -531,6 +531,7 @@ create table ResourceBlockPermission (
 	actionIds LONG
 );
 
+drop index IX_8D83D0CE on ResourcePermission;
 alter table ResourcePermission add ownerId LONG;
 
 create table ResourceTypePermission (
