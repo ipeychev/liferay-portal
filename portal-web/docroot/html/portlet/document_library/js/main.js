@@ -3,13 +3,8 @@ AUI.add(
 	function(A) {
 		var AObject = A.Object;
 		var Lang = A.Lang;
-		
-		var AppViewDDNavigation = Liferay.AppViewDDNavigation;
-		var AppViewFoldersNavigation = Liferay.AppViewFoldersNavigation;
 		var History = Liferay.HistoryManager;
-		var AppViewPageNavigation = Liferay.AppViewPageNavigation;
-		var AppViewSelectNavigation = Liferay.AppViewSelectNavigation;
-		
+
 		var formatSelectorNS = A.Node.formatSelectorNS;
 
 		var UA = A.UA;
@@ -145,7 +140,7 @@ AUI.add(
 							}
 						).render();
 
-						var pageNavigation = new AppViewPageNavigation(
+						var pageNavigation = new Liferay.AppViewPageNavigation(
 							{
 								'entriesTotal' : config.entriesTotal,
 								'entryEnd' : config.entryEnd,
@@ -163,7 +158,7 @@ AUI.add(
 
 						instance._pageNavigation = pageNavigation;
 
-						var selectAjaxNavigation = new AppViewSelectNavigation(
+						var selectNavigation = new Liferay.AppViewSelectNavigation(
 							{
 								'checkBoxesId' :
 									[
@@ -172,7 +167,7 @@ AUI.add(
 										instance.ns(STR_ROW_IDS_FILE_ENTRY_CHECKBOX)
 									],
 								'displayStyle' : config.displayStyle,
-								'displayStyleCssClass' : 'document-display-style',
+								'displayStyleCSSClass' : 'document-display-style',
 								'folderContainer' : folderContainer,
 								'namespace' : config.namespace,
 								'portletContainerId': instance.ns('documentLibraryContainer'),
@@ -181,9 +176,9 @@ AUI.add(
 							}
 						);
 
-						instance._selectAjaxNavigation = selectAjaxNavigation;
+						instance._selectNavigation = selectNavigation;
 
-						var ddNavigation = new AppViewDDNavigation(
+						var ddNavigation = new Liferay.AppViewDDNavigation(
 							{
 								'actions' : config.actions,
 								'allRowIds' : config.allRowIds,
@@ -202,8 +197,8 @@ AUI.add(
 												instance.ns('fileEntryIds')
 											]
 									},
-								'displayStyleCssClass' : 'document-display-style',
-								'draggableCssClass' : 'document-link',
+								'displayStyleCSSClass' : 'document-display-style',
+								'draggableCSSClass' : 'document-link',
 								'editEntryUrl' : config._editEntryUrl,
 								'folderIdHashRegEx' : config.folderIdHashRegEx,
 								'form' : config.form,
@@ -212,19 +207,19 @@ AUI.add(
 								'namespace' : config.namespace,
 								'portletContainerId': instance.ns('documentLibraryContainer'),
 								'portletGroup' : 'document-library',
-								'selectAjaxNavigation' : selectAjaxNavigation,
+								'selectNavigation' : selectNavigation,
 								'updateable' : config.updateable
 							}
 						);
 
 						instance._ddNavigation = ddNavigation;
 
-						var foldersNavigation = new AppViewFoldersNavigation(
+						var foldersNavigation = new Liferay.AppViewFoldersNavigation(
 							{
 								'defaultParams' : config.defaultParams,
 								'defaultParentFolderId' : config.defaultParentFolderId,
 								'displayStyle' : config.displayStyle,
-								'displayStyleCssClass' : 'document-display-style',
+								'displayStyleCSSClass' : 'document-display-style',
 								'displayStyleToolbarId' : DISPLAY_STYLE_TOOLBAR,
 								'displayViews' : config.displayViews,
 								'ddNavigation' : instance._ddNavigation,
@@ -233,7 +228,7 @@ AUI.add(
 								'namespace': instance.NS,
 								'pageNavigation': pageNavigation,
 								'portletContainerId': instance.ns('documentLibraryContainer'),
-								'selectAjaxNavigation' : selectAjaxNavigation
+								'selectNavigation' : selectNavigation
 							}
 						);
 
@@ -351,7 +346,7 @@ AUI.add(
 					_onChangeSearchFolder: function(event) {
 						var instance = this;
 
-						var selectedFolder = instance._selectAjaxNavigation._getSelectedFolder();
+						var selectedFolder = instance._selectNavigation._getSelectedFolder();
 
 						var searchData = {
 							folderId: selectedFolder.id,
@@ -428,7 +423,7 @@ AUI.add(
 
 						event.preventDefault();
 
-						var selectedFolder = instance._selectAjaxNavigation._getSelectedFolder();
+						var selectedFolder = instance._selectNavigation._getSelectedFolder();
 
 						var showTabs = (selectedFolder.id == DEFAULT_FOLDER_ID);
 
@@ -467,7 +462,7 @@ AUI.add(
 						if (!searchResultsWrapper.hasAttribute(STR_DATA_SEARCH_PROCESSED)) {
 							searchResultsWrapper.setAttribute(STR_DATA_SEARCH_PROCESSED, true);
 
-							var selectedFolder = instance._selectAjaxNavigation._getSelectedFolder();
+							var selectedFolder = instance._selectNavigation._getSelectedFolder();
 
 							var searchData = {
 								folderId: selectedFolder.id,

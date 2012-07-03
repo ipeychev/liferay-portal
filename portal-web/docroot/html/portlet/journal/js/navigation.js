@@ -146,7 +146,7 @@ AUI.add(
 
 						instance._pageNavigation = pageNavigation;
 
-						var selectAjaxNavigation = new AppViewSelectNavigation(
+						var selectNavigation = new AppViewSelectNavigation(
 							{
 								'checkBoxesId' :
 									[
@@ -162,7 +162,7 @@ AUI.add(
 							}
 						);
 
-						instance._selectAjaxNavigation = selectAjaxNavigation;
+						instance._selectNavigation = selectNavigation;
 
 						var ddNavigation = new AppViewDDNavigation(
 							{
@@ -191,7 +191,7 @@ AUI.add(
 								'namespace' : config.namespace,
 								'portletContainerId': instance.ns('journalContainer'),
 								'portletGroup' : 'journal',
-								'selectAjaxNavigation' : selectAjaxNavigation,
+								'selectNavigation' : selectNavigation,
 								'updateable' : config.updateable
 							}
 						);
@@ -212,7 +212,7 @@ AUI.add(
 								'namespace': instance.NS,
 								'pageNavigation': pageNavigation,
 								'portletContainerId': instance.ns('journalContainer'),
-								'selectAjaxNavigation' : selectAjaxNavigation
+								'selectNavigation' : selectNavigation
 							}
 						);
 
@@ -314,7 +314,7 @@ AUI.add(
 
 						event.preventDefault();
 
-						var selectedFolder = instance._selectAjaxNavigation._getSelectedFolder();
+						var selectedFolder = instance._selectNavigation._getSelectedFolder();
 
 						var showTabs = (selectedFolder.id == DEFAULT_FOLDER_ID);
 
@@ -339,7 +339,7 @@ AUI.add(
 					_onChangeSearchFolder: function(event) {
 						var instance = this;
 
-						var selectedFolder = instance._selectAjaxNavigation._getSelectedFolder();
+						var selectedFolder = instance._selectNavigation._getSelectedFolder();
 
 						var showAdvancedSearch = instance.byId('showAdvancedSearch');
 
@@ -417,7 +417,7 @@ AUI.add(
 
 						event.preventDefault();
 
-						var selectedFolder = instance._selectAjaxNavigation._getSelectedFolder();
+						var selectedFolder = instance._selectNavigation._getSelectedFolder();
 
 						var showTabs = (selectedFolder.id == DEFAULT_FOLDER_ID);
 

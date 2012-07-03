@@ -6,8 +6,6 @@ AUI.add(
 		var Lang = A.Lang;
 		var UA = A.UA;
 
-		var ARTICLE_DRAGGABLE = '[data-draggable]';
-
 		var CSS_ACTIVE_AREA = 'active-area';
 
 		var CSS_ACTIVE_AREA_PROXY = 'active-area-proxy';
@@ -16,17 +14,84 @@ AUI.add(
 
 		var DATA_FOLDER_ID = 'data-folder-id';
 
+		var SELECTOR_DRAGGABLE_NODES = '[data-draggable]';
+
+		var STR_ACTIONS = 'actions';
+
 		var STR_BLANK = '';
 
 		var STR_DATA = 'data';
 
+		var STR_DISPLAY_STYLE = 'displayStyleCSSClass';
+
 		var STR_DRAG_NODE = 'dragNode';
+
+		var STR_FORM = 'form';
+
+		var STR_PORTLET_GROUP = 'portletGroup';
 
 		var TOUCH = UA.touch;
 
 		var AppViewDDNavigation = A.Component.create(
 			{
 				AUGMENTS: [Liferay.PortletBase],
+
+				ATTRS: {
+					actions: {
+						validator: Lang.isObject
+					},
+					allRowIds: {
+						validator: Lang.isString
+					},
+					processEntryIds: {
+						validator: Lang.isObject
+					},
+					displayStyleCSSClass: {
+						validator: Lang.isString
+					},
+					draggableCSSClass: {
+						validator: Lang.isString
+					},
+					editEntryUrl: {
+						validator: Lang.isString
+					},
+					folderIdHashRegEx:{
+						setter: function(value) {
+							if (Lang.isString(value)) {
+								value = new RegExp(value);
+							}
+
+							return value;
+						},
+						validator: function(value) {
+							return (value instanceof RegExp || Lang.isString(value));
+						}
+					},
+					form: {
+						validator: Lang.isObject
+					},
+					moveConstant: { // No one is setting this param, where does it come from?
+						validator: Lang.isNumber
+					},
+					moveEntryRenderUrl: {
+						validator: Lang.isString
+					},
+					namespace:  {
+						validator: Lang.isString
+					},
+					portletContainerId:  {
+						validator: Lang.isString
+					},
+					portletGroup:  {
+						validator: Lang.isString
+					},
+					selectNavigation: {
+						validator: Lang.isObject
+					},
+					updateable: {
+						validator: Lang.isBoolean
+					}
+				},
 
 				EXTENDS: A.Base,
 
@@ -36,37 +101,11 @@ AUI.add(
 					initializer: function(config) {
 						var instance = this;
 
-						var portletContainer = instance.byId(config.portletContainerId);
-
-						instance._config = config;
-
-						instance._actions = config.actions;
-
-						instance._allRowIds = config.allRowIds;
-
-						instance._draggableCssClass = config.draggableCssClass;
-
-						instance._editEntryUrl = config.editEntryUrl;
-
-						instance._portletContainer = portletContainer;
-
-						instance._portletGroup = config.portletGroup;
+						instance._portletContainer = instance.byId(instance.get('portletContainerId'));
 
 						instance._entriesContainer = instance.byId('entriesContainer');
 
-						instance._folderIdHashRegEx = config.folderIdHashRegEx;
-
-						instance._form = config.form;
-
-						instance._processEntryIds = config.processEntryIds;
-
-						instance._displayStyleCssClass = config.displayStyleCssClass;
-
-						instance._selectAjaxNavigation = config.selectAjaxNavigation;
-
 						instance._eventEditEntry = instance.ns('editEntry');
-
-						instance._moveEntryRenderUrl = config.moveEntryRenderUrl;
 
 						var eventHandles = [
 							Liferay.on(instance._eventEditEntry, instance._editEntry, instance)
@@ -74,7 +113,7 @@ AUI.add(
 
 						instance._eventHandles = eventHandles;
 
-						if (themeDisplay.isSignedIn() && config.updateable) {
+						if (themeDisplay.isSignedIn() && this.get('updateable')) {
 							instance._initDragDrop();
 						}
 					},
@@ -92,10 +131,12 @@ AUI.add(
 
 						var action = event.action;
 
-						var url = instance._editEntryUrl;
+						var url = instance.get('editEntryUrl');
 
-						if (action == instance._actions.MOVE) {
-							url = instance._moveEntryRenderUrl;
+						var actions = instance.get(STR_ACTIONS);
+
+						if (action === actions.MOVE) {
+							url = instance.get('moveEntryRenderUrl');
 						}
 
 						instance._processEntryAction(action, url);
@@ -128,7 +169,7 @@ AUI.add(
 						var ddHandler = new A.DD.Delegate(
 							{
 								container: instance._portletContainer,
-								nodes: ARTICLE_DRAGGABLE,
+								nodes: SELECTOR_DRAGGABLE_NODES,
 								on: {
 									'drag:drophit': A.bind(instance._onDragDropHit, instance),
 									'drag:enter': A.bind(instance._onDragEnter, instance),
@@ -144,7 +185,7 @@ AUI.add(
 
 						dd.removeInvalid('a');
 
-						dd.set('groups', [instance._portletGroup]);
+						dd.set('groups', [instance.get(STR_PORTLET_GROUP)]);
 
 						dd.plug(
 							[
@@ -176,7 +217,7 @@ AUI.add(
 							dd.after(
 								'afterMouseDown',
 								function(event) {
-									instance._dragTask(event.target.get('node').one(instance._draggableCssClass));
+									instance._dragTask(event.target.get('node').one(instance.get('draggableCSSClass')));
 								},
 								instance
 							);
@@ -198,7 +239,7 @@ AUI.add(
 									item.plug(
 										A.Plugin.Drop,
 										{
-											groups: [instance._portletGroup],
+											groups: [instance.get(STR_PORTLET_GROUP)],
 											padding: '-1px'
 										}
 									);
@@ -210,13 +251,13 @@ AUI.add(
 					_moveEntries: function(folderId) {
 						var instance = this;
 
-						var form = instance._form.node;
+						var form = instance.get(STR_FORM).node;
 
 						form.get(instance.ns('newFolderId')).val(folderId);
 
 						var config = instance._config;
 
-						instance._processEntryAction(config.moveConstant, config.moveEntryRenderUrl);
+						instance._processEntryAction(this.get('moveConstant'), this.get('moveEntryRenderUrl'));
 					},
 
 					_onDragDropHit: function(event) {
@@ -232,7 +273,7 @@ AUI.add(
 
 						var folderId = dropTarget.attr(DATA_FOLDER_ID);
 
-						var folderContainer = dropTarget.ancestor('.' + instance._displayStyleCssClass);
+						var folderContainer = dropTarget.ancestor('.' + instance.get(STR_DISPLAY_STYLE));
 
 						var selectedItems = instance._ddHandler.dd.get(STR_DATA).selectedItems;
 
@@ -247,7 +288,7 @@ AUI.add(
 						var dragNode = event.drag.get('node');
 						var dropTarget = event.drop.get('node');
 
-						dropTarget = dropTarget.ancestor('.' + instance._displayStyleCssClass) || dropTarget;
+						dropTarget = dropTarget.ancestor('.' + instance.get(STR_DISPLAY_STYLE)) || dropTarget;
 
 						if (!dragNode.compareTo(dropTarget)) {
 							dropTarget.addClass(CSS_ACTIVE_AREA);
@@ -271,7 +312,7 @@ AUI.add(
 
 						var dropTarget = event.drop.get('node');
 
-						dropTarget = dropTarget.ancestor('.' + instance._displayStyleCssClass) || dropTarget;
+						dropTarget = dropTarget.ancestor('.' + instance.get(STR_DISPLAY_STYLE)) || dropTarget;
 
 						dropTarget.removeClass(CSS_ACTIVE_AREA);
 
@@ -295,10 +336,12 @@ AUI.add(
 
 						var node = target.get('node');
 
-						if (!node.hasClass(CSS_SELECTED)) {
-							instance._selectAjaxNavigation._unselectAllEntries();
+						var selectNavigation = instance.get('selectNavigation');
 
-							instance._selectAjaxNavigation._toggleSelected(node);
+						if (!node.hasClass(CSS_SELECTED)) {
+							selectNavigation._unselectAllEntries();
+
+							selectNavigation._toggleSelected(node);
 						}
 
 						var proxyNode = target.get(STR_DRAG_NODE);
@@ -310,7 +353,7 @@ AUI.add(
 							}
 						);
 
-						var selectedItems = instance._entriesContainer.all('.' + instance._displayStyleCssClass + '.selected');
+						var selectedItems = instance._entriesContainer.all('.' + instance.get(STR_DISPLAY_STYLE) + '.selected');
 
 						var selectedItemsCount = selectedItems.size();
 
@@ -334,29 +377,35 @@ AUI.add(
 					_processEntryAction: function(action, url) {
 						var instance = this;
 
-						var form = instance._form.node;
+						var form = instance.get(STR_FORM).node;
 
 						var redirectUrl = location.href;
 
-						if (action === instance._actions.DELETE && !History.HTML5 && location.hash) {
+						var actions = instance.get(STR_ACTIONS);
+
+						if (action === actions.DELETE && !History.HTML5 && location.hash) {
 							redirectUrl = instance._updateFolderIdRedirectUrl(redirectUrl);
 						}
 
-						form.attr('method', instance._form.method);
+						form.attr('method', instance.get(STR_FORM).method);
 
 						form.get(instance.ns('cmd')).val(action);
 						form.get(instance.ns('redirect')).val(redirectUrl);
 
-						var allRowIds = instance._allRowIds;
+						var allRowIds = instance.get('allRowIds');
 
 						var allRowsIdCheckbox = instance.ns(allRowIds + 'Checkbox');
 
-						var checkBoxesIds = instance._processEntryIds.checkBoxesIds;
+						var processEntryIds = instance.get('processEntryIds');
 
-						for (var i = 0; i < checkBoxesIds.length; i++) {
-							var entryIds = Liferay.Util.listCheckedExcept(form, allRowsIdCheckbox, checkBoxesIds[i]);
+						var entryIds = processEntryIds.entryIds;
 
-							form.get(instance._processEntryIds.entryIds[i]).val(entryIds);
+						var checkBoxesIds = processEntryIds.checkBoxesIds;
+
+						for (var i = 0, checkBoxesIdsLength = checkBoxesIds.length; i < checkBoxesIdsLength; i++) {
+							var listEntryIds = Liferay.Util.listCheckedExcept(form, allRowsIdCheckbox, checkBoxesIds[i]);
+
+							form.get(entryIds[i]).val(listEntryIds);
 						}
 
 						submitForm(form, url);
@@ -365,13 +414,13 @@ AUI.add(
 					_updateFolderIdRedirectUrl: function(redirectUrl) {
 						var instance = this;
 
-						var currentFolderMatch = instance._folderIdHashRegEx.exec(redirectUrl);
+						var currentFolderMatch = instance.get('folderIdHashRegEx').exec(redirectUrl);
 
 						if (currentFolderMatch) {
 							var currentFolderId = currentFolderMatch[1];
 
 							redirectUrl = redirectUrl.replace(
-								config.folderIdRegEx,
+								this.get('folderIdRegEx'),
 								function(match, folderId) {
 									return match.replace(folderId, currentFolderId);
 								}
