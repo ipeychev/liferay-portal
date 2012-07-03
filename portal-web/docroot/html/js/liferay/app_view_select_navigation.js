@@ -53,7 +53,7 @@ AUI.add(
 
 						instance._checkBoxesId = config.checkBoxesId;
 
-						instance._displayStyleCssClass = config.displayStyleCssClass;
+						instance._displayStyleCSSClass = config.displayStyleCSSClass;
 
 						instance._initHover();
 
@@ -173,7 +173,7 @@ AUI.add(
 						WIN[instance.ns(STR_TOGGLE_ACTIONS_BUTTON)]();
 
 						if (!instance._getDisplayStyle(instance._displayStyle, DISPLAY_STYLE_LIST)) {
-							var articleDisplayStyle = A.all('.' + instance._displayStyleCssClass + '.selectable');
+							var articleDisplayStyle = A.all('.' + instance._displayStyleCSSClass + '.selectable');
 
 							articleDisplayStyle.toggleClass(CSS_SELECTED, instance._selectAllCheckbox.attr(ATTR_CHECKED));
 						}
@@ -183,7 +183,7 @@ AUI.add(
 						var instance = this;
 
 						if (!instance._getDisplayStyle(instance._displayStyle, DISPLAY_STYLE_LIST)) {
-							var articleDisplayStyle = event.target.ancestor('.' + instance._displayStyleCssClass);
+							var articleDisplayStyle = event.target.ancestor('.' + instance._displayStyleCSSClass);
 
 							if (articleDisplayStyle) {
 								articleDisplayStyle.toggleClass('hover', (event.type == STR_FOCUS));
@@ -202,7 +202,7 @@ AUI.add(
 							}
 						}
 						else {
-							node = node.ancestor('.' + instance._displayStyleCssClass) || node;
+							node = node.ancestor('.' + instance._displayStyleCSSClass) || node;
 
 							if (!preventUpdate) {
 								var selectElement = node.one('.' + instance._selector + ' :checkbox');

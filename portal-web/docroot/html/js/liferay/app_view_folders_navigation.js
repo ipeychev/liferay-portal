@@ -105,11 +105,11 @@ AUI.add(
 
 						instance._displayViews = config.displayViews;
 
-						instance._selectAjaxNavigation = config.selectAjaxNavigation;
+						instance._selectNavigation = config.selectNavigation;
 
 						instance._portletMessageContainer = A.Node.create(TPL_MESSAGE_RESPONSE);
 
-						instance._displayStyleCssClass = config.displayStyleCssClass;
+						instance._displayStyleCSSClass = config.displayStyleCSSClass;
 
 						instance._entriesContainer = instance.byId('entriesContainer');
 
@@ -326,16 +326,16 @@ AUI.add(
 						if (src === SRC_DISPLAY_STYLE_BUTTONS || src === SRC_ENTRIES_PAGINATOR) {
 							var selectedEntries;
 
-							var entriesSelector = '.' + instance._displayStyleCssClass + '.selected' + ' :checkbox';
+							var entriesSelector = '.' + instance._displayStyleCSSClass + '.selected' + ' :checkbox';
 
-							if (instance._selectAjaxNavigation._getDisplayStyle(instance._displayStyle, DISPLAY_STYLE_LIST)) {
+							if (instance._selectNavigation._getDisplayStyle(instance._displayStyle, DISPLAY_STYLE_LIST)) {
 								entriesSelector = 'td > :checkbox:checked';
 							}
 
 							selectedEntries = instance._entriesContainer.all(entriesSelector);
 
 							if (selectedEntries.size()) {
-								instance._selectAjaxNavigation._setSelectedEntries(selectedEntries.val());
+								instance._selectNavigation._setSelectedEntries(selectedEntries.val());
 							}
 						}
 						else if (src === SRC_SEARCH) {
@@ -568,7 +568,7 @@ AUI.add(
 
 							instance._ddNavigation._initDropTargets();
 
-							instance._selectAjaxNavigation._updateSelectedEntriesStatus();
+							instance._selectNavigation._updateSelectedEntriesStatus();
 
 						}
 					},
@@ -609,7 +609,7 @@ AUI.add(
 						if (length > 1) {
 							var displayStyleToolbar = instance._displayStyleToolbar.getData(DISPLAY_STYLE_TOOLBAR);
 
-							var displayStyle = instance._selectAjaxNavigation._getDisplayStyle();
+							var displayStyle = instance._selectNavigation._getDisplayStyle();
 
 							for (var i = 0; i < length; i++) {
 								displayStyleToolbar.item(i).StateInteraction.set(STR_ACTIVE, displayStyle === displayViews[i]);
