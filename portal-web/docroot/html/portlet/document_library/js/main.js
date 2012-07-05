@@ -142,17 +142,17 @@ AUI.add(
 
 						var pageNavigation = new Liferay.AppViewPageNavigation(
 							{
-								'entriesTotal' : config.entriesTotal,
-								'entryEnd' : config.entryEnd,
-								'entryRowsPerPage' : config.entryRowsPerPage,
-								'entryRowsPerPageOptions' : config.entryRowsPerPageOptions,
-								'entryPaginatorContainer' : '.document-entries-paginator',
-								'folderEnd' : config.folderEnd,
-								'folderPaginatorContainer' : '.folder-paginator',
-								'folderRowsPerPage' : config.folderRowsPerPage,
-								'folderRowsPerPageOptions' : config.folderRowsPerPageOptions,
-								'foldersTotal' : config.foldersTotal,
-								'namespace' : config.namespace
+								'entriesTotal': config.entriesTotal,
+								'entryEnd': config.entryEnd,
+								'entryRowsPerPage': config.entryRowsPerPage,
+								'entryRowsPerPageOptions': config.entryRowsPerPageOptions,
+								'entryPaginatorContainer': '.document-entries-paginator',
+								'folderEnd': config.folderEnd,
+								'folderPaginatorContainer': '.folder-paginator',
+								'folderRowsPerPage': config.folderRowsPerPage,
+								'folderRowsPerPageOptions': config.folderRowsPerPageOptions,
+								'foldersTotal': config.foldersTotal,
+								'namespace': config.namespace
 							}
 						);
 
@@ -160,19 +160,19 @@ AUI.add(
 
 						var selectNavigation = new Liferay.AppViewSelectNavigation(
 							{
-								'checkBoxesId' :
+								checkBoxesId:
 									[
 										instance.ns(STR_ROW_IDS_FILE_SHORTCUT_CHECKBOX),
 										instance.ns(STR_ROW_IDS_FOLDER_CHECKBOX),
 										instance.ns(STR_ROW_IDS_FILE_ENTRY_CHECKBOX)
 									],
-								'displayStyle' : config.displayStyle,
-								'displayStyleCSSClass' : 'document-display-style',
-								'folderContainer' : folderContainer,
-								'namespace' : config.namespace,
-								'portletContainerId': instance.ns('documentLibraryContainer'),
-								'repositories' : config.repositories,
-								'selector': 'document-selector'
+								displayStyle: config.displayStyle,
+								displayStyleCSSClass: 'document-display-style',
+								folderContainer: folderContainer,
+								namespace: config.namespace,
+								portletContainerId: instance.ns('documentLibraryContainer'),
+								repositories: config.repositories,
+								selector: 'document-selector'
 							}
 						);
 
@@ -180,35 +180,35 @@ AUI.add(
 
 						var ddNavigation = new Liferay.AppViewDDNavigation(
 							{
-								'actions' : config.actions,
-								'allRowIds' : config.allRowIds,
-								'processEntryIds' :
+								'actions': config.actions,
+								'allRowIds': config.allRowIds,
+								'processEntryIds':
 									{
-										checkBoxesIds :
+										checkBoxesIds:
 											[
 												instance.ns(STR_ROW_IDS_FILE_SHORTCUT_CHECKBOX),
 												instance.ns(STR_ROW_IDS_FOLDER_CHECKBOX),
 												instance.ns(STR_ROW_IDS_FILE_ENTRY_CHECKBOX)
 											],
-										entryIds :
+										entryIds:
 											[
 												instance.ns('fileShortcutIds'),
 												instance.ns('folderIds'),
 												instance.ns('fileEntryIds')
 											]
 									},
-								'displayStyleCSSClass' : 'document-display-style',
-								'draggableCSSClass' : 'document-link',
-								'editEntryUrl' : config._editEntryUrl,
-								'folderIdHashRegEx' : config.folderIdHashRegEx,
-								'form' : config.form,
+								'displayStyleCSSClass': 'document-display-style',
+								'draggableCSSClass': 'document-link',
+								'editEntryUrl': config._editEntryUrl,
+								'folderIdHashRegEx': config.folderIdHashRegEx,
+								'form': config.form,
 								'moveConstant': config.moveConstant,
 								'moveEntryRenderUrl': config.moveEntryRenderUrl,
-								'namespace' : config.namespace,
+								'namespace': config.namespace,
 								'portletContainerId': instance.ns('documentLibraryContainer'),
-								'portletGroup' : 'document-library',
-								'selectNavigation' : selectNavigation,
-								'updateable' : config.updateable
+								'portletGroup': 'document-library',
+								'selectNavigation': selectNavigation,
+								'updateable': config.updateable
 							}
 						);
 
@@ -216,19 +216,19 @@ AUI.add(
 
 						var foldersNavigation = new Liferay.AppViewFoldersNavigation(
 							{
-								'defaultParams' : config.defaultParams,
-								'defaultParentFolderId' : config.defaultParentFolderId,
-								'displayStyle' : config.displayStyle,
-								'displayStyleCSSClass' : 'document-display-style',
-								'displayStyleToolbarId' : DISPLAY_STYLE_TOOLBAR,
-								'displayViews' : config.displayViews,
-								'ddNavigation' : instance._ddNavigation,
-								'listView' : instance._listView,
+								'defaultParams': config.defaultParams,
+								'defaultParentFolderId': config.defaultParentFolderId,
+								'displayStyle': config.displayStyle,
+								'displayStyleCSSClass': 'document-display-style',
+								'displayStyleToolbarId': DISPLAY_STYLE_TOOLBAR,
+								'displayViews': config.displayViews,
+								'ddNavigation': instance._ddNavigation,
+								'listView': instance._listView,
 								'mainUrl': config.mainUrl,
 								'namespace': instance.NS,
 								'pageNavigation': pageNavigation,
 								'portletContainerId': instance.ns('documentLibraryContainer'),
-								'selectNavigation' : selectNavigation
+								'selectNavigation': selectNavigation
 							}
 						);
 
@@ -314,8 +314,8 @@ AUI.add(
 						var instance = this;
 
 						var data = {
-							entryTypeId : 'data-file-entry-type-id',
-							requestParam : 'fileEntryTypeId'
+							entryTypeId: 'data-file-entry-type-id',
+							requestParam: 'fileEntryTypeId'
 						};
 
 						instance._foldersNavigation._afterListViewItemChange(event, data);
