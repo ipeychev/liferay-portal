@@ -69,6 +69,16 @@ AUI.add(
 
 		var AppViewFoldersNavigation = A.Component.create(
 			{
+				ATTRS: {
+					listView: {
+						validator: Lang.isObject
+					},
+
+					portletContainerId: {
+						validator: Lang.isString
+					}
+				},
+
 				AUGMENTS: [Liferay.PortletBase],
 
 				EXTENDS: A.Base,
@@ -79,7 +89,7 @@ AUI.add(
 					initializer: function(config) {
 						var instance = this;
 
-						var portletContainer = instance.byId(config.portletContainerId);
+						var portletContainer = instance.byId(instance.get('portletContainerId'));
 
 						instance._config = config;
 
@@ -87,7 +97,7 @@ AUI.add(
 						instance._eventDataRequest = instance.ns('dataRequest');
 						instance._dataRetrieveFailure = instance.ns('dataRetrieveFailure');
 
-						instance._listView = config.listView;
+						instance._listView = instance.get('listView');
 
 						instance._ddNavigation = config.ddNavigation;
 
@@ -234,76 +244,6 @@ AUI.add(
 						delete data[STR_AJAX_REQUEST];
 
 						instance._lastDataRequest = data;
-					},
-
-					_afterListViewItemChange: function(event, data) {
-						var instance = this;
-
-						var selFolder = A.one('.folder.selected');
-
-						if (selFolder) {
-							selFolder.removeClass(CSS_SELECTED);
-						}
-
-						var item = event.newVal;
-
-						item.ancestor('.folder').addClass(CSS_SELECTED);
-
-						var dataExpandFolder = item.attr('data-expand-folder');
-						var dataStructureId = item.attr(data.entryTypeId);
-						var dataFolderId = item.attr(DATA_FOLDER_ID);
-						var dataNavigation = item.attr('data-navigation');
-						var dataViewEntries = item.attr(DATA_VIEW_ENTRIES);
-						var dataViewFolders = item.attr(DATA_VIEW_FOLDERS);
-
-						var direction = 'left';
-
-						if (item.attr(DATA_DIRECTION_RIGHT)) {
-							direction = 'right';
-						}
-
-						instance._listView.set('direction', direction);
-
-						var config = instance._config;
-
-						var requestParams = {};
-
-						requestParams[instance.ns(STRUTS_ACTION)] = config.strutsAction;
-						requestParams[instance.ns(STR_ENTRY_END)] = config.entryRowsPerPage || instance._entryPaginator.get(ROWS_PER_PAGE);
-						requestParams[instance.ns(STR_ENTRY_START)] = 0;
-						requestParams[instance.ns(STR_FOLDER_END)] = config.folderRowsPerPage || instance._folderPaginator.get(ROWS_PER_PAGE);
-						requestParams[instance.ns(STR_FOLDER_START)] = 0;
-
-						if (dataExpandFolder) {
-							requestParams[instance.ns(EXPAND_FOLDER)] = dataExpandFolder;
-						}
-
-						if (dataFolderId) {
-							requestParams[instance._folderId] = dataFolderId;
-						}
-
-						if (dataNavigation) {
-							requestParams[instance.ns('navigation')] = dataNavigation;
-						}
-
-						if (dataViewEntries) {
-							requestParams[instance.ns(VIEW_ENTRIES)] = dataViewEntries;
-						}
-
-						if (dataStructureId) {
-							requestParams[instance.ns(data.requestParam)] = dataStructureId;
-						}
-
-						if (dataViewFolders) {
-							requestParams[instance.ns(VIEW_FOLDERS)] = dataViewFolders;
-						}
-
-						Liferay.fire(
-							instance._eventDataRequest,
-							{
-								requestParams: requestParams
-							}
-						);
 					},
 
 					_getDefaultHistoryState: function() {

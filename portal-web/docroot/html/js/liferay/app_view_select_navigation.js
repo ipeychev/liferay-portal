@@ -1,6 +1,7 @@
 AUI.add(
 	'liferay-app-view-select-navigation',
 	function(A) {
+		var Lang = A.Lang;
 		var History = Liferay.HistoryManager;
 
 		var WIN = A.config.win;
@@ -25,6 +26,36 @@ AUI.add(
 
 		var AppViewSelectNavigation = A.Component.create(
 			{
+				ATTRS: {
+					checkBoxesId: {
+						validator: Lang.isArray
+					},
+
+					displayStyle: {
+						validator: Lang.isString
+					},
+
+					displayStyleCSSClass: {
+						validator: Lang.isString
+					},
+
+					folderContainer: {
+						setter: '_setFolderContainer'
+					},
+
+					portletContainerId: {
+						validator: Lang.isString
+					},
+
+					repositories: {
+						validator: Lang.isArray
+					},
+
+					selector: {
+						validator: Lang.isString
+					}
+				},
+
 				AUGMENTS: [Liferay.PortletBase],
 
 				EXTENDS: A.Base,
@@ -35,9 +66,7 @@ AUI.add(
 					initializer: function(config) {
 						var instance = this;
 
-						var portletContainer = instance.byId(config.portletContainerId);
-
-						instance._config = config;
+						var portletContainer = instance.byId(instance.get('portletContainerId'));
 
 						instance._portletContainer = portletContainer;
 
@@ -47,13 +76,13 @@ AUI.add(
 
 						instance._selectAllCheckbox = instance.byId('allRowIdsCheckbox');
 
-						instance._folderContainer = config.folderContainer;
+						instance._folderContainer = instance.get('folderContainer');
 
-						instance._selector = config.selector;
+						instance._selector = instance.get('selector');
 
-						instance._checkBoxesId = config.checkBoxesId;
+						instance._checkBoxesId = instance.get('checkBoxesId');
 
-						instance._displayStyleCSSClass = config.displayStyleCSSClass;
+						instance._displayStyleCSSClass = instance.get('displayStyleCSSClass');
 
 						instance._initHover();
 
@@ -75,7 +104,7 @@ AUI.add(
 					_getDisplayStyle: function(currentDisplayStyle, style) {
 						var instance = this;
 
-						var displayStyle = History.get(currentDisplayStyle) || instance._config.displayStyle;
+						var displayStyle = History.get(currentDisplayStyle) || instance.get('displayStyle');
 
 						if (style) {
 							displayStyle = (displayStyle == style);
@@ -98,7 +127,7 @@ AUI.add(
 							repositoryId = selectedFolderNode.attr(DATA_REPOSITORY_ID);
 
 							if (!repositoryId) {
-								var repositories = instance._config.repositories;
+								var repositories = instance.get('repositories');
 
 								if (repositories) {
 									repositoryId = repositories[0].id;
@@ -153,6 +182,10 @@ AUI.add(
 						var instance = this;
 
 						instance._toggleEntriesSelection();
+					},
+
+					_setFolderContainer: function(value) {
+						return A.one(value);
 					},
 
 					_setSelectedEntries: function(selectedEntries) {
