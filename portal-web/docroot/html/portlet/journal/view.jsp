@@ -148,12 +148,6 @@ int foldersTotal = GetterUtil.getInteger((String)request.getAttribute("view_fold
 
 	new Liferay.Portlet.JournalNavigation(
 		{
-			actions: {
-				DELETE: '<%= Constants.DELETE %>',
-				DELETE_VERSIONS: '<%= Constants.DELETE_VERSIONS %>',
-				EXPIRE: '<%= Constants.EXPIRE %>',
-				MOVE: '<%= Constants.MOVE %>'
-			},
 			advancedSearch: '<%= DisplayTerms.ADVANCED_SEARCH %>',
 			allRowIds: '<%= RowChecker.ALL_ROW_IDS %>',
 			defaultParams: {

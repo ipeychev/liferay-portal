@@ -20,6 +20,8 @@ AUI.add(
 
 		var SRC_SEARCH_FRAGMENT = 2;
 
+		var SRC_SEARCH = 3;
+
 		var STR_ENTRY_END = 'entryEnd';
 
 		var STR_ENTRY_START = 'entryStart';
@@ -42,7 +44,7 @@ AUI.add(
 
 				EXTENDS: A.Base,
 
-				NAME: 'liferayappviewpagingnavigation',
+				NAME: 'liferay-app-view-page-navigation',
 
 				prototype: {
 					initializer: function(config) {
@@ -102,6 +104,8 @@ AUI.add(
 						folderPaginator.on('changeRequest', instance._onFolderPaginatorChangeRequest, instance);
 
 						instance._folderPaginator = folderPaginator;
+
+						Liferay.on('liferay-app-view-folders-navigation:dataRequest', instance._onDataRequest, instance);
 					},
 
 					destructor: function() {
@@ -174,6 +178,22 @@ AUI.add(
 						return [start, end];
 					},
 
+					_onDataRequest: function(event) {
+						var instance = this;
+
+						instance._updatePaginatorValues(event.requestParams);
+
+						var src = event.src;
+
+						if (src === SRC_SEARCH) {
+							instance._entryPaginator.setState(
+								{
+									page: 1
+								}
+							);
+						}
+					},
+
 					_onEntryPaginatorChangeRequest: function(event) {
 						var instance = this;
 
@@ -238,10 +258,8 @@ AUI.add(
 						}
 					},
 
-					_updatePaginatorValues: function(event) {
+					_updatePaginatorValues: function(requestParams) {
 						var instance = this;
-
-						var requestParams = event.requestParams;
 
 						var entryStartEndParams = instance._getResultsStartEnd(instance._entryPaginator);
 						var folderStartEndParams = instance._getResultsStartEnd(instance._folderPaginator);

@@ -166,7 +166,6 @@ AUI.add(
 
 						var ddNavigation = new AppViewDDNavigation(
 							{
-								'actions' : config.actions,
 								'allRowIds' : config.allRowIds,
 								'processEntryIds' :
 								{
@@ -191,7 +190,6 @@ AUI.add(
 								'namespace' : config.namespace,
 								'portletContainerId': instance.ns('journalContainer'),
 								'portletGroup' : 'journal',
-								'selectNavigation' : selectNavigation,
 								'updateable' : config.updateable
 							}
 						);
@@ -206,7 +204,6 @@ AUI.add(
 								'displayStyleCssClass' : 'article-display-style',
 								'displayStyleToolbarId' : DISPLAY_STYLE_TOOLBAR,
 								'displayViews' : instance._displayViews,
-								'ddNavigation' : instance._ddNavigation,
 								'listView' : instance._listView,
 								'mainUrl': config.mainUrl,
 								'namespace': instance.NS,

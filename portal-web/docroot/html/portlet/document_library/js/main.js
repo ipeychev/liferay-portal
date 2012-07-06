@@ -180,7 +180,6 @@ AUI.add(
 
 						var ddNavigation = new Liferay.AppViewDDNavigation(
 							{
-								'actions': config.actions,
 								'allRowIds': config.allRowIds,
 								'processEntryIds':
 									{
@@ -207,7 +206,6 @@ AUI.add(
 								'namespace': config.namespace,
 								'portletContainerId': instance.ns('documentLibraryContainer'),
 								'portletGroup': 'document-library',
-								'selectNavigation': selectNavigation,
 								'updateable': config.updateable
 							}
 						);
@@ -222,7 +220,6 @@ AUI.add(
 								'displayStyleCSSClass': 'document-display-style',
 								'displayStyleToolbarId': DISPLAY_STYLE_TOOLBAR,
 								'displayViews': config.displayViews,
-								'ddNavigation': instance._ddNavigation,
 								'listView': instance._listView,
 								'mainUrl': config.mainUrl,
 								'namespace': instance.NS,

@@ -60,7 +60,7 @@ AUI.add(
 
 				EXTENDS: A.Base,
 
-				NAME: 'liferayselectajaxnavigation',
+				NAME: 'liferay-app-view-select-navigation',
 
 				prototype: {
 					initializer: function(config) {
@@ -85,6 +85,8 @@ AUI.add(
 						instance._displayStyleCSSClass = instance.get('displayStyleCSSClass');
 
 						instance._initHover();
+
+						Liferay.on('liferay-app-view-dd-navigation:dragStart', instance._onDragStart, instance);
 
 						if (themeDisplay.isSignedIn()) {
 							instance._initSelectAllCheckbox();
@@ -162,6 +164,14 @@ AUI.add(
 							'.' + instance._selector,
 							instance
 						);
+					},
+
+					_onDragStart: function(event) {
+						var instance = this;
+
+						instance._unselectAllEntries();
+
+						instance._toggleSelected(event.node);
 					},
 
 					_onEntrySelectorChange: function(event) {

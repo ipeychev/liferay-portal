@@ -83,7 +83,7 @@ AUI.add(
 
 				EXTENDS: A.Base,
 
-				NAME: 'liferayappviewfoldersnavigation',
+				NAME: 'liferay-app-view-folders-navigation',
 
 				prototype: {
 					initializer: function(config) {
@@ -98,8 +98,6 @@ AUI.add(
 						instance._dataRetrieveFailure = instance.ns('dataRetrieveFailure');
 
 						instance._listView = instance.get('listView');
-
-						instance._ddNavigation = config.ddNavigation;
 
 						instance._pageNavigation = config.pageNavigation;
 
@@ -278,17 +276,16 @@ AUI.add(
 								instance._selectNavigation._setSelectedEntries(selectedEntries.val());
 							}
 						}
-						else if (src === SRC_SEARCH) {
-							instance._entryPaginator.setState(
-								{
-									page: 1
-								}
-							);
-						}
 
 						instance._processDefaultParams(event);
 
-						instance._pageNavigation._updatePaginatorValues(event);
+						Liferay.fire(
+							'liferay-app-view-folders-navigation:dataRequest',
+							{
+								requestParams: event.requestParams,
+								src: src
+							}
+						);
 					},
 
 					_onDataRetrieveFailure: function(event) {
@@ -506,7 +503,7 @@ AUI.add(
 
 							entriesContainer.setContent(entries);
 
-							instance._ddNavigation._initDropTargets();
+							Liferay.fire('liferay-app-view-folders-navigation:setEntries');
 
 							instance._selectNavigation._updateSelectedEntriesStatus();
 

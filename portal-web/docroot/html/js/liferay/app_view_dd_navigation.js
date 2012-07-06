@@ -16,17 +16,19 @@ AUI.add(
 
 		var SELECTOR_DRAGGABLE_NODES = '[data-draggable]';
 
-		var STR_ACTIONS = 'actions';
-
 		var STR_BLANK = '';
 
 		var STR_DATA = 'data';
+
+		var STR_DELETE = 'delete';
 
 		var STR_DISPLAY_STYLE = 'displayStyleCSSClass';
 
 		var STR_DRAG_NODE = 'dragNode';
 
 		var STR_FORM = 'form';
+
+		var STR_MOVE = 'move';
 
 		var STR_PORTLET_GROUP = 'portletGroup';
 
@@ -37,9 +39,6 @@ AUI.add(
 				AUGMENTS: [Liferay.PortletBase],
 
 				ATTRS: {
-					actions: {
-						validator: Lang.isObject
-					},
 					allRowIds: {
 						validator: Lang.isString
 					},
@@ -70,9 +69,6 @@ AUI.add(
 					form: {
 						validator: Lang.isObject
 					},
-					moveConstant: { // No one is setting this param, where does it come from?
-						validator: Lang.isNumber
-					},
 					moveEntryRenderUrl: {
 						validator: Lang.isString
 					},
@@ -85,9 +81,6 @@ AUI.add(
 					portletGroup:  {
 						validator: Lang.isString
 					},
-					selectNavigation: {
-						validator: Lang.isObject
-					},
 					updateable: {
 						validator: Lang.isBoolean
 					}
@@ -95,7 +88,7 @@ AUI.add(
 
 				EXTENDS: A.Base,
 
-				NAME: 'liferayappviewddnavigation',
+				NAME: 'liferay-app-view-dd-navigation',
 
 				prototype: {
 					initializer: function(config) {
@@ -116,6 +109,8 @@ AUI.add(
 						if (themeDisplay.isSignedIn() && this.get('updateable')) {
 							instance._initDragDrop();
 						}
+
+						Liferay.on('liferay-app-view-folders-navigation:setEntries', instance._onSetEntries, instance);
 					},
 
 					destructor: function() {
@@ -133,9 +128,7 @@ AUI.add(
 
 						var url = instance.get('editEntryUrl');
 
-						var actions = instance.get(STR_ACTIONS);
-
-						if (action === actions.MOVE) {
+						if (action === STR_MOVE) {
 							url = instance.get('moveEntryRenderUrl');
 						}
 
@@ -257,7 +250,7 @@ AUI.add(
 
 						var config = instance._config;
 
-						instance._processEntryAction(this.get('moveConstant'), this.get('moveEntryRenderUrl'));
+						instance._processEntryAction(STR_MOVE, this.get('moveEntryRenderUrl'));
 					},
 
 					_onDragDropHit: function(event) {
@@ -336,13 +329,12 @@ AUI.add(
 
 						var node = target.get('node');
 
-						var selectNavigation = instance.get('selectNavigation');
-
-						if (!node.hasClass(CSS_SELECTED)) {
-							selectNavigation._unselectAllEntries();
-
-							selectNavigation._toggleSelected(node);
-						}
+						Liferay.fire(
+								'liferay-app-view-dd-navigation:dragStart',
+							{
+								node: node
+							}
+						);
 
 						var proxyNode = target.get(STR_DRAG_NODE);
 
@@ -374,6 +366,12 @@ AUI.add(
 						);
 					},
 
+					_onSetEntries: function(event) {
+						var instance = this;
+
+						instance._initDropTargets();
+					},
+
 					_processEntryAction: function(action, url) {
 						var instance = this;
 
@@ -381,9 +379,7 @@ AUI.add(
 
 						var redirectUrl = location.href;
 
-						var actions = instance.get(STR_ACTIONS);
-
-						if (action === actions.DELETE && !History.HTML5 && location.hash) {
+						if (action === STR_DELETE && !History.HTML5 && location.hash) {
 							redirectUrl = instance._updateFolderIdRedirectUrl(redirectUrl);
 						}
 

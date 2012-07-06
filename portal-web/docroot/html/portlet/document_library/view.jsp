@@ -198,10 +198,6 @@ if (folder != null) {
 
 	new Liferay.Portlet.DocumentLibrary(
 		{
-			actions: {
-				DELETE: '<%= Constants.DELETE %>',
-				MOVE: '<%= Constants.MOVE %>'
-			},
 			allRowIds: '<%= RowChecker.ALL_ROW_IDS %>',
 			defaultParams: {
 				p_p_id: <%= portletId %>,
