@@ -1,5 +1,5 @@
 AUI.add(
-	'liferay-app-view-select-navigation',
+	'liferay-app-view-select',
 	function(A) {
 		var Lang = A.Lang;
 		var History = Liferay.HistoryManager;
@@ -32,7 +32,7 @@ AUI.add(
 
 		var STR_TOGGLE_ACTIONS_BUTTON = 'toggleActionsButton';
 
-		var AppViewSelectNavigation = A.Component.create(
+		var AppViewSelect = A.Component.create(
 			{
 				ATTRS: {
 					checkBoxesId: {
@@ -76,7 +76,7 @@ AUI.add(
 
 				EXTENDS: A.Base,
 
-				NAME: 'liferay-app-view-select-navigation',
+				NAME: 'liferay-app-view-select',
 
 				prototype: {
 					initializer: function(config) {
@@ -102,9 +102,9 @@ AUI.add(
 
 						instance._initHover();
 
-						Liferay.on('liferay-app-view-folders-navigation:dataRequest', instance._onDataRequest, instance);
-						Liferay.on('liferay-app-view-folders-navigation:setEntries', instance._onSetEntries, instance);
-						Liferay.on('liferay-app-view-dd-navigation:dragStart', instance._onDragStart, instance);
+						Liferay.on('liferay-app-view-folders:dataRequest', instance._onDataRequest, instance);
+						Liferay.on('liferay-app-view-folders:setEntries', instance._onSetEntries, instance);
+						Liferay.on('liferay-app-view-dd:dragStart', instance._onDragStart, instance);
 
 						if (themeDisplay.isSignedIn()) {
 							instance._initSelectAllCheckbox();
@@ -356,10 +356,10 @@ AUI.add(
 			}
 		);
 
-		Liferay.AppViewSelectNavigation = AppViewSelectNavigation;
+		Liferay.AppViewSelect = AppViewSelect;
 	},
 	'',
 	{
-		requires: ['aui-base', 'liferay-app-view-dd-navigation', 'liferay-history-manager', 'liferay-portlet-base', 'liferay-util-list-fields']
+		requires: ['aui-base', 'liferay-app-view-dd', 'liferay-history-manager', 'liferay-portlet-base', 'liferay-util-list-fields']
 	}
 );

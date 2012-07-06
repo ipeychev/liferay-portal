@@ -5,10 +5,10 @@ AUI.add(
 		var Lang = A.Lang;
 		var History = Liferay.HistoryManager;
 
-		var AppViewDDNavigation = Liferay.AppViewDDNavigation;
-		var AppViewFoldersNavigation = Liferay.AppViewFoldersNavigation;
-		var AppViewPageNavigation = Liferay.AppViewPageNavigation;
-		var AppViewSelectNavigation = Liferay.AppViewSelectNavigation;
+		var AppViewDD = Liferay.AppViewDD;
+		var AppViewFolders = Liferay.AppViewFolders;
+		var AppViewPaginator = Liferay.AppViewPaginator;
+		var AppViewSelect = Liferay.AppViewSelect;
 
 		var formatSelectorNS = A.Node.formatSelectorNS;
 
@@ -126,7 +126,7 @@ AUI.add(
 							}
 						).render();
 
-						var pageNavigation = new AppViewPageNavigation(
+						var appViewPaginator = new AppViewPaginator(
 							{
 								'entriesTotal' : config.entriesTotal,
 								'entryEnd' : config.entryEnd,
@@ -142,11 +142,11 @@ AUI.add(
 							}
 						);
 
-						instance._pageNavigation = pageNavigation;
+						instance._appViewPaginator = appViewPaginator;
 
 						var displayStyleToolbar = instance.byId(DISPLAY_STYLE_TOOLBAR);
 
-						var selectNavigation = new AppViewSelectNavigation(
+						var appViewSelect = new AppViewSelect(
 							{
 								'checkBoxesId' :
 									[
@@ -164,9 +164,9 @@ AUI.add(
 							}
 						);
 
-						instance._selectNavigation = selectNavigation;
+						instance._appViewSelect = appViewSelect;
 
-						var ddNavigation = new AppViewDDNavigation(
+						var appViewDD = new AppViewDD(
 							{
 								'allRowIds' : config.allRowIds,
 								'processEntryIds' :
@@ -196,9 +196,9 @@ AUI.add(
 							}
 						);
 
-						instance._ddNavigation = ddNavigation;
+						instance._appViewDD = appViewDD;
 
-						var foldersNavigation = new AppViewFoldersNavigation(
+						var appViewFolders = new AppViewFolders(
 							{
 								'defaultParams' : config.defaultParams,
 								'defaultParentFolderId' : config.defaultParentFolderId,
@@ -208,14 +208,14 @@ AUI.add(
 								'listView' : instance._listView,
 								'mainUrl': config.mainUrl,
 								'namespace': instance.NS,
-								'pageNavigation': pageNavigation,
+								'appViewPaginator': appViewPaginator,
 								'portletContainerId': instance.ns('journalContainer')
 							}
 						);
 
-						instance._foldersNavigation = foldersNavigation;
+						instance._appViewFolders = appViewFolders;
 
-						instance._listView.after('transitionComplete', A.bind(instance._ddNavigation._initDropTargets, instance._ddNavigation), instance);
+						instance._listView.after('transitionComplete', A.bind(instance._appViewDD._initDropTargets, instance._appViewDD), instance);
 
 						instance._listView.after('itemChange', instance._afterListViewItemChange, instance);
 
@@ -283,7 +283,7 @@ AUI.add(
 						);
 
 						if (AObject.isEmpty(requestParams)) {
-							requestParams = instance._foldersNavigation._getDefaultHistoryState();
+							requestParams = instance._appViewFolders._getDefaultHistoryState();
 						}
 
 						Liferay.fire(
@@ -303,7 +303,7 @@ AUI.add(
 							requestParam : 'structureId'
 						};
 
-						instance._foldersNavigation._afterListViewItemChange(event, data);
+						instance._appViewFolders._afterListViewItemChange(event, data);
 					},
 
 					_onAdvancedSearchFormSubmit: function(event) {
@@ -311,7 +311,7 @@ AUI.add(
 
 						event.preventDefault();
 
-						var selectedFolder = instance._selectNavigation._getSelectedFolder();
+						var selectedFolder = instance._appViewSelect._getSelectedFolder();
 
 						var showTabs = (selectedFolder.id == DEFAULT_FOLDER_ID);
 
@@ -336,7 +336,7 @@ AUI.add(
 					_onChangeSearchFolder: function(event) {
 						var instance = this;
 
-						var selectedFolder = instance._selectNavigation._getSelectedFolder();
+						var selectedFolder = instance._appViewSelect._getSelectedFolder();
 
 						var showAdvancedSearch = instance.byId('showAdvancedSearch');
 
@@ -375,12 +375,12 @@ AUI.add(
 						var content = A.Node.create(responseData);
 
 						if (content) {
-							instance._foldersNavigation._setBreadcrumb(content);
-							instance._foldersNavigation._setButtons(content);
-							instance._foldersNavigation._setEntries(content);
-							instance._foldersNavigation._setFolders(content);
-							instance._foldersNavigation._setParentFolderTitle(content);
-							instance._selectNavigation._syncDisplayStyleToolbar(content);
+							instance._appViewFolders._setBreadcrumb(content);
+							instance._appViewFolders._setButtons(content);
+							instance._appViewFolders._setEntries(content);
+							instance._appViewFolders._setFolders(content);
+							instance._appViewFolders._setParentFolderTitle(content);
+							instance._appViewSelect._syncDisplayStyleToolbar(content);
 							instance._setSearchResults(content);
 						}
 					},
@@ -405,7 +405,7 @@ AUI.add(
 						var paginatorData = event.paginator;
 
 						if (paginatorData) {
-							instance._pageNavigation._setPaginatorData(paginatorData);
+							instance._appViewPaginator._setPaginatorData(paginatorData);
 						}
 					},
 
@@ -414,7 +414,7 @@ AUI.add(
 
 						event.preventDefault();
 
-						var selectedFolder = instance._selectNavigation._getSelectedFolder();
+						var selectedFolder = instance._appViewSelect._getSelectedFolder();
 
 						var showTabs = (selectedFolder.id == DEFAULT_FOLDER_ID);
 
@@ -528,6 +528,6 @@ AUI.add(
 	},
 	'',
 	{
-		requires: ['aui-loading-mask', 'aui-paginator', 'aui-parse-content', 'event-simulate', 'liferay-app-view-dd-navigation', 'liferay-app-view-folders-navigation', 'liferay-history-manager', 'liferay-list-view', 'liferay-message', 'liferay-app-view-page-navigation', 'liferay-portlet-base', 'liferay-app-view-select-navigation', 'liferay-util-list-fields', 'querystring-parse-simple']
+		requires: ['aui-loading-mask', 'aui-paginator', 'aui-parse-content', 'event-simulate', 'liferay-app-view-dd', 'liferay-app-view-folders', 'liferay-history-manager', 'liferay-list-view', 'liferay-message', 'liferay-app-view-paginator', 'liferay-portlet-base', 'liferay-app-view-select', 'liferay-util-list-fields', 'querystring-parse-simple']
 	}
 );

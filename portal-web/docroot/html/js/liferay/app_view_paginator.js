@@ -1,5 +1,5 @@
 AUI.add(
-	'liferay-app-view-page-navigation',
+	'liferay-app-view-paginator',
 	function(A) {
 		var AObject = A.Object;
 		var History = Liferay.HistoryManager;
@@ -38,13 +38,13 @@ AUI.add(
 
 		var VIEW_FOLDERS = 'viewFolders';
 
-		var AppViewPageNavigation = A.Component.create(
+		var AppViewPaginator = A.Component.create(
 			{
 				AUGMENTS: [Liferay.PortletBase],
 
 				EXTENDS: A.Base,
 
-				NAME: 'liferay-app-view-page-navigation',
+				NAME: 'liferay-app-view-paginator',
 
 				prototype: {
 					initializer: function(config) {
@@ -105,8 +105,8 @@ AUI.add(
 
 						instance._folderPaginator = folderPaginator;
 
-						Liferay.on('liferay-app-view-folders-navigation:dataRequest', instance._onDataRequest, instance);
-						Liferay.on('liferay-app-view-folders-navigation:afterDataRequest', instance._afterDataRequest, instance);
+						Liferay.on('liferay-app-view-folders:dataRequest', instance._onDataRequest, instance);
+						Liferay.on('liferay-app-view-folders:afterDataRequest', instance._afterDataRequest, instance);
 					},
 
 					destructor: function() {
@@ -303,7 +303,7 @@ AUI.add(
 			}
 		);
 
-		Liferay.AppViewPageNavigation = AppViewPageNavigation;
+		Liferay.AppViewPaginator = AppViewPaginator;
 	},
 	'',
 	{

@@ -1,5 +1,5 @@
 AUI.add(
-	'liferay-app-view-folders-navigation',
+	'liferay-app-view-folders',
 	function(A) {
 		var AObject = A.Object;
 		var Lang = A.Lang;
@@ -47,7 +47,7 @@ AUI.add(
 
 		var VIEW_FOLDERS = 'viewFolders';
 
-		var AppViewFoldersNavigation = A.Component.create(
+		var AppViewFolders = A.Component.create(
 			{
 				ATTRS: {
 					listView: {
@@ -63,7 +63,7 @@ AUI.add(
 
 				EXTENDS: A.Base,
 
-				NAME: 'liferay-app-view-folders-navigation',
+				NAME: 'liferay-app-view-folders',
 
 				prototype: {
 					initializer: function(config) {
@@ -79,7 +79,7 @@ AUI.add(
 
 						instance._listView = instance.get('listView');
 
-						instance._pageNavigation = config.pageNavigation;
+						instance._appViewPaginator = config.appViewPaginator;
 
 						instance._portletContainer = portletContainer;
 
@@ -215,7 +215,7 @@ AUI.add(
 						instance._lastDataRequest = data;
 
 						Liferay.fire(
-							'liferay-app-view-folders-navigation:afterDataRequest',
+							'liferay-app-view-folders:afterDataRequest',
 							{
 								data: data
 							}
@@ -296,7 +296,7 @@ AUI.add(
 						var initialState = History.get();
 
 						if (AObject.isEmpty(initialState)) {
-							initialState = instance._pageNavigation._getDefaultParams();
+							initialState = instance._appViewPaginator._getDefaultParams();
 						}
 
 						return initialState;
@@ -308,7 +308,7 @@ AUI.add(
 						instance._processDefaultParams(event);
 
 						Liferay.fire(
-							'liferay-app-view-folders-navigation:dataRequest',
+							'liferay-app-view-folders:dataRequest',
 							{
 								requestParams: event.requestParams,
 								src: event.src
@@ -528,7 +528,7 @@ AUI.add(
 
 							entriesContainer.setContent(entries);
 
-							Liferay.fire('liferay-app-view-folders-navigation:setEntries');
+							Liferay.fire('liferay-app-view-folders:setEntries');
 						}
 					},
 
@@ -561,10 +561,10 @@ AUI.add(
 			}
 		);
 
-		Liferay.AppViewFoldersNavigation = AppViewFoldersNavigation;
+		Liferay.AppViewFolders = AppViewFolders;
 	},
 	'',
 	{
-		requires: ['aui-base', 'aui-parse-content', 'liferay-app-view-dd-navigation', 'liferay-history-manager', 'liferay-portlet-base']
+		requires: ['aui-base', 'aui-parse-content', 'liferay-app-view-dd', 'liferay-history-manager', 'liferay-portlet-base']
 	}
 );

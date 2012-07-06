@@ -1,5 +1,5 @@
 AUI.add(
-	'liferay-app-view-dd-navigation',
+	'liferay-app-view-dd',
 	function(A) {
 		var AObject = A.Object;
 		var History = Liferay.HistoryManager;
@@ -34,7 +34,7 @@ AUI.add(
 
 		var TOUCH = UA.touch;
 
-		var AppViewDDNavigation = A.Component.create(
+		var AppViewDD = A.Component.create(
 			{
 				AUGMENTS: [Liferay.PortletBase],
 
@@ -88,7 +88,7 @@ AUI.add(
 
 				EXTENDS: A.Base,
 
-				NAME: 'liferay-app-view-dd-navigation',
+				NAME: 'liferay-app-view-dd',
 
 				prototype: {
 					initializer: function(config) {
@@ -110,7 +110,7 @@ AUI.add(
 							instance._initDragDrop();
 						}
 
-						Liferay.on('liferay-app-view-folders-navigation:setEntries', instance._onSetEntries, instance);
+						Liferay.on('liferay-app-view-folders:setEntries', instance._onSetEntries, instance);
 					},
 
 					destructor: function() {
@@ -330,7 +330,7 @@ AUI.add(
 						var node = target.get('node');
 
 						Liferay.fire(
-								'liferay-app-view-dd-navigation:dragStart',
+								'liferay-app-view-dd:dragStart',
 							{
 								node: node
 							}
@@ -429,7 +429,7 @@ AUI.add(
 			}
 		);
 
-		Liferay.AppViewDDNavigation = AppViewDDNavigation;
+		Liferay.AppViewDD = AppViewDD;
 	},
 	'',
 	{
