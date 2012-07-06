@@ -2028,6 +2028,30 @@ public class PortalImpl implements Portal {
 			group, privateLayoutSet, themeDisplay, false);
 	}
 
+	public long[] getGroupIds(long groupId)
+		throws PortalException, SystemException {
+
+		Group scopeGroup = GroupLocalServiceUtil.getGroup(groupId);
+
+		Group companyGroup = GroupLocalServiceUtil.getCompanyGroup(
+			scopeGroup.getCompanyId());
+
+		if (scopeGroup.isLayout()) {
+			return new long[] {
+				scopeGroup.getParentGroupId(), companyGroup.getGroupId()
+			};
+		}
+		else {
+			return new long[] {groupId, companyGroup.getGroupId()};
+		}
+	}
+
+	public long[] getGroupIds(ThemeDisplay themeDisplay)
+		throws PortalException, SystemException {
+
+		return getGroupIds(themeDisplay.getScopeGroupId());
+	}
+
 	public String[] getGroupPermissions(HttpServletRequest request) {
 		return request.getParameterValues("groupPermissions");
 	}
@@ -3884,7 +3908,7 @@ public class PortalImpl implements Portal {
 	}
 
 	public String getUniqueElementId(
-		HttpServletRequest request, String elementId) {
+		HttpServletRequest request, String namespace, String elementId) {
 
 		String uniqueElementId = elementId;
 
@@ -3899,7 +3923,9 @@ public class PortalImpl implements Portal {
 		else {
 			int i = 1;
 
-			while (uniqueElementIds.contains(uniqueElementId)) {
+			while (uniqueElementIds.contains(
+						namespace.concat(uniqueElementId))) {
+
 				uniqueElementId = elementId.concat(StringPool.UNDERLINE).concat(
 					String.valueOf(i));
 
@@ -3907,13 +3933,16 @@ public class PortalImpl implements Portal {
 			}
 		}
 
-		uniqueElementIds.add(uniqueElementId);
+		uniqueElementIds.add(namespace.concat(uniqueElementId));
 
 		return uniqueElementId;
 	}
 
-	public String getUniqueElementId(PortletRequest request, String elementId) {
-		return getUniqueElementId(getHttpServletRequest(request), elementId);
+	public String getUniqueElementId(
+		PortletRequest request, String namespace, String elementId) {
+
+		return getUniqueElementId(
+			getHttpServletRequest(request), namespace, elementId);
 	}
 
 	public UploadPortletRequest getUploadPortletRequest(

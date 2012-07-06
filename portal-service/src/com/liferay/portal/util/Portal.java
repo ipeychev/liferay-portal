@@ -613,6 +613,12 @@ public interface Portal {
 			Group group, boolean privateLayoutSet, ThemeDisplay themeDisplay)
 		throws PortalException, SystemException;
 
+	public long[] getGroupIds(long groupId)
+		throws PortalException, SystemException;
+
+	public long[] getGroupIds(ThemeDisplay themeDisplay)
+		throws PortalException, SystemException;
+
 	public String[] getGroupPermissions(HttpServletRequest request);
 
 	public String[] getGroupPermissions(PortletRequest portletRequest);
@@ -923,9 +929,11 @@ public interface Portal {
 
 	public String[] getSystemSiteRoles();
 
-	public String getUniqueElementId(HttpServletRequest request, String id);
+	public String getUniqueElementId(
+		HttpServletRequest request, String namespace, String id);
 
-	public String getUniqueElementId(PortletRequest request, String id);
+	public String getUniqueElementId(
+		PortletRequest request, String namespace, String id);
 
 	public UploadPortletRequest getUploadPortletRequest(
 		PortletRequest portletRequest);

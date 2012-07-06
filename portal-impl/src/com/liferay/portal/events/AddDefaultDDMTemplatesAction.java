@@ -22,7 +22,6 @@ import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.model.Group;
-import com.liferay.portal.model.GroupConstants;
 import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.UserLocalServiceUtil;
@@ -104,8 +103,7 @@ public class AddDefaultDDMTemplatesAction extends SimpleAction {
 	protected void doRun(long companyId) throws Exception {
 		ServiceContext serviceContext = new ServiceContext();
 
-		Group group = GroupLocalServiceUtil.getGroup(
-			companyId, GroupConstants.GUEST);
+		Group group = GroupLocalServiceUtil.getCompanyGroup(companyId);
 
 		serviceContext.setScopeGroupId(group.getGroupId());
 

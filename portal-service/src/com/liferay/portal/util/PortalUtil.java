@@ -512,6 +512,18 @@ public class PortalUtil {
 			group, privateLayoutSet, themeDisplay);
 	}
 
+	public static long[] getGroupIds(long groupId)
+		throws PortalException, SystemException {
+
+		return getPortal().getGroupIds(groupId);
+	}
+
+	public static long[] getGroupIds(ThemeDisplay themeDisplay)
+		throws PortalException, SystemException {
+
+		return getPortal().getGroupIds(themeDisplay);
+	}
+
 	public static String[] getGroupPermissions(HttpServletRequest request) {
 		return getPortal().getGroupPermissions(request);
 	}
@@ -1150,13 +1162,15 @@ public class PortalUtil {
 	}
 
 	public static String getUniqueElementId(
-		HttpServletRequest request, String id) {
+		HttpServletRequest request, String namespace, String id) {
 
-		return getPortal().getUniqueElementId(request, id);
+		return getPortal().getUniqueElementId(request, namespace, id);
 	}
 
-	public static String getUniqueElementId(PortletRequest request, String id) {
-		return getPortal().getUniqueElementId(request, id);
+	public static String getUniqueElementId(
+		PortletRequest request, String namespace, String id) {
+
+		return getPortal().getUniqueElementId(request, namespace, id);
 	}
 
 	public static UploadPortletRequest getUploadPortletRequest(
