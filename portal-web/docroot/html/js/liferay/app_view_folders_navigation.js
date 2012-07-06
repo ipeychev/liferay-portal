@@ -19,21 +19,11 @@ AUI.add(
 
 		var DATA_VIEW_FOLDERS = 'data-view-folders';
 
-		var DISPLAY_STYLE_LIST = 'list';
-
-		var DISPLAY_STYLE_TOOLBAR = 'displayStyleToolbar';
-
 		var EXPAND_FOLDER = 'expandFolder';
 
 		var MESSAGE_TYPE_ERROR = 'error';
 
-		var ROWS_PER_PAGE = 'rowsPerPage';
-
 		var SEARCH_REPOSITORY_ID = 'searchRepositoryId';
-
-		var SRC_DISPLAY_STYLE_BUTTONS = 0;
-
-		var SRC_ENTRIES_PAGINATOR = 1;
 
 		var SRC_HISTORY = 2;
 
@@ -41,23 +31,13 @@ AUI.add(
 
 		var SRC_SEARCH = 3;
 
-		var STR_ACTIVE = 'active';
-
 		var STR_AJAX_REQUEST = 'ajax';
 
 		var STR_CLICK = 'click';
 
 		var STR_DATA = 'data';
 
-		var STR_ENTRY_END = 'entryEnd';
-
-		var STR_ENTRY_START = 'entryStart';
-
-		var STR_FOLDER_END = 'folderEnd';
-
 		var STR_FOLDER_ID = 'folderId';
-
-		var STR_FOLDER_START = 'folderStart';
 
 		var STRUTS_ACTION = 'struts_action';
 
@@ -101,9 +81,6 @@ AUI.add(
 
 						instance._pageNavigation = config.pageNavigation;
 
-						instance._entryPaginator = instance._pageNavigation.getEntryPaginator();
-						instance._folderPaginator = instance._pageNavigation.getFolderPaginator();
-
 						instance._portletContainer = portletContainer;
 
 						instance._displayStyle = instance.ns('displayStyle');
@@ -111,13 +88,7 @@ AUI.add(
 
 						instance._displayStyleToolbar = instance.byId(config.displayStyleToolbarId);
 
-						instance._displayViews = config.displayViews;
-
-						instance._selectNavigation = config.selectNavigation;
-
 						instance._portletMessageContainer = A.Node.create(TPL_MESSAGE_RESPONSE);
-
-						instance._displayStyleCSSClass = config.displayStyleCSSClass;
 
 						instance._entriesContainer = instance.byId('entriesContainer');
 
@@ -242,6 +213,81 @@ AUI.add(
 						delete data[STR_AJAX_REQUEST];
 
 						instance._lastDataRequest = data;
+
+						Liferay.fire(
+							'liferay-app-view-folders-navigation:afterDataRequest',
+							{
+								data: data
+							}
+						);
+
+					},
+
+					_afterListViewItemChange: function(event, data) {
+						var instance = this;
+
+						var selFolder = A.one('.folder.selected');
+
+						if (selFolder) {
+							selFolder.removeClass(CSS_SELECTED);
+						}
+
+						var item = event.newVal;
+
+						item.ancestor('.folder').addClass(CSS_SELECTED);
+
+						var dataExpandFolder = item.attr('data-expand-folder');
+						var dataStructureId = item.attr(data.entryTypeId);
+						var dataFolderId = item.attr(DATA_FOLDER_ID);
+						var dataNavigation = item.attr('data-navigation');
+						var dataViewEntries = item.attr(DATA_VIEW_ENTRIES);
+						var dataViewFolders = item.attr(DATA_VIEW_FOLDERS);
+
+						var direction = 'left';
+
+						if (item.attr(DATA_DIRECTION_RIGHT)) {
+							direction = 'right';
+						}
+
+						instance._listView.set('direction', direction);
+
+						var config = instance._config;
+
+						var requestParams = {};
+
+						requestParams[instance.ns(STRUTS_ACTION)] = config.strutsAction;
+
+						if (dataExpandFolder) {
+							requestParams[instance.ns(EXPAND_FOLDER)] = dataExpandFolder;
+						}
+
+						if (dataFolderId) {
+							requestParams[instance._folderId] = dataFolderId;
+						}
+
+						if (dataNavigation) {
+							requestParams[instance.ns('navigation')] = dataNavigation;
+						}
+
+						if (dataViewEntries) {
+							requestParams[instance.ns(VIEW_ENTRIES)] = dataViewEntries;
+						}
+
+						if (dataStructureId) {
+							requestParams[instance.ns(data.requestParam)] = dataStructureId;
+						}
+
+						if (dataViewFolders) {
+							requestParams[instance.ns(VIEW_FOLDERS)] = dataViewFolders;
+						}
+
+						Liferay.fire(
+							instance._eventDataRequest,
+							{
+								requestParams: requestParams,
+								resetPaginator: true
+							}
+						);
 					},
 
 					_getDefaultHistoryState: function() {
@@ -259,31 +305,13 @@ AUI.add(
 					_onDataRequest: function(event) {
 						var instance = this;
 
-						var src = event.src;
-
-						if (src === SRC_DISPLAY_STYLE_BUTTONS || src === SRC_ENTRIES_PAGINATOR) {
-							var selectedEntries;
-
-							var entriesSelector = '.' + instance._displayStyleCSSClass + '.selected' + ' :checkbox';
-
-							if (instance._selectNavigation._getDisplayStyle(instance._displayStyle, DISPLAY_STYLE_LIST)) {
-								entriesSelector = 'td > :checkbox:checked';
-							}
-
-							selectedEntries = instance._entriesContainer.all(entriesSelector);
-
-							if (selectedEntries.size()) {
-								instance._selectNavigation._setSelectedEntries(selectedEntries.val());
-							}
-						}
-
 						instance._processDefaultParams(event);
 
 						Liferay.fire(
 							'liferay-app-view-folders-navigation:dataRequest',
 							{
 								requestParams: event.requestParams,
-								src: src
+								src: event.src
 							}
 						);
 					},
@@ -307,12 +335,8 @@ AUI.add(
 
 						requestParams[instance.ns(STRUTS_ACTION)] = config.strutsAction;
 						requestParams[instance.ns('action')] = 'browseFolder';
-						requestParams[instance.ns(STR_ENTRY_END)] = instance._entryPaginator.get(ROWS_PER_PAGE);
-						requestParams[instance.ns(STR_FOLDER_END)] = instance._folderPaginator.get(ROWS_PER_PAGE);
 						requestParams[instance._folderId] = event.currentTarget.attr(DATA_FOLDER_ID);
 						requestParams[instance.ns(EXPAND_FOLDER)] = false;
-						requestParams[instance.ns(STR_ENTRY_START)] = 0;
-						requestParams[instance.ns(STR_FOLDER_START)] = 0;
 
 						var viewEntries = event.currentTarget.attr(DATA_VIEW_ENTRIES);
 
@@ -337,7 +361,8 @@ AUI.add(
 						Liferay.fire(
 							instance._eventDataRequest,
 							{
-								requestParams: requestParams
+								requestParams: requestParams,
+								resetPaginator: true
 							}
 						);
 					},
@@ -504,9 +529,6 @@ AUI.add(
 							entriesContainer.setContent(entries);
 
 							Liferay.fire('liferay-app-view-folders-navigation:setEntries');
-
-							instance._selectNavigation._updateSelectedEntriesStatus();
-
 						}
 					},
 
@@ -533,24 +555,6 @@ AUI.add(
 							var parentFolderTitleContainer = instance.byId('parentFolderTitleContainer');
 
 							parentFolderTitleContainer.setContent(parentFolderTitle);
-						}
-					},
-
-					_syncDisplayStyleToolbar: function(content) {
-						var instance = this;
-
-						var displayViews = instance._displayViews;
-
-						var length = displayViews.length;
-
-						if (length > 1) {
-							var displayStyleToolbar = instance._displayStyleToolbar.getData(DISPLAY_STYLE_TOOLBAR);
-
-							var displayStyle = instance._selectNavigation._getDisplayStyle();
-
-							for (var i = 0; i < length; i++) {
-								displayStyleToolbar.item(i).StateInteraction.set(STR_ACTIVE, displayStyle === displayViews[i]);
-							}
 						}
 					}
 				}

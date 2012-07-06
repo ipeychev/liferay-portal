@@ -126,8 +126,6 @@ AUI.add(
 							}
 						).render();
 
-						instance._displayViews = config.displayViews;
-
 						var pageNavigation = new AppViewPageNavigation(
 							{
 								'entriesTotal' : config.entriesTotal,
@@ -146,6 +144,8 @@ AUI.add(
 
 						instance._pageNavigation = pageNavigation;
 
+						var displayStyleToolbar = instance.byId(DISPLAY_STYLE_TOOLBAR);
+
 						var selectNavigation = new AppViewSelectNavigation(
 							{
 								'checkBoxesId' :
@@ -155,6 +155,8 @@ AUI.add(
 									],
 								'displayStyle' : config.displayStyle,
 								'displayStyleCssClass' : 'article-display-style',
+								'displayStyleToolbar': displayStyleToolbar,
+								'displayViews' : config.displayViews,
 								'folderContainer' : folderContainer,
 								'namespace' : config.namespace,
 								'portletContainerId': instance.ns('journalContainer'),
@@ -203,13 +205,11 @@ AUI.add(
 								'displayStyle' : config.displayStyle,
 								'displayStyleCssClass' : 'article-display-style',
 								'displayStyleToolbarId' : DISPLAY_STYLE_TOOLBAR,
-								'displayViews' : instance._displayViews,
 								'listView' : instance._listView,
 								'mainUrl': config.mainUrl,
 								'namespace': instance.NS,
 								'pageNavigation': pageNavigation,
-								'portletContainerId': instance.ns('journalContainer'),
-								'selectNavigation' : selectNavigation
+								'portletContainerId': instance.ns('journalContainer')
 							}
 						);
 
@@ -380,7 +380,7 @@ AUI.add(
 							instance._foldersNavigation._setEntries(content);
 							instance._foldersNavigation._setFolders(content);
 							instance._foldersNavigation._setParentFolderTitle(content);
-							instance._foldersNavigation._syncDisplayStyleToolbar(content);
+							instance._selectNavigation._syncDisplayStyleToolbar(content);
 							instance._setSearchResults(content);
 						}
 					},

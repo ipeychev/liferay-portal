@@ -106,6 +106,7 @@ AUI.add(
 						instance._folderPaginator = folderPaginator;
 
 						Liferay.on('liferay-app-view-folders-navigation:dataRequest', instance._onDataRequest, instance);
+						Liferay.on('liferay-app-view-folders-navigation:afterDataRequest', instance._afterDataRequest, instance);
 					},
 
 					destructor: function() {
@@ -113,6 +114,12 @@ AUI.add(
 
 						instance._entryPaginator.destroy();
 						instance._folderPaginator.destroy();
+					},
+
+					_afterDataRequest: function(event) {
+						var instance = this;
+
+						instance._lastDataRequest = event.data;
 					},
 
 					getEntryPaginator: function() {
@@ -181,7 +188,7 @@ AUI.add(
 					_onDataRequest: function(event) {
 						var instance = this;
 
-						instance._updatePaginatorValues(event.requestParams);
+						instance._updatePaginatorValues(event.requestParams, event.resetPaginator);
 
 						var src = event.src;
 
@@ -258,15 +265,21 @@ AUI.add(
 						}
 					},
 
-					_updatePaginatorValues: function(requestParams) {
+					_updatePaginatorValues: function(requestParams, resetPaginator) {
 						var instance = this;
-
-						var entryStartEndParams = instance._getResultsStartEnd(instance._entryPaginator);
-						var folderStartEndParams = instance._getResultsStartEnd(instance._folderPaginator);
 
 						var customParams = {};
 
-						if (requestParams) {
+						if (resetPaginator) {
+							customParams[instance.ns(STR_ENTRY_START)] = 0;
+							customParams[instance.ns(STR_ENTRY_END)] = instance._entryPaginator.get(ROWS_PER_PAGE);
+							customParams[instance.ns(STR_FOLDER_START)] = 0;
+							customParams[instance.ns(STR_FOLDER_END)] = instance._folderPaginator.get(ROWS_PER_PAGE);
+						}
+						else {
+							var entryStartEndParams = instance._getResultsStartEnd(instance._entryPaginator);
+							var folderStartEndParams = instance._getResultsStartEnd(instance._folderPaginator);
+
 							if (!owns(requestParams, instance.ns(STR_ENTRY_START)) && !owns(requestParams, instance.ns(STR_ENTRY_END))) {
 								customParams[instance.ns(STR_ENTRY_START)] = entryStartEndParams[0];
 								customParams[instance.ns(STR_ENTRY_END)] = entryStartEndParams[1];
@@ -276,10 +289,10 @@ AUI.add(
 								customParams[instance.ns(STR_FOLDER_START)] = folderStartEndParams[0];
 								customParams[instance.ns(STR_FOLDER_END)] = folderStartEndParams[1];
 							}
+						}
 
-							if (!AObject.isEmpty(customParams)) {
-								A.mix(requestParams, customParams, true);
-							}
+						if (!AObject.isEmpty(customParams)) {
+							A.mix(requestParams, customParams, true);
 						}
 					}
 				},

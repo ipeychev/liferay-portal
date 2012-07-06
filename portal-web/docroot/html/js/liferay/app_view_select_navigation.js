@@ -18,6 +18,14 @@ AUI.add(
 
 		var DISPLAY_STYLE_LIST = 'list';
 
+		var DISPLAY_STYLE_TOOLBAR = 'displayStyleToolbar';
+
+		var SRC_DISPLAY_STYLE_BUTTONS = 0;
+
+		var SRC_ENTRIES_PAGINATOR = 1;
+
+		var STR_ACTIVE = 'active';
+
 		var STR_CLICK = 'click';
 
 		var STR_FOCUS = 'focus';
@@ -39,8 +47,16 @@ AUI.add(
 						validator: Lang.isString
 					},
 
+					displayStyleToolbar: {
+						setter: '_setDisplayStyleToolbar'
+					},
+
+					displayViews: {
+						validator: Lang.isObject
+					},
+
 					folderContainer: {
-						setter: '_setFolderContainer'
+						validator: Lang.isObject
 					},
 
 					portletContainerId: {
@@ -86,6 +102,8 @@ AUI.add(
 
 						instance._initHover();
 
+						Liferay.on('liferay-app-view-folders-navigation:dataRequest', instance._onDataRequest, instance);
+						Liferay.on('liferay-app-view-folders-navigation:setEntries', instance._onSetEntries, instance);
 						Liferay.on('liferay-app-view-dd-navigation:dragStart', instance._onDragStart, instance);
 
 						if (themeDisplay.isSignedIn()) {
@@ -166,6 +184,27 @@ AUI.add(
 						);
 					},
 
+					_onDataRequest: function(event) {
+						var instance = this;
+
+						var src = event.src;
+
+						if (src === SRC_DISPLAY_STYLE_BUTTONS || src === SRC_ENTRIES_PAGINATOR) {
+							var entriesSelector = '.' + instance._displayStyleCSSClass + '.selected' + ' :checkbox';
+
+							if (instance._getDisplayStyle(instance._displayStyle, DISPLAY_STYLE_LIST)) {
+								entriesSelector = 'td > :checkbox:checked';
+							}
+
+							var selectedEntries = instance._entriesContainer.all(entriesSelector);
+
+							if (selectedEntries.size()) {
+								instance._setSelectedEntries(selectedEntries.val());
+							}
+
+						}
+					},
+
 					_onDragStart: function(event) {
 						var instance = this;
 
@@ -194,6 +233,12 @@ AUI.add(
 						instance._toggleEntriesSelection();
 					},
 
+					_onSetEntries: function(event) {
+						var instance = this;
+
+						instance._updateSelectedEntriesStatus();
+					},
+
 					_setFolderContainer: function(value) {
 						return A.one(value);
 					},
@@ -202,6 +247,24 @@ AUI.add(
 						var instance = this;
 
 						instance._selectedEntries = selectedEntries;
+					},
+
+					_syncDisplayStyleToolbar: function(content) {
+						var instance = this;
+
+						var displayViews = instance.get('displayViews');
+
+						var length = displayViews.length;
+
+						if (length > 1) {
+							var displayStyleToolbar = instance.get('displayStyleToolbar').getData(DISPLAY_STYLE_TOOLBAR);
+
+							var displayStyle = instance._getDisplayStyle();
+
+							for (var i = 0; i < length; i++) {
+								displayStyleToolbar.item(i).StateInteraction.set(STR_ACTIVE, displayStyle === displayViews[i]);
+							}
+						}
 					},
 
 					_toggleEntriesSelection: function() {
