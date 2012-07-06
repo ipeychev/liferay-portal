@@ -70,7 +70,7 @@ List<Folder> mountFolders = DLAppServiceUtil.getMountFolders(scopeGroupId, DLFol
 
 int total = 0;
 
-if (folderId != rootFolderId) {
+if (folderId != rootFolderId || expandFolder) {
 	total = DLAppServiceUtil.getFoldersCount(repositoryId, parentFolderId, false);
 }
 
