@@ -122,6 +122,7 @@
 			<equals arg1="${app.server.type}" arg2="jboss" />
 			<then>
 				<echo file="${war.file.dest}.dodeploy" />
+				<delete file="${war.file.dest}.failed" failonerror="false" />
 			</then>
 		</if>
 

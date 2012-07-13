@@ -14,11 +14,14 @@
 
 package com.liferay.portal.tools.deploy;
 
+import aQute.bnd.main.bnd;
+
 import com.liferay.portal.deploy.DeployUtil;
 import com.liferay.portal.deploy.auto.AutoDeployer;
 import com.liferay.portal.kernel.deploy.Deployer;
 import com.liferay.portal.kernel.deploy.auto.AutoDeployException;
 import com.liferay.portal.kernel.deploy.auto.context.AutoDeploymentContext;
+import com.liferay.portal.kernel.deploy.hot.DependencyManagementThreadLocal;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.plugin.License;
@@ -955,11 +958,13 @@ public class BaseDeployer implements AutoDeployer, Deployer {
 	public String downloadJar(String jar) throws Exception {
 		String tmpDir = SystemProperties.get(SystemProperties.TMP_DIR);
 
-		File file = new File(
-			tmpDir + "/liferay/com/liferay/portal/deploy/dependencies/" + jar);
+		String fileName =
+			tmpDir + "/liferay/com/liferay/portal/deploy/dependencies/" + jar;
 
-		if (!file.exists()) {
-			synchronized (this) {
+		File file = new File(fileName);
+
+		synchronized (this) {
+			if (!file.exists()) {
 				String url = PropsUtil.get(
 					PropsKeys.LIBRARY_DOWNLOAD_URL + jar);
 
@@ -970,10 +975,34 @@ public class BaseDeployer implements AutoDeployer, Deployer {
 				byte[] bytes = HttpUtil.URLtoByteArray(url);
 
 				FileUtil.write(file, bytes);
+
+				if (DependencyManagementThreadLocal.isEnabled()) {
+					// convert to a valid OSGI bundle every jar file
+					// which is provisioned at runtime.
+
+					bnd bnd = new bnd();
+
+					File output = new File(
+						tmpDir,
+						"/liferay/com/liferay/portal/deploy/dependencies/");
+
+					boolean doWrap = bnd.doWrap(
+						null, file, output, null, 0, null);
+
+					if (doWrap) {
+						String[] filenameWithoutExtension = StringUtil.split(
+							fileName, ".jar");
+
+						FileUtil.move(
+							filenameWithoutExtension[0] + ".bar", fileName);
+					}
+
+					bnd.close();
+				}
 			}
 		}
 
-		return FileUtil.getAbsolutePath(file);
+		return fileName;
 	}
 
 	public String fixPortalDependencyJar(String portalJar) {
@@ -1331,6 +1360,36 @@ public class BaseDeployer implements AutoDeployer, Deployer {
 		return PropertiesUtil.load(propertiesString);
 	}
 
+	public String getPluginPackageRequiredDeploymentContextsXml(
+		List<String> requiredDeploymentContexts) {
+
+		if (requiredDeploymentContexts.isEmpty()) {
+			return StringPool.BLANK;
+		}
+
+		StringBundler sb = new StringBundler(
+			requiredDeploymentContexts.size() * 3 + 2);
+
+		for (int i = 0; i < requiredDeploymentContexts.size(); i++) {
+			String requiredDeploymentContext = requiredDeploymentContexts.get(
+				i);
+
+			if (i == 0) {
+				sb.append("\r\n");
+			}
+
+			sb.append("\t\t<required-deployment-context>");
+			sb.append(requiredDeploymentContext);
+			sb.append("</required-deployment-context>\r\n");
+
+			if ((i + 1) == requiredDeploymentContexts.size()) {
+				sb.append("\t");
+			}
+		}
+
+		return sb.toString();
+	}
+
 	public String getPluginPackageTagsXml(List<String> tags) {
 		if (tags.isEmpty()) {
 			return StringPool.BLANK;
@@ -1375,6 +1434,13 @@ public class BaseDeployer implements AutoDeployer, Deployer {
 		filterMap.put("module_version", pluginPackage.getVersion());
 
 		filterMap.put("plugin_name", pluginPackage.getName());
+		filterMap.put(
+			"recommended_deployment_context",
+			pluginPackage.getRecommendedDeploymentContext());
+		filterMap.put(
+			"required_deployment_contexts",
+			getPluginPackageRequiredDeploymentContextsXml(
+				pluginPackage.getRequiredDeploymentContexts()));
 		filterMap.put("plugin_type", pluginType);
 		filterMap.put(
 			"plugin_type_name",
