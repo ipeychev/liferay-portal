@@ -390,7 +390,7 @@ public class LayoutAction extends Action {
 					PortletContainerUtil.render(request, response, portlet);
 
 					StringServletResponse stringResponse =
-						(StringServletResponse)response;
+						new StringServletResponse(response);
 
 					JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
 
