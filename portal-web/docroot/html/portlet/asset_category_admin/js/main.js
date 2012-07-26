@@ -462,13 +462,8 @@ AUI.add(
 
 						var selectedCategory = instance._selectedCategory;
 
-						if (selectedCategory) {
-							if (Lang.isFunction(selectedCategory.unselect)) {
-								selectedCategory.unselect();
-							}
-							else {
-								selectedCategory.removeClass(STR_SELECTED);
-							}
+						if (selectedCategory && Lang.isFunction(selectedCategory.unselect)) {
+							selectedCategory.unselect();
 						}
 					},
 
