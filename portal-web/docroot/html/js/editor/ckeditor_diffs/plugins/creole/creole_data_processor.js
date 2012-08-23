@@ -445,6 +445,12 @@
 		_handleOrderedList: function(element, listTagsIn, listTagsOut) {
 			var instance = this;
 
+			var length = instance._listsStack.length;
+
+			for (i = 0; i < length; i++) {
+				instance._listsStack[i] = TAG_ORDERED_LIST_ITEM;
+			}
+
 			instance._listsStack.push(TAG_ORDERED_LIST_ITEM);
 		},
 
@@ -541,6 +547,12 @@
 
 		_handleUnorderedList: function(element, listTagsIn, listTagsOut) {
 			var instance = this;
+
+			var length = instance._listsStack.length;
+
+			for (i = 0; i < length; i++) {
+				instance._listsStack[i] = TAG_UNORDERED_LIST_ITEM;
+			}
 
 			instance._listsStack.push(TAG_UNORDERED_LIST_ITEM);
 		},
