@@ -98,6 +98,20 @@ public class CountryServiceImpl extends CountryServiceBaseImpl {
 		return countryPersistence.findByActive(active);
 	}
 
+	public List<Country> getCountries(boolean active, String languageId)
+		throws SystemException {
+
+		List<Country> countryList = countryPersistence.findByActive(active);
+
+		if (languageId != null) {
+			for (Country country : countryList) {
+				country.setNameCurrentLanguageId(languageId);
+			}
+		}
+
+		return countryList;
+	}
+
 	public Country getCountry(long countryId)
 		throws PortalException, SystemException {
 
