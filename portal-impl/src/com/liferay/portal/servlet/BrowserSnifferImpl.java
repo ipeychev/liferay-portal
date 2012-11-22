@@ -18,6 +18,7 @@ import com.liferay.portal.kernel.servlet.BrowserSniffer;
 import com.liferay.portal.kernel.servlet.HttpHeaders;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.Validator;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -336,7 +337,7 @@ public class BrowserSnifferImpl implements BrowserSniffer {
 
 		accept = String.valueOf(request.getAttribute(HttpHeaders.ACCEPT));
 
-		if (accept != null) {
+		if (Validator.isNotNull(accept)) {
 			return accept;
 		}
 
@@ -364,7 +365,7 @@ public class BrowserSnifferImpl implements BrowserSniffer {
 		userAgent = String.valueOf(
 			request.getAttribute(HttpHeaders.USER_AGENT));
 
-		if (userAgent != null) {
+		if (Validator.isNotNull(userAgent)) {
 			return userAgent;
 		}
 
