@@ -41,7 +41,11 @@ if (Validator.isNotNull(portletResourceNamespace)) {
 		window,
 		'<portlet:namespace />saveTemplate',
 		function() {
-			document.<portlet:namespace />fm.<portlet:namespace />script.value = window.<portlet:namespace />formBuilder.getXSD();
+			document.<portlet:namespace />fm.<portlet:namespace />script.value = Liferay.FormBuilder.getContextXSD(
+				window.<portlet:namespace />formBuilderTabs,
+				window.<portlet:namespace />formBuilderEditor,
+				window.<portlet:namespace />formBuilder
+			);
 
 			submitForm(document.<portlet:namespace />fm);
 		},

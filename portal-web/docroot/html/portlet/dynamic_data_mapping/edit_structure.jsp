@@ -265,7 +265,11 @@ if (scriptJSONArray != null) {
 		window,
 		'<portlet:namespace />saveStructure',
 		function() {
-			document.<portlet:namespace />fm.<portlet:namespace />xsd.value = window.<portlet:namespace />formBuilder.getXSD();
+			document.<portlet:namespace />fm.<portlet:namespace />xsd.value = Liferay.FormBuilder.getContextXSD(
+				window.<portlet:namespace />formBuilderTabs,
+				window.<portlet:namespace />formBuilderEditor,
+				window.<portlet:namespace />formBuilder
+			);
 
 			submitForm(document.<portlet:namespace />fm);
 		},

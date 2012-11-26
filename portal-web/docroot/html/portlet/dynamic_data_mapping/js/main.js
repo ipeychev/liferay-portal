@@ -647,6 +647,19 @@ AUI.add(
 					);
 
 					return str.replace(/\s/g, '_');
+				},
+
+				getContextXSD: function(tabView, editor, formBuilder) {
+					var content;
+
+					if (tabView && tabView.getTab(1).get('active')) {
+						content = editor.get('value');
+					}
+					else {
+						content = formBuilder.getXSD();
+					}
+
+					return content;
 				}
 			}
 		);
