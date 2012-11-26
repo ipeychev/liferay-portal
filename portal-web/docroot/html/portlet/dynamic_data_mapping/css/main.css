@@ -98,4 +98,12 @@
 			height: 400px;
 		}
 	}
+
+	.aui-form-builder-source-wrapper {
+		position: relative;
+		
+		.aui-form-builder-source {
+			position: relative;
+		}
+	}	
 }

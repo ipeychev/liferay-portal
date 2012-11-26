@@ -1,3 +1,4 @@
+
 <%--
 /**
  * Copyright (c) 2000-2012 Liferay, Inc. All rights reserved.
@@ -113,39 +114,63 @@ String defaultLanguageId = LocalizationUtil.getDefaultLocale(script);
 	</div>
 </div>
 
-<div class="aui-diagram-builder" id="<portlet:namespace />formBuilder">
-	<div class="aui-diagram-builder-content aui-helper-clearfix" id="<portlet:namespace />formBuilderContent">
-		<div class="aui-diagram-builder-tabs">
-			<div class="aui-diagram-builder-tabs-content">
-				<ul class="aui-tabview-list aui-widget-hd">
-					<li class="aui-state-active aui-state-default aui-tab aui-tab-active">
-						<span class="aui-tab-content">
-							<a class="aui-tab-label" href="javascript:;">
-								<liferay-ui:message key="fields" />
-							</a>
-						</span>
-					</li>
-					<li class="aui-state-default aui-tab">
-						<span class="aui-tab-content">
-							<a class="aui-tab-label" href="javascript:;">
-								<liferay-ui:message key="settings" />
-							</a>
-						</span>
-					</li>
-				</ul>
 
-				<div class="aui-tabview-content aui-widget-bd">
-					<div class="aui-tabview-content-item"></div>
+<div id="<portlet:namespace />formBuilderTabView">
+	<ul class="aui-tabview-list aui-widget-hd" id="<portlet:namespace />formBuilderTabs">
+		<li class="aui-tab">
+			<a class="aui-tab-label" href="#<portlet:namespace />formBuilderTab">
+				<liferay-ui:message key="view" />
+			</a>
+		</li>
+		<li class="aui-tab">
+			<a class="aui-tab-label" href="#<portlet:namespace />formBuilderSourceTab">
+				<liferay-ui:message key="source" />
+			</a>
+		</li>
+	</ul>
 
-					<div class="aui-helper-hidden aui-tabview-content-item"></div>
+	<div class="aui-tabview-content aui-widget-bd" id="<portlet:namespace />formBuilderViewContent">
+		<div class="aui-tabview-content-item" id="<portlet:namespace />formBuilderTab">
+			<div class="aui-diagram-builder" id="<portlet:namespace />formBuilder">
+				<div class="aui-diagram-builder-content aui-helper-clearfix" id="<portlet:namespace />formBuilderContent">
+					<div class="aui-diagram-builder-tabs">
+						<div class="aui-diagram-builder-tabs-content">
+							<ul class="aui-tabview-list aui-widget-hd">
+								<li class="aui-state-active aui-state-default aui-tab aui-tab-active">
+									<span class="aui-tab-content">
+										<a class="aui-tab-label" href="javascript:;">
+											<liferay-ui:message key="fields" />
+										</a>
+									</span>
+								</li>
+								<li class="aui-state-default aui-tab">
+									<span class="aui-tab-content">
+										<a class="aui-tab-label" href="javascript:;">
+											<liferay-ui:message key="settings" />
+										</a>
+									</span>
+								</li>
+							</ul>
+
+							<div class="aui-tabview-content aui-widget-bd">
+								<div class="aui-tabview-content-item"></div>
+
+								<div class="aui-helper-hidden aui-tabview-content-item"></div>
+							</div>
+						</div>
+					</div>
+
+					<div class="aui-diagram-builder-content-container"></div>
 				</div>
 			</div>
 		</div>
-
-		<div class="aui-diagram-builder-content-container"></div>
+		<div class="aui-tabview-content-item" id="<portlet:namespace />formBuilderSourceTab">
+			<div class="aui-form-builder-source-wrapper" id="<portlet:namespace />formBuilderSourceWrapper">
+				<div class="aui-form-builder-source" id="<portlet:namespace />formBuilderEditor"></div>
+			</div>
+		</div>
 	</div>
 </div>
-
 <%
 JSONArray availableLocalesJSONArray = JSONFactoryUtil.createJSONArray();
 
@@ -160,8 +185,100 @@ for (int i = 0; i < locales.length; i++) {
 }
 %>
 
-<aui:script use="liferay-portlet-dynamic-data-mapping">
-	window.<portlet:namespace />formBuilder = new Liferay.FormBuilder(
+<aui:script use="liferay-portlet-dynamic-data-mapping,aui-tabs,aui-ace-editor,liferay-xml-beautifier">
+	var formEditor, xmlBeautifier;
+
+	var clearFormBuilderNode = function() {
+		var formBuilderNode = A.one('#<portlet:namespace />formBuilder');
+
+		formBuilderNode.purge(true);
+
+		formBuilderNode.html('<div class="loading-animation" />');
+	};
+
+	var getFormEditor = function() {
+		if (!formEditor) {
+			formEditor = new A.AceEditor(
+				{
+					boundingBox: '#<portlet:namespace />formBuilderEditor',
+					mode: 'xml',
+					tabSize: 4,
+					width: A.one('#<portlet:namespace />formBuilderViewContent').get('clientWidth')
+				}
+			).render();
+		}
+
+		return formEditor;
+	};
+
+	var getXMLBeautifier = function() {
+		if (!xmlBeautifier) {
+			xmlBeautifier = new Liferay.XMLBeautifier();
+		}
+
+		return xmlBeautifier;
+	};
+
+	var isViewTabActive = function(tabNode) {
+		return !!tabNode.get('contentNode').one('.aui-diagram-builder');
+	};
+
+	var reloadFormBuilderData = function() {
+		A.io.request(
+			'',
+			{
+				dataType: 'json',
+				on: {
+					success: function(event, id, obj) {
+						
+					},
+					failure: function(event, id, obj) {
+						
+					}
+				}
+			}
+		);
+	};
+
+	var switchToSource = function() {
+		formEditor = getFormEditor();
+
+		xmlBeautifier = getXMLBeautifier();
+
+		var content = formBuilder.getXSD();
+
+		content = xmlBeautifier.beautify(content);
+
+		formEditor.set('value', content);
+	};
+
+	var switchToView = function() {
+		clearFormBuilderNode();
+
+		reloadFormBuilderData();
+	};
+
+	var formBuilderTabs = new A.TabView(
+		{
+			boundingBox: '#<portlet:namespace />formBuilderTabView',
+			contentNode: '#<portlet:namespace />formBuilderViewContent',
+			listNode: '#<portlet:namespace />formBuilderTabs'
+		}
+	).render();
+
+	formBuilderTabs.on(
+		'activeTabChange',
+		function(event) {
+			if (isViewTabActive(event.newVal)) {
+				switchToView();
+			}
+			else {
+				switchToSource();
+			}
+		}
+	);
+
+	var formBuilder = new Liferay.FormBuilder(
 		{
 			<c:if test="<%= Validator.isNotNull(scopeAvailableFields) %>">
 				availableFields: A.Object.getValue(window, '<%= HtmlUtil.escapeJS(scopeAvailableFields) %>'.split('.')),
@@ -192,4 +309,9 @@ for (int i = 0; i < locales.length; i++) {
 			srcNode: '#<portlet:namespace />formBuilderContent'
 		}
 	).render();
+
+	window.<portlet:namespace />formBuilder = formBuilder;
+
+	window.<portlet:namespace />formBuilderTabs = formBuilderTabs;
+
 </aui:script>
