@@ -70,49 +70,53 @@ Map<String, String> requestParams = (Map<String, String>)request.getAttribute("l
 			);
 		}
 
-		var displayStyleToolbarChildren = [];
+		var toolbarContent = A.one('.aui-toolbar-content');
 
-		<%
-		for (int i = 0; i < displayStyles.length; i++) {
-		%>
+		if (toolbarContent == null) {
+			var displayStyleToolbarChildren = [];
 
-			displayStyleToolbarChildren.push(
-				{
-					handler: A.bind(onButtonClick, null, '<%= displayStyles[i] %>'),
-					icon: 'display-<%= displayStyles[i] %>',
-					title: '<%= UnicodeLanguageUtil.get(pageContext, displayStyles[i] + "-view") %>'
-				}
-			);
+			<%
+			for (int i = 0; i < displayStyles.length; i++) {
+			%>
 
-		<%
-		}
-		%>
+				displayStyleToolbarChildren.push(
+					{
+						handler: A.bind(onButtonClick, null, '<%= displayStyles[i] %>'),
+						icon: 'display-<%= displayStyles[i] %>',
+						title: '<%= UnicodeLanguageUtil.get(pageContext, displayStyles[i] + "-view") %>'
+					}
+				);
 
-		var displayStyleToolbar = new A.Toolbar(
+			<%
+			}
+			%>
+
+			var displayStyleToolbar = new A.Toolbar(
 			{
 				activeState: true,
 				boundingBox: buttonRow,
 				children: displayStyleToolbarChildren
 			}
-		).render();
+			).render();
 
-		var index = 0;
+			var index = 0;
 
-		<%
-		for (int i = 0; i < displayStyles.length; i++) {
-			if (displayStyle.equals(displayStyles[i])) {
-		%>
+			<%
+			for (int i = 0; i < displayStyles.length; i++) {
+				if (displayStyle.equals(displayStyles[i])) {
+			%>
 
-				index = <%= i %>;
+					index = <%= i %>;
 
-		<%
-				break;
+			<%
+					break;
+				}
 			}
+			%>
+
+			displayStyleToolbar.item(index).StateInteraction.set('active', true);
+
+			buttonRow.setData('displayStyleToolbar', displayStyleToolbar);
 		}
-		%>
-
-		displayStyleToolbar.item(index).StateInteraction.set('active', true);
-
-		buttonRow.setData('displayStyleToolbar', displayStyleToolbar);
 	</aui:script>
 </c:if>
