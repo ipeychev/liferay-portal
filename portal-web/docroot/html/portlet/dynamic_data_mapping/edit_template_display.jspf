@@ -41,7 +41,7 @@ if (Validator.isNotNull(scriptContent)) {
 <aui:field-wrapper label="script">
 	<aui:input label="" name="script" type="file" />
 
-	<aui:button name="editorButton" value="launch-editor" />
+	<liferay-util:include page="/html/portlet/dynamic_data_mapping/edit_template_xsl.jsp" />
 </aui:field-wrapper>
 
 <aui:script>
@@ -56,9 +56,9 @@ if (Validator.isNotNull(scriptContent)) {
 			<%
 			long controlPanelPlid = PortalUtil.getControlPanelPlid(company.getCompanyId());
 
-			PortletURL portletURL = PortletURLFactoryUtil.create(request, PortletKeys.JOURNAL, controlPanelPlid, PortletRequest.RENDER_PHASE);
+			PortletURL portletURL = PortletURLFactoryUtil.create(request, PortletKeys.DYNAMIC_DATA_MAPPING, controlPanelPlid, PortletRequest.RENDER_PHASE);
 
-			portletURL.setParameter("struts_action", "/journal/edit_template_xsl");
+			portletURL.setParameter("struts_action", "/dynamic_data_mapping/edit_template_xsl");
 			portletURL.setParameter("editorContentInputElement", "#" + renderResponse.getNamespace() + "scriptContent");
 			portletURL.setParameter("editorContentOutputElement", "#" + renderResponse.getNamespace() + "scriptContent");
 			portletURL.setPortletMode(PortletMode.VIEW);
