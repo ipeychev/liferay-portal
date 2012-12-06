@@ -352,7 +352,23 @@ if (Validator.isNotNull(structureAvailableFields)) {
 </c:choose>
 
 <aui:button-row>
-	<aui:button onClick='<%= renderResponse.getNamespace() + "saveTemplate();" %>' value='<%= LanguageUtil.get(pageContext, "save") %>' />
+	<aui:script>
+		window.<portlet:namespace />updateTemplateScript = function() {
+			var A = AUI();
+
+			var scriptContentNode = A.one('#<portlet:namespace />scriptContent');
+
+			var editorType = A.one('#<portlet:namespace />editorType').val();
+
+			var scriptContent = window.<portlet:namespace />getEditorContent(editorType);
+
+			scriptContentNode.val(scriptContent);
+
+			<%= renderResponse.getNamespace() + "saveTemplate();" %>
+		};
+	</aui:script>
+
+	<aui:button onClick='<%= renderResponse.getNamespace() + "updateTemplateScript();" %>' value='<%= LanguageUtil.get(pageContext, "save") %>' />
 
 	<aui:button href="<%= redirect %>" type="cancel" />
 </aui:button-row>
