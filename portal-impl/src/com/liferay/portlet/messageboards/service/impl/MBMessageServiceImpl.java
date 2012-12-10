@@ -640,7 +640,7 @@ public class MBMessageServiceImpl extends MBMessageServiceBaseImpl {
 			ServiceContext serviceContext)
 		throws PortalException, SystemException {
 
-		MBMessage message = mbMessageLocalService.getMessage(messageId);
+		MBMessage message = mbMessagePersistence.findByPrimaryKey(messageId);
 
 		boolean preview = ParamUtil.getBoolean(serviceContext, "preview");
 

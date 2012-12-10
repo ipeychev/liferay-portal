@@ -144,7 +144,11 @@ public class JSONWebServiceInvokerAction implements JSONWebServiceAction {
 					continue;
 				}
 
-				jsonSerializer.include(name.substring(1));
+				String includeName = name.substring(1);
+
+				_checkJSONSerializerIncludeName(includeName);
+
+				jsonSerializer.include(includeName);
 			}
 
 			return jsonSerializer.serialize(_result);
@@ -202,6 +206,13 @@ public class JSONWebServiceInvokerAction implements JSONWebServiceAction {
 		}
 
 		return results;
+	}
+
+	private void _checkJSONSerializerIncludeName(String includeName) {
+		if (includeName.contains(StringPool.STAR)) {
+			throw new IllegalArgumentException(
+				includeName + " has special characters");
+		}
 	}
 
 	private List<Object> _convertObjectToList(Object object) {

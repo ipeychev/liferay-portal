@@ -274,6 +274,66 @@ public class JSONWebServiceInvokerTest extends BaseJSONWebServiceTestCase {
 	}
 
 	@Test
+	public void testSerializationHack() throws Exception {
+		Map<String, Object> map = new LinkedHashMap<String, Object>();
+
+		Map<String, Object> params = new LinkedHashMap<String, Object>();
+
+		map.put("/foo/bar", params);
+
+		String json = toJSON(map);
+
+		JSONWebServiceAction jsonWebServiceAction = prepareInvokerAction(json);
+
+		Object result = jsonWebServiceAction.invoke();
+
+		JSONWebServiceInvokerAction.InvokerResult invokerResult =
+			(JSONWebServiceInvokerAction.InvokerResult)result;
+
+		Assert.assertEquals(
+			"{\"array\":[1,2,3],\"value\":\"value\"}", toJSON(invokerResult));
+
+		// Hack 1
+
+		map.clear();
+
+		map.put("$* = /foo/bar", params);
+
+		json = toJSON(map);
+
+		jsonWebServiceAction = prepareInvokerAction(json);
+
+		result = jsonWebServiceAction.invoke();
+
+		invokerResult = (JSONWebServiceInvokerAction.InvokerResult)result;
+
+		try {
+			toJSON(invokerResult);
+
+			Assert.fail();
+		}
+		catch (IllegalArgumentException iae) {
+		}
+
+		// Hack 2
+
+		map.clear();
+
+		map.put("$secret = /foo/bar", params);
+
+		json = toJSON(map);
+
+		jsonWebServiceAction = prepareInvokerAction(json);
+
+		result = jsonWebServiceAction.invoke();
+
+		invokerResult = (JSONWebServiceInvokerAction.InvokerResult)result;
+
+		Assert.assertEquals(
+			"{\"array\":[1,2,3],\"value\":\"value\"}", toJSON(invokerResult));
+	}
+
+	@Test
 	public void testSimpleCall() throws Exception {
 		Map<String, Object> map = new LinkedHashMap<String, Object>();
 
