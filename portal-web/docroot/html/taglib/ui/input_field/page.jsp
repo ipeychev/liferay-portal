@@ -17,6 +17,7 @@
 <%@ include file="/html/taglib/init.jsp" %>
 
 <%
+boolean autoSize = GetterUtil.getBoolean((String)request.getAttribute("liferay-ui:input-field:autoSize"));
 String cssClass = GetterUtil.getString((String)request.getAttribute("liferay-ui:input-field:cssClass"));
 String formName = (String)request.getAttribute("liferay-ui:input-field:formName");
 String defaultLanguageId = (String)request.getAttribute("liferay-ui:input-field:defaultLanguageId");
@@ -378,15 +379,20 @@ if (hints != null) {
 			boolean checkTab = false;
 
 			if (hints != null) {
+				autoSize = GetterUtil.getBoolean(hints.get("autoSize"), autoSize);
+				checkTab = GetterUtil.getBoolean(hints.get("check-tab"), checkTab);
 				displayHeight = GetterUtil.getString(hints.get("display-height"), displayHeight);
 				displayWidth = GetterUtil.getString(hints.get("display-width"), displayWidth);
 				maxLength = GetterUtil.getString(hints.get("max-length"), maxLength);
 				secret = GetterUtil.getBoolean(hints.get("secret"), secret);
 				upperCase = GetterUtil.getBoolean(hints.get("upper-case"), upperCase);
-				checkTab = GetterUtil.getBoolean(hints.get("check-tab"), checkTab);
 			}
 
 			boolean localized = ModelHintsUtil.isLocalized(model, field);
+
+			if (autoSize) {
+				displayHeight = "auto";
+			}
 
 			String xml = StringPool.BLANK;
 
@@ -433,6 +439,25 @@ if (hints != null) {
 							<textarea <%= Validator.isNotNull(cssClass) ? "class=\"" + cssClass + " lfr-textarea\"" : StringPool.BLANK %> <%= disabled ? "disabled=\"disabled\"" : "" %> id="<%= namespace %><%= id %>" name="<%= namespace %><%= fieldParam %>" <%= Validator.isNotNull(placeholder) ? "placeholder=\"" + LanguageUtil.get(pageContext, placeholder) + "\"" : StringPool.BLANK %> style="height: <%= displayHeight %><%= Validator.isDigit(displayHeight) ? "px" : "" %>; max-width: <%= displayWidth %><%= Validator.isDigit(displayWidth) ? "px" : "" %>;" wrap="soft" onKeyDown="<%= checkTab ? "Liferay.Util.checkTab(this); " : "" %> Liferay.Util.disableEsc();"><%= autoEscape ? HtmlUtil.escape(value) : value %></textarea>
 						</c:otherwise>
 					</c:choose>
+
+					<c:if test="<%= autoSize && !localized  %>">
+						<aui:script use="liferay-textarea">
+							new Liferay.Textarea(
+								{
+									autoSize: true
+
+									<c:if test="<%= Validator.isDigit(displayHeight) %>">
+										,
+										minHeight: <%= displayHeight %>
+									</c:if>
+
+									,
+									node: '#<%= namespace %><%= id %>',
+									width: <%= displayWidth %>
+								}
+							).render();
+						</aui:script>
+					</c:if>
 				</c:otherwise>
 			</c:choose>
 
