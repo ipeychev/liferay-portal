@@ -59,7 +59,9 @@ else {
 String summary = HtmlUtil.escape(articleDisplay.getDescription());
 
 if (Validator.isNull(summary)) {
-	summary = HtmlUtil.stripHtml(articleDisplay.getContent());
+	String content = articleDisplay.getContent().replaceAll("<br />", StringPool.NEW_LINE);
+
+	summary = HtmlUtil.stripHtml(content).replaceAll(StringPool.NEW_LINE, "<br />");
 }
 %>
 
