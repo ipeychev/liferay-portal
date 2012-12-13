@@ -27,7 +27,6 @@ import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.model.ResourceConstants;
 import com.liferay.portal.model.User;
-import com.liferay.portal.model.WorkflowInstanceLink;
 import com.liferay.portal.portletfilerepository.PortletFileRepositoryUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portlet.messageboards.SplitThreadException;
@@ -872,12 +871,7 @@ public class MBThreadLocalServiceImpl extends MBThreadLocalServiceBaseImpl {
 
 			// Messages
 
-			if (status == WorkflowConstants.STATUS_IN_TRASH) {
-				moveThreadMessagesToTrash(thread);
-			}
-			else {
-				restoreThreadMessagesFromTrash(thread);
-			}
+			updateStatus(threadId, status);
 
 			if (thread.getCategoryId() !=
 					MBCategoryConstants.DEFAULT_PARENT_CATEGORY_ID) {
@@ -939,15 +933,7 @@ public class MBThreadLocalServiceImpl extends MBThreadLocalServiceBaseImpl {
 			}
 		}
 		else {
-
-			// Messages
-
-			if (status == WorkflowConstants.STATUS_IN_TRASH) {
-				moveThreadMessagesToTrash(thread);
-			}
-			else {
-				restoreThreadMessagesFromTrash(thread);
-			}
+			updateStatus(threadId, status);
 		}
 
 		return thread;
@@ -1000,16 +986,25 @@ public class MBThreadLocalServiceImpl extends MBThreadLocalServiceBaseImpl {
 		return messagesMoved;
 	}
 
-	protected void moveThreadMessagesToTrash(MBThread thread)
+	protected void updateStatus(long threadId, int status)
 		throws PortalException, SystemException {
 
 		List<MBMessage> messages = mbMessageLocalService.getThreadMessages(
-			thread.getThreadId(), WorkflowConstants.STATUS_ANY);
+			threadId, WorkflowConstants.STATUS_ANY);
 
 		for (MBMessage message : messages) {
 			if (message.isDiscussion()) {
-				return;
+				continue;
 			}
+
+			updateStatus(message, status);
+		}
+	}
+
+	protected void updateStatus(MBMessage message, int status)
+		throws PortalException, SystemException {
+
+		if (status == WorkflowConstants.STATUS_IN_TRASH) {
 
 			// Asset
 
@@ -1037,27 +1032,12 @@ public class MBThreadLocalServiceImpl extends MBThreadLocalServiceBaseImpl {
 
 				mbMessagePersistence.update(message);
 
-				WorkflowInstanceLink workflowInstanceLink =
-					workflowInstanceLinkLocalService.getWorkflowInstanceLink(
-						message.getCompanyId(), message.getGroupId(),
-						MBMessage.class.getName(), message.getMessageId());
-
 				workflowInstanceLinkLocalService.deleteWorkflowInstanceLink(
-					workflowInstanceLink.getWorkflowInstanceLinkId());
+					message.getCompanyId(), message.getGroupId(),
+					MBMessage.class.getName(), message.getMessageId());
 			}
 		}
-	}
-
-	protected void restoreThreadMessagesFromTrash(MBThread thread)
-		throws PortalException, SystemException {
-
-		List<MBMessage> messages = mbMessageLocalService.getThreadMessages(
-			thread.getThreadId(), WorkflowConstants.STATUS_ANY);
-
-		for (MBMessage message : messages) {
-			if (message.isDiscussion()) {
-				return;
-			}
+		else {
 
 			// Asset
 
@@ -1068,7 +1048,7 @@ public class MBThreadLocalServiceImpl extends MBThreadLocalServiceBaseImpl {
 
 			// Social
 
-			socialActivityCounterLocalService.disableActivityCounters(
+			socialActivityCounterLocalService.enableActivityCounters(
 				MBMessage.class.getName(), message.getMessageId());
 
 			// Index

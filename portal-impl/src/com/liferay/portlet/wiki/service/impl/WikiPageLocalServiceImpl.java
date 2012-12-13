@@ -1464,7 +1464,7 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 	}
 
 	public WikiPage updateStatus(
-			long userId, WikiPage page, int status, int nodeStatus,
+			long userId, WikiPage page, int status,
 			ServiceContext serviceContext)
 		throws PortalException, SystemException {
 
@@ -1582,16 +1582,17 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 				WikiPage.class.getName(), page.getResourcePrimKey());
 		}
 		else if (status == WorkflowConstants.STATUS_IN_TRASH) {
+
+			// Asset
+
 			assetEntryLocalService.updateVisible(
 				WikiPage.class.getName(), page.getResourcePrimKey(), false);
 
 			// Trash
 
-			if (nodeStatus != WorkflowConstants.STATUS_IN_TRASH) {
-				trashEntryLocalService.addTrashEntry(
-					userId, page.getGroupId(), WikiPage.class.getName(),
-					page.getResourcePrimKey(), oldStatus, null, null);
-			}
+			trashEntryLocalService.addTrashEntry(
+				userId, page.getGroupId(), WikiPage.class.getName(),
+				page.getResourcePrimKey(), oldStatus, null, null);
 
 			// Indexer
 
@@ -1646,15 +1647,6 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 		}
 
 		return wikiPagePersistence.update(page);
-	}
-
-	public WikiPage updateStatus(
-			long userId, WikiPage page, int status,
-			ServiceContext serviceContext)
-		throws PortalException, SystemException {
-
-		return updateStatus(
-			userId, page, status, WorkflowConstants.STATUS_ANY, serviceContext);
 	}
 
 	public void validateTitle(String title) throws PortalException {
