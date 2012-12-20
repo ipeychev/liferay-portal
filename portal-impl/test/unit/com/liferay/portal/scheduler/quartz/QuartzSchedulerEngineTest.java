@@ -94,11 +94,9 @@ public class QuartzSchedulerEngineTest {
 
 	@Before
 	public void setUp() throws Exception {
-		PropsUtil.setProps(new PropsImpl());
+		JSONFactoryUtil jsonFactoryUtil = new JSONFactoryUtil();
 
-		PortalUUIDUtil portalUUIDUtil = new PortalUUIDUtil();
-
-		portalUUIDUtil.setPortalUUID(new PortalUUIDImpl());
+		jsonFactoryUtil.setJSONFactory(new JSONFactoryImpl());
 
 		Thread currentThread = Thread.currentThread();
 
@@ -106,11 +104,13 @@ public class QuartzSchedulerEngineTest {
 
 		PortalClassLoaderUtil.setClassLoader(currentClassLoader);
 
+		PortalUUIDUtil portalUUIDUtil = new PortalUUIDUtil();
+
+		portalUUIDUtil.setPortalUUID(new PortalUUIDImpl());
+
+		PropsUtil.setProps(new PropsImpl());
+
 		ClassLoaderPool.register(_TEST_PORTLET_ID, currentClassLoader);
-
-		JSONFactoryUtil jsonFactoryUtil = new JSONFactoryUtil();
-
-		jsonFactoryUtil.setJSONFactory(new JSONFactoryImpl());
 
 		MessageBusUtil.init(new DefaultMessageBus(), null, null);
 
@@ -148,7 +148,7 @@ public class QuartzSchedulerEngineTest {
 	@Test
 	public void testDelete1() throws Exception {
 
-		// Delete by groupName
+		// Delete by group name
 
 		List<SchedulerResponse> schedulerResponses =
 			_quartzSchedulerEngine.getScheduledJobs(_MEMORY_TEST_GROUP_NAME);
@@ -162,7 +162,7 @@ public class QuartzSchedulerEngineTest {
 
 		Assert.assertTrue(schedulerResponses.isEmpty());
 
-		// Delete by jobName and groupName
+		// Delete by job name and group name
 
 		SchedulerResponse schedulerResponse =
 			_quartzSchedulerEngine.getScheduledJob(
@@ -471,6 +471,7 @@ public class QuartzSchedulerEngineTest {
 				_TEST_JOB_NAME_0, _MEMORY_TEST_GROUP_NAME);
 
 		Message message = schedulerResponse.getMessage();
+
 		JobState jobState = (JobState)message.get(SchedulerEngine.JOB_STATE);
 
 		Assert.assertNotNull(jobState.getExceptions());
@@ -482,6 +483,7 @@ public class QuartzSchedulerEngineTest {
 			_TEST_JOB_NAME_0, _MEMORY_TEST_GROUP_NAME);
 
 		message = schedulerResponse.getMessage();
+
 		jobState = (JobState)message.get(SchedulerEngine.JOB_STATE);
 
 		Assert.assertNull(jobState.getExceptions());
@@ -491,7 +493,7 @@ public class QuartzSchedulerEngineTest {
 	@Test
 	public void testUnschedule1() throws Exception {
 
-		// Unschedule Memory Job
+		// Unschedule memory job
 
 		List<SchedulerResponse> schedulerResponses =
 			_quartzSchedulerEngine.getScheduledJobs(_MEMORY_TEST_GROUP_NAME);
@@ -505,7 +507,7 @@ public class QuartzSchedulerEngineTest {
 
 		Assert.assertTrue(schedulerResponses.isEmpty());
 
-		// Unschedule Persisted Job
+		// Unschedule persisted job
 
 		schedulerResponses = _quartzSchedulerEngine.getScheduledJobs(
 			_PERSISTED_TEST_GROUP_NAME);
@@ -528,7 +530,7 @@ public class QuartzSchedulerEngineTest {
 	@Test
 	public void testUnschedule2() throws Exception {
 
-		// Unschedule Memory Job
+		// Unschedule memory job
 
 		SchedulerResponse schedulerResponse =
 			_quartzSchedulerEngine.getScheduledJob(
@@ -544,7 +546,7 @@ public class QuartzSchedulerEngineTest {
 
 		Assert.assertNull(schedulerResponse);
 
-		// Unschedule Persisted Job
+		// Unschedule persisted job
 
 		schedulerResponse = _quartzSchedulerEngine.getScheduledJob(
 			_TEST_JOB_NAME_0, _PERSISTED_TEST_GROUP_NAME);
@@ -828,7 +830,7 @@ public class QuartzSchedulerEngineTest {
 		}
 
 		public List<String> getCalendarNames() {
-			return Collections.EMPTY_LIST;
+			return Collections.emptyList();
 		}
 
 		public SchedulerContext getContext() {
@@ -836,7 +838,7 @@ public class QuartzSchedulerEngineTest {
 		}
 
 		public List<JobExecutionContext> getCurrentlyExecutingJobs() {
-			return Collections.EMPTY_LIST;
+			return Collections.emptyList();
 		}
 
 		public JobDetail getJobDetail(JobKey jobKey) {
@@ -908,7 +910,7 @@ public class QuartzSchedulerEngineTest {
 		}
 
 		public List<String> getTriggerGroupNames() {
-			return Collections.EMPTY_LIST;
+			return Collections.emptyList();
 		}
 
 		public Set<TriggerKey> getTriggerKeys(
@@ -920,7 +922,7 @@ public class QuartzSchedulerEngineTest {
 		public List<? extends org.quartz.Trigger> getTriggersOfJob(
 			JobKey jobkey) {
 
-			return Collections.EMPTY_LIST;
+			return Collections.emptyList();
 		}
 
 		public org.quartz.Trigger.TriggerState getTriggerState(
