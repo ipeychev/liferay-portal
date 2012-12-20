@@ -47,7 +47,7 @@ portletURL.setParameter("recordSetId", String.valueOf(recordSet.getRecordSetId()
 	List<String> headerNames = new ArrayList<String>();
 
 	for (Map<String, String> fields : fieldsMap.values()) {
-		String label = fields.get(FieldConstants.LABEL);
+		String label = HtmlUtil.escape(fields.get(FieldConstants.LABEL));
 
 		headerNames.add(label);
 	}
