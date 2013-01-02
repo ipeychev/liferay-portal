@@ -913,6 +913,8 @@ public class WebServerServlet extends HttpServlet {
 
 			int thumbnailIndex = imageThumbnail - 1;
 
+			ImageProcessorUtil.generateImages(null, fileVersion);
+
 			inputStream = ImageProcessorUtil.getThumbnailAsStream(
 				fileVersion, thumbnailIndex);
 			contentLength = ImageProcessorUtil.getThumbnailFileSize(
