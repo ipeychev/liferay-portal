@@ -1077,12 +1077,12 @@ if (themeDisplay.isStatePopUp()) {
 		<aui:script use="aui-base">
 			var dialog = Liferay.Util.getWindow();
 
-			var hideDialogSignature = '<portlet:namespace />hideRefreshDialog|*';
+			var hideDialogSignature = '<portlet:namespace />hideRefreshDialog|<portlet:namespace />*';
 
 			dialog.detach(hideDialogSignature);
 
 			dialog.on(
-				'<portlet:namespace />hideRefreshDialog|visibleChange',
+				'<portlet:namespace />hideRefreshDialog|<portlet:namespace />visibleChange',
 				function(event) {
 					if (!event.newVal && event.src !== 'hideLink') {
 						var refreshWindow = dialog._refreshWindow || Liferay.Util.getTop();
