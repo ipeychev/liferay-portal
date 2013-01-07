@@ -911,9 +911,9 @@ public class WebServerServlet extends HttpServlet {
 				StringPool.PERIOD).concat(
 					ImageProcessorUtil.getThumbnailType(fileVersion));
 
-			int thumbnailIndex = imageThumbnail - 1;
-
 			ImageProcessorUtil.generateImages(null, fileVersion);
+
+			int thumbnailIndex = imageThumbnail - 1;
 
 			inputStream = ImageProcessorUtil.getThumbnailAsStream(
 				fileVersion, thumbnailIndex);
