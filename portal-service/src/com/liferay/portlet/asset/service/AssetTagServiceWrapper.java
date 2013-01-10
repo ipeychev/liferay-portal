@@ -171,6 +171,12 @@ public class AssetTagServiceWrapper implements AssetTagService,
 		return _assetTagService.search(groupId, name, tagProperties, start, end);
 	}
 
+	public com.liferay.portal.kernel.json.JSONArray search(long[] groupIds,
+		java.lang.String name, java.lang.String[] tagProperties, int start,
+		int end) throws com.liferay.portal.kernel.exception.SystemException {
+		return _assetTagService.search(groupIds, name, tagProperties, start, end);
+	}
+
 	public com.liferay.portlet.asset.model.AssetTag updateTag(long tagId,
 		java.lang.String name, java.lang.String[] tagProperties,
 		com.liferay.portal.service.ServiceContext serviceContext)
