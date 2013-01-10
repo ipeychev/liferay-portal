@@ -117,6 +117,19 @@ AUI.add(
 							return instance._getTagsDataSource();
 						}
 					},
+					groupIds: {
+						getter: '_getGroupIds',
+						setter: function(value) {
+							var instance = this;
+
+							if (Lang.isString(value) && value) {
+								value = value.split(',');
+							}
+
+							return value;
+						},
+						value: []
+					},
 					guid: {
 						value: ''
 					},
@@ -195,6 +208,24 @@ AUI.add(
 						instance.get('boundingBox').on('keypress', instance._onKeyPress, instance);
 					},
 
+					_getGroupIds: function(value) {
+						var instance = this;
+
+						var portalModelResource = instance.get('portalModelResource');
+
+						if (!value.length) {
+							if (!portalModelResource && (themeDisplay.getParentGroupId() != themeDisplay.getCompanyGroupId())) {
+								value.push(themeDisplay.getParentGroupId());
+							}
+						}
+
+						if (value.indexOf(themeDisplay.getCompanyGroupId()) == -1) {
+							value.push(themeDisplay.getCompanyGroupId());
+						}
+
+						return value;
+					},
+
 					_getPopup: function() {
 						var instance = this;
 
@@ -267,18 +298,10 @@ AUI.add(
 
 						var portalModelResource = instance.get('portalModelResource');
 
-						var groupIds = [];
-
-						if (!portalModelResource && (themeDisplay.getParentGroupId() != themeDisplay.getCompanyGroupId())) {
-							groupIds.push(themeDisplay.getParentGroupId());
-						}
-
-						groupIds.push(themeDisplay.getCompanyGroupId());
-
 						Liferay.Service(
 							'/assettag/get-groups-tags',
 							{
-								groupIds: groupIds
+								groupIds: instance.get('groupIds')
 							},
 							callback
 						);
@@ -309,7 +332,7 @@ AUI.add(
 
 										if (!serviceQueryObj) {
 											serviceQueryObj = {
-												groupId: themeDisplay.getParentGroupId(),
+												groupIds: instance.get('groupIds'),
 												name: '%' + term + '%',
 												tagProperties: STR_BLANK,
 												start: 0,

@@ -62,6 +62,7 @@ if (queryLogicIndex >= 0) {
 		<liferay-ui:asset-tags-selector
 			curTags='<%= Validator.equals(queryName, "assetTags") ? queryValues : null %>'
 			focus="<%= false %>"
+			groupIds="<%= groupIds %>"
 			hiddenInput='<%= "queryTagNames" + index %>'
 		/>
 	</div>

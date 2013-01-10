@@ -47,6 +47,10 @@ public class AssetTagsSelectorTag extends IncludeTag {
 		_focus = focus;
 	}
 
+	public void setGroupIds(long[] groupIds) {
+		_groupIds = groupIds;
+	}
+
 	public void setHiddenInput(String hiddenInput) {
 		_hiddenInput = hiddenInput;
 	}
@@ -62,6 +66,7 @@ public class AssetTagsSelectorTag extends IncludeTag {
 		_contentCallback = null;
 		_curTags = null;
 		_focus = false;
+		_groupIds = null;
 		_hiddenInput = "assetTagNames";
 		_id = null;
 	}
@@ -93,6 +98,8 @@ public class AssetTagsSelectorTag extends IncludeTag {
 		request.setAttribute(
 			"liferay-ui:asset-tags-selector:focus", String.valueOf(_focus));
 		request.setAttribute(
+			"liferay-ui:asset-tags-selector:groupIds", _groupIds);
+		request.setAttribute(
 			"liferay-ui:asset-tags-selector:hiddenInput", _hiddenInput);
 		request.setAttribute("liferay-ui:asset-tags-selector:id", id);
 	}
@@ -105,6 +112,7 @@ public class AssetTagsSelectorTag extends IncludeTag {
 	private String _contentCallback;
 	private String _curTags;
 	private boolean _focus;
+	private long[] _groupIds;
 	private String _hiddenInput = "assetTagNames";
 	private String _id;
 
