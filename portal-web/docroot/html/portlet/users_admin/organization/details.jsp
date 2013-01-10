@@ -242,7 +242,7 @@ if (parentOrganization != null) {
 />
 
 <portlet:renderURL var="organizationSelectorURL" windowState="<%= LiferayWindowState.EXCLUSIVE.toString() %>">
- <portlet:param name="struts_action" value="/users_admin/select_organization" />
+<portlet:param name="struts_action" value="/users_admin/select_organization" />
 </portlet:renderURL>
 
 <aui:script>
@@ -254,13 +254,13 @@ if (parentOrganization != null) {
 			var type = '<%= HtmlUtil.escape(type) %>';
 		</c:otherwise>
 	</c:choose>
- 	var organizationDialog;
+	var organizationDialog;
 
- 	function <portlet:namespace />openOrganizationSelector() {
- 		AUI().use('aui-dialog', 'aui-io', function(A) {
+	function <portlet:namespace />openOrganizationSelector() {
+		AUI().use('aui-dialog', 'aui-io', function(A) {
 
 			if (!organizationDialog) {
- 				organizationDialog = new A.Dialog(
+				organizationDialog = new A.Dialog(
 			   	{
 				   align: Liferay.Util.Window.ALIGN_CENTER,
 				   title: '<%= UnicodeLanguageUtil.get(pageContext, "select").concat(" ").concat(UnicodeLanguageUtil.get(pageContext, "parent-organization")) %>',
@@ -270,9 +270,9 @@ if (parentOrganization != null) {
 				).render();
 			}
 
- 			organizationDialog.plug(A.Plugin.IO, {uri: '<%= organizationSelectorURL %>'});
+			organizationDialog.plug(A.Plugin.IO, {uri: '<%= organizationSelectorURL %>'});
 
- 			organizationDialog.show();
+			organizationDialog.show();
 
 		});
 	}
@@ -297,9 +297,9 @@ if (parentOrganization != null) {
 			searchContainer.addRow(rowColumns, organizationId);
 			searchContainer.updateDataStore(organizationId);
 
- 			if (organizationDialog) {
- 				organizationDialog.hide();
- 			}
+			if (organizationDialog) {
+				organizationDialog.hide();
+			}
 		},
 		['liferay-search-container']
 	);
