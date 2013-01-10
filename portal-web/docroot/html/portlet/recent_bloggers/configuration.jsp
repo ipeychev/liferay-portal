@@ -84,11 +84,33 @@ if (organizationId > 0) {
 	</aui:button-row>
 </aui:form>
 
-<aui:script>
-	function <portlet:namespace />openOrganizationSelector() {
-		var organizationWindow = window.open('<portlet:renderURL windowState="<%= LiferayWindowState.POP_UP.toString() %>"><portlet:param name="struts_action" value="/portlet_configuration/select_organization" /><portlet:param name="tabs1" value="organizations" /></portlet:renderURL>', 'organization', 'directories=no,height=640,location=no,menubar=no,resizable=yes,scrollbars=yes,status=no,toolbar=no,width=680');
+<portlet:renderURL var="organizationSelectorURL" windowState="<%= LiferayWindowState.EXCLUSIVE.toString() %>">
+	<portlet:param name="struts_action" value="/portlet_configuration/select_organization" />
+	<portlet:param name="tabs1" value="organizations" />
+</portlet:renderURL>
 
-		organizationWindow.focus();
+<aui:script>
+	var organizationDialog;
+
+	function <portlet:namespace />openOrganizationSelector() {
+		AUI().use('aui-dialog', 'aui-io', function(A) {
+
+			if (!organizationDialog) {
+				organizationDialog = new A.Dialog(
+					{
+					align: Liferay.Util.Window.ALIGN_CENTER,
+					title: '<%= UnicodeLanguageUtil.get(pageContext, "select").concat(" ").concat(UnicodeLanguageUtil.get(pageContext, "organization")) %>',
+					modal: true,
+					width: 600
+					}
+			 	).render();
+			}
+
+		organizationDialog.plug(A.Plugin.IO, {uri: '<%= organizationSelectorURL %>'});
+
+		organizationDialog.show();
+
+		});
 	}
 
 	function <portlet:namespace />removeOrganization() {
@@ -109,6 +131,10 @@ if (organizationId > 0) {
 		nameEl.innerHTML = name + "&nbsp;";
 
 		document.getElementById("<portlet:namespace />removeOrganizationButton").disabled = false;
+
+		if (organizationDialog) {
+			organizationDialog.hide();
+		}
 	}
 
 	Liferay.Util.toggleSelectBox('<portlet:namespace />selectionMethod', 'users', '<portlet:namespace />UsersSelectionOptions');
