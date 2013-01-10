@@ -241,22 +241,40 @@ if (parentOrganization != null) {
 	url='<%= "javascript:" + renderResponse.getNamespace() + "openOrganizationSelector();" %>'
 />
 
+<portlet:renderURL var="organizationSelectorURL" windowState="<%= LiferayWindowState.EXCLUSIVE.toString() %>">
+ <portlet:param name="struts_action" value="/users_admin/select_organization" />
+</portlet:renderURL>
+
 <aui:script>
-	function <portlet:namespace />openOrganizationSelector() {
-		var url = '<portlet:renderURL windowState="<%= LiferayWindowState.POP_UP.toString() %>"><portlet:param name="struts_action" value="/users_admin/select_organization" /></portlet:renderURL>';
+	<c:choose>
+		<c:when test="<%= organization == null %>">
+			var type = document.<portlet:namespace />fm.<portlet:namespace />type.value;
+		</c:when>
+		<c:otherwise>
+			var type = '<%= HtmlUtil.escape(type) %>';
+		</c:otherwise>
+	</c:choose>
+ 	var organizationDialog;
 
-		<c:choose>
-			<c:when test="<%= organization == null %>">
-				var type = document.<portlet:namespace />fm.<portlet:namespace />type.value;
-			</c:when>
-			<c:otherwise>
-				var type = '<%= HtmlUtil.escape(type) %>';
-			</c:otherwise>
-		</c:choose>
+ 	function <portlet:namespace />openOrganizationSelector() {
+ 		AUI().use('aui-dialog', 'aui-io', function(A) {
 
-		var organizationWindow = window.open(url, 'organization', 'directories=no,height=640,location=no,menubar=no,resizable=yes,scrollbars=yes,status=no,toolbar=no,width=680');
+			if (!organizationDialog) {
+ 				organizationDialog = new A.Dialog(
+			   	{
+				   align: Liferay.Util.Window.ALIGN_CENTER,
+				   title: '<%= UnicodeLanguageUtil.get(pageContext, "select").concat(" ").concat(UnicodeLanguageUtil.get(pageContext, "parent-organization")) %>',
+				   modal: true,
+				   width: 600
+			   	}
+				).render();
+			}
 
-		organizationWindow.focus();
+ 			organizationDialog.plug(A.Plugin.IO, {uri: '<%= organizationSelectorURL %>'});
+
+ 			organizationDialog.show();
+
+		});
 	}
 
 	Liferay.provide(
@@ -278,6 +296,10 @@ if (parentOrganization != null) {
 			searchContainer.deleteRow(1, searchContainer.getData());
 			searchContainer.addRow(rowColumns, organizationId);
 			searchContainer.updateDataStore(organizationId);
+
+ 			if (organizationDialog) {
+ 				organizationDialog.hide();
+ 			}
 		},
 		['liferay-search-container']
 	);
