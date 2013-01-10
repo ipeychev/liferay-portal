@@ -158,6 +158,11 @@ public interface AssetTagService extends BaseService {
 		java.lang.String name, java.lang.String[] tagProperties, int start,
 		int end) throws com.liferay.portal.kernel.exception.SystemException;
 
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public com.liferay.portal.kernel.json.JSONArray search(long[] groupIds,
+		java.lang.String name, java.lang.String[] tagProperties, int start,
+		int end) throws com.liferay.portal.kernel.exception.SystemException;
+
 	public com.liferay.portlet.asset.model.AssetTag updateTag(long tagId,
 		java.lang.String name, java.lang.String[] tagProperties,
 		com.liferay.portal.service.ServiceContext serviceContext)

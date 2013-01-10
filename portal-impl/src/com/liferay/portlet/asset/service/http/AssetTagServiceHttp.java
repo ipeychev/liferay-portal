@@ -687,6 +687,39 @@ public class AssetTagServiceHttp {
 		}
 	}
 
+	public static com.liferay.portal.kernel.json.JSONArray search(
+		HttpPrincipal httpPrincipal, long[] groupIds, java.lang.String name,
+		java.lang.String[] tagProperties, int start, int end)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		try {
+			MethodKey methodKey = new MethodKey(AssetTagServiceUtil.class,
+					"search", _searchParameterTypes19);
+
+			MethodHandler methodHandler = new MethodHandler(methodKey,
+					groupIds, name, tagProperties, start, end);
+
+			Object returnObj = null;
+
+			try {
+				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
+			}
+			catch (Exception e) {
+				if (e instanceof com.liferay.portal.kernel.exception.SystemException) {
+					throw (com.liferay.portal.kernel.exception.SystemException)e;
+				}
+
+				throw new com.liferay.portal.kernel.exception.SystemException(e);
+			}
+
+			return (com.liferay.portal.kernel.json.JSONArray)returnObj;
+		}
+		catch (com.liferay.portal.kernel.exception.SystemException se) {
+			_log.error(se, se);
+
+			throw se;
+		}
+	}
+
 	public static com.liferay.portlet.asset.model.AssetTag updateTag(
 		HttpPrincipal httpPrincipal, long tagId, java.lang.String name,
 		java.lang.String[] tagProperties,
@@ -695,7 +728,7 @@ public class AssetTagServiceHttp {
 			com.liferay.portal.kernel.exception.SystemException {
 		try {
 			MethodKey methodKey = new MethodKey(AssetTagServiceUtil.class,
-					"updateTag", _updateTagParameterTypes19);
+					"updateTag", _updateTagParameterTypes20);
 
 			MethodHandler methodHandler = new MethodHandler(methodKey, tagId,
 					name, tagProperties, serviceContext);
@@ -789,7 +822,11 @@ public class AssetTagServiceHttp {
 			long.class, java.lang.String.class, java.lang.String[].class,
 			int.class, int.class
 		};
-	private static final Class<?>[] _updateTagParameterTypes19 = new Class[] {
+	private static final Class<?>[] _searchParameterTypes19 = new Class[] {
+			long[].class, java.lang.String.class, java.lang.String[].class,
+			int.class, int.class
+		};
+	private static final Class<?>[] _updateTagParameterTypes20 = new Class[] {
 			long.class, java.lang.String.class, java.lang.String[].class,
 			com.liferay.portal.service.ServiceContext.class
 		};

@@ -343,6 +343,22 @@ public class AssetTagServiceSoap {
 		}
 	}
 
+	public static java.lang.String search(long[] groupIds,
+		java.lang.String name, java.lang.String[] tagProperties, int start,
+		int end) throws RemoteException {
+		try {
+			com.liferay.portal.kernel.json.JSONArray returnValue = AssetTagServiceUtil.search(groupIds,
+					name, tagProperties, start, end);
+
+			return returnValue.toString();
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
 	public static com.liferay.portlet.asset.model.AssetTagSoap updateTag(
 		long tagId, java.lang.String name, java.lang.String[] tagProperties,
 		com.liferay.portal.service.ServiceContext serviceContext)
