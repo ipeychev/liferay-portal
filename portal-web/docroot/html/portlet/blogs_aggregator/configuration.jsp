@@ -106,25 +106,25 @@ if (organizationId > 0) {
 </portlet:renderURL>
 
 <aui:script>
-	var  organizationDialog;
+	var organizationDialog;
 
- 	function <portlet:namespace />openOrganizationSelector() {
+	function <portlet:namespace />openOrganizationSelector() {
 		AUI().use('aui-dialog', 'aui-io', function(A) {
 
- 			if (!organizationDialog) {
- 				organizationDialog = new A.Dialog(
- 				{
- 					align: Liferay.Util.Window.ALIGN_CENTER,
- 					title: '<%= UnicodeLanguageUtil.get(pageContext, "select").concat(" ").concat(UnicodeLanguageUtil.get(pageContext, "organization")) %>',
- 					modal: true,
- 					width: 600
- 				}
- 				).render();
- 			}
+			if (!organizationDialog) {
+				organizationDialog = new A.Dialog(
+				{
+					align: Liferay.Util.Window.ALIGN_CENTER,
+					title: '<%= UnicodeLanguageUtil.get(pageContext, "select").concat(" ").concat(UnicodeLanguageUtil.get(pageContext, "organization")) %>',
+					modal: true,
+					width: 600
+				}
+				).render();
+			}
 
- 			organizationDialog.plug(A.Plugin.IO, {uri: '<%= organizationSelectorURL %>'});
+			organizationDialog.plug(A.Plugin.IO, {uri: '<%= organizationSelectorURL %>'});
 
- 			organizationDialog.show();
+			organizationDialog.show();
 
 		});
 	}
@@ -149,7 +149,7 @@ if (organizationId > 0) {
 		document.getElementById("<portlet:namespace />removeOrganizationButton").disabled = false;
 
 		if (organizationDialog) {
- 			organizationDialog.hide();
+			organizationDialog.hide();
 		}
 	}
 </aui:script>
