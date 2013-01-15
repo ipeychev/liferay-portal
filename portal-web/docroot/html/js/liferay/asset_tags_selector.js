@@ -219,7 +219,7 @@ AUI.add(
 							}
 						}
 
-						if (value.indexOf(themeDisplay.getCompanyGroupId()) == -1) {
+						if (AArray.indexOf(value, themeDisplay.getCompanyGroupId()) == -1) {
 							value.push(themeDisplay.getCompanyGroupId());
 						}
 
