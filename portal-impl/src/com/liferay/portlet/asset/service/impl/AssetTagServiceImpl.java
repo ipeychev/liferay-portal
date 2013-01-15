@@ -233,6 +233,20 @@ public class AssetTagServiceImpl extends AssetTagServiceBaseImpl {
 		return Autocomplete.listToJson(tags, "name", "name");
 	}
 
+	public JSONArray search(
+			long[] groupIds, String name, String[] tagProperties, int start,
+			int end)
+		throws SystemException {
+
+		List<AssetTag> tags = new ArrayList<AssetTag>();
+
+		for (int i = 0; i < groupIds.length; i++) {
+			tags.addAll(getTags(groupIds[i], name, tagProperties, start, end));
+		}
+
+		return Autocomplete.listToJson(tags, "name", "name");
+	}
+
 	public AssetTag updateTag(
 			long tagId, String name, String[] tagProperties,
 			ServiceContext serviceContext)

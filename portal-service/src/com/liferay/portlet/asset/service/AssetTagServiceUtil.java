@@ -177,6 +177,13 @@ public class AssetTagServiceUtil {
 		return getService().search(groupId, name, tagProperties, start, end);
 	}
 
+	public static com.liferay.portal.kernel.json.JSONArray search(
+		long[] groupIds, java.lang.String name,
+		java.lang.String[] tagProperties, int start, int end)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getService().search(groupIds, name, tagProperties, start, end);
+	}
+
 	public static com.liferay.portlet.asset.model.AssetTag updateTag(
 		long tagId, java.lang.String name, java.lang.String[] tagProperties,
 		com.liferay.portal.service.ServiceContext serviceContext)
