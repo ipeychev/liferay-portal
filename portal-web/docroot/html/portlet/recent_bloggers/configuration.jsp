@@ -91,6 +91,7 @@ if (organizationId > 0) {
 
 <aui:script>
 	var organizationDialog;
+	var orgForm;
 
 	function <portlet:namespace />openOrganizationSelector() {
 		AUI().use('aui-dialog', 'aui-io', function(A) {
@@ -106,14 +107,33 @@ if (organizationId > 0) {
 			 	).render();
 			}
 
-		organizationDialog.plug(A.Plugin.IO, {uri: '<%= organizationSelectorURL %>'});
+		organizationDialog.plug(A.Plugin.IO, {uri: '<%= organizationSelectorURL %>', after: { success: <portlet:namespace />setupFormHandler}});
 
 		organizationDialog.show();
 
 		});
 	}
 
-	function <portlet:namespace />removeOrganization() {
+	function <portlet:namespace />setupFormHandler(event) {
+		orgForm = organizationDialog.get('contentBox').one('form');
+
+		orgForm.on('submit', function(submitEvent){
+
+			 organizationDialog.io.set('uri', submitEvent.target.get('action'));
+			 organizationDialog.io.set('method', submitEvent.target.get('method'));
+			 organizationDialog.io.set('dataType', 'json');
+			 organizationDialog.io.set('form', orgForm.getDOM());
+
+			 organizationDialog.io.after('success', <portlet:namespace />setupFormHandler);
+
+			 organizationDialog.io.start();
+
+			 submitEvent.preventDefault();
+		});
+	}
+
+
+function <portlet:namespace />removeOrganization() {
 		document.<portlet:namespace />fm.<portlet:namespace />organizationId.value = "";
 
 		var nameEl = document.getElementById("<portlet:namespace />organizationName");

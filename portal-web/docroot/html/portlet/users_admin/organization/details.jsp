@@ -255,9 +255,10 @@ if (parentOrganization != null) {
 		</c:otherwise>
 	</c:choose>
 	var organizationDialog;
+	var orgForm;
 
 	function <portlet:namespace />openOrganizationSelector() {
-		AUI().use('aui-dialog', 'aui-io', function(A) {
+		AUI().use('aui-dialog', 'aui-io', 'event', function(A) {
 
 			if (!organizationDialog) {
 				organizationDialog = new A.Dialog(
@@ -270,10 +271,27 @@ if (parentOrganization != null) {
 				).render();
 			}
 
-			organizationDialog.plug(A.Plugin.IO, {uri: '<%= organizationSelectorURL %>'});
+			organizationDialog.plug(A.Plugin.IO, {uri: '<%= organizationSelectorURL %>', after: { success: <portlet:namespace />setupFormHandler}});
 
 			organizationDialog.show();
+		});
+	}
 
+	function <portlet:namespace />setupFormHandler(event) {
+		orgForm = organizationDialog.get('contentBox').one('form');
+
+		orgForm.on('submit', function(submitEvent){
+
+			organizationDialog.io.set('uri', submitEvent.target.get('action'));
+			organizationDialog.io.set('method', submitEvent.target.get('method'));
+			organizationDialog.io.set('dataType', 'json');
+			organizationDialog.io.set('form', orgForm.getDOM());
+
+			organizationDialog.io.after('success', <portlet:namespace />setupFormHandler);
+
+			organizationDialog.io.start();
+
+			submitEvent.preventDefault();
 		});
 	}
 
