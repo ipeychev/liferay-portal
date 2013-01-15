@@ -118,16 +118,7 @@ AUI.add(
 						}
 					},
 					groupIds: {
-						getter: '_getGroupIds',
-						setter: function(value) {
-							var instance = this;
-
-							if (Lang.isString(value) && value) {
-								value = value.split(',');
-							}
-
-							return value;
-						},
+						setter: '_setGroupIds',
 						value: []
 					},
 					guid: {
@@ -206,24 +197,6 @@ AUI.add(
 						instance._submitFormListener = A.Do.before(instance._onAddEntryClick, window, 'submitForm', instance);
 
 						instance.get('boundingBox').on('keypress', instance._onKeyPress, instance);
-					},
-
-					_getGroupIds: function(value) {
-						var instance = this;
-
-						var portalModelResource = instance.get('portalModelResource');
-
-						if (!value.length) {
-							if (!portalModelResource && (themeDisplay.getParentGroupId() != themeDisplay.getCompanyGroupId())) {
-								value.push(themeDisplay.getParentGroupId());
-							}
-						}
-
-						if (AArray.indexOf(value, themeDisplay.getCompanyGroupId()) == -1) {
-							value.push(themeDisplay.getCompanyGroupId());
-						}
-
-						return value;
 					},
 
 					_getPopup: function() {
@@ -526,6 +499,26 @@ AUI.add(
 						popup.liveSearch.get('nodes').refresh();
 
 						popup.liveSearch.refreshIndex();
+					},
+
+					_setGroupIds: function(value) {
+						var instance = this;
+
+						value = AArray(value);
+
+						if (!value.length) {
+							var portalModelResource = instance.get('portalModelResource');
+
+							if (!portalModelResource && (themeDisplay.getParentGroupId() != themeDisplay.getCompanyGroupId())) {
+								value.push(themeDisplay.getParentGroupId());
+							}
+						}
+
+						if (AArray.indexOf(value, themeDisplay.getCompanyGroupId()) == -1) {
+							value.push(themeDisplay.getCompanyGroupId());
+						}
+
+						return value;
 					},
 
 					_showPopup: function(event) {
