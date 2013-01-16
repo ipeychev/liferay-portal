@@ -118,8 +118,11 @@ AUI.add(
 						}
 					},
 					groupIds: {
-						setter: '_setGroupIds',
-						value: []
+						validator: function(value) {
+							debugger;
+
+							return true;
+						}
 					},
 					guid: {
 						value: ''
