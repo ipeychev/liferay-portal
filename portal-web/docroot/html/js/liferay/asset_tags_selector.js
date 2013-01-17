@@ -117,6 +117,13 @@ AUI.add(
 							return instance._getTagsDataSource();
 						}
 					},
+					groupIds: {
+						validator: function(value) {
+							debugger;
+
+							return true;
+						}
+					},
 					guid: {
 						value: ''
 					},
@@ -267,18 +274,10 @@ AUI.add(
 
 						var portalModelResource = instance.get('portalModelResource');
 
-						var groupIds = [];
-
-						if (!portalModelResource && (themeDisplay.getParentGroupId() != themeDisplay.getCompanyGroupId())) {
-							groupIds.push(themeDisplay.getParentGroupId());
-						}
-
-						groupIds.push(themeDisplay.getCompanyGroupId());
-
 						Liferay.Service(
 							'/assettag/get-groups-tags',
 							{
-								groupIds: groupIds
+								groupIds: instance.get('groupIds')
 							},
 							callback
 						);
@@ -309,7 +308,7 @@ AUI.add(
 
 										if (!serviceQueryObj) {
 											serviceQueryObj = {
-												groupId: themeDisplay.getParentGroupId(),
+												groupIds: instance.get('groupIds'),
 												name: '%' + term + '%',
 												tagProperties: STR_BLANK,
 												start: 0,
@@ -503,6 +502,26 @@ AUI.add(
 						popup.liveSearch.get('nodes').refresh();
 
 						popup.liveSearch.refreshIndex();
+					},
+
+					_setGroupIds: function(value) {
+						var instance = this;
+
+						value = AArray(value);
+
+						if (!value.length) {
+							var portalModelResource = instance.get('portalModelResource');
+
+							if (!portalModelResource && (themeDisplay.getParentGroupId() != themeDisplay.getCompanyGroupId())) {
+								value.push(themeDisplay.getParentGroupId());
+							}
+						}
+
+						if (AArray.indexOf(value, themeDisplay.getCompanyGroupId()) == -1) {
+							value.push(themeDisplay.getCompanyGroupId());
+						}
+
+						return value;
 					},
 
 					_showPopup: function(event) {
