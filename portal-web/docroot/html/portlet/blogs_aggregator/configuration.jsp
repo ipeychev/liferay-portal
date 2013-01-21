@@ -30,11 +30,6 @@ if (organizationId > 0) {
 }
 %>
 
-<portlet:renderURL var="organizationSelectorURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
-	<portlet:param name="struts_action" value="/portlet_configuration/select_organization" />
-	<portlet:param name="tabs1" value="organizations" />
-</portlet:renderURL>
-
 <liferay-portlet:actionURL portletConfiguration="true" var="configurationURL" />
 
 <aui:form action="<%= configurationURL %>" method="post" name="fm">
@@ -105,11 +100,52 @@ if (organizationId > 0) {
 	</aui:button-row>
 </aui:form>
 
-<aui:script>
-	function <portlet:namespace />openOrganizationSelector() {
-		var organizationWindow = window.open('<%= organizationSelectorURL %>', 'organization', 'directories=no,height=640,location=no,menubar=no,resizable=yes,scrollbars=yes,status=no,toolbar=no,width=680');
+<portlet:renderURL var="organizationSelectorURL" windowState="<%= LiferayWindowState.EXCLUSIVE.toString() %>">
+	<portlet:param name="struts_action" value="/portlet_configuration/select_organization" />
+	<portlet:param name="tabs1" value="organizations" />
+</portlet:renderURL>
 
-		organizationWindow.focus();
+<aui:script>
+	var organizationDialog;
+	var orgForm;
+
+	function <portlet:namespace />openOrganizationSelector() {
+		AUI().use('aui-dialog', 'aui-io', function(A) {
+
+			if (!organizationDialog) {
+				organizationDialog = new A.Dialog(
+				{
+					align: Liferay.Util.Window.ALIGN_CENTER,
+					title: '<%= UnicodeLanguageUtil.get(pageContext, "select").concat(" ").concat(UnicodeLanguageUtil.get(pageContext, "organization")) %>',
+					modal: true,
+					width: 600
+				}
+				).render();
+			}
+
+			organizationDialog.plug(A.Plugin.IO, {uri: '<%= organizationSelectorURL %>', after: { success: <portlet:namespace />setupFormHandler}});
+
+			organizationDialog.show();
+
+		});
+	}
+
+	function <portlet:namespace />setupFormHandler(event) {
+		orgForm = organizationDialog.get('contentBox').one('form');
+
+		orgForm.on('submit', function(submitEvent){
+
+			organizationDialog.io.set('uri', submitEvent.target.get('action'));
+			organizationDialog.io.set('method', submitEvent.target.get('method'));
+			organizationDialog.io.set('dataType', 'json');
+			organizationDialog.io.set('form', orgForm.getDOM());
+
+			organizationDialog.io.after('success', <portlet:namespace />setupFormHandler);
+
+			organizationDialog.io.start();
+
+			submitEvent.preventDefault();
+		});
 	}
 
 	function <portlet:namespace />removeOrganization() {
@@ -130,6 +166,10 @@ if (organizationId > 0) {
 		nameEl.innerHTML = name + "&nbsp;";
 
 		document.getElementById("<portlet:namespace />removeOrganizationButton").disabled = false;
+
+		if (organizationDialog) {
+			organizationDialog.hide();
+		}
 	}
 </aui:script>
 
