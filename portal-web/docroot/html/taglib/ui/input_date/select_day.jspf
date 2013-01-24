@@ -14,7 +14,7 @@
  */
 --%>
 
-<select <%= disabled ? "disabled=\"disabled\"" : "" %> id="<%= dayParam %>" name="<%= dayParam %>">
+<select <%= disabled ? "disabled=\"disabled\"" : "" %> id="<%= normalizedDayParam %>" name="<%= dayParam %>">
 	<c:if test="<%= dayNullable %>">
 		<option value=""></option>
 	</c:if>
