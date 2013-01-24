@@ -14,15 +14,26 @@
 
 package com.liferay.portlet.dynamicdatamapping.action;
 
+import com.liferay.portal.kernel.json.JSONArray;
+import com.liferay.portal.kernel.json.JSONFactoryUtil;
+import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.servlet.SessionErrors;
+import com.liferay.portal.kernel.template.StringTemplateResource;
+import com.liferay.portal.kernel.template.Template;
+import com.liferay.portal.kernel.template.TemplateContextType;
+import com.liferay.portal.kernel.template.TemplateManager;
+import com.liferay.portal.kernel.template.TemplateManagerUtil;
+import com.liferay.portal.kernel.template.TemplateResource;
 import com.liferay.portal.kernel.upload.UploadPortletRequest;
 import com.liferay.portal.kernel.util.Constants;
+import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.LocalizationUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.StreamUtil;
+import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.security.auth.PrincipalException;
@@ -47,6 +58,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
+import java.io.OutputStream;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.Locale;
 import java.util.Map;
 
@@ -57,6 +71,9 @@ import javax.portlet.PortletPreferences;
 import javax.portlet.PortletRequest;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
+import javax.portlet.ResourceRequest;
+import javax.portlet.ResourceResponse;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -152,6 +169,33 @@ public class EditTemplateAction extends PortletAction {
 				renderRequest, "portlet.dynamic_data_mapping.edit_template"));
 	}
 
+	@Override
+	public void serveResource(
+			ActionMapping mapping, ActionForm form, PortletConfig portletConfig,
+			ResourceRequest resourceRequest, ResourceResponse resourceResponse)
+		throws Exception {
+
+		String cmd = ParamUtil.getString(resourceRequest, Constants.CMD);
+		long templateId = ParamUtil.getLong(resourceRequest, "templateId");
+		String query = ParamUtil.getString(resourceRequest, "query");
+
+		if (cmd.equals("autocomplete")) {
+			resourceResponse.setContentType(ContentTypes.TEXT_JAVASCRIPT);
+
+			OutputStream outputStream = resourceResponse.getPortletOutputStream();
+
+			try {
+				byte[] bytes = getAutocompleteJSON(
+					templateId, query, resourceRequest, resourceResponse);
+
+				outputStream.write(bytes);
+			}
+			finally {
+				outputStream.close();
+			}
+		}
+	}
+
 	protected void deleteTemplates(ActionRequest actionRequest)
 		throws Exception {
 
@@ -170,6 +214,74 @@ public class EditTemplateAction extends PortletAction {
 		for (long deleteTemplateId : deleteTemplateIds) {
 			DDMTemplateServiceUtil.deleteTemplate(deleteTemplateId);
 		}
+	}
+
+	protected byte[] getAutocompleteJSON(
+			long templateId, String query, ResourceRequest resourceRequest,
+			ResourceResponse resourceResponse)
+		throws Exception {
+
+		String json = null;
+
+		JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
+
+		DDMTemplate ddmTemplate = DDMTemplateServiceUtil.getTemplate(
+			templateId);
+
+		if (ddmTemplate.getLanguage().equals("ftl")) {
+			HttpServletRequest request = PortalUtil.getHttpServletRequest(
+				resourceRequest);
+
+			TemplateResource templateResource = new StringTemplateResource(
+				String.valueOf(templateId), ddmTemplate.getScript());
+
+			Template template = TemplateManagerUtil.getTemplate(
+				TemplateManager.FREEMARKER, templateResource,
+				TemplateContextType.STANDARD);
+
+			template.prepare(request);
+
+			if (Validator.isBlank(query)) {
+				jsonObject.put("status", 0);
+
+				JSONArray jsonArray = JSONFactoryUtil.createJSONArray();
+
+				jsonArray.put(template.getKeys());
+
+				jsonObject.put("result", jsonArray);
+
+				json = jsonObject.toString();
+			}
+			else {
+				jsonObject.put("status", 0);
+
+				JSONArray jsonArray = JSONFactoryUtil.createJSONArray();
+
+				Object object = template.get(query);
+
+				if (object != null) {
+					for (Field field : object.getClass().getDeclaredFields()) {
+						jsonArray.put(field.getName());
+					}
+
+					for (Method method: object.getClass().getDeclaredMethods()) {
+						jsonArray.put(method.getName());
+					}
+
+				}
+
+				jsonObject.put("result", jsonArray);
+
+				json = jsonObject.toString();
+			}
+		}
+
+		if (json == null) {
+			jsonObject.put("status", -1);
+			jsonObject.put("message", "invalid-query");
+		}
+
+		return json.getBytes(StringPool.UTF8);
 	}
 
 	protected String getSaveAndContinueRedirect(

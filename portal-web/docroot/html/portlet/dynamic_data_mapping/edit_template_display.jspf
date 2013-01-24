@@ -138,6 +138,10 @@ boolean useRichEditor = editorType.equals("rich");
 	String langType = ParamUtil.getString(request, "langType");
 	%>
 
+	<portlet:resourceURL var="autocompleteURL">
+		<portlet:param name="struts_action" value="/dynamic_data_mapping/edit_template" />
+	</portlet:resourceURL>
+
 	A.on(
 		'domready',
 		function(event) {
@@ -154,9 +158,10 @@ boolean useRichEditor = editorType.equals("rich");
 								processor: new A.AceEditor.AutoCompleteFreemarker(
 									{
 										io: {
-											url: 'The URL here',
+											uri: '<%= autocompleteURL %>',
 											data: {
-												// custom data here
+												templateId: '<%= (template == null) ? 0  :template.getTemplateId() %>',
+												cmd: 'autocomplete'
 											}
 										}
 									}
