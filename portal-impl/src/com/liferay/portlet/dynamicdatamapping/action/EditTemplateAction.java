@@ -64,6 +64,9 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
@@ -237,7 +240,7 @@ public class EditTemplateAction extends PortletAction {
 				String.valueOf(templateId), ddmTemplate.getScript());
 
 			Template template = TemplateManagerUtil.getTemplate(
-				TemplateManager.FREEMARKER, templateResource,
+				TemplateConstants.LANG_TYPE_FTL, templateResource,
 				TemplateContextType.STANDARD);
 
 			template.prepare(request);
@@ -260,15 +263,21 @@ public class EditTemplateAction extends PortletAction {
 
 				Object object = template.get(query);
 
+				Set<String> nameSet = new TreeSet<String>();
+
 				if (object != null) {
-					for (Field field : object.getClass().getDeclaredFields()) {
-						jsonArray.put(field.getName());
+					for (Field field : object.getClass().getFields()) {
+						nameSet.add(field.getName());
 					}
 
-					for (Method method: object.getClass().getDeclaredMethods()) {
-						jsonArray.put(method.getName());
+					for (Method method: object.getClass().getMethods()) {
+						nameSet.add(method.getName());
 					}
 
+				}
+
+				for (String name : nameSet) {
+					jsonArray.put(name);
 				}
 
 				jsonObject.put("result", jsonArray);
