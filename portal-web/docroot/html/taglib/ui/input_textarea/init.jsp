@@ -14,19 +14,6 @@
  */
 --%>
 
-<select <%= disabled ? "disabled=\"disabled\"" : "" %> id="<%= normalizedMonthParam %>" name="<%= monthParam %>">
-	<c:if test="<%= monthNullable %>">
-		<option value=""></option>
-	</c:if>
+<%@ include file="/html/taglib/init.jsp" %>
 
-	<%
-	for (int i = 0; i < months.length; i++) {
-	%>
-
-		<option <%= (monthValue == monthIds[i]) ? "selected" : "" %> value="<%= monthIds[i] %>"><%= months[i] %></option>
-
-	<%
-	}
-	%>
-
-</select>
+<%@ page import="com.liferay.portal.kernel.util.FriendlyURLNormalizerUtil" %>

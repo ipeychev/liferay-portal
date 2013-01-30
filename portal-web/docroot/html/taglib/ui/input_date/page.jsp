@@ -14,7 +14,7 @@
  */
 --%>
 
-<%@ include file="/html/taglib/init.jsp" %>
+<%@ include file="/html/taglib/ui/input_date/init.jsp" %>
 
 <%
 String randomNamespace = PortalUtil.generateRandomKey(request, "taglib_ui_input_date_page") + StringPool.UNDERLINE;
@@ -27,12 +27,15 @@ String cssClass = GetterUtil.getString((String)request.getAttribute("liferay-ui:
 String formName = namespace + request.getAttribute("liferay-ui:input-date:name");
 String name = GetterUtil.getString((String)request.getAttribute("liferay-ui:input-date:name"));
 String monthParam = namespace + request.getAttribute("liferay-ui:input-date:monthParam");
+String normalizedMonthParam = FriendlyURLNormalizerUtil.normalize(monthParam);
 int monthValue = GetterUtil.getInteger((String)request.getAttribute("liferay-ui:input-date:monthValue"));
 boolean monthNullable = GetterUtil.getBoolean((String)request.getAttribute("liferay-ui:input-date:monthNullable"));
 String dayParam = namespace + request.getAttribute("liferay-ui:input-date:dayParam");
+String normalizedDayParam = FriendlyURLNormalizerUtil.normalize(dayParam);
 int dayValue = GetterUtil.getInteger((String)request.getAttribute("liferay-ui:input-date:dayValue"));
 boolean dayNullable = GetterUtil.getBoolean((String)request.getAttribute("liferay-ui:input-date:dayNullable"));
 String yearParam = namespace + request.getAttribute("liferay-ui:input-date:yearParam");
+String normalizedYearParam = FriendlyURLNormalizerUtil.normalize(yearParam);
 int yearValue = GetterUtil.getInteger((String)request.getAttribute("liferay-ui:input-date:yearValue"));
 boolean yearNullable = GetterUtil.getBoolean((String)request.getAttribute("liferay-ui:input-date:yearNullable"));
 int yearRangeStart = GetterUtil.getInteger((String)request.getAttribute("liferay-ui:input-date:yearRangeStart"));
@@ -206,9 +209,9 @@ else if (yearNullable) {
 						}
 					},
 					datePickerConfig: {},
-					dayNode: '#<%= dayParam %>',
+					dayNode: '#<%= normalizedDayParam %>',
 					disabled: <%= disabled %>,
-					monthNode: '#<%= monthParam %>',
+					monthNode: '#<%= normalizedMonthParam %>',
 					nullableDay: <%= dayNullable %>,
 					nullableMonth: <%= monthNullable %>,
 					nullableYear: <%= yearNullable %>,
@@ -220,7 +223,7 @@ else if (yearNullable) {
 						}
 					},
 					srcNode: '#<%= randomNamespace %>displayDateContent',
-					yearNode: '#<%= yearParam %>',
+					yearNode: '#<%= normalizedYearParam %>',
 					yearRange: [<%= yearRangeStart %>, <%= yearRangeEnd %>]
 				}
 			).render();
