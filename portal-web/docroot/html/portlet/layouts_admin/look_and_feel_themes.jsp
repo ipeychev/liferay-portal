@@ -35,7 +35,7 @@ Map<String, ThemeSetting> configurableSettings = selTheme.getConfigurableSetting
 		<h3><liferay-ui:message key="current-theme" /></h3>
 
 		<div>
-			<img alt="<%= selTheme.getName() %>" class="theme-screenshot" onclick="document.getElementById('<portlet:namespace /><%= device %>SelTheme').checked = true;" src="<%= themeDisplay.getCDNBaseURL() %><%= selTheme.getStaticResourcePath() %><%= selTheme.getImagesPath() %>/thumbnail.png" title="<%= selTheme.getName() %>" />
+			<img alt="<%= selTheme.getName() %>" class="theme-screenshot" onclick="<portlet:namespace /><%= device %>selectTheme('SelTheme', false);" src="<%= themeDisplay.getCDNBaseURL() %><%= selTheme.getStaticResourcePath() %><%= selTheme.getImagesPath() %>/thumbnail.png" title="<%= selTheme.getName() %>" />
 
 			<div class="theme-details">
 				<c:choose>
@@ -122,7 +122,7 @@ Map<String, ThemeSetting> configurableSettings = selTheme.getConfigurableSetting
 									%>
 
 								<div class="<%= cssClass %> theme-entry">
-									<img alt="" class="modify-link theme-thumbnail" onclick="document.getElementById('<portlet:namespace /><%= device %>ColorSchemeId<%= i %>').checked = true;" src="<%= themeDisplay.getCDNBaseURL() %><%= selTheme.getStaticResourcePath() %><%= curColorScheme.getColorSchemeThumbnailPath() %>/thumbnail.png" title="<%= curColorScheme.getName() %>" />
+									<img alt="" class="modify-link theme-thumbnail" onclick="<portlet:namespace /><%= device %>selectColorScheme('#<portlet:namespace /><%= device %>ColorSchemeId<%= i %>');" src="<%= themeDisplay.getCDNBaseURL() %><%= selTheme.getStaticResourcePath() %><%= curColorScheme.getColorSchemeThumbnailPath() %>/thumbnail.png" title="<%= curColorScheme.getName() %>" />
 
 										<aui:input checked="<%= selColorScheme.getColorSchemeId().equals(curColorScheme.getColorSchemeId()) %>" cssClass="theme-title" id='<%= device + "ColorSchemeId" + i %>' label="<%= curColorScheme.getName() %>" name='<%= device + "ColorSchemeId" %>' type="radio" value="<%= curColorScheme.getColorSchemeId() %>" />
 									</div>
@@ -227,7 +227,7 @@ Map<String, ThemeSetting> configurableSettings = selTheme.getConfigurableSetting
 
 							<li>
 								<div class="theme-entry">
-									<img alt="" class="modify-link theme-thumbnail" onclick="document.getElementById('<portlet:namespace /><%= device %>ThemeId<%= i %>').checked = true;" src="<%= themeDisplay.getCDNBaseURL() %><%= curTheme.getStaticResourcePath() %><%= curTheme.getImagesPath() %>/thumbnail.png" title="<%= curTheme.getName() %>" />
+									<img alt="" class="modify-link theme-thumbnail" onclick="<portlet:namespace /><%= device %>selectTheme('ThemeId<%= i %>', true);" src="<%= themeDisplay.getCDNBaseURL() %><%= curTheme.getStaticResourcePath() %><%= curTheme.getImagesPath() %>/thumbnail.png" title="<%= curTheme.getName() %>" />
 
 									<aui:input cssClass="theme-title" id='<%= device + "ThemeId" + i %>' label="<%= curTheme.getName() %>" name='<%= device + "ThemeId" %>' type="radio" value="<%= curTheme.getThemeId() %>" />
 								</div>
@@ -243,6 +243,45 @@ Map<String, ThemeSetting> configurableSettings = selTheme.getConfigurableSetting
 		</div>
 	</c:if>
 </div>
+
+<c:if test="<%= editable %>">
+	<aui:script use="aui-base">
+		Liferay.provide(
+			window,
+			'<portlet:namespace /><%= device %>selectColorScheme',
+			function (id) {
+				var colorSchemeInput = A.one(id);
+
+				if (!colorSchemeInput.get('disabled')) {
+					colorSchemeInput.set('checked', true);
+				}
+			}
+		);
+
+		Liferay.provide(
+			window,
+			'<portlet:namespace /><%= device %>selectTheme',
+			function (themeId, colorSchemesDisabled) {
+				A.one('#<portlet:namespace /><%= device %>'+themeId).set('checked', true);
+				A.all('input[name=<portlet:namespace /><%= device %>ColorSchemeId]').set('disabled', colorSchemesDisabled);
+			}
+		);
+
+		A.all('.lfr-available-themes input[name=<portlet:namespace /><%= device %>ThemeId]').on(
+			'change',
+			function() {
+				A.all('input[name=<portlet:namespace /><%= device %>ColorSchemeId]').set('disabled', true);
+			}
+		);
+
+		A.one('#<portlet:namespace /><%= device %>SelTheme').on(
+			'change',
+			function() {
+				A.all('input[name=<portlet:namespace /><%= device %>ColorSchemeId]').set('disabled', false);
+			}
+		);
+	</aui:script>
+</c:if>
 
 <c:if test="<%= editable && permissionChecker.isOmniadmin() && PrefsPropsUtil.getBoolean(PropsKeys.AUTO_DEPLOY_ENABLED, PropsValues.AUTO_DEPLOY_ENABLED) %>">
 	<aui:script use="aui-base">
