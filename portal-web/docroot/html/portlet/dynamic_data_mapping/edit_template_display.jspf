@@ -153,7 +153,7 @@ boolean useRichEditor = editorType.equals("rich");
 					mode: '<%= EditorUtil.getEditorMode(langType) %>',
 					plugins: [
 						{
-							fn: A.AceEditor.AutoCompleteBase,
+							fn: A.Plugin.AceAutoComplete,
 							cfg: {
 								processor: new A.AceEditor.AutoCompleteFreemarker(
 									{
@@ -165,7 +165,11 @@ boolean useRichEditor = editorType.equals("rich");
 											}
 										}
 									}
-								)
+								),
+								render: true,
+								visible: false,
+								width: 250,
+								zIndex: 10000
 							}
 						}
 					]
