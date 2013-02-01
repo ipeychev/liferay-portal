@@ -240,7 +240,7 @@ public class EditTemplateAction extends PortletAction {
 				String.valueOf(templateId), ddmTemplate.getScript());
 
 			Template template = TemplateManagerUtil.getTemplate(
-				TemplateManager.FREEMARKER, templateResource,
+				TemplateConstants.LANG_TYPE_FTL, templateResource,
 				TemplateContextType.STANDARD);
 
 			template.prepare(request);
