@@ -163,6 +163,8 @@ else if (liveGroup.isUser()) {
 	rootNodeName = user2.getFullName();
 }
 
+rootNodeName = HtmlUtil.escape(rootNodeName);
+
 LayoutLister layoutLister = new LayoutLister();
 
 LayoutView layoutView = layoutLister.getLayoutView(stagingGroupId, privateLayout, rootNodeName, locale);

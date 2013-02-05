@@ -147,7 +147,7 @@ portletURL.setParameter("target", target);
 				sb.append("('");
 				sb.append(group.getGroupId());
 				sb.append("', '");
-				sb.append(UnicodeFormatter.toString(group.getDescriptiveName(locale)));
+				sb.append(UnicodeFormatter.toString(HtmlUtil.escape(group.getDescriptiveName(locale))));
 				sb.append("', '");
 				sb.append(target);
 				sb.append("'); window.close();");
