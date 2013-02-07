@@ -25,6 +25,7 @@ import com.liferay.portal.kernel.util.CharPool;
 import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
@@ -40,20 +41,24 @@ import com.liferay.portlet.asset.model.AssetCategoryProperty;
 import com.liferay.portlet.asset.model.AssetRendererFactory;
 import com.liferay.portlet.asset.model.AssetTag;
 import com.liferay.portlet.asset.model.AssetTagProperty;
+import com.liferay.portlet.asset.model.AssetVocabulary;
 import com.liferay.portlet.asset.service.AssetCategoryLocalServiceUtil;
 import com.liferay.portlet.asset.service.AssetCategoryPropertyLocalServiceUtil;
 import com.liferay.portlet.asset.service.AssetTagLocalServiceUtil;
 import com.liferay.portlet.asset.service.AssetTagPropertyLocalServiceUtil;
+import com.liferay.portlet.asset.service.AssetVocabularyLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.model.DLFileEntry;
 import com.liferay.portlet.documentlibrary.model.DLFolderConstants;
 import com.liferay.portlet.dynamicdatamapping.model.DDMStructure;
 import com.liferay.portlet.dynamicdatamapping.service.DDMStructureLocalServiceUtil;
 import com.liferay.portlet.journal.model.JournalArticle;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -261,6 +266,80 @@ public class AssetUtil {
 		sb.append(ListUtil.toString(categories, AssetCategory.NAME_ACCESSOR));
 
 		return sb.toString();
+	}
+
+	public static String getCategoryPath(
+			AssetCategory category, boolean containsCurrentCategoryName,
+			boolean containsVocabularyName, Locale locale)
+		throws PortalException, SystemException {
+
+		List<String> names = new ArrayList<String>();
+
+		AssetCategory curCategory = category;
+
+		String separator =
+			StringPool.SPACE + StringPool.GREATER_THAN + StringPool.SPACE;
+
+		while (curCategory.getParentCategoryId() > 0) {
+			AssetCategory parentCategory =
+				AssetCategoryLocalServiceUtil.getCategory(
+					curCategory.getParentCategoryId());
+
+			names.add(parentCategory.getTitle(locale));
+			names.add(separator);
+
+			curCategory = parentCategory;
+		}
+
+		int namesSize = names.size();
+
+		if (containsCurrentCategoryName) {
+			names.add(0, category.getTitle(locale));
+
+			if (namesSize > 0) {
+				names.add(1, separator);
+			}
+		}
+
+		AssetVocabulary vocabulary = null;
+
+		if (containsVocabularyName) {
+			vocabulary = AssetVocabularyLocalServiceUtil.getVocabulary(
+				category.getVocabularyId());
+
+			if (names.size() == 1) {
+				names.add(separator);
+			}
+
+			names.add(vocabulary.getTitle(locale));
+		}
+
+		String lastElement = names.get(names.size() - 1);
+
+		if ((lastElement != null) && lastElement.equals(separator)) {
+			names.remove(names.size() - 1);
+		}
+
+		Collections.reverse(names);
+
+		StringBundler sb = new StringBundler(names.size());
+
+		sb.append(names.toArray(new String[names.size()]));
+
+		return sb.toString();
+	}
+
+	public static String getCategoryPath(
+			long categoryId, boolean containsCurrentCategoryName,
+			boolean containsVocabularyName, Locale locale)
+		throws PortalException, SystemException {
+
+		AssetCategory category = AssetCategoryLocalServiceUtil.getCategory(
+			categoryId);
+
+		return getCategoryPath(
+			category, containsCurrentCategoryName, containsVocabularyName,
+			locale);
 	}
 
 	public static Set<String> getLayoutTagNames(HttpServletRequest request) {

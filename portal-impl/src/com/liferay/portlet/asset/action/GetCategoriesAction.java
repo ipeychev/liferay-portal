@@ -59,6 +59,7 @@ public class GetCategoriesAction extends JSONAction {
 			jsonObject.put("hasChildren", !childCategories.isEmpty());
 			jsonObject.put("name", category.getName());
 			jsonObject.put("parentCategoryId", category.getParentCategoryId());
+			jsonObject.put("path", category.getPath());
 			jsonObject.put(
 				"titleCurrentValue", category.getTitleCurrentValue());
 

@@ -20,23 +20,20 @@ import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.util.ListUtil;
+import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
-import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portlet.asset.model.AssetCategory;
 import com.liferay.portlet.asset.model.AssetCategoryConstants;
-import com.liferay.portlet.asset.model.AssetVocabulary;
 import com.liferay.portlet.asset.service.base.AssetCategoryServiceBaseImpl;
 import com.liferay.portlet.asset.service.permission.AssetCategoryPermission;
+import com.liferay.portlet.asset.util.AssetUtil;
 import com.liferay.util.Autocomplete;
 import com.liferay.util.dao.orm.CustomSQLUtil;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -385,33 +382,22 @@ public class AssetCategoryServiceImpl extends AssetCategoryServiceBaseImpl {
 			JSONObject categoryJSONObject = JSONFactoryUtil.createJSONObject(
 				categoryJSON);
 
-			List<String> names = new ArrayList<String>();
+			String languageId = category.getTitleCurrentLanguageId();
 
-			AssetCategory curCategory = category;
+			Locale locale = null;
 
-			while (curCategory.getParentCategoryId() > 0) {
-				AssetCategory parentCategory = getCategory(
-					curCategory.getParentCategoryId());
-
-				names.add(parentCategory.getName());
-				names.add(
-					StringPool.SPACE + StringPool.GREATER_THAN +
-						StringPool.SPACE);
-
-				curCategory = parentCategory;
+			if (languageId != null) {
+				locale = LocaleUtil.fromLanguageId(languageId);
 			}
 
-			Collections.reverse(names);
+			if (locale == null) {
+				locale = LocaleUtil.getMostRelevantLocale();
+			}
 
-			AssetVocabulary vocabulary = assetVocabularyService.getVocabulary(
-				category.getVocabularyId());
+			String path = AssetUtil.getCategoryPath(
+				category, false, true, locale);
 
-			StringBundler sb = new StringBundler(1 + names.size());
-
-			sb.append(vocabulary.getName());
-			sb.append(names.toArray(new String[names.size()]));
-
-			categoryJSONObject.put("path", sb.toString());
+			categoryJSONObject.put("path", path);
 
 			jsonArray.put(categoryJSONObject);
 		}

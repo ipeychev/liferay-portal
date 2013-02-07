@@ -202,7 +202,7 @@ private String[] _getCategoryIdsTitles(String categoryIds, String categoryNames,
 				categoryIdsSb.append(categoryId);
 				categoryIdsSb.append(StringPool.COMMA);
 
-				categoryNamesSb.append(category.getTitle(themeDisplay.getLocale()));
+				categoryNamesSb.append(category.getPath(themeDisplay.getLocale()));
 				categoryNamesSb.append(_CATEGORY_SEPARATOR);
 			}
 
