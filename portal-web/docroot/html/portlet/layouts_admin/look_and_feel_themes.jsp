@@ -121,8 +121,8 @@ Map<String, ThemeSetting> configurableSettings = selTheme.getConfigurableSetting
 										}
 									%>
 
-								<div class="<%= cssClass %> theme-entry">
-									<img alt="" class="modify-link theme-thumbnail" onclick="<portlet:namespace /><%= device %>selectColorScheme('#<portlet:namespace /><%= device %>ColorSchemeId<%= i %>');" src="<%= themeDisplay.getCDNBaseURL() %><%= selTheme.getStaticResourcePath() %><%= curColorScheme.getColorSchemeThumbnailPath() %>/thumbnail.png" title="<%= curColorScheme.getName() %>" />
+									<div class="<%= cssClass %> theme-entry">
+										<img alt="" class="modify-link theme-thumbnail" onclick="<portlet:namespace /><%= device %>selectColorScheme('#<portlet:namespace /><%= device %>ColorSchemeId<%= i %>');" src="<%= themeDisplay.getCDNBaseURL() %><%= selTheme.getStaticResourcePath() %><%= curColorScheme.getColorSchemeThumbnailPath() %>/thumbnail.png" title="<%= curColorScheme.getName() %>" />
 
 										<aui:input checked="<%= selColorScheme.getColorSchemeId().equals(curColorScheme.getColorSchemeId()) %>" cssClass="theme-title" id='<%= device + "ColorSchemeId" + i %>' label="<%= curColorScheme.getName() %>" name='<%= device + "ColorSchemeId" %>' type="radio" value="<%= curColorScheme.getColorSchemeId() %>" />
 									</div>
@@ -262,7 +262,7 @@ Map<String, ThemeSetting> configurableSettings = selTheme.getConfigurableSetting
 			window,
 			'<portlet:namespace /><%= device %>selectTheme',
 			function (themeId, colorSchemesDisabled) {
-				A.one('#<portlet:namespace /><%= device %>'+themeId).set('checked', true);
+				A.one('#<portlet:namespace /><%= device %>' + themeId).set('checked', true);
 				A.all('input[name=<portlet:namespace /><%= device %>ColorSchemeId]').set('disabled', colorSchemesDisabled);
 			}
 		);
