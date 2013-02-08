@@ -773,6 +773,14 @@ public class AssetCategoryWrapper implements AssetCategory,
 		return _assetCategory.getAncestors();
 	}
 
+	public java.lang.String getPath() {
+		return _assetCategory.getPath();
+	}
+
+	public java.lang.String getPath(java.util.Locale locale) {
+		return _assetCategory.getPath(locale);
+	}
+
 	public boolean isRootCategory() {
 		return _assetCategory.isRootCategory();
 	}
