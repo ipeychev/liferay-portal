@@ -22,13 +22,16 @@ import com.liferay.portal.kernel.servlet.ServletResponseUtil;
 import com.liferay.portal.kernel.staging.StagingUtil;
 import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.ContentTypes;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HttpUtil;
 import com.liferay.portal.kernel.util.InstancePool;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PropertiesParamUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.UnicodeProperties;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.model.Layout;
 import com.liferay.portal.model.LayoutRevision;
@@ -50,6 +53,9 @@ import com.liferay.portal.util.LayoutCloneFactory;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.WebKeys;
 import com.liferay.portlet.PortletPreferencesFactoryUtil;
+import com.liferay.portlet.asset.model.AssetEntry;
+import com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil;
+import com.liferay.portlet.assetpublisher.util.AssetPublisherUtil;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -98,6 +104,32 @@ public class UpdateLayoutAction extends JSONAction {
 
 			portletId = layoutTypePortlet.addPortletId(
 				userId, portletId, columnId, columnPos);
+
+			String[] portletData = StringUtil.split(
+				ParamUtil.getString(request, "portletData"));
+
+			if (Validator.isNotNull(portletData)) {
+				long classPK = GetterUtil.getLong(portletData[0]);
+
+				String className = GetterUtil.getString(portletData[1]);
+
+				if ((classPK > 0) && Validator.isNotNull(className)) {
+					AssetEntry entry = AssetEntryLocalServiceUtil.getEntry(
+						className, classPK);
+
+					PortletPreferences preferences =
+						PortletPreferencesFactoryUtil.getLayoutPortletSetup(
+							layout, portletId);
+
+					preferences.setValue("selectionStyle", "manual");
+
+					AssetPublisherUtil.addSelection(
+						request, preferences, portletId, entry.getEntryId(), -1,
+						entry.getClassName());
+
+					preferences.store();
+				}
+			}
 
 			if (layoutTypePortlet.isCustomizable() &&
 				layoutTypePortlet.isCustomizedView() &&

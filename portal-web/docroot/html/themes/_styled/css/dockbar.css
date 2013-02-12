@@ -514,3 +514,169 @@ html > .lfr-dockbar-pinned {
 		padding-left: 1em;
 	}
 }
+
+/* ---------- Add Content ---------- */
+
+.add-content-menu {
+	background-color: #D3DBE4;
+	left: 0 !important;
+
+	.aui-menu-content {
+		background: none;
+		width: 320px;
+
+		.aui-tabview-list {
+			margin: 5px;
+			padding-left: 5px;
+		}
+
+		.search-panel {
+			background: #D3DBE4 url(../images/custom/shadow_bottom_bg.png) 0 100% repeat-x;
+			padding: 5px;
+			overflow: hidden;
+
+			.add-content-search {
+				float: left;
+
+				.aui-field-input {
+					background-image: url(../images/common/search.png);
+					background-position: 5px 50%;
+					background-repeat: no-repeat;
+					border-radius: 4px 4px 4px 4px;
+					padding-left: 25px;
+					width: 150px;
+				}
+			}
+
+			.aui-field-content {
+				display: inherit;
+			}
+
+			.buttons {
+				font-size: 0;
+				float: left;
+				margin-left: 5px;
+				padding: 5px 0;
+
+				.button {
+					float: left;
+					height: 21px;
+					margin-right: 5px;
+					width: 23px;
+
+					&:hover {
+						background-position: 0 50%;
+					}
+
+					&.last {
+						margin-right: 0;
+					}
+
+					&.selected {
+						background-position: 0 100%;
+					}
+				}
+
+				.list {
+					background: url(../images/custom/list1.png) no-repeat 0 0;
+				}
+
+				.descriptive {
+					background: url(../images/custom/list2.png) no-repeat 0 0;
+				}
+
+				.icon {
+					background: url(../images/custom/list3.png) no-repeat 0 0;
+				}
+			}
+
+			.num-items {
+				float: left;
+				margin-left: 5px;
+				padding: 5px 0;
+			}
+		}
+
+		.lfr-panel.lfr-extended {
+			border-width: 0;
+			border-color: #979798 #FAFAFB #FAFAFB #BDBDBE;
+			border-radius: 0 0 0 0;
+			box-shadow: none;
+			clear: both;
+
+			&.recent .lfr-panel-titlebar {
+				cursor: default;
+			}
+
+			.lfr-panel-titlebar {
+				background-image: -moz-linear-gradient(#D2DBE4, #BDC8D6);
+				border-top: 1px solid #F0F1F2;
+				cursor: pointer;
+				margin-bottom: 0;
+				padding: 7px 6px 6px;
+
+				.lfr-panel-button {
+					background-image: url(../images/custom/dragimg.png);
+					background-repeat: no-repeat;
+					left: 0;
+					position: absolute;
+
+					&:hover {
+						background-position: 0 0;
+					}
+				}
+
+				.lfr-panel-title {
+					font-size: 13px;
+					font-weight: bold;
+					padding-left: 20px;
+				}
+			}
+
+			.lfr-panel-content {
+				background: transparent url(../images/custom/shadow_top_bg.png) 0 0 repeat-x;
+				padding: 0;
+
+				ul {
+					overflow: hidden;
+					padding: 10px 0;
+
+					li {
+						border: 0;
+
+						a {
+							padding: 5px 5px 5px 20px;
+							font-weight: normal;
+
+							&.aui-focus {
+								background-color: #EBF0F5;
+								color: #2C2F34;
+								text-shadow: 0 0;
+							}
+
+							&:hover {
+								background-color: #EBF0F5;
+							}
+						}
+					}
+
+					.app-view-entry-taglib.entry-display-style {
+
+						&.display-icon {
+							height: 110px;
+							width: 95px;
+						}
+
+						.entry-thumbnail {
+							max-width: 75px;
+
+							img {
+								max-width: 65px;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}

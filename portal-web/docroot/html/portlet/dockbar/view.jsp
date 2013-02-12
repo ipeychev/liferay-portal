@@ -55,66 +55,129 @@ boolean hasLayoutUpdatePermission = LayoutPermissionUtil.contains(permissionChec
 
 				<div class="aui-menu add-content-menu aui-overlaycontext-hidden" id="<portlet:namespace />addContentContainer">
 					<div class="aui-menu-content">
-						<ul>
-							<c:if test="<%= GroupPermissionUtil.contains(permissionChecker, scopeGroupId, ActionKeys.ADD_LAYOUT) && !group.isLayoutPrototype() %>">
-								<li class="first add-page">
-									<a href="javascript:;" id="addPage">
-										<liferay-ui:message key="page" />
-									</a>
-								</li>
-							</c:if>
 
-							<c:if test="<%= !themeDisplay.isStateMaximized() && layout.isTypePortlet() && !layout.isLayoutPrototypeLinkActive() %>">
-								<li class="last common-items">
-									<div class="aui-menugroup">
-										<div class="aui-menugroup-content">
-											<c:if test="<%= hasLayoutUpdatePermission || (layoutTypePortlet.isCustomizable() && layoutTypePortlet.isCustomizedView() && hasLayoutCustomizePermission) %>">
-												<span class="aui-menu-label"><liferay-ui:message key="applications" /></span>
+						<liferay-ui:tabs
+							names="content,application"
+							refresh="<%= false %>"
+						>
+							<liferay-ui:section>
 
-												<ul>
+									<%
+									int delta = ParamUtil.getInteger(request, "delta", 10);
 
-													<%
-													int j = 0;
+									String displayStyle = ParamUtil.getString(request, "displayStyle", "list");
+									%>
 
-													for (int i = 0; i < portlets.size(); i++) {
-														Portlet portlet = portlets.get(i);
+									<portlet:resourceURL var="updateContentListURL">
+										<portlet:param name="struts_action" value="/dockbar/view" />
+										<portlet:param name="redirect" value="<%= currentURL %>" />
+									</portlet:resourceURL>
 
-														boolean portletInstanceable = portlet.isInstanceable();
+									<aui:form action="<%= updateContentListURL %>" name="addContentForm" onSubmit="event.preventDefault();">
+										<div class="search-panel">
+											<aui:input cssClass="add-content-search" label="" name="searchInput" type="text" />
 
-														boolean portletUsed = layoutTypePortlet.hasPortletId(portlet.getPortletId());
+											<div class="buttons" id="<portlet:namespace />styleButtons">
+												<span class='list button <%= displayStyle.equals("list") ? "selected" : "" %>' data-style="list">
+													<liferay-ui:message key="1" />
+												</span>
 
-														boolean portletLocked = !portletInstanceable && portletUsed;
+												<span class='descriptive button <%= displayStyle.equals("descriptive") ? "selected" : "" %>' data-style="descriptive">
+													<liferay-ui:message key="2" />
+												</span>
 
-														if (!PortletPermissionUtil.contains(permissionChecker, layout, portlet.getPortletId(), ActionKeys.ADD_TO_PAGE)) {
-															continue;
-														}
-													%>
+												<span class='icon button last <%= displayStyle.equals("icon") ? "selected" : "" %>' data-style="icon">
+													<liferay-ui:message key="3" />
+												</span>
+											</div>
 
-														<li class="<%= (j == 0) ? "first" : "" %>">
-															<a class="app-shortcut <c:if test="<%= portletLocked %>">lfr-portlet-used</c:if> <c:if test="<%= portletInstanceable %>">lfr-instanceable</c:if>" data-portlet-id="<%= portlet.getPortletId() %>" href="javascript:;" <c:if test="<%= portletLocked %>">tabIndex="-1"</c:if>>
-																<liferay-portlet:icon-portlet portlet="<%= portlet %>" />
+											<aui:select cssClass="num-items" label="" name="numItems">
 
-																<%= PortalUtil.getPortletTitle(portlet.getPortletId(), locale) %>
-															</a>
-														</li>
-
-													<%
-														j++;
+												<%
+												for (int curDelta : PropsValues.SEARCH_CONTAINER_PAGE_DELTA_VALUES) {
+													if (curDelta > SearchContainer.MAX_DELTA) {
+														continue;
 													}
-													%>
+												%>
 
-													<li class="add-application last more-applications">
-														<a href="javascript:;" id="<portlet:namespace />addApplication">
-															<liferay-ui:message key="more" />&hellip;
-														</a>
-													</li>
-												</ul>
-											</c:if>
+													<aui:option label="<%= curDelta %>" selected="<%= delta == curDelta %>" />
+
+												<%
+												}
+												%>
+
+											</aui:select>
 										</div>
-									</div>
-								</li>
-							</c:if>
-						</ul>
+
+										<div id="<portlet:namespace />entriesContainer">
+											<liferay-util:include page="/html/portlet/dockbar/view_resources.jsp" />
+										</div>
+									</aui:form>
+							</liferay-ui:section>
+
+							<liferay-ui:section>
+								<ul>
+									<c:if test="<%= GroupPermissionUtil.contains(permissionChecker, scopeGroupId, ActionKeys.ADD_LAYOUT) && !group.isLayoutPrototype() %>">
+										<li class="first add-page">
+											<a href="javascript:;" id="addPage">
+												<liferay-ui:message key="page" />
+											</a>
+										</li>
+									</c:if>
+
+									<c:if test="<%= !themeDisplay.isStateMaximized() && layout.isTypePortlet() && !layout.isLayoutPrototypeLinkActive() %>">
+										<li class="last common-items">
+											<div class="aui-menugroup">
+												<div class="aui-menugroup-content">
+													<c:if test="<%= hasLayoutUpdatePermission || (layoutTypePortlet.isCustomizable() && layoutTypePortlet.isCustomizedView() && hasLayoutCustomizePermission) %>">
+														<span class="aui-menu-label"><liferay-ui:message key="applications" /></span>
+
+														<ul>
+
+															<%
+															int j = 0;
+
+															for (int i = 0; i < portlets.size(); i++) {
+																Portlet portlet = portlets.get(i);
+
+																boolean portletInstanceable = portlet.isInstanceable();
+
+																boolean portletUsed = layoutTypePortlet.hasPortletId(portlet.getPortletId());
+
+																boolean portletLocked = !portletInstanceable && portletUsed;
+
+																if (!PortletPermissionUtil.contains(permissionChecker, layout, portlet.getPortletId(), ActionKeys.ADD_TO_PAGE)) {
+																	continue;
+																}
+															%>
+
+																<li class="<%= (j == 0) ? "first" : "" %>">
+																	<a class="app-shortcut <c:if test="<%= portletLocked %>">lfr-portlet-used</c:if> <c:if test="<%= portletInstanceable %>">lfr-instanceable</c:if>" data-portlet-id="<%= portlet.getPortletId() %>" href="javascript:;" <c:if test="<%= portletLocked %>">tabIndex="-1"</c:if>>
+																		<liferay-portlet:icon-portlet portlet="<%= portlet %>" />
+
+																		<%= PortalUtil.getPortletTitle(portlet.getPortletId(), locale) %>
+																	</a>
+																</li>
+
+															<%
+																j++;
+															}
+															%>
+
+															<li class="add-application last more-applications">
+																<a href="javascript:;" id="<portlet:namespace />addApplication">
+																	<liferay-ui:message key="more" />&hellip;
+																</a>
+															</li>
+														</ul>
+													</c:if>
+												</div>
+											</div>
+										</li>
+									</c:if>
+								</ul>
+							</liferay-ui:section>
+						</liferay-ui:tabs>
 					</div>
 				</div>
 			</li>
@@ -559,3 +622,13 @@ boolean hasLayoutUpdatePermission = LayoutPermissionUtil.contains(permissionChec
 		customizableColumns.get('parentNode').addClass('customizable');
 	}
 </aui:script>
+
+<c:if test="<%= !group.isControlPanel() && (!group.hasStagingGroup() || group.isStagingGroup()) && (GroupPermissionUtil.contains(permissionChecker, group.getGroupId(), ActionKeys.ADD_LAYOUT) || hasLayoutUpdatePermission || (layoutTypePortlet.isCustomizable() && layoutTypePortlet.isCustomizedView() && hasLayoutCustomizePermission)) %>">
+	<aui:script use="liferay-dockbar-add-content">
+		new Liferay.AddContent(
+			{
+				namespace: '<portlet:namespace />'
+			}
+		);
+	</aui:script>
+</c:if>

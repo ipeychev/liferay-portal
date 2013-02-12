@@ -178,6 +178,18 @@ public class AssetPublisherUtil {
 			long assetEntryId, int assetEntryOrder, String assetEntryType)
 		throws Exception {
 
+		addSelection(
+			PortalUtil.getHttpServletRequest(portletRequest),
+			portletPreferences, portletId, assetEntryId, assetEntryOrder,
+			assetEntryType);
+	}
+
+	public static void addSelection(
+			HttpServletRequest request,
+			PortletPreferences portletPreferences, String portletId,
+			long assetEntryId, int assetEntryOrder, String assetEntryType)
+		throws Exception {
+
 		AssetEntry assetEntry = AssetEntryLocalServiceUtil.getEntry(
 			assetEntryId);
 
@@ -199,7 +211,7 @@ public class AssetPublisherUtil {
 			portletPreferences.setValues("assetEntryXml", assetEntryXmls);
 		}
 
-		ThemeDisplay themeDisplay = (ThemeDisplay)portletRequest.getAttribute(
+		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
 		long plid = themeDisplay.getRefererPlid();
@@ -208,16 +220,11 @@ public class AssetPublisherUtil {
 			plid = themeDisplay.getPlid();
 		}
 
-		ServiceContext serviceContext = ServiceContextFactory.getInstance(
-			AssetEntry.class.getName(), portletRequest);
-
 		List<AssetEntry> assetEntries = new ArrayList<AssetEntry>();
 
 		assetEntries.add(assetEntry);
 
-		notifySubscribers(
-			ServiceContextUtil.getPortletPreferences(serviceContext), plid,
-			portletId, assetEntries);
+		notifySubscribers(portletPreferences, plid, portletId, assetEntries);
 	}
 
 	public static void addUserAttributes(
