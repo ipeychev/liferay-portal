@@ -66,6 +66,17 @@ AUI.add(
 					}
 				);
 			}
+			
+			var buttons = instance._container.all('button');
+
+			if (buttons) {
+				buttons.on(
+					'click',
+					function(event) {
+						A.fire('formNavigator:trackChanges', event.target);
+					}
+				);
+			}
 
 			Liferay.on(
 				'submitForm',
