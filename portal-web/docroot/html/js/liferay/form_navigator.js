@@ -66,7 +66,7 @@ AUI.add(
 					}
 				);
 			}
-			
+
 			var buttons = instance._container.all('button');
 
 			if (buttons) {
