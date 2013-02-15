@@ -153,19 +153,25 @@ boolean useRichEditor = editorType.equals("rich");
 					mode: '<%= EditorUtil.getEditorMode(langType) %>',
 					plugins: [
 						{
-							fn: A.AceEditor.AutoCompleteBase,
+							fn: A.Plugin.AceAutoComplete,
 							cfg: {
 								processor: new A.AceEditor.AutoCompleteFreemarker(
 									{
-										io: {
-											uri: '<%= autocompleteURL %>',
-											data: {
-												templateId: '<%= (template == null) ? 0  :template.getTemplateId() %>',
-												cmd: 'autocomplete'
+										variables: {
+											'HttpUtil': {
+												'getCompleteURL': {
+													'toLowerCase': {}
+												}
+											},
+											'AssetEntries': {
 											}
 										}
 									}
-								)
+								),
+								render: true,
+								visible: false,
+								width: 250,
+								zIndex: 10000
 							}
 						}
 					]
