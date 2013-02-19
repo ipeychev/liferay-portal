@@ -320,11 +320,11 @@ public class AssetUtil {
 			names.remove(names.size() - 1);
 		}
 
-		Collections.reverse(names);
-
 		StringBundler sb = new StringBundler(names.size());
 
-		sb.append(names.toArray(new String[names.size()]));
+		for (int i = names.size() - 1; i >= 0; i--) {
+			sb.append(names.get(i));
+		}
 
 		return sb.toString();
 	}
