@@ -16,12 +16,15 @@ package com.liferay.portlet.asset.model.impl;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portlet.asset.model.AssetCategory;
 import com.liferay.portlet.asset.service.AssetCategoryLocalServiceUtil;
+import com.liferay.portlet.asset.util.AssetUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * @author Brian Wing Shun Chan
@@ -46,6 +49,26 @@ public class AssetCategoryImpl extends AssetCategoryBaseImpl {
 		}
 
 		return categories;
+	}
+
+	public String getPath() {
+		Locale locale = getLocale(getTitleCurrentLanguageId());
+
+		return getPath(locale);
+	}
+
+	public String getPath(Locale locale) {
+		String path = null;
+
+		try {
+			path = AssetUtil.getCategoryPath(
+				getCategoryId(), true, false, locale);
+		}
+		catch (Exception e) {
+			return StringPool.BLANK;
+		}
+
+		return path;
 	}
 
 	@Override

@@ -111,6 +111,7 @@ if (Validator.isNotNull(className)) {
 					maxEntries: <%= maxEntries %>,
 					portalModelResource: <%= Validator.isNotNull(className) && (ResourceActionsUtil.isPortalModelResource(className) || className.equals(Group.class.getName())) %>,
 					singleSelect: <%= !vocabulary.isMultiValued() %>,
+					title: '<%= UnicodeLanguageUtil.format(pageContext, "select-x", vocabulary.getTitle(locale)) %>',
 					vocabularyGroupIds: '<%= vocabulary.getGroupId() %>',
 					vocabularyIds: '<%= String.valueOf(vocabulary.getVocabularyId()) %>'
 				}
@@ -201,7 +202,7 @@ private String[] _getCategoryIdsTitles(String categoryIds, String categoryNames,
 				categoryIdsSb.append(categoryId);
 				categoryIdsSb.append(StringPool.COMMA);
 
-				categoryNamesSb.append(category.getTitle(themeDisplay.getLocale()));
+				categoryNamesSb.append(category.getPath(themeDisplay.getLocale()));
 				categoryNamesSb.append(_CATEGORY_SEPARATOR);
 			}
 

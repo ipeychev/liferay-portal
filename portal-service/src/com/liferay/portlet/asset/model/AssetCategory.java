@@ -54,6 +54,10 @@ public interface AssetCategory extends AssetCategoryModel, PersistedModel {
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException;
 
+	public java.lang.String getPath();
+
+	public java.lang.String getPath(java.util.Locale locale);
+
 	public java.lang.String getTitle(java.lang.String languageId);
 
 	public java.lang.String getTitle(java.lang.String languageId,
