@@ -267,3 +267,49 @@ if (fieldParamSelection.equals("0")) {
 		}
 	);
 </aui:script>
+
+<aui:script use="aui-form-validator">
+	var DEFAULTS_FORM_VALIDATOR = AUI.defaults.FormValidator;
+
+	A.mix(
+		DEFAULTS_FORM_VALIDATOR.STRINGS,
+		{
+			customRange: Liferay.Language.get('search-custom-range-format')
+		},
+		true
+	);
+
+	A.mix(
+		DEFAULTS_FORM_VALIDATOR.RULES,
+		{
+			customRange: function(val, fieldNode, ruleValue) {
+				var valid = (val != '') && val.match(/^\d{4}-\d{2}-\d{2}$/);
+
+				if (valid) {
+					var date = new Date(val);
+
+					valid = A.Lang.isDate(date) && (date !== 'Invalid Date') && !isNaN(date);
+				}
+
+				return valid;
+			}
+		},
+		true
+	);
+
+	var rulesArray = {
+		customRange: true,
+		required: true
+	};
+
+	var customRangeValidator = new A.FormValidator({
+		boundingBox: document.<portlet:namespace />fm,
+		fieldContainer: 'div',
+		validateOnInput: true,
+
+		rules: {
+			<portlet:namespace /><%= facet.getFieldName() %>from: rulesArray,
+			<portlet:namespace /><%= facet.getFieldName() %>to: rulesArray
+		}
+	});
+</aui:script>
