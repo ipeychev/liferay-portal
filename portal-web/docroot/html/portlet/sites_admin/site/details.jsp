@@ -496,14 +496,14 @@ if (parentGroup != null) {
 
 			var href = "<portlet:renderURL><portlet:param name="struts_action" value="/sites_admin/edit_group" /><portlet:param name="redirect" value="<%= currentURL %>" /></portlet:renderURL>&<portlet:namespace />groupId=" + groupId;
 
-			rowColumns.push(<portlet:namespace />createURL(href, name));
+			rowColumns.push(<portlet:namespace />createURL(href, A.Escape.html(name)));
 			rowColumns.push('<a class="modify-link" data-rowId="' + groupId + '" href="javascript:;"><%= UnicodeFormatter.toString(removeGroupIcon) %></a>');
 
 			searchContainer.deleteRow(1, searchContainer.getData());
 			searchContainer.addRow(rowColumns, groupId);
 			searchContainer.updateDataStore(groupId);
 		},
-		['liferay-search-container']
+		['liferay-search-container', 'escape']
 	);
 
 	Liferay.Util.toggleBoxes('<portlet:namespace />publicLayoutSetPrototypeLinkEnabledCheckbox','<portlet:namespace />publicLayoutSetPrototypeMergeAlert');
