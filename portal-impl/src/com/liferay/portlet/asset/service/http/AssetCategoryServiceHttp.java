@@ -134,7 +134,7 @@ public class AssetCategoryServiceHttp {
 		}
 	}
 
-	public static void deleteCategories(HttpPrincipal httpPrincipal,
+	public static long[] deleteCategories(HttpPrincipal httpPrincipal,
 		long[] categoryIds)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
@@ -145,8 +145,10 @@ public class AssetCategoryServiceHttp {
 			MethodHandler methodHandler = new MethodHandler(methodKey,
 					categoryIds);
 
+			Object returnObj = null;
+
 			try {
-				TunnelUtil.invoke(httpPrincipal, methodHandler);
+				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
 			}
 			catch (Exception e) {
 				if (e instanceof com.liferay.portal.kernel.exception.PortalException) {
@@ -159,6 +161,8 @@ public class AssetCategoryServiceHttp {
 
 				throw new com.liferay.portal.kernel.exception.SystemException(e);
 			}
+
+			return (long[])returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException se) {
 			_log.error(se, se);
