@@ -2122,10 +2122,14 @@ AUI.add(
 						);
 					},
 
-					_processCategoryDeletion: function(result) {
+					_processCategoryDeletion: function() {
 						var instance = this;
 
-						var exception = result.exception;
+						var exception;
+
+						if (arguments.length > 1) {
+							exception = arguments[0];
+						}
 
 						if (!exception) {
 							instance._closeEditSection();
@@ -2162,15 +2166,21 @@ AUI.add(
 						}
 					},
 
-					_processVocabularyDeletion: function(result) {
+					_processVocabularyDeletion: function() {
 						var instance = this;
 
-						var exception = result.exception;
+						var exception;
+
+						if (arguments.length > 1) {
+							exception = arguments[0];
+						}
 
 						if (!exception) {
 							instance._closeEditSection();
 							instance._hidePanels();
 							instance._loadData();
+
+							instance._sendMessage(MESSAGE_TYPE_SUCCESS, Liferay.Language.get('your-request-processed-successfully'));
 						}
 						else {
 							var errorKey;
