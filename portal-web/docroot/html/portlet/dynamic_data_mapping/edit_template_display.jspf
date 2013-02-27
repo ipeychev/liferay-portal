@@ -120,15 +120,8 @@ boolean useRichEditor = editorType.equals("rich");
 				{
 					processor: new A.AceEditor.AutoCompleteFreemarker(
 						{
-							variables: {
-								'HttpUtil': {
-									'getCompleteURL': {
-										'toLowerCase': {}
-									}
-								},
-								'AssetEntries': {
-								}
-							}
+							variables:
+								<%= DDMTemplateHelperUtil.getAutocompleteJSON(request) %>
 						}
 					),
 					render: true,
