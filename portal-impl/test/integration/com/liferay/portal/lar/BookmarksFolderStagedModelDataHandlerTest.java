@@ -47,36 +47,39 @@ public class BookmarksFolderStagedModelDataHandlerTest
 	extends BaseStagedModelDataHandlerTestCase {
 
 	@Override
-	protected StagedModel addStagedModel(
-			Group group, Map<String, List<StagedModel>> stagedModelsMap)
+	protected Map<String, List<StagedModel>> addDependentStagedModels(
+			Group group)
 		throws Exception {
 
-		List<StagedModel> stagedModels = stagedModelsMap.get(
+		Map<String, List<StagedModel>> dependentStagedModelsMap =
+			new HashMap<String, List<StagedModel>>();
+
+		List<StagedModel> dependentStagedModels = new ArrayList<StagedModel>();
+
+		dependentStagedModels.add(
+			BookmarksTestUtil.addFolder(
+				group.getGroupId(), ServiceTestUtil.randomString()));
+
+		dependentStagedModelsMap.put(
+			BookmarksFolder.class.getName(), dependentStagedModels);
+
+		return dependentStagedModelsMap;
+	}
+
+	@Override
+	protected StagedModel addStagedModel(
+			Group group,
+			Map<String, List<StagedModel>> dependentStagedModelsMap)
+		throws Exception {
+
+		List<StagedModel> dependentStagedModels = dependentStagedModelsMap.get(
 			BookmarksFolder.class.getName());
 
-		BookmarksFolder folder = (BookmarksFolder)stagedModels.get(0);
+		BookmarksFolder folder = (BookmarksFolder)dependentStagedModels.get(0);
 
 		return BookmarksTestUtil.addFolder(
 			group.getGroupId(), folder.getFolderId(),
 			ServiceTestUtil.randomString());
-	}
-
-	@Override
-	protected Map<String, List<StagedModel>> addStagedModels(Group group)
-		throws Exception {
-
-		Map<String, List<StagedModel>> stagedModelsMap =
-			new HashMap<String, List<StagedModel>>();
-
-		List<StagedModel> stagedModels = new ArrayList<StagedModel>();
-
-		stagedModels.add(
-			BookmarksTestUtil.addFolder(
-				group.getGroupId(), ServiceTestUtil.randomString()));
-
-		stagedModelsMap.put(BookmarksFolder.class.getName(), stagedModels);
-
-		return stagedModelsMap;
 	}
 
 	@Override
@@ -102,15 +105,16 @@ public class BookmarksFolderStagedModelDataHandlerTest
 
 	@Override
 	protected void validateImport(
-			Map<String, List<StagedModel>> stagedModelsMap, Group group)
+			Map<String, List<StagedModel>> dependentStagedModelsMap,
+			Group group)
 		throws Exception {
 
-		List<StagedModel> stagedModels = stagedModelsMap.get(
+		List<StagedModel> dependentStagedModels = dependentStagedModelsMap.get(
 			BookmarksFolder.class.getName());
 
-		Assert.assertEquals(1, stagedModels.size());
+		Assert.assertEquals(1, dependentStagedModels.size());
 
-		BookmarksFolder folder = (BookmarksFolder)stagedModels.get(0);
+		BookmarksFolder folder = (BookmarksFolder)dependentStagedModels.get(0);
 
 		BookmarksFolderLocalServiceUtil.getBookmarksFolderByUuidAndGroupId(
 			folder.getUuid(), group.getGroupId());

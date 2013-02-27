@@ -3964,7 +3964,7 @@
 			<transient name="scopeable" />
 			<transient name="showPortletAccessDenied" />
 			<transient name="showPortletInactive" />
-			<transient name="socialActivityInterpreterClass" />
+			<transient name="socialActivityInterpreterClasses" />
 			<transient name="socialRequestInterpreterClass" />
 			<transient name="stagedModelDataHandlerClasses" />
 			<transient name="static" />

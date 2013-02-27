@@ -12,18 +12,21 @@
  * details.
  */
 
-package com.liferay.portal.kernel.templateparser;
+package com.liferay.portal.kernel.portlet;
+
+import com.liferay.portal.model.Portlet;
+
+import javax.portlet.PortletContext;
+
+import javax.servlet.ServletContext;
 
 /**
- * @author Marcellus Tavares
- * @author Brian Wing Shun Chan
+ * @author Raymond Augé
  */
-public interface TemplateContext {
+public interface LiferayPortletContext extends PortletContext {
 
-	public static final String WRITER = "writer";
+	public Portlet getPortlet();
 
-	public Object get(String key);
-
-	public void put(String key, Object value);
+	public ServletContext getServletContext();
 
 }

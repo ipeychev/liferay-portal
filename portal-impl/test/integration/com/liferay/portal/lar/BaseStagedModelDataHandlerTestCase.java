@@ -88,17 +88,21 @@ public abstract class BaseStagedModelDataHandlerTestCase extends PowerMockito {
 			getParameterMap(), new HashSet<String>(), getStartDate(),
 			getEndDate(), zipWriter);
 
-		Map<String, List<StagedModel>> stagedModels = addStagedModels(
-			_stagingGroup);
+		Map<String, List<StagedModel>> dependentStagedModelsMap =
+			addDependentStagedModels(_stagingGroup);
 
-		StagedModel stagedModel = addStagedModel(_stagingGroup, stagedModels);
+		StagedModel stagedModel = addStagedModel(
+			_stagingGroup, dependentStagedModelsMap);
 
-		Element[] stagedModelsElements = getStagedModelsElements(stagedModels);
+		Element[] dependentStagedModelsElements =
+			getDependentStagedModelsElements(dependentStagedModelsMap);
 
 		StagedModelDataHandlerUtil.exportStagedModel(
-			portletDataContext, stagedModelsElements, stagedModel);
+			portletDataContext, dependentStagedModelsElements, stagedModel);
 
-		validateExport(stagedModel, stagedModels, stagedModelsElements);
+		validateExport(
+			stagedModel, dependentStagedModelsMap,
+			dependentStagedModelsElements);
 
 		// Import
 
@@ -116,24 +120,49 @@ public abstract class BaseStagedModelDataHandlerTestCase extends PowerMockito {
 		portletDataContext.setSourceGroupId(_stagingGroup.getGroupId());
 
 		Element importedStagedModelElement = getImportedStagedModelElement(
-			stagedModel, stagedModelsElements);
+			stagedModel, dependentStagedModelsElements);
 
 		Assert.assertNotNull(importedStagedModelElement);
 
 		StagedModelDataHandlerUtil.importStagedModel(
 			portletDataContext, importedStagedModelElement);
 
-		validateImport(stagedModel, stagedModels, _liveGroup);
+		validateImport(stagedModel, dependentStagedModelsMap, _liveGroup);
 	}
 
-	protected abstract StagedModel addStagedModel(
-			Group group, Map<String, List<StagedModel>> dependentStagedModels)
-		throws Exception;
-
-	protected Map<String, List<StagedModel>> addStagedModels(Group group)
+	protected Map<String, List<StagedModel>> addDependentStagedModels(
+			Group group)
 		throws Exception {
 
 		return new HashMap<String, List<StagedModel>>();
+	}
+
+	protected abstract StagedModel addStagedModel(
+			Group group,
+			Map<String, List<StagedModel>> dependentStagedModelsMap)
+		throws Exception;
+
+	protected Element[] getDependentStagedModelsElements(
+		Map<String, List<StagedModel>> dependentStagedModelsMap) {
+
+		List<Element> dependentStagedModelsElements = new ArrayList<Element>();
+
+		for (String className : dependentStagedModelsMap.keySet()) {
+			Element dependentStagedModelsElement = SAXReaderUtil.createElement(
+				className);
+
+			dependentStagedModelsElements.add(dependentStagedModelsElement);
+		}
+
+		if (!dependentStagedModelsMap.containsKey(getStagedModelClassName())) {
+			Element dependentStagedModelsElement = SAXReaderUtil.createElement(
+				getStagedModelClassName());
+
+			dependentStagedModelsElements.add(dependentStagedModelsElement);
+		}
+
+		return dependentStagedModelsElements.toArray(
+			new Element[dependentStagedModelsElements.size()]);
 	}
 
 	protected abstract String getElementName();
@@ -143,12 +172,14 @@ public abstract class BaseStagedModelDataHandlerTestCase extends PowerMockito {
 	}
 
 	protected Element getImportedStagedModelElement(
-		StagedModel stagedModel, Element[] stagedModelsElements) {
+		StagedModel stagedModel, Element[] dependentStagedModelsElements) {
 
 		Element rootElement = SAXReaderUtil.createElement("root");
 
-		for (Element stagedModelElement : stagedModelsElements) {
-			rootElement.add(stagedModelElement);
+		for (Element dependentStagedModelsElement :
+				dependentStagedModelsElements) {
+
+			rootElement.add(dependentStagedModelsElement);
 		}
 
 		StringBundler sb = new StringBundler(6);
@@ -190,73 +221,54 @@ public abstract class BaseStagedModelDataHandlerTestCase extends PowerMockito {
 
 	protected abstract String getStagedModelClassName();
 
-	protected Element[] getStagedModelsElements(
-		Map<String, List<StagedModel>> stagedModelsMap) {
-
-		List<Element> stagedModelsElements = new ArrayList<Element>();
-
-		for (String className : stagedModelsMap.keySet()) {
-			Element stagedModelsElement = SAXReaderUtil.createElement(
-				className);
-
-			stagedModelsElements.add(stagedModelsElement);
-		}
-
-		if (!stagedModelsMap.containsKey(getStagedModelClassName())) {
-			Element stagedModelsElement = SAXReaderUtil.createElement(
-				getStagedModelClassName());
-
-			stagedModelsElements.add(stagedModelsElement);
-		}
-
-		return stagedModelsElements.toArray(
-			new Element[stagedModelsElements.size()]);
-	}
-
 	protected Date getStartDate() {
 		return new Date(System.currentTimeMillis() - Time.HOUR);
 	}
 
 	protected void validateExport(
 			StagedModel stagedModel,
-			Map<String, List<StagedModel>> stagedModelsMap,
-			Element[] stagedModelsElements)
+			Map<String, List<StagedModel>> dependentStagedModelsMap,
+			Element[] dependentStagedModelsElements)
 		throws Exception {
 
-		for (Element stagedModelsElement : stagedModelsElements) {
-			String className = stagedModelsElement.getName();
+		for (Element dependentStagedModelsElement :
+				dependentStagedModelsElements) {
 
-			List<StagedModel> stagedModels = stagedModelsMap.get(className);
+			String className = dependentStagedModelsElement.getName();
 
-			if (stagedModels == null) {
-				stagedModels = new ArrayList<StagedModel>();
+			List<StagedModel> dependentStagedModels =
+				dependentStagedModelsMap.get(className);
+
+			if (dependentStagedModels == null) {
+				dependentStagedModels = new ArrayList<StagedModel>();
 			}
 			else {
-				stagedModels = ListUtil.copy(stagedModels);
+				dependentStagedModels = ListUtil.copy(dependentStagedModels);
 			}
 
 			if (className.equals(getStagedModelClassName())) {
-				stagedModels.add(stagedModel);
+				dependentStagedModels.add(stagedModel);
 			}
 
-			List<Element> elements = stagedModelsElement.elements();
+			List<Element> elements = dependentStagedModelsElement.elements();
 
-			Assert.assertEquals(stagedModels.size(), elements.size());
+			Assert.assertEquals(dependentStagedModels.size(), elements.size());
 
 			for (Element element : elements) {
 				String path = element.attributeValue("path");
 
 				Assert.assertNotNull(path);
 
-				Iterator<StagedModel> iterator = stagedModels.iterator();
+				Iterator<StagedModel> iterator =
+					dependentStagedModels.iterator();
 
 				while (iterator.hasNext()) {
-					StagedModel curStagedModel = iterator.next();
+					StagedModel dependentStagedModel = iterator.next();
 
-					String curPath = StagedModelPathUtil.getPath(
-						curStagedModel);
+					String dependentStagedModelPath =
+						StagedModelPathUtil.getPath(dependentStagedModel);
 
-					if (path.equals(curPath)) {
+					if (path.equals(dependentStagedModelPath)) {
 						iterator.remove();
 					}
 				}
@@ -264,18 +276,20 @@ public abstract class BaseStagedModelDataHandlerTestCase extends PowerMockito {
 
 			Assert.assertTrue(
 				"There is more than one element exported with the same path",
-				stagedModels.isEmpty());
+				dependentStagedModels.isEmpty());
 		}
 	}
 
 	protected void validateImport(
-			Map<String, List<StagedModel>> stagedModelsMap, Group group)
+			Map<String, List<StagedModel>> dependentStagedModelsMap,
+			Group group)
 		throws Exception {
 	}
 
 	protected void validateImport(
 			StagedModel stagedModel,
-			Map<String, List<StagedModel>> stagedModelsMap, Group group)
+			Map<String, List<StagedModel>> dependentStagedModelsMap,
+			Group group)
 		throws Exception {
 
 		StagedModel importedStagedModel = getStagedModel(
@@ -283,7 +297,7 @@ public abstract class BaseStagedModelDataHandlerTestCase extends PowerMockito {
 
 		Assert.assertNotNull(importedStagedModel);
 
-		validateImport(stagedModelsMap, group);
+		validateImport(dependentStagedModelsMap, group);
 	}
 
 	private Group _liveGroup;

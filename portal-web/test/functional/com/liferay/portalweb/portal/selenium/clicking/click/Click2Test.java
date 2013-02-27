@@ -12,33 +12,18 @@
  * details.
  */
 
-package com.liferay.portlet.journal.util;
+package com.liferay.portalweb.portal.selenium.clicking.click;
 
-import com.liferay.portal.kernel.templateparser.TemplateContext;
-
-import javax.xml.transform.Transformer;
+import com.liferay.portalweb.portal.BaseTestCase;
 
 /**
  * @author Brian Wing Shun Chan
  */
-public class XSLContext implements TemplateContext {
-
-	public XSLContext(Transformer transformer) {
-		_transformer = transformer;
+public class Click2Test extends BaseTestCase {
+	public void testClick2() throws Exception {
+		selenium.selectWindow("null");
+		selenium.selectFrame("relative=top");
+		selenium.open("/web/guest/home/");
+		selenium.click("//img[@alt='Catherine']");
 	}
-
-	public Object get(String key) {
-		return _transformer.getParameter(key);
-	}
-
-	public Transformer getTransformer() {
-		return _transformer;
-	}
-
-	public void put(String key, Object value) {
-		_transformer.setParameter(key, value);
-	}
-
-	private Transformer _transformer;
-
 }

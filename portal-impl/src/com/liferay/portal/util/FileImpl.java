@@ -376,6 +376,14 @@ public class FileImpl implements com.liferay.portal.kernel.util.File {
 			}
 		}
 
+		if (!exists(directory)) {
+			if (_log.isWarnEnabled()) {
+				_log.warn("Directory " + directory + " does not exist");
+			}
+
+			return new String[0];
+		}
+
 		DirectoryScanner directoryScanner = new DirectoryScanner();
 
 		directoryScanner.setBasedir(directory);
