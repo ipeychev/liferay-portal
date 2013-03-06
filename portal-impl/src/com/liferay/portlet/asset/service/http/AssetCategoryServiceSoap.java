@@ -112,10 +112,12 @@ public class AssetCategoryServiceSoap {
 		}
 	}
 
-	public static void deleteCategories(long[] categoryIds)
+	public static long[] deleteCategories(long[] categoryIds)
 		throws RemoteException {
 		try {
-			AssetCategoryServiceUtil.deleteCategories(categoryIds);
+			long[] returnValue = AssetCategoryServiceUtil.deleteCategories(categoryIds);
+
+			return returnValue;
 		}
 		catch (Exception e) {
 			_log.error(e, e);

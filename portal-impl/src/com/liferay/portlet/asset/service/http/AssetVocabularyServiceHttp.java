@@ -174,7 +174,7 @@ public class AssetVocabularyServiceHttp {
 		}
 	}
 
-	public static void deleteVocabularies(HttpPrincipal httpPrincipal,
+	public static long[] deleteVocabularies(HttpPrincipal httpPrincipal,
 		long[] vocabularyIds)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
@@ -185,8 +185,10 @@ public class AssetVocabularyServiceHttp {
 			MethodHandler methodHandler = new MethodHandler(methodKey,
 					vocabularyIds);
 
+			Object returnObj = null;
+
 			try {
-				TunnelUtil.invoke(httpPrincipal, methodHandler);
+				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
 			}
 			catch (Exception e) {
 				if (e instanceof com.liferay.portal.kernel.exception.PortalException) {
@@ -199,6 +201,8 @@ public class AssetVocabularyServiceHttp {
 
 				throw new com.liferay.portal.kernel.exception.SystemException(e);
 			}
+
+			return (long[])returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException se) {
 			_log.error(se, se);
