@@ -138,10 +138,12 @@ public class AssetVocabularyServiceSoap {
 		}
 	}
 
-	public static void deleteVocabularies(long[] vocabularyIds)
+	public static long[] deleteVocabularies(long[] vocabularyIds)
 		throws RemoteException {
 		try {
-			AssetVocabularyServiceUtil.deleteVocabularies(vocabularyIds);
+			long[] returnValue = AssetVocabularyServiceUtil.deleteVocabularies(vocabularyIds);
+
+			return returnValue;
 		}
 		catch (Exception e) {
 			_log.error(e, e);
