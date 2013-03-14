@@ -108,6 +108,27 @@ boolean hasLayoutUpdatePermission = LayoutPermissionUtil.contains(permissionChec
 															<liferay-ui:message key="more" />&hellip;
 														</a>
 													</li>
+
+													<style>
+														.lfr-has-add-content {
+															padding-left: 220px;
+														}
+
+														.lfr-add-content {
+															border: 1px solid #ccc;
+															bottom: 0;
+															margin-left: -218px;
+															position: absolute;
+															top: 0;
+															width: 215px;
+														}
+													</style>
+
+													<li class="add-application last more-applications">
+														<a href="javascript:;" id="<portlet:namespace />addContent2">
+															Add content
+														</a>
+													</li>
 												</ul>
 											</c:if>
 										</div>

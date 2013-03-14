@@ -15,6 +15,10 @@ AUI.add(
 
 		var CONTENT_BOX = 'contentBox';
 
+		var TPL_ADD_CONTENT =
+			'<div class="lfr-add-content">' +
+			'</div>';
+
 		var EVENT_CLICK = 'click';
 
 		var Dockbar = {
@@ -777,6 +781,53 @@ AUI.add(
 						instance._updateMenu(event, event.currentTarget);
 					},
 					'.aui-toolbar a'
+				);
+
+				var addContentMenuNode = A.one('#' + namespace + 'addContent2');
+
+				addContentMenuNode.on(
+					'click',
+					function(event) {
+						var bodyNode = A.one(A.config.doc.body);
+
+						bodyNode.toggleClass('lfr-has-add-content');
+
+						var addContentNode = A.one('#' + namespace + 'addContentSidebar');
+
+						if (bodyNode.hasClass('lfr-has-add-content')) {
+							if (!addContentNode) {
+								addContentNode = A.Node.create(TPL_ADD_CONTENT);
+
+								addContentNode.plug(A.Plugin.ParseContent);
+
+								bodyNode.appendChild(addContentNode);
+
+								addContentNode.set('id', namespace + 'addContentSidebar');
+
+								bodyNode.show();
+
+								/*
+								A.io.request(
+									'url_here',
+									{
+										after: {
+											success: function() {
+
+											}
+										},
+										data: data
+									}
+								);
+								*/
+							}
+							else {
+								addContentNode.show();
+							}
+						}
+						else {
+							addContentNode.hide();
+						}
+					}
 				);
 
 				Liferay.fire('dockbarLoaded');

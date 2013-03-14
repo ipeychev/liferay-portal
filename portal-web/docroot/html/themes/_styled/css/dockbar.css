@@ -276,9 +276,29 @@ html > .lfr-dockbar-pinned {
 	padding: 0 10px 10px;
 }
 
+
+
+
 .add-application {
 	left: 10px !important;
 }
+
+.lfr-has-add-content {
+	padding-left: 220px;
+}
+
+.lfr-has-add-content #main-content {
+	padding-left: 220px;
+}
+
+.lfr-add-content {
+	height: 100%;
+	width: 220px;
+}
+
+
+
+
 
 .lfr-has-sidebar #main-content {
 	padding-left: 220px;
