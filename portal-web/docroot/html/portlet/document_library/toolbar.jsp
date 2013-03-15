@@ -80,7 +80,7 @@ Folder folder = (Folder)request.getAttribute("view.jsp-folder");
 	<liferay-ui:icon-delete
 		confirmation="are-you-sure-you-want-to-delete-the-selected-entries"
 		id="moveToTrashAction"
-		trash="true"
+		trash="<%= true %>"
 		url="<%= trashTaglibURL %>"
 	/>
 
