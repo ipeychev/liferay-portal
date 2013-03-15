@@ -982,15 +982,7 @@
 			var totalOn = 0;
 			var inputs = A.one(form).all('input[type=checkbox]');
 
-			if (allBox && (typeof allBox == 'string' || allBox instanceof String) && allBox.charAt(0) === '#') {
-				var inputName = A.one(form).one('input[name=#' + allBox + STR_RIGHT_SQUARE_BRACKET);
-			}
-
-			allBox = A.one(allBox) || inputName;
-
-			if (!allBox) {
-				return;
-			}
+			allBox = A.one(allBox) || A.one(form).one('input[name=' + allBox + STR_RIGHT_SQUARE_BRACKET);
 
 			if (!isArray(name)) {
 				name = [name];
