@@ -26,7 +26,7 @@ String backURL = ParamUtil.getString(request, "backURL", redirect);
 
 Group group = (Group)request.getAttribute(WebKeys.GROUP);
 
-String groupName = HtmlUtil.escape(group.getDescriptiveName(locale));
+String groupName = group.getDescriptiveName(locale);
 
 Role role = (Role)request.getAttribute(WebKeys.ROLE);
 
@@ -84,7 +84,7 @@ request.setAttribute("edit_user_group_roles.jsp-portletURL", portletURL);
 	backURL="<%= backURL %>"
 	escapeXml="<%= false %>"
 	localizeTitle="<%= false %>"
-	title="<%= groupName %>"
+	title="<%= HtmlUtil.escape(groupName) %>"
 />
 
 <aui:form action="<%= portletURL.toString() %>" method="post" name="fm">
