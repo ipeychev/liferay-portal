@@ -156,9 +156,10 @@ else if (classNameId > 0) {
 	</liferay-ui:panel>
 </liferay-ui:panel-container>
 
-<aui:script use="aui-ace-autocomplete-freemarker,aui-ace-autocomplete-plugin,aui-toggler,aui-tooltip,event-mouseenter,transition">
+<aui:script use="aui-ace-autocomplete-freemarker,aui-ace-autocomplete-plugin,aui-ace-autocomplete-velocity,aui-toggler,aui-tooltip,event-mouseenter,transition">
 	var AObject = A.Object;
 	var Util = Liferay.Util;
+	var ACPlugin = A.Plugin.AceAutoComplete;
 
 	var editorType = '<%= HtmlUtil.escapeJS(editorType) %>';
 
@@ -359,15 +360,30 @@ else if (classNameId > 0) {
 	function updateEditorPlugins(event) {
 		var selectedOptionValue = getSelectedLanguage();
 
+		var processor;
+
 		if (selectedOptionValue === 'ftl') {
-			richEditor.plug(
-				A.Plugin.AceAutoComplete,
+			processor = new A.AceEditor.AutoCompleteFreemarker(
 				{
-					processor: new A.AceEditor.AutoCompleteFreemarker(
-						{
-							variables: <%= DDMTemplateHelperUtil.getAutocompleteJSON(request) %>
-						}
-					),
+					variables: <%= DDMTemplateHelperUtil.getAutocompleteJSON(request) %>
+				}
+			);
+		}
+		else if (selectedOptionValue === 'vm') {
+			processor = new A.AceEditor.AutoCompleteVelocity(
+				{
+					variables: <%= DDMTemplateHelperUtil.getAutocompleteJSON(request) %>
+				}
+			);
+		}
+
+		if (processor) {
+			richEditor.unplug(ACPlugin);
+
+			richEditor.plug(
+				ACPlugin,
+				{
+					processor: processor,
 					render: true,
 					visible: false,
 					zIndex: 10000
@@ -375,7 +391,7 @@ else if (classNameId > 0) {
 			);
 		}
 		else {
-			richEditor.unplug(A.Plugin.AceAutoComplete);
+			richEditor.unplug(ACPlugin);
 		}
 	}
 
