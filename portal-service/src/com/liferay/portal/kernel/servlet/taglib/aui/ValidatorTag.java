@@ -27,6 +27,8 @@ public interface ValidatorTag {
 
 	public String getName();
 
+	public boolean isValidateOnInput();
+
 	public boolean isCustom();
 
 }

@@ -34,7 +34,6 @@
 
 						for (ValidatorTag validatorTag : validatorTags) {
 					%>
-
 							<%= i != 0 ? StringPool.COMMA : StringPool.BLANK %>
 
 							{
@@ -42,9 +41,9 @@
 								custom: <%= validatorTag.isCustom() %>,
 								errorMessage: '<%= UnicodeLanguageUtil.get(pageContext, validatorTag.getErrorMessage()) %>',
 								fieldName: '<%= namespace + fieldName %>',
-								validatorName: '<%= validatorTag.getName() %>'
+								validatorName: '<%= validatorTag.getName() %>',
+								validateOnInput: <%= validatorTag.isValidateOnInput() %>
 							}
-
 					<%
 							i++;
 						}

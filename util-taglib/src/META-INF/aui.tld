@@ -1877,6 +1877,12 @@
 			<rtexprvalue>true</rtexprvalue>
 			<type>java.lang.String</type>
 		</attribute>
+		<attribute>
+			<name>validateOnInput</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>boolean</type>
+		</attribute>
 	</tag>
 	<tag>
 		<name>workflow-status</name>
