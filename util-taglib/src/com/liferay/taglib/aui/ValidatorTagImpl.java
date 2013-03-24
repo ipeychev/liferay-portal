@@ -35,13 +35,24 @@ public class ValidatorTagImpl
 	}
 
 	public ValidatorTagImpl(
-		String name, String errorMessage, String body, boolean custom) {
+		String name, String errorMessage, String body, boolean custom,
+		boolean validateOnInput) {
 
 		setName(name);
 		setErrorMessage(errorMessage);
+		setValidateOnInput(validateOnInput);
 
 		_body = body;
 		_custom = custom;
+		_validateOnInput = validateOnInput;
+	}
+
+	public void setValidateOnInput(boolean validateOnInput) {
+		_validateOnInput = validateOnInput;
+	}
+
+	public boolean isValidateOnInput() {
+		return _validateOnInput;
 	}
 
 	@Override
@@ -77,7 +88,7 @@ public class ValidatorTagImpl
 		}
 
 		ValidatorTag validatorTag = new ValidatorTagImpl(
-			name, getErrorMessage(), _body, _custom);
+			name, getErrorMessage(), _body, _custom, _validateOnInput);
 
 		inputTag.addValidatorTag(name, validatorTag);
 
@@ -125,5 +136,7 @@ public class ValidatorTagImpl
 
 	private String _body;
 	private boolean _custom;
+	private boolean _validateOnInput;
+
 
 }
