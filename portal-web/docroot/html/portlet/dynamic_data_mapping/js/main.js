@@ -858,6 +858,6 @@ AUI.add(
 	},
 	'',
 	{
-		requires: ['aui-form-builder', 'aui-form-validator', 'aui-text', 'json', 'liferay-menu', 'liferay-translation-manager']
+		requires: ['aui-form-builder', 'aui-form-validator', 'json', 'liferay-menu', 'liferay-translation-manager', 'text']
 	}
 );
