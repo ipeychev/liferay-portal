@@ -163,7 +163,7 @@
 
 	Liferay.provide(
 		window,
-		'<portlet:namespace />toggleDeleteEntriesButton',
+		'<portlet:namespace />toggleActionsButton',
 		function() {
 			var A = AUI();
 
@@ -179,5 +179,5 @@
 		},
 		['liferay-util-list-fields']
 	);
-	<portlet:namespace />toggleDeleteEntriesButton();
+	<portlet:namespace />toggleActionsButton();
 </aui:script>
