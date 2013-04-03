@@ -194,6 +194,50 @@ if (folder != null) {
 	);
 
 	<portlet:namespace />toggleActionsButton();
+
+	Liferay.provide(
+		window,
+		'<portlet:namespace />toggleTrashAction',
+		function(isTrashEnabled) {
+			var A = AUI();
+
+			var moveToTrashMenu = '<portlet:namespace />moveToTrashMenu';
+			var deleteMenu = '<portlet:namespace />deleteMenu';
+
+			// Cache reference to Window scope since Delete / Move to the Recycle bin button is not
+			// always findable through DOM search
+
+			if (!Window[moveToTrashMenu]) {
+				var moveToTrashIcon = A.one('#<portlet:namespace />moveToTrashAction');
+
+				if (moveToTrashIcon) {
+					Window[moveToTrashMenu] = moveToTrashIcon.get('parentNode');
+				}
+			}
+
+			if (!Window[deleteMenu]) {
+				var deleteMenuIcon = A.one('#<portlet:namespace />deleteAction');
+
+				if(deleteMenuIcon) {
+					Window[deleteMenu] = A.one('#<portlet:namespace />deleteAction').get('parentNode');
+				}
+			}
+
+			if (Window[moveToTrashMenu] && Window[deleteMenu]) {
+				if (isTrashEnabled) {
+					Window[moveToTrashMenu].show();
+					Window[deleteMenu].hide();
+				}
+				else {
+					Window[moveToTrashMenu].hide();
+					Window[deleteMenu].show();
+				}
+			}
+		},
+		['liferay-util-list-fields']
+	);
+
+	<portlet:namespace />toggleTrashAction(<%= ((repositoryId == scopeGroupId) && TrashUtil.isTrashEnabled(scopeGroupId)) %>);
 </aui:script>
 
 <aui:script use="liferay-document-library">
