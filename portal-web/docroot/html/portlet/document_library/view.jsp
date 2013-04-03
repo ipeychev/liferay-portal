@@ -201,40 +201,16 @@ if (folder != null) {
 		function(isTrashEnabled) {
 			var A = AUI();
 
-			var moveToTrashMenu = '<portlet:namespace />moveToTrashMenu';
-			var deleteMenu = '<portlet:namespace />deleteMenu';
-
-			// Cache reference to Window scope since Delete / Move to the Recycle bin button is not
-			// always findable through DOM search
-
-			if (!Window[moveToTrashMenu]) {
-				var moveToTrashIcon = A.one('#<portlet:namespace />moveToTrashAction');
-
-				if (moveToTrashIcon) {
-					Window[moveToTrashMenu] = moveToTrashIcon.get('parentNode');
-				}
+			if (isTrashEnabled) {
+				A.one('#<portlet:namespace />deleteAction').get('parentNode').hide();
+				A.one('#<portlet:namespace />moveToTrashAction').get('parentNode').show();
 			}
-
-			if (!Window[deleteMenu]) {
-				var deleteMenuIcon = A.one('#<portlet:namespace />deleteAction');
-
-				if(deleteMenuIcon) {
-					Window[deleteMenu] = A.one('#<portlet:namespace />deleteAction').get('parentNode');
-				}
-			}
-
-			if (Window[moveToTrashMenu] && Window[deleteMenu]) {
-				if (isTrashEnabled) {
-					Window[moveToTrashMenu].show();
-					Window[deleteMenu].hide();
-				}
-				else {
-					Window[moveToTrashMenu].hide();
-					Window[deleteMenu].show();
-				}
+			else {
+				A.one('#<portlet:namespace />deleteAction').get('parentNode').show();
+				A.one('#<portlet:namespace />moveToTrashAction').get('parentNode').hide();
 			}
 		},
-		['liferay-util-list-fields']
+		['aui-base']
 	);
 
 	<portlet:namespace />toggleTrashAction(<%= ((repositoryId == scopeGroupId) && TrashUtil.isTrashEnabled(scopeGroupId)) %>);
