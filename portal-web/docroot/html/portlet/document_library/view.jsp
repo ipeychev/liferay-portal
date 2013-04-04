@@ -195,6 +195,26 @@ if (folder != null) {
 	);
 
 	<portlet:namespace />toggleActionsButton();
+
+	Liferay.provide(
+		window,
+		'<portlet:namespace />toggleTrashAction',
+		function(isTrashEnabled) {
+			var A = AUI();
+
+			if (isTrashEnabled) {
+				A.one('#<portlet:namespace />deleteAction').get('parentNode').hide();
+				A.one('#<portlet:namespace />moveToTrashAction').get('parentNode').show();
+			}
+			else {
+				A.one('#<portlet:namespace />deleteAction').get('parentNode').show();
+				A.one('#<portlet:namespace />moveToTrashAction').get('parentNode').hide();
+			}
+		},
+		['aui-base']
+	);
+
+	<portlet:namespace />toggleTrashAction(<%= ((repositoryId == scopeGroupId) && TrashUtil.isTrashEnabled(scopeGroupId)) %>);
 </aui:script>
 
 <aui:script use="liferay-document-library">
