@@ -35,7 +35,7 @@ page import="com.liferay.portlet.journal.service.JournalArticleServiceUtil" %><%
 page import="com.liferay.portlet.journal.service.permission.JournalArticlePermission" %><%@
 page import="com.liferay.portlet.journal.service.permission.JournalPermission" %><%@
 page import="com.liferay.portlet.journal.util.JournalUtil" %><%@
-page import="com.liferay.portlet.layoutconfiguration.util.RuntimePageUtil" %><%@
+page import="com.liferay.portal.layoutconfiguration.util.RuntimePageUtil" %><%@
 page import="com.liferay.portlet.messageboards.service.MBMessageLocalServiceUtil" %>
 
 <%

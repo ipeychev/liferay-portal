@@ -40,7 +40,7 @@ import com.liferay.portlet.journal.NoSuchTemplateException;
 import com.liferay.portlet.journal.model.JournalArticle;
 import com.liferay.portlet.journal.service.JournalArticleLocalServiceUtil;
 import com.liferay.portlet.journal.service.JournalContentSearchLocalServiceUtil;
-import com.liferay.portlet.layoutconfiguration.util.xml.PortletLogic;
+import com.liferay.portal.layoutconfiguration.util.xml.PortletLogic;
 
 import java.util.List;
 

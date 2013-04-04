@@ -33,7 +33,7 @@ page import="com.liferay.portlet.journal.service.JournalArticleLocalServiceUtil"
 page import="com.liferay.portlet.journal.service.JournalArticleServiceUtil" %><%@
 page import="com.liferay.portlet.journal.util.JournalUtil" %><%@
 page import="com.liferay.portlet.journalcontent.util.JournalContentUtil" %><%@
-page import="com.liferay.portlet.layoutconfiguration.util.RuntimePageUtil" %>
+page import="com.liferay.portal.layoutconfiguration.util.RuntimePageUtil" %>
 
 <%
 PortletPreferences preferences = renderRequest.getPreferences();

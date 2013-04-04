@@ -20,7 +20,7 @@
 <%@ page import="com.liferay.portlet.journal.model.JournalArticleResource" %>
 <%@ page import="com.liferay.portlet.journal.service.JournalArticleResourceLocalServiceUtil" %>
 <%@ page import="com.liferay.portlet.journalcontent.util.JournalContentUtil" %>
-<%@ page import="com.liferay.portlet.layoutconfiguration.util.RuntimePageUtil" %>
+<%@ page import="com.liferay.portal.layoutconfiguration.util.RuntimePageUtil" %>
 
 <portlet:defineObjects />
 

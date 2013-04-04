@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portlet.layoutconfiguration.util.velocity;
+package com.liferay.portal.layoutconfiguration.util.velocity;
 
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.portlet.PortletContainerUtil;
@@ -26,7 +26,7 @@ import com.liferay.portal.model.Portlet;
 import com.liferay.portal.service.PortletLocalServiceUtil;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.WebKeys;
-import com.liferay.portlet.layoutconfiguration.util.PortletRenderer;
+import com.liferay.portal.layoutconfiguration.util.PortletRenderer;
 
 import java.util.ArrayList;
 import java.util.Comparator;

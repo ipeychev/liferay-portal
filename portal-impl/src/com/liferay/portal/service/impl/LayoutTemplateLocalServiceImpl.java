@@ -41,7 +41,7 @@ import com.liferay.portal.model.PluginSetting;
 import com.liferay.portal.model.impl.LayoutTemplateImpl;
 import com.liferay.portal.service.base.LayoutTemplateLocalServiceBaseImpl;
 import com.liferay.portal.util.PropsValues;
-import com.liferay.portlet.layoutconfiguration.util.velocity.InitColumnProcessor;
+import com.liferay.portal.layoutconfiguration.util.velocity.InitColumnProcessor;
 
 import java.io.IOException;
 

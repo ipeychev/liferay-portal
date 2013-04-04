@@ -12,12 +12,13 @@
  * details.
  */
 
-package com.liferay.portlet.layoutconfiguration.util.xml;
+package com.liferay.portal.layoutconfiguration.util.xml;
 
 import com.liferay.portal.kernel.portlet.LiferayPortletURL;
 import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
+import com.liferay.portal.layoutconfiguration.util.xml.RuntimeLogic;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portlet.RenderResponseImpl;
 

@@ -17,7 +17,7 @@
 <%@ include file="/html/portlet/init.jsp" %>
 
 <%@ page import="com.liferay.portal.plugin.PluginUtil" %><%@
-page import="com.liferay.portlet.layoutconfiguration.util.RuntimePageUtil" %>
+page import="com.liferay.portal.layoutconfiguration.util.RuntimePageUtil" %>
 
 <%
 PortletPreferences preferences = renderRequest.getPreferences();
