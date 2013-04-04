@@ -198,22 +198,24 @@ if (folder != null) {
 	Liferay.provide(
 		window,
 		'<portlet:namespace />toggleTrashAction',
-		function(isTrashEnabled) {
+		function() {
 			var A = AUI();
 
-			if (isTrashEnabled) {
-				A.one('#<portlet:namespace />deleteAction').get('parentNode').hide();
-				A.one('#<portlet:namespace />moveToTrashAction').get('parentNode').show();
+			var PARENT_NODE = 'parentNode';
+
+			if (<%= ((repositoryId == scopeGroupId) && TrashUtil.isTrashEnabled(scopeGroupId)) %>) {
+				A.one('#<portlet:namespace />deleteAction').get(PARENT_NODE).hide();
+				A.one('#<portlet:namespace />moveToTrashAction').get(PARENT_NODE).show();
 			}
 			else {
-				A.one('#<portlet:namespace />deleteAction').get('parentNode').show();
-				A.one('#<portlet:namespace />moveToTrashAction').get('parentNode').hide();
+				A.one('#<portlet:namespace />deleteAction').get(PARENT_NODE).show();
+				A.one('#<portlet:namespace />moveToTrashAction').get(PARENT_NODE).hide();
 			}
 		},
 		['aui-base']
 	);
 
-	<portlet:namespace />toggleTrashAction(<%= ((repositoryId == scopeGroupId) && TrashUtil.isTrashEnabled(scopeGroupId)) %>);
+	<portlet:namespace />toggleTrashAction();
 </aui:script>
 
 <aui:script use="liferay-document-library">
