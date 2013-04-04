@@ -40,10 +40,6 @@
 
 	var REGEX_DASH = /-([a-z])/gi;
 
-	var STR_LEFT_ROUND_BRACKET = '(';
-
-	var STR_RIGHT_ROUND_BRACKET = ')';
-
 	var STR_LEFT_SQUARE_BRACKET = '[';
 
 	var STR_RIGHT_SQUARE_BRACKET = ']';
@@ -57,11 +53,6 @@
 	};
 
 	var Window = {
-		ALIGN_CENTER: {
-			points: ['tc', 'tc']
-		},
-		XY: [50, 100],
-		XY_INCREMENTOR: 50,
 		_map: {}
 	};
 
@@ -477,7 +468,7 @@
 				id = Util.getWindowName();
 			}
 
-			return Util.getTop().Liferay.Util.Window._map[id];
+			return Util.getTop().Liferay.Util.Window.getById(id);
 		},
 
 		getWindowName: function() {
@@ -1368,10 +1359,6 @@
 				config.dialog = dialogConfig;
 			}
 
-			if (!('align' in dialogConfig)) {
-				dialogConfig.align = Util.Window.ALIGN_CENTER;
-			}
-
 			Util.openWindow(config);
 
 			Liferay.on(config.eventName, callback);
@@ -1979,7 +1966,7 @@
 		Util,
 		'_openWindowProvider',
 		function(config, callback) {
-			Util._openWindow(config, callback);
+			Window._openWindow(config, callback);
 		},
 		['liferay-util-window']
 	);
@@ -1989,7 +1976,7 @@
 		function(event) {
 			var id = event.id;
 
-			var dialog = Liferay.Util.getTop().Liferay.Util.Window._map[id];
+			var dialog = Liferay.Util.getTop().Liferay.Util.Window.getById(id);
 
 			if (dialog && dialog.iframe) {
 				var dialogWindow = dialog.iframe.node.get('contentWindow').getDOM();
