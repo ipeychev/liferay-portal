@@ -363,7 +363,7 @@
 	</library>
 	<library>
 		<file-name>lib/development/jetty-server.jar</file-name>
-		<version>7.6.3</version>
+		<version>8.1.10</version>
 		<project-name>Jetty</project-name>
 		<project-url>http://www.eclipse.org/jetty</project-url>
 		<licenses>
@@ -377,7 +377,7 @@
 	</library>
 	<library>
 		<file-name>lib/development/jetty-util.jar</file-name>
-		<version>7.6.3</version>
+		<version>8.1.10</version>
 		<project-name>Jetty</project-name>
 		<project-url>http://www.eclipse.org/jetty</project-url>
 		<licenses>

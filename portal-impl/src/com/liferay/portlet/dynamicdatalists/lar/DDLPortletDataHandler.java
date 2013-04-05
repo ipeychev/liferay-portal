@@ -74,21 +74,19 @@ public class DDLPortletDataHandler extends BasePortletDataHandler {
 		ActionableDynamicQuery actionableDynamicQuery =
 			new DDLRecordSetActionableDynamicQuery() {
 
-				@Override
-				protected void addCriteria(DynamicQuery dynamicQuery) {
-					portletDataContext.addDateRangeCriteria(
-						dynamicQuery, "modifiedDate");
-				}
+			@Override
+			protected void addCriteria(DynamicQuery dynamicQuery) {
+				portletDataContext.addDateRangeCriteria(
+					dynamicQuery, "modifiedDate");
+			}
 
-				@Override
-				protected void performAction(Object object)
-					throws PortalException {
+			@Override
+			protected void performAction(Object object) throws PortalException {
+				DDLRecordSet recordSet = (DDLRecordSet)object;
 
-					DDLRecordSet recordSet = (DDLRecordSet)object;
-
-					StagedModelDataHandlerUtil.exportStagedModel(
-						portletDataContext, recordSet);
-				}
+				StagedModelDataHandlerUtil.exportStagedModel(
+					portletDataContext, recordSet);
+			}
 
 		};
 
