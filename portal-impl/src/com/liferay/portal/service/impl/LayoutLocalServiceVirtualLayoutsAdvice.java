@@ -14,6 +14,11 @@
 
 package com.liferay.portal.service.impl;
 
+import com.liferay.portal.kernel.dao.orm.DynamicQuery;
+import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
+import com.liferay.portal.kernel.dao.orm.Property;
+import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.staging.MergeLayoutPrototypesThreadLocal;
@@ -227,6 +232,37 @@ public class LayoutLocalServiceVirtualLayoutsAdvice
 		return layouts;
 	}
 
+	protected List<Layout> getPrototypeLinkedLayouts(
+			long groupId, boolean privateLayout)
+		throws SystemException {
+
+		Class<?> clazz = getClass();
+
+		DynamicQuery dynamicQuery = DynamicQueryFactoryUtil.forClass(
+			Layout.class, clazz.getClassLoader());
+
+		Property groupIdProperty = PropertyFactoryUtil.forName("groupId");
+
+		dynamicQuery.add(groupIdProperty.eq(groupId));
+
+		Property layoutPrototypeUuidProperty = PropertyFactoryUtil.forName(
+			"layoutPrototypeUuid");
+
+		dynamicQuery.add(layoutPrototypeUuidProperty.isNotNull());
+
+		Property privateLayoutProperty = PropertyFactoryUtil.forName(
+			"privateLayout");
+
+		dynamicQuery.add(privateLayoutProperty.eq(privateLayout));
+
+		Property sourcePrototypeLayoutUuidProperty =
+			PropertyFactoryUtil.forName("sourcePrototypeLayoutUuid");
+
+		dynamicQuery.add(sourcePrototypeLayoutUuidProperty.isNotNull());
+
+		return LayoutLocalServiceUtil.dynamicQuery(dynamicQuery);
+	}
+
 	protected void mergeLayoutSetPrototypeLayouts(
 		String methodName, Object[] arguments, Class<?>[] parameterTypes,
 		Group group, LayoutSet layoutSet, boolean privateLayout,
@@ -249,7 +285,7 @@ public class LayoutLocalServiceVirtualLayoutsAdvice
 				return;
 			}
 
-			List<Layout> layouts = LayoutLocalServiceUtil.getLayouts(
+			List<Layout> layouts = getPrototypeLinkedLayouts(
 				group.getGroupId(), privateLayout);
 
 			for (Layout layout : layouts) {

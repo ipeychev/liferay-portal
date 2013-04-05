@@ -110,7 +110,19 @@ public class VerifyUUID extends VerifyProcess {
 			"MBThreadFlag", "threadFlagId"
 		},
 		new String[] {
+			"Organization_", "organizationId"
+		},
+		new String[] {
+			"PasswordPolicy", "passwordPolicyId"
+		},
+		new String[] {
 			"PollsVote", "voteId"
+		},
+		new String[] {
+			"Role_", "roleId"
+		},
+		new String[] {
+			"UserGroup", "userGroupId"
 		},
 		new String[] {
 			"WikiPageResource", "resourcePrimKey"

@@ -184,7 +184,14 @@ AUI.add(
 			'</div>' +
 		'</li>';
 
-		var TPL_VOCABULARY_OPTION = '<option {selected} value="{vocabularyId}">{titleCurrentValue}</option>';
+		var TPL_VOCABULARY_OPTION = A.Template(
+			'<option {selected} value="{vocabularyId}">{titleCurrentValue:this.getTitleText}</option>',
+			{
+				getTitleText: function(str, values) {
+					return A.Escape.html(str);
+				}
+			}
+		);
 
 		var TPL_CATEGORIES_TREE_CONTAINER = '<div class="categories-treeview-container" id="categoriesTreeContainer"></div>';
 
@@ -1733,7 +1740,7 @@ AUI.add(
 											item[STR_SELECTED] = STR_SELECTED;
 										}
 
-										buffer.push(Lang.sub(TPL_VOCABULARY_OPTION, item));
+										buffer.push(TPL_VOCABULARY_OPTION.parse(item));
 									}
 								);
 
@@ -2886,6 +2893,6 @@ AUI.add(
 	},
 	'',
 	{
-		requires: ['aui-live-search', 'aui-dialog', 'aui-dialog-iframe', 'aui-paginator', 'autocomplete-base', 'aui-tree-view', 'dd', 'json', 'liferay-history-manager', 'liferay-portlet-url', 'liferay-util-window']
+		requires: ['aui-live-search', 'aui-dialog', 'aui-dialog-iframe', 'aui-paginator', 'aui-template', 'autocomplete-base', 'aui-tree-view', 'dd', 'escape', 'json', 'liferay-history-manager', 'liferay-portlet-url', 'liferay-util-window']
 	}
 );

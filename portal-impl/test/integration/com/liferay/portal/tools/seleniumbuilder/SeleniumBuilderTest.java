@@ -591,7 +591,7 @@ public class SeleniumBuilderTest {
 		test(
 			"FunctionIfElement1002.function",
 			"Error 1002: Invalid fail element in " + _DIR_NAME +
-				"/FunctionIfElement1002.function:4");
+				"/FunctionIfElement1002.function:11");
 	}
 
 	@Test
@@ -940,7 +940,7 @@ public class SeleniumBuilderTest {
 		test(
 			"MacroIfElement1002.macro",
 			"Error 1002: Invalid fail element in " + _DIR_NAME +
-				"/MacroIfElement1002.macro:4");
+				"/MacroIfElement1002.macro:11");
 	}
 
 	@Test
@@ -1013,6 +1013,424 @@ public class SeleniumBuilderTest {
 			"MacroVarElement1006_2.macro",
 			"Error 1006: Invalid value attribute value in " + _DIR_NAME +
 				"/MacroVarElement1006_2.macro:2");
+	}
+
+	@Test
+	public void testMacroWhileElement1001_1() throws Exception {
+		test(
+			"MacroWhileElement1001_1.macro",
+			"Error 1001: Missing (condition|then) child element in " +
+				_DIR_NAME + "/MacroWhileElement1001_1.macro:3");
+	}
+
+	@Test
+	public void testMacroWhileElement1001_2() throws Exception {
+		test(
+			"MacroWhileElement1001_2.macro",
+			"Error 1001: Missing (condition|then) child element in " +
+				_DIR_NAME + "/MacroWhileElement1001_2.macro:3");
+	}
+
+	@Test
+	public void testMacroWhileElement1001_3() throws Exception {
+		test(
+			"MacroWhileElement1001_3.macro",
+			"Error 1001: Missing (condition|then) child element in " +
+				_DIR_NAME + "/MacroWhileElement1001_3.macro:3");
+	}
+
+	@Test
+	public void testMacroWhileElement1002() throws Exception {
+		test(
+			"MacroWhileElement1002.macro",
+			"Error 1002: Invalid else element in " + _DIR_NAME +
+				"/MacroWhileElement1002.macro:8");
+	}
+
+	@Test
+	public void testTestCase() throws Exception {
+		test("TestCase.testcase");
+	}
+
+	@Test
+	public void testTestCaseCommandElement1001() throws Exception {
+		test(
+			"TestCaseCommandElement1001.testcase",
+			"Error 1001: Missing (execute|var) child element in " +
+				_DIR_NAME + "/TestCaseCommandElement1001.testcase:2");
+	}
+
+	@Test
+	public void testTestCaseCommandElement1002_1() throws Exception {
+		test(
+			"TestCaseCommandElement1002_1.testcase",
+			"Error 1002: Invalid execute-fail element in " + _DIR_NAME +
+				"/TestCaseCommandElement1002_1.testcase:3");
+	}
+
+	@Test
+	public void testTestCaseCommandElement1002_2() throws Exception {
+		test(
+			"TestCaseCommandElement1002_2.testcase",
+			"Error 1002: Invalid if element in " + _DIR_NAME +
+				"/TestCaseCommandElement1002_2.testcase:3");
+	}
+
+	@Test
+	public void testTestCaseCommandElement1002_3() throws Exception {
+		test(
+			"TestCaseCommandElement1002_3.testcase",
+			"Error 1002: Invalid while element in " + _DIR_NAME +
+				"/TestCaseCommandElement1002_3.testcase:3");
+	}
+
+	@Test
+	public void testTestCaseCommandElement1003_1() throws Exception {
+		test(
+			"TestCaseCommandElement1003_1.testcase",
+			"Error 1003: Missing name attribute in " + _DIR_NAME +
+				"/TestCaseCommandElement1003_1.testcase:2");
+	}
+
+	@Test
+	public void testTestCaseCommandElement1003_2() throws Exception {
+		test(
+			"TestCaseCommandElement1003_2.testcase",
+			"Error 1003: Missing name attribute in " + _DIR_NAME +
+				"/TestCaseCommandElement1003_2.testcase:2");
+	}
+
+	@Test
+	public void testTestCaseCommandElement1006() throws Exception {
+		test(
+			"TestCaseCommandElement1006.testcase",
+			"Error 1006: Invalid name attribute value in " + _DIR_NAME +
+				"/TestCaseCommandElement1006.testcase:2");
+	}
+
+	@Test
+	public void testTestCaseDefinitionElement1000() throws Exception {
+		test(
+			"TestCaseDefinitionElement1000.testcase",
+			"Error 1000: Invalid root element in " + _DIR_NAME +
+				"/TestCaseDefinitionElement1000.testcase:1");
+	}
+
+	@Test
+	public void testTestCaseDefinitionElement1001() throws Exception {
+		test(
+			"TestCaseDefinitionElement1001.testcase",
+			"Error 1001: Missing (command) child element in " + _DIR_NAME +
+				"/TestCaseDefinitionElement1001.testcase:1");
+	}
+
+	@Test
+	public void testTestCaseDefinitionElement1002() throws Exception {
+		test(
+			"TestCaseDefinitionElement1002.testcase",
+			"Error 1002: Invalid command-fail element in " + _DIR_NAME +
+				"/TestCaseDefinitionElement1002.testcase:1");
+	}
+
+	@Test
+	public void testTestCaseExecuteElement1002_1() throws Exception {
+		test(
+			"TestCaseExecuteElement1002_1.testcase",
+			"Error 1002: Invalid fail element in " + _DIR_NAME +
+				"/TestCaseExecuteElement1002_1.testcase:4");
+	}
+
+	@Test
+	public void testTestCaseExecuteElement1002_2() throws Exception {
+		test(
+			"TestCaseExecuteElement1002_2.testcase",
+			"Error 1002: Invalid fail element in " + _DIR_NAME +
+				"/TestCaseExecuteElement1002_2.testcase:4");
+	}
+
+	@Test
+	public void testTestCaseExecuteElement1004_1() throws Exception {
+		test(
+			"TestCaseExecuteElement1004_1.testcase",
+			"Error 1004: Missing (action|macro) attribute in " + _DIR_NAME +
+				"/TestCaseExecuteElement1004_1.testcase:3");
+	}
+
+	@Test
+	public void testTestCaseExecuteElement1004_2() throws Exception {
+		test(
+			"TestCaseExecuteElement1004_2.testcase",
+			"Error 1004: Missing (action|macro) attribute in " + _DIR_NAME +
+				"/TestCaseExecuteElement1004_2.testcase:3");
+	}
+
+	@Test
+	public void testTestCaseExecuteElement1004_3() throws Exception {
+		test(
+			"TestCaseExecuteElement1004_3.testcase",
+			"Error 1004: Missing (action|macro) attribute in " + _DIR_NAME +
+				"/TestCaseExecuteElement1004_3.testcase:3");
+	}
+
+	@Test
+	public void testTestCaseExecuteElement1005_1() throws Exception {
+		test(
+			"TestCaseExecuteElement1005_1.testcase",
+			"Error 1005: Invalid fail attribute in " + _DIR_NAME +
+				"/TestCaseExecuteElement1005_1.testcase:3");
+	}
+
+	@Test
+	public void testTestCaseExecuteElement1005_2() throws Exception {
+		test(
+			"TestCaseExecuteElement1005_2.testcase",
+			"Error 1005: Invalid locator attribute in " + _DIR_NAME +
+				"/TestCaseExecuteElement1005_2.testcase:3");
+	}
+
+	@Test
+	public void testTestCaseExecuteElement1005_3() throws Exception {
+		test(
+			"TestCaseExecuteElement1005_3.testcase",
+			"Error 1005: Invalid value attribute in " + _DIR_NAME +
+				"/TestCaseExecuteElement1005_3.testcase:3");
+	}
+
+	@Test
+	public void testTestCaseExecuteElement1005_4() throws Exception {
+		test(
+			"TestCaseExecuteElement1005_4.testcase",
+			"Error 1005: Invalid macro attribute in " + _DIR_NAME +
+				"/TestCaseExecuteElement1005_4.testcase:3");
+	}
+
+	@Test
+	public void testTestCaseExecuteElement1005_5() throws Exception {
+		test(
+			"TestCaseExecuteElement1005_5.testcase",
+			"Error 1005: Invalid fail attribute in " + _DIR_NAME +
+				"/TestCaseExecuteElement1005_5.testcase:3");
+	}
+
+	@Test
+	public void testTestCaseExecuteElement1006_1() throws Exception {
+		test(
+			"TestCaseExecuteElement1006_1.testcase",
+			"Error 1006: Invalid action attribute value in " + _DIR_NAME +
+				"/TestCaseExecuteElement1006_1.testcase:3");
+	}
+
+	@Test
+	public void testTestCaseExecuteElement1006_2() throws Exception {
+		test(
+			"TestCaseExecuteElement1006_2.testcase",
+			"Error 1006: Invalid macro attribute value in " + _DIR_NAME +
+				"/TestCaseExecuteElement1006_2.testcase:3");
+	}
+
+	@Test
+	public void testTestCaseSetUpElement1001() throws Exception {
+		test(
+			"TestCaseSetUpElement1001.testcase",
+			"Error 1001: Missing (execute|var) child element in " + _DIR_NAME +
+				"/TestCaseSetUpElement1001.testcase:2");
+	}
+
+	@Test
+	public void testTestCaseSetUpElement1002() throws Exception {
+		test(
+			"TestCaseSetUpElement1002.testcase",
+			"Error 1002: Invalid fail element in " + _DIR_NAME +
+				"/TestCaseSetUpElement1002.testcase:3");
+	}
+
+	@Test
+	public void testTestCaseSetUpElement1005() throws Exception {
+		test(
+			"TestCaseSetUpElement1005.testcase",
+			"Error 1005: Invalid name attribute in " + _DIR_NAME +
+				"/TestCaseSetUpElement1005.testcase:2");
+	}
+
+	@Test
+	public void testTestCaseTearDownElement1001() throws Exception {
+		test(
+			"TestCaseTearDownElement1001.testcase",
+			"Error 1001: Missing (execute|var) child element in " + _DIR_NAME +
+				"/TestCaseTearDownElement1001.testcase:6");
+	}
+
+	@Test
+	public void testTestCaseTearDownElement1002() throws Exception {
+		test(
+			"TestCaseTearDownElement1002.testcase",
+			"Error 1002: Invalid fail element in " + _DIR_NAME +
+				"/TestCaseTearDownElement1002.testcase:7");
+	}
+
+	@Test
+	public void testTestCaseTearDownElement1005() throws Exception {
+		test(
+			"TestCaseTearDownElement1005.testcase",
+			"Error 1005: Invalid name attribute in " + _DIR_NAME +
+				"/TestCaseTearDownElement1005.testcase:6");
+	}
+
+	@Test
+	public void testTestCaseVarElement1002() throws Exception {
+		test(
+			"TestCaseVarElement1002.testcase",
+			"Error 1002: Invalid fail element in " + _DIR_NAME +
+				"/TestCaseVarElement1002.testcase:3");
+	}
+
+	@Test
+	public void testTestCaseVarElement1004_1() throws Exception {
+		test(
+			"TestCaseVarElement1004_1.testcase",
+			"Error 1004: Missing (name|value) attribute in " + _DIR_NAME +
+				"/TestCaseVarElement1004_1.testcase:2");
+	}
+
+	@Test
+	public void testTestCaseVarElement1004_2() throws Exception {
+		test(
+			"TestCaseVarElement1004_2.testcase",
+			"Error 1004: Missing (name|value) attribute in " + _DIR_NAME +
+				"/TestCaseVarElement1004_2.testcase:2");
+	}
+
+	@Test
+	public void testTestCaseVarElement1004_3() throws Exception {
+		test(
+			"TestCaseVarElement1004_3.testcase",
+			"Error 1004: Missing (name|value) attribute in " + _DIR_NAME +
+				"/TestCaseVarElement1004_3.testcase:2");
+	}
+
+	@Test
+	public void testTestCaseVarElement1005() throws Exception {
+		test(
+			"TestCaseVarElement1005.testcase",
+			"Error 1005: Invalid fail attribute in " + _DIR_NAME +
+				"/TestCaseVarElement1005.testcase:2");
+	}
+
+	@Test
+	public void testTestCaseVarElement1006_1() throws Exception {
+		test(
+			"TestCaseVarElement1006_1.testcase",
+			"Error 1006: Invalid name attribute value in " + _DIR_NAME +
+				"/TestCaseVarElement1006_1.testcase:2");
+	}
+
+	@Test
+	public void testTestCaseVarElement1006_2() throws Exception {
+		test(
+			"TestCaseVarElement1006_2.testcase",
+			"Error 1006: Invalid value attribute value in " + _DIR_NAME +
+				"/TestCaseVarElement1006_2.testcase:2");
+	}
+
+	@Test
+	public void testTestSuite() throws Exception {
+		test("TestSuite.testsuite");
+	}
+
+	@Test
+	public void testTestSuiteDefinitionElement1000() throws Exception {
+		test(
+			"TestSuiteDefinitionElement1000.testsuite",
+			"Error 1000: Invalid root element in " + _DIR_NAME +
+				"/TestSuiteDefinitionElement1000.testsuite:1");
+	}
+
+	@Test
+	public void testTestSuiteDefinitionElement1001() throws Exception {
+		test(
+			"TestSuiteDefinitionElement1001.testsuite",
+			"Error 1001: Missing (execute) child element in " + _DIR_NAME +
+				"/TestSuiteDefinitionElement1001.testsuite:1");
+	}
+
+	@Test
+	public void testTestSuiteDefinitionElement1002() throws Exception {
+		test(
+			"TestSuiteDefinitionElement1002.testsuite",
+			"Error 1002: Invalid command element in " + _DIR_NAME +
+				"/TestSuiteDefinitionElement1002.testsuite:1");
+	}
+
+	@Test
+	public void testTestSuiteExecuteElement1002() throws Exception {
+		test(
+			"TestSuiteExecuteElement1002.testsuite",
+			"Error 1002: Invalid var element in " + _DIR_NAME +
+				"/TestSuiteExecuteElement1002.testsuite:3");
+	}
+
+	@Test
+	public void testTestSuiteExecuteElement1004_1() throws Exception {
+		test(
+			"TestSuiteExecuteElement1004_1.testsuite",
+			"Error 1004: Missing (test-case|test-suite) attribute in " +
+				_DIR_NAME + "/TestSuiteExecuteElement1004_1.testsuite:2");
+	}
+
+	@Test
+	public void testTestSuiteExecuteElement1004_2() throws Exception {
+		test(
+			"TestSuiteExecuteElement1004_2.testsuite",
+			"Error 1004: Missing (test-case|test-suite) attribute in " +
+				_DIR_NAME + "/TestSuiteExecuteElement1004_2.testsuite:2");
+	}
+
+	@Test
+	public void testTestSuiteExecuteElement1004_3() throws Exception {
+		test(
+			"TestSuiteExecuteElement1004_3.testsuite",
+			"Error 1004: Missing (test-case|test-suite) attribute in " +
+				_DIR_NAME + "/TestSuiteExecuteElement1004_3.testsuite:2");
+	}
+
+	@Test
+	public void testTestSuiteExecuteElement1005_1() throws Exception {
+		test(
+			"TestSuiteExecuteElement1005_1.testsuite",
+			"Error 1005: Invalid fail attribute in " + _DIR_NAME +
+				"/TestSuiteExecuteElement1005_1.testsuite:2");
+	}
+
+	@Test
+	public void testTestSuiteExecuteElement1005_2() throws Exception {
+		test(
+			"TestSuiteExecuteElement1005_2.testsuite",
+			"Error 1005: Invalid test-suite attribute in " + _DIR_NAME +
+				"/TestSuiteExecuteElement1005_2.testsuite:2");
+	}
+
+	@Test
+	public void testTestSuiteExecuteElement1005_3() throws Exception {
+		test(
+			"TestSuiteExecuteElement1005_3.testsuite",
+			"Error 1005: Invalid fail attribute in " + _DIR_NAME +
+				"/TestSuiteExecuteElement1005_3.testsuite:2");
+	}
+
+	@Test
+	public void testTestSuiteExecuteElement1006_1() throws Exception {
+		test(
+			"TestSuiteExecuteElement1006_1.testsuite",
+			"Error 1006: Invalid test-case attribute value in " + _DIR_NAME +
+				"/TestSuiteExecuteElement1006_1.testsuite:2");
+	}
+
+	@Test
+	public void testTestSuiteExecuteElement1006_2() throws Exception {
+		test(
+			"TestSuiteExecuteElement1006_2.testsuite",
+			"Error 1006: Invalid test-suite attribute value in " + _DIR_NAME +
+				"/TestSuiteExecuteElement1006_2.testsuite:2");
 	}
 
 	protected void test(String fileName) throws Exception {
