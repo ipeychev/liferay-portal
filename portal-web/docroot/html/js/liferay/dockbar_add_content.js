@@ -133,6 +133,7 @@ AUI.add(
 									points: ['lc', 'rc']
 								},
 								cssClass: 'lfr-content-preview-popup',
+								hideOn: 'mouseleave',
 								on: {
 									show: function() {
 										var currentNode = this.get('currentNode');
@@ -173,6 +174,7 @@ AUI.add(
 									}
 								},
 								showArrow: false,
+								showOn: 'mouseenter',
 								trigger: '.has-preview'
 							}
 						).render();
@@ -241,6 +243,6 @@ AUI.add(
 	},
 	'',
 	{
-		requires: ['aui-dialog', 'aui-io-request', 'aui-tooltip', 'autocomplete-base', 'liferay-layout-configuration', 'liferay-portlet-base']
+		requires: ['aui-dialog', 'aui-io-request', 'aui-tooltip', 'autocomplete-base', 'event-mouseenter', 'liferay-layout-configuration', 'liferay-portlet-base']
 	}
 );
