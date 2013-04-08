@@ -14,6 +14,7 @@
 
 package com.liferay.portal.tools.seleniumbuilder;
 
+import com.liferay.portal.freemarker.FreeMarkerUtil;
 import com.liferay.portal.kernel.io.unsync.UnsyncBufferedReader;
 import com.liferay.portal.kernel.io.unsync.UnsyncStringReader;
 import com.liferay.portal.kernel.util.ArrayUtil;
@@ -33,8 +34,10 @@ import com.liferay.portal.tools.servicebuilder.ServiceBuilder;
 
 import java.io.File;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.regex.Matcher;
@@ -150,6 +153,30 @@ public class SeleniumBuilderFileUtil {
 	public String getNormalizedContent(String fileName) throws Exception {
 		String content = readFile(fileName);
 
+		if (fileName.endsWith(".path")) {
+			int x = content.indexOf("<tbody>");
+			int y = content.indexOf("</tbody>");
+
+			if ((x == -1) || (y == -1)) {
+				throwValidationException(1002, fileName, "tbody");
+			}
+
+			String pathTbody = content.substring(x, y + 8);
+
+			Map<String, Object> context = new HashMap<String, Object>();
+
+			context.put("pathName", getName(fileName));
+			context.put("pathTbody", pathTbody);
+
+			String newContent = processTemplate("path_xml.ftl", context);
+
+			if (!content.equals(newContent)) {
+				content = newContent;
+
+				writeFile(getBaseDir(), fileName, newContent, false);
+			}
+		}
+
 		StringBundler sb = new StringBundler();
 
 		int lineNumber = 1;
@@ -258,7 +285,14 @@ public class SeleniumBuilderFileUtil {
 	public void writeFile(String fileName, String content, boolean format)
 		throws Exception {
 
-		File file = new File(getBaseDir() + "-generated/" + fileName);
+		writeFile(getBaseDir() + "-generated", fileName, content, format);
+	}
+
+	public void writeFile(
+			String baseDir, String fileName, String content, boolean format)
+		throws Exception {
+
+		File file = new File(baseDir + "/" + fileName);
 
 		if (format) {
 			ServiceBuilder.writeFile(file, content);
@@ -268,6 +302,13 @@ public class SeleniumBuilderFileUtil {
 
 			FileUtil.write(file, content);
 		}
+	}
+
+	protected String processTemplate(String name, Map<String, Object> context)
+		throws Exception {
+
+		return StringUtil.strip(
+			FreeMarkerUtil.process(_TPL_ROOT + name, context), '\r');
 	}
 
 	protected void throwValidationException(int errorCode, String fileName) {
@@ -340,6 +381,10 @@ public class SeleniumBuilderFileUtil {
 			throw new IllegalArgumentException(
 				prefix + "Poorly formed XML in " + suffix, e);
 		}
+		else if (errorCode == 1008) {
+			throw new IllegalArgumentException(
+				prefix + "Duplicate name " + string + " at " + suffix);
+		}
 		else if (errorCode == 2000) {
 			throw new IllegalArgumentException(
 				prefix + "Too many child elements in the " + string +
@@ -354,6 +399,12 @@ public class SeleniumBuilderFileUtil {
 		int errorCode, String fileName, Exception e) {
 
 		throwValidationException(errorCode, fileName, null, null, null, e);
+	}
+
+	protected void throwValidationException(
+		int errorCode, String fileName, String string) {
+
+		throwValidationException(errorCode, fileName, null, null, string, null);
 	}
 
 	protected void validate(String fileName, Element rootElement)
@@ -880,8 +931,7 @@ public class SeleniumBuilderFileUtil {
 				validateVarElement(fileName, element);
 			}
 			else {
-				throwValidationException(
-					1002, fileName, rootElement, elementName);
+				throwValidationException(1002, fileName, element, elementName);
 			}
 		}
 	}
@@ -916,6 +966,46 @@ public class SeleniumBuilderFileUtil {
 
 		if ((tdText == null) || !shortFileName.equals(tdText)) {
 			throwValidationException(0, fileName);
+		}
+
+		Element tbodyElement = tableElement.element("tbody");
+
+		List<Element> elements = tbodyElement.elements();
+
+		for (Element element : elements) {
+			String elementName = element.getName();
+
+			if (elementName.equals("tr")) {
+				validatePathTrElement(fileName, element);
+			}
+			else {
+				throwValidationException(1002, fileName, element, elementName);
+			}
+		}
+	}
+
+	protected void validatePathTrElement(String fileName, Element trElement) {
+		List<Element> elements = trElement.elements();
+
+		for (Element element : elements) {
+			String elementName = element.getName();
+
+			if (!elementName.equals("td")) {
+				throwValidationException(1002, fileName, element, elementName);
+			}
+		}
+
+		if (elements.size() < 3) {
+			throwValidationException(
+				1001, fileName, trElement, new String[] {"td"});
+		}
+
+		if (elements.size() > 3) {
+			Element element = elements.get(3);
+
+			String elementName = element.getName();
+
+			throwValidationException(1002, fileName, element, elementName);
 		}
 	}
 
@@ -972,8 +1062,7 @@ public class SeleniumBuilderFileUtil {
 				validateVarElement(fileName, element);
 			}
 			else {
-				throwValidationException(
-					1002, fileName, rootElement, elementName);
+				throwValidationException(1002, fileName, element, elementName);
 			}
 		}
 	}
@@ -1001,8 +1090,7 @@ public class SeleniumBuilderFileUtil {
 					".+", new String[0]);
 			}
 			else {
-				throwValidationException(
-					1002, fileName, rootElement, elementName);
+				throwValidationException(1002, fileName, element, elementName);
 			}
 		}
 	}
@@ -1093,6 +1181,9 @@ public class SeleniumBuilderFileUtil {
 				new String[] {"condition", "then"});
 		}
 	}
+
+	private static final String _TPL_ROOT =
+		"com/liferay/portal/tools/seleniumbuilder/dependencies/";
 
 	private String _baseDir;
 

@@ -187,6 +187,24 @@ public class Entity {
 		return _alias;
 	}
 
+	public List<EntityColumn> getBadNamedColumnsList() {
+		List<EntityColumn> badNamedColumnsList = ListUtil.copy(_columnList);
+
+		Iterator<EntityColumn> itr = badNamedColumnsList.iterator();
+
+		while (itr.hasNext()) {
+			EntityColumn col = itr.next();
+
+			String name = col.getName();
+
+			if (name.equals(col.getDBName())) {
+				itr.remove();
+			}
+		}
+
+		return badNamedColumnsList;
+	}
+
 	public List<EntityColumn> getBlobList() {
 		return _blobList;
 	}

@@ -56,7 +56,7 @@ page import="com.liferay.util.RSSUtil" %><%@
 page import="com.liferay.util.xml.DocUtil" %>
 
 <%
-PortletPreferences preferences = renderRequest.getPreferences();
+PortletPreferences preferences = liferayPortletRequest.getPreferences();
 
 String portletResource = ParamUtil.getString(request, "portletResource");
 
@@ -183,6 +183,7 @@ boolean mergeLayoutTags = GetterUtil.getBoolean(preferences.getValue("mergeLayou
 
 String displayStyle = GetterUtil.getString(preferences.getValue("displayStyle", PropsValues.ASSET_PUBLISHER_DISPLAY_STYLE_DEFAULT));
 
+boolean showAddContentButton = GetterUtil.getBoolean(preferences.getValue("showAddContentButton", null), true);
 boolean showAssetTitle = GetterUtil.getBoolean(preferences.getValue("showAssetTitle", null), true);
 boolean showContextLink = GetterUtil.getBoolean(preferences.getValue("showContextLink", null), true);
 int abstractLength = GetterUtil.getInteger(preferences.getValue("abstractLength", null), 200);

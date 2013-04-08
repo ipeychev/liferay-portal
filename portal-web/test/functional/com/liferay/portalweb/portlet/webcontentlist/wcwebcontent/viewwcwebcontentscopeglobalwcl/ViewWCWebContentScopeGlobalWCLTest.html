@@ -38,17 +38,17 @@
 </tr>
 <tr>
 	<td>assertText</td>
-	<td>//td[1]/a</td>
-	<td>WC WebContent Title</td>
+	<td>//tr[contains(.,'WC WebContent Global Title')]/td[1]/a</td>
+	<td>WC WebContent Global Title</td>
 </tr>
 <tr>
 	<td>assertVisible</td>
-	<td>//td[2]/a</td>
+	<td>//tr[contains(.,'WC WebContent Global Title')]/td[2]/a</td>
 	<td>Display Date</td>
 </tr>
 <tr>
 	<td>assertText</td>
-	<td>//td[3]/a</td>
+	<td>//tr[contains(.,'WC WebContent Global Title')]/td[3]/a</td>
 	<td>Joe Bloggs</td>
 </tr>
 <tr>
@@ -57,19 +57,14 @@
 	<td>Showing 1 result.</td>
 </tr>
 <tr>
-	<td>assertText</td>
-	<td>//td[1]/a</td>
+	<td>assertTextNotPresent</td>
 	<td>WC WebContent Title</td>
+	<td></td>
 </tr>
 <tr>
-	<td>clickAtAndWait</td>
-	<td>//td[1]/a</td>
-	<td>WC WebContent Title</td>
-</tr>
-<tr>
-	<td>assertText</td>
-	<td>//div[@class='journal-content-article']/p</td>
-	<td>WC WebContent Content</td>
+	<td>assertTextNotPresent</td>
+	<td>WC WebContent MySite Title</td>
+	<td></td>
 </tr>
 </tbody></table>
 </body>

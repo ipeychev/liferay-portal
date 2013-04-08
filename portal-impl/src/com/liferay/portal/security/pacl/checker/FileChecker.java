@@ -207,7 +207,12 @@ public class FileChecker extends BaseChecker {
 		Class<?> callerClass1 = Reflection.getCallerClass(stackIndex);
 		Class<?> callerClass2 = Reflection.getCallerClass(stackIndex + 1);
 
-		if (callerClass1.equals(File.class) &&
+		Package callerClass1Package = callerClass1.getPackage();
+
+		String callerClass1PackageName = callerClass1Package.getName();
+
+		if (callerClass1PackageName.startsWith("java.") &&
+			!callerClass1.equals(ProcessBuilder.class) &&
 			isTrustedCaller(callerClass2, permission)) {
 
 			return true;
