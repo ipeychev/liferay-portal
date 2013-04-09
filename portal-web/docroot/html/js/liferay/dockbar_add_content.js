@@ -7,6 +7,8 @@ AUI.add(
 
 		var Node = A.Node;
 
+		var CLICK = 'click';
+
 		var isString = Lang.isString;
 
 		var ParseContent = A.Plugin.ParseContent;
@@ -31,7 +33,7 @@ AUI.add(
 
 						instance._styleButtons = instance._styleButtonsList.all('.button');
 
-						instance._styleButtons.on('click', instance._onChangeDisplayStyle, instance);
+						instance._styleButtons.on(CLICK, instance._onChangeDisplayStyle, instance);
 
 						instance._numItems = instance.byId('numItems');
 
@@ -43,7 +45,7 @@ AUI.add(
 
 						instance._entriesContainer = instance.byId('entriesContainer');
 
-						instance._entriesContainer.delegate('click', instance._addPortlet, '.content-shortcut');
+						instance._entriesContainer.delegate(CLICK, instance._addPortlet, '.content-shortcut');
 
 						instance._createToolTip();
 
@@ -70,7 +72,7 @@ AUI.add(
 					},
 
 					_afterPreviewFailure: function(event) {
-
+						// Please add here "Failed to load content"
 					},
 
 					_afterPreviewSuccess: function(event) {
@@ -80,7 +82,11 @@ AUI.add(
 
 						var content = Node.create(data);
 
-						instance._tooltip.set('bodyContent', content);
+						var tooltip = instance._tooltip;
+
+						tooltip.set('bodyContent', content);
+
+						tooltip.get('boundingBox').one('.add-button-preview input').on(CLICK, instance._addPortlet, instance);
 					},
 
 					_afterSuccess: function(event) {
@@ -190,8 +196,6 @@ AUI.add(
 								trigger: '.has-preview'
 							}
 						).render();
-
-						A.one('.lfr-content-preview-popup').delegate('click', instance._addPortlet, '.add-button-preview input');
 					},
 
 					_onChangeDisplayStyle: function(event) {
@@ -227,9 +231,11 @@ AUI.add(
 					_onShowTab: function(event) {
 						var instance = this;
 
-						var index = event.selectedIndex;
+						if (event.namespace.indexOf(instance.get('namespace')) === 0) {
+							var index = event.selectedIndex;
 
-						Liferay.Store('liferay_addpanel_tab', event.names[index]);
+							Liferay.Store('liferay_addpanel_tab', event.names[index]);
+						}
 					},
 
 					_refreshContentList: function(event) {
