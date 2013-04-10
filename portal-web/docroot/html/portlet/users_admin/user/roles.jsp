@@ -110,7 +110,7 @@ userGroupRoles.addAll(siteRoles);
 						uri: '<portlet:renderURL windowState="<%= LiferayWindowState.POP_UP.toString() %>"><portlet:param name="struts_action" value="/users_admin/select_regular_role" /><portlet:param name="p_u_i_d" value='<%= (selUser == null) ? "0" : String.valueOf(selUser.getUserId()) %>' /></portlet:renderURL>'
 					},
 					function(event){
-						<portlet:namespace />selectRole(event.roleId, event.roleTitle, event.searchContainerName, event.groupName, event.groupId);
+						<portlet:namespace />selectRole(event.roleid, event.roletitle, event.searchcontainername, event.groupname, event.groupid);
 					}
 				);
 			}
@@ -277,7 +277,7 @@ userGroupRoles.addAll(siteRoles);
 						uri: '<portlet:renderURL windowState="<%= LiferayWindowState.POP_UP.toString() %>"><portlet:param name="struts_action" value="/users_admin/select_organization_role" /><portlet:param name="step" value="1" /><portlet:param name="organizationIds" value="<%= StringUtil.merge(organizationIds) %>" /><portlet:param name="p_u_i_d" value='<%= (selUser == null) ? "0" : String.valueOf(selUser.getUserId()) %>' /></portlet:renderURL>'
 					},
 					function(event){
-						<portlet:namespace />selectRole(event.roleId, event.roleTitle, event.searchContainerName, event.groupName, event.groupId);
+						<portlet:namespace />selectRole(event.roleid, event.roletitle, event.searchcontainername, event.groupname, event.groupid);
 					}
 				);
 			}
@@ -393,7 +393,7 @@ userGroupRoles.addAll(siteRoles);
 								uri: '<portlet:renderURL windowState="<%= LiferayWindowState.POP_UP.toString() %>"><portlet:param name="struts_action" value="/users_admin/select_site_role" /><portlet:param name="step" value="1" /><portlet:param name="p_u_i_d" value='<%= (selUser == null) ? "0" : String.valueOf(selUser.getUserId()) %>' /></portlet:renderURL>'
 							},
 							function(event){
-								<portlet:namespace />selectRole(event.roleId, event.roleTitle, event.searchContainerName, event.groupName, event.groupId);
+								<portlet:namespace />selectRole(event.roleid, event.roletitle, event.searchcontainername, event.groupname, event.groupid);
 							}
 						);
 					}
