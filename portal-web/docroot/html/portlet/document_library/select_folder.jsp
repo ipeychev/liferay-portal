@@ -39,129 +39,8 @@ if (folder != null) {
 
 	<liferay-ui:breadcrumb showGuestGroup="<%= false %>" showLayout="<%= false %>" showParentGroups="<%= false %>" />
 
-	<%
-	PortletURL portletURL = renderResponse.createRenderURL();
-
-	portletURL.setParameter("struts_action", "/document_library/select_folder");
-	portletURL.setParameter("folderId", String.valueOf(folderId));
-
-	List<String> headerNames = new ArrayList<String>();
-
-	headerNames.add("folder");
-	headerNames.add("num-of-folders");
-	headerNames.add("num-of-documents");
-	headerNames.add(StringPool.BLANK);
-
-	SearchContainer searchContainer = new SearchContainer(renderRequest, null, null, SearchContainer.DEFAULT_CUR_PARAM, SearchContainer.DEFAULT_DELTA, portletURL, headerNames, null);
-
-	int total = DLAppServiceUtil.getFoldersCount(repositoryId, folderId);
-
-	searchContainer.setTotal(total);
-
-	List results = DLAppServiceUtil.getFolders(repositoryId, folderId, searchContainer.getStart(), searchContainer.getEnd());
-
-	searchContainer.setResults(results);
-
-	List resultRows = searchContainer.getResultRows();
-
-	for (int i = 0; i < results.size(); i++) {
-		Folder curFolder = (Folder)results.get(i);
-
-		curFolder = curFolder.toEscapedModel();
-
-		ResultRow row = new ResultRow(curFolder, curFolder.getFolderId(), i);
-
-		PortletURL rowURL = renderResponse.createRenderURL();
-
-		rowURL.setParameter("struts_action", "/document_library/select_folder");
-		rowURL.setParameter("folderId", String.valueOf(curFolder.getFolderId()));
-
-		// Name
-
-		StringBundler sb = new StringBundler(7);
-
-		sb.append("<img align=\"left\" border=\"0\" src=\"");
-		sb.append(themeDisplay.getPathThemeImages());
-
-		int foldersCount = 0;
-		int fileEntriesCount = 0;
-
-		try {
-			List<Long> subfolderIds = DLAppServiceUtil.getSubfolderIds(curFolder.getRepositoryId(), curFolder.getFolderId(), false);
-
-			foldersCount = subfolderIds.size();
-
-			subfolderIds.clear();
-			subfolderIds.add(curFolder.getFolderId());
-
-			fileEntriesCount = DLAppServiceUtil.getFoldersFileEntriesCount(curFolder.getRepositoryId(), subfolderIds, WorkflowConstants.STATUS_APPROVED);
-		}
-		catch (com.liferay.portal.kernel.repository.RepositoryException re) {
-			rowURL = null;
-		}
-		catch (com.liferay.portal.security.auth.PrincipalException pe) {
-			rowURL = null;
-		}
-
-		if (curFolder.isMountPoint()) {
-			if (rowURL != null) {
-				sb.append("/common/drive.png\">");
-			}
-			else {
-				sb.append("/common/drive_error.png\">");
-			}
-		}
-		else {
-			if ((foldersCount + fileEntriesCount) > 0) {
-				sb.append("/common/folder_full_document.png\">");
-			}
-			else {
-				sb.append("/common/folder_empty.png\">");
-			}
-		}
-
-		sb.append(curFolder.getName());
-
-		row.addText(sb.toString(), rowURL);
-
-		// Statistics
-
-		row.addText(String.valueOf(foldersCount), rowURL);
-		row.addText(String.valueOf(fileEntriesCount), rowURL);
-
-		// Action
-
-		if (rowURL != null) {
-			sb.setIndex(0);
-
-			sb.append("opener.");
-			sb.append(renderResponse.getNamespace());
-			sb.append("selectFolder('");
-			sb.append(curFolder.getFolderId());
-			sb.append("', '");
-			sb.append(UnicodeFormatter.toString(curFolder.getName()));
-			sb.append("', ");
-			sb.append(curFolder.isSupportsMetadata());
-			sb.append(", ");
-			sb.append(curFolder.isSupportsSocial());
-			sb.append("); window.close();");
-
-			row.addButton("right", SearchEntry.DEFAULT_VALIGN, LanguageUtil.get(pageContext, "choose"), sb.toString());
-		}
-		else {
-			row.addText(StringPool.BLANK);
-		}
-
-		// Add result row
-
-		resultRows.add(row);
-	}
-
-	showAddFolderButton = showAddFolderButton && DLFolderPermission.contains(permissionChecker, repositoryId, folderId, ActionKeys.ADD_FOLDER);
-	%>
-
 	<aui:button-row>
-		<c:if test="<%= showAddFolderButton %>">
+		<c:if test="<%= showAddFolderButton && DLFolderPermission.contains(permissionChecker, repositoryId, folderId, ActionKeys.ADD_FOLDER) %>">
 			<portlet:renderURL var="editFolderURL">
 				<portlet:param name="struts_action" value="/document_library/edit_folder" />
 				<portlet:param name="redirect" value="<%= currentURL %>" />
@@ -179,9 +58,116 @@ if (folder != null) {
 		<aui:button onClick="<%= taglibSelectOnClick %>" value="choose-this-folder" />
 	</aui:button-row>
 
-	<c:if test="<%= !results.isEmpty() %>">
-		<br />
-	</c:if>
+	<%
+	PortletURL portletURL = renderResponse.createRenderURL();
 
-	<liferay-ui:search-iterator searchContainer="<%= searchContainer %>" />
+	portletURL.setParameter("struts_action", "/document_library/select_folder");
+	portletURL.setParameter("folderId", String.valueOf(folderId));
+	%>
+
+	<liferay-ui:search-container
+		iteratorURL="<%= portletURL %>"
+	>
+
+		<liferay-ui:search-container-results
+			results="<%= DLAppServiceUtil.getFolders(repositoryId, folderId, searchContainer.getStart(), searchContainer.getEnd())%>"
+			total="<%= DLAppServiceUtil.getFoldersCount(repositoryId, folderId) %>"
+		/>
+
+		<liferay-ui:search-container-row
+			className="com.liferay.portal.kernel.repository.model.Folder"
+			keyProperty="folderId"
+			modelVar="curFolder"
+			rowVar="row"
+		>
+			<liferay-portlet:renderURL varImpl="rowURL">
+				<portlet:param name="struts_action" value="/document_library/select_folder" />
+				<portlet:param name="folderId" value="<%= String.valueOf(curFolder.getFolderId()) %>" />
+			</liferay-portlet:renderURL>
+
+			<%
+			int foldersCount = 0;
+			int fileEntriesCount = 0;
+
+			try {
+				List<Long> subfolderIds = DLAppServiceUtil.getSubfolderIds(curFolder.getRepositoryId(), curFolder.getFolderId(), false);
+
+				foldersCount = subfolderIds.size();
+
+				subfolderIds.clear();
+				subfolderIds.add(curFolder.getFolderId());
+
+				fileEntriesCount = DLAppServiceUtil.getFoldersFileEntriesCount(curFolder.getRepositoryId(), subfolderIds, WorkflowConstants.STATUS_APPROVED);
+			}
+			catch (com.liferay.portal.kernel.repository.RepositoryException re) {
+				rowURL = null;
+			}
+			catch (com.liferay.portal.security.auth.PrincipalException pe) {
+				rowURL = null;
+			}
+
+			String image = null;
+
+			if (curFolder.isMountPoint()) {
+				if (rowURL != null) {
+					image = "drive";
+				}
+				else {
+					image = "drive_error";
+				}
+			}
+			else {
+				if ((foldersCount + fileEntriesCount) > 0) {
+					image = "folder_full_document";
+				}
+				else {
+					image = "folder_empty";
+				}
+			}
+			%>
+
+			<liferay-ui:search-container-column-text
+				name="folder"
+			>
+				<liferay-ui:icon image="<%= image %>" label="<%= true %>" message="<%= HtmlUtil.escape(curFolder.getName()) %>" url="<%= rowURL.toString() %>" />
+			</liferay-ui:search-container-column-text>
+
+			<liferay-ui:search-container-column-text
+				href="<%= rowURL %>"
+				name="num-of-folders"
+				value="<%= String.valueOf(foldersCount) %>"
+			/>
+
+			<liferay-ui:search-container-column-text
+				href="<%= rowURL %>"
+				name="num-of-documents"
+				value="<%= String.valueOf(fileEntriesCount) %>"
+			/>
+
+			<liferay-ui:search-container-column-text>
+				<c:if test="<%= rowURL != null %>">
+
+					<%
+					StringBundler sb = new StringBundler(8);
+
+					sb.append("opener.");
+					sb.append(renderResponse.getNamespace());
+					sb.append("selectFolder('");
+					sb.append(curFolder.getFolderId());
+					sb.append("', '");
+					sb.append(UnicodeFormatter.toString(curFolder.getName()));
+					sb.append("', ");
+					sb.append(curFolder.isSupportsMetadata());
+					sb.append(", ");
+					sb.append(curFolder.isSupportsSocial());
+					sb.append("); window.close();");
+					%>
+
+					<aui:button cssClass="" onClick="<%= sb.toString() %>" value="choose" />
+				</c:if>
+			</liferay-ui:search-container-column-text>
+		</liferay-ui:search-container-row>
+
+		<liferay-ui:search-iterator />
+	</liferay-ui:search-container>
 </aui:form>

@@ -85,8 +85,8 @@ String eventName = ParamUtil.getString(request, "eventName", "selectStructure");
 					<%
 					Map<String, Object> data = new HashMap<String, Object>();
 
-					data.put("ddmStructureId", structure.getStructureId());
-					data.put("ddmStructureKey", structure.getStructureKey());
+					data.put("ddmstructureid", structure.getStructureId());
+					data.put("ddmstructurekey", structure.getStructureKey());
 					data.put("name", HtmlUtil.escapeAttribute(structure.getName(locale)));
 					%>
 
