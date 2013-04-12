@@ -132,6 +132,6 @@ String title = ddmDisplay.getViewTemplatesTitle(structure, locale);
 
 			Util.getWindow().close();
 		},
-		'.selector-button input'
+		'.selector-button'
 	);
 </aui:script>
