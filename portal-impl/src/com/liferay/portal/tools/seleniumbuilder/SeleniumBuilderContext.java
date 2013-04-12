@@ -14,7 +14,9 @@
 
 package com.liferay.portal.tools.seleniumbuilder;
 
+import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.kernel.xml.Attribute;
 import com.liferay.portal.kernel.xml.Element;
 
 import java.util.HashMap;
@@ -108,6 +110,8 @@ public class SeleniumBuilderContext {
 			}
 
 			_actionFileNames.put(actionName, fileName);
+
+			_actionNames.add(actionName);
 
 			_actionRootElements.put(actionName, _getRootElement(fileName));
 		}
@@ -448,6 +452,35 @@ public class SeleniumBuilderContext {
 			return;
 		}
 
+		if (!_pathNames.contains(actionName)) {
+			_seleniumBuilderFileUtil.throwValidationException(
+				2002, actionFileName, actionName);
+		}
+
+		List<Element> caseElements =
+			_seleniumBuilderFileUtil.getAllChildElements(rootElement, "case");
+
+		for (Element caseElement : caseElements) {
+			String caseComparator = caseElement.attributeValue("comparator");
+
+			List<Attribute> attributes = caseElement.attributes();
+
+			for (Attribute attribute : attributes) {
+				String attributeName = attribute.getName();
+
+				if (attributeName.startsWith("locator-key")) {
+					String attributeValue = attribute.getValue();
+
+					if (!_isValidLocatorKey(
+							actionName, caseComparator, attributeValue)) {
+
+						_seleniumBuilderFileUtil.throwValidationException(
+							1010, actionFileName, caseElement, attributeValue);
+					}
+				}
+			}
+		}
+
 		List<Element> commandElements =
 			_seleniumBuilderFileUtil.getAllChildElements(
 				rootElement, "command");
@@ -467,6 +500,35 @@ public class SeleniumBuilderContext {
 			if (!_isFunctionName(commandName)) {
 				_seleniumBuilderFileUtil.throwValidationException(
 					2001, actionFileName, commandElement, commandName);
+			}
+		}
+
+		List<Element> executeElements =
+			_seleniumBuilderFileUtil.getAllChildElements(
+				rootElement, "execute");
+
+		for (Element executeElement : executeElements) {
+			String function = executeElement.attributeValue("function");
+
+			int x = function.indexOf(StringPool.POUND);
+
+			if (x == -1) {
+				_seleniumBuilderFileUtil.throwValidationException(
+					1006, actionFileName, executeElement, "function");
+			}
+
+			String functionName = function.substring(0, x);
+
+			if (!_isFunctionName(functionName)) {
+				_seleniumBuilderFileUtil.throwValidationException(
+					2003, actionFileName, executeElement, functionName);
+			}
+
+			String functionCommand = function.substring(x + 1);
+
+			if (!_isFunctionCommand(functionName, functionCommand)) {
+				_seleniumBuilderFileUtil.throwValidationException(
+					2004, actionFileName, executeElement, functionCommand);
 			}
 		}
 	}
@@ -617,10 +679,66 @@ public class SeleniumBuilderContext {
 			fileName, classSuffix);
 	}
 
+	private boolean _isFunctionCommand(String name, String command) {
+		if (_isFunctionName(name)) {
+			Element rootElement = getFunctionRootElement(name);
+
+			List<Element> commandElements =
+				_seleniumBuilderFileUtil.getAllChildElements(
+					rootElement, "command");
+
+			for (Element commandElement : commandElements) {
+				String commandName = commandElement.attributeValue("name");
+
+				if (commandName.equals(command)) {
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
+
 	private boolean _isFunctionName(String name) {
 		for (String functionName : _functionNames) {
 			if (functionName.equals(StringUtil.upperCaseFirstLetter(name))) {
 				return true;
+			}
+		}
+
+		return false;
+	}
+
+	private boolean _isValidLocatorKey(
+		String actionName, String caseComparator, String locatorKey) {
+
+		Element pathRootElement = getPathRootElement(actionName);
+
+		Set<String> pathLocatorKeys =
+			_seleniumBuilderFileUtil.getPathLocatorKeys(pathRootElement);
+
+		for (String pathLocatorKey : pathLocatorKeys) {
+			if (caseComparator == null) {
+				if (pathLocatorKey.equals(locatorKey)) {
+					return true;
+				}
+			}
+			else {
+				if (caseComparator.equals("contains") &&
+					pathLocatorKey.contains(locatorKey)) {
+
+					return true;
+				}
+				else if (caseComparator.equals("endsWith") &&
+						 pathLocatorKey.endsWith(locatorKey)) {
+
+					return true;
+				}
+				else if (caseComparator.equals("startsWith") &&
+						 pathLocatorKey.startsWith(locatorKey)) {
+
+					return true;
+				}
 			}
 		}
 
