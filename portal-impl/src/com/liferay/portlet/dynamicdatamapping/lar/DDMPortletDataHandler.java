@@ -68,7 +68,7 @@ import javax.portlet.PortletPreferences;
  */
 public class DDMPortletDataHandler extends BasePortletDataHandler {
 
-	public static final String NAMESPACE = "ddm";
+	public static final String NAMESPACE = "dynamic_data_mapping";
 
 	public static String exportReferencedContent(
 			PortletDataContext portletDataContext,

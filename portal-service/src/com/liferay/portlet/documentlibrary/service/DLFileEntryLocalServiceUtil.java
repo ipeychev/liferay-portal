@@ -441,6 +441,12 @@ public class DLFileEntryLocalServiceUtil {
 		return getService().fetchFileEntryByName(groupId, folderId, name);
 	}
 
+	public static java.util.List<com.liferay.portlet.documentlibrary.model.DLFileEntry> getDDMStructureFileEntries(
+		long[] ddmStructureIds)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getService().getDDMStructureFileEntries(ddmStructureIds);
+	}
+
 	public static java.util.List<com.liferay.portlet.documentlibrary.model.DLFileEntry> getExtraSettingsFileEntries(
 		int start, int end)
 		throws com.liferay.portal.kernel.exception.SystemException {

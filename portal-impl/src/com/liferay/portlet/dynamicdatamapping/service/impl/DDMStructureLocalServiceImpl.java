@@ -21,6 +21,8 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.search.Indexer;
+import com.liferay.portal.kernel.search.IndexerRegistryUtil;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.CharPool;
 import com.liferay.portal.kernel.util.GetterUtil;
@@ -1383,7 +1385,45 @@ public class DDMStructureLocalServiceImpl
 
 		syncStructureTemplatesFields(structure);
 
+		Indexer indexer = IndexerRegistryUtil.getIndexer(
+			structure.getClassName());
+
+		if (indexer != null) {
+			List<Long> ddmStructureIds = getChildrenStructureIds(
+				structure.getGroupId(), structure.getStructureId());
+
+			indexer.reindexDDMStructures(ddmStructureIds);
+		}
+
 		return structure;
+	}
+
+	protected void getChildrenStructureIds(
+			List<Long> structureIds, long groupId, long structureId)
+		throws PortalException, SystemException {
+
+		List<DDMStructure> structures = ddmStructurePersistence.findByG_P(
+			groupId, structureId);
+
+		for (DDMStructure structure : structures) {
+			structureIds.add(structure.getStructureId());
+
+			getChildrenStructureIds(
+				structureIds, structure.getGroupId(),
+				structure.getParentStructureId());
+		}
+	}
+
+	protected List<Long> getChildrenStructureIds(long groupId, long structureId)
+		throws PortalException, SystemException {
+
+		List<Long> structureIds = new ArrayList<Long>();
+
+		getChildrenStructureIds(structureIds, groupId, structureId);
+
+		structureIds.add(0, structureId);
+
+		return structureIds;
 	}
 
 	protected void syncStructureTemplatesFields(DDMStructure structure)

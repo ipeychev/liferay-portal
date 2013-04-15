@@ -16,6 +16,7 @@ package com.liferay.portalweb.socialofficesite.home;
 
 import com.liferay.portalweb.portal.BaseTestSuite;
 import com.liferay.portalweb.socialofficesite.home.announcement.AnnouncementTestPlan;
+import com.liferay.portalweb.socialofficesite.home.bookmarks.BookmarksTestPlan;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
@@ -29,6 +30,8 @@ public class HomeTestPlan extends BaseTestSuite {
 		TestSuite testSuite = new TestSuite();
 
 		testSuite.addTest(AnnouncementTestPlan.suite());
+		testSuite.addTest(BookmarksTestPlan.suite());
+		//testSuite.addTest(HomeLARTestPlan.suite());
 
 		return testSuite;
 	}

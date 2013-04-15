@@ -458,6 +458,30 @@ public class JournalArticleIndexer extends BaseIndexer {
 		reindexArticles(companyId);
 	}
 
+	@Override
+	protected void doReindexDDMStructures(List<Long> ddmStructureIds)
+		throws Exception {
+
+		String[] ddmStructureKeys = new String[ddmStructureIds.size()];
+
+		for (int i = 0; i < ddmStructureIds.size(); i++) {
+			long structureId = ddmStructureIds.get(i);
+
+			DDMStructure ddmStructure =
+				DDMStructureLocalServiceUtil.getDDMStructure(structureId);
+
+			ddmStructureKeys[i] = ddmStructure.getStructureKey();
+		}
+
+		List<JournalArticle> articles =
+			JournalArticleLocalServiceUtil.getStructureArticles(
+				ddmStructureKeys);
+
+		for (JournalArticle article : articles) {
+			doReindex(article);
+		}
+	}
+
 	protected String extractContent(JournalArticle article, String languageId) {
 		String content = article.getContentByLocale(languageId);
 
