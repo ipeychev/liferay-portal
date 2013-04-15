@@ -33,6 +33,7 @@ import com.liferay.portlet.documentlibrary.model.impl.DLFileEntryImpl;
 import com.liferay.portlet.documentlibrary.model.impl.DLFileVersionImpl;
 import com.liferay.util.dao.orm.CustomSQLUtil;
 
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -57,6 +58,9 @@ public class DLFileEntryFinderImpl
 
 	public static final String FIND_BY_EXTRA_SETTINGS =
 		DLFileEntryFinder.class.getName() + ".findByExtraSettings";
+
+	public static final String FIND_BY_DDM_STRUCTURE_IDS =
+		DLFileEntryFinder.class.getName() + ".findByDDMStructureIds";
 
 	public static final String FIND_BY_MISVERSIONED =
 		DLFileEntryFinder.class.getName() + ".findByMisversioned";
@@ -184,6 +188,44 @@ public class DLFileEntryFinderImpl
 
 		throw new NoSuchFileEntryException(
 			"No DLFileEntry exists with the imageId " + imageId);
+	}
+
+	public List<DLFileEntry> findByDDMStructureIds(
+			long[] ddmStructureIds, int start, int end)
+		throws SystemException {
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			String sql = CustomSQLUtil.get(FIND_BY_DDM_STRUCTURE_IDS);
+
+			if ((ddmStructureIds == null) || (ddmStructureIds.length <= 0)) {
+				return Collections.emptyList();
+			}
+
+			sql = StringUtil.replace(
+				sql, "[$DDM_STRUCTURE_ID$]",
+				getDDMStructureIds(ddmStructureIds));
+
+			SQLQuery q = session.createSQLQuery(sql);
+
+			q.addEntity(DLFileEntryImpl.TABLE_NAME, DLFileEntryImpl.class);
+
+			QueryPos qPos = QueryPos.getInstance(q);
+
+			qPos.add(ddmStructureIds);
+
+			return (List<DLFileEntry>)QueryUtil.list(
+				q, getDialect(), start, end);
+		}
+		catch (Exception e) {
+			throw new SystemException(e);
+		}
+		finally {
+			closeSession(session);
+		}
 	}
 
 	public List<DLFileEntry> findByExtraSettings(int start, int end)
@@ -419,6 +461,25 @@ public class DLFileEntryFinderImpl
 		finally {
 			closeSession(session);
 		}
+	}
+
+	protected String getDDMStructureIds(long[] ddmStructureIds) {
+		StringBundler sb = new StringBundler(
+			(ddmStructureIds.length * 2 - 1) + 2);
+
+		sb.append(StringPool.OPEN_PARENTHESIS);
+
+		for (int i = 0; i < ddmStructureIds.length; i++) {
+			sb.append("DLFileEntryTypes_DDMStructures.structureId = ?");
+
+			if ((i + 1) != ddmStructureIds.length) {
+				sb.append(WHERE_OR);
+			}
+		}
+
+		sb.append(StringPool.CLOSE_PARENTHESIS);
+
+		return sb.toString();
 	}
 
 	protected String getFileEntriesSQL(

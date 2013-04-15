@@ -963,6 +963,22 @@ public interface PropsKeys {
 
 	public static final String INDEX_WITH_THREAD = "index.with.thread";
 
+	public static final String INTRABAND_WELDER_IMPL = "intraband.welder.impl";
+
+	public static final String INTRABAND_WELDER_SOCKET_BUFFER_SIZE = "intraband.welder.socket.buffer.size";
+
+	public static final String INTRABAND_WELDER_SOCKET_KEEP_ALIVE = "intraband.welder.socket.keep.alive";
+
+	public static final String INTRABAND_WELDER_SOCKET_REUSE_ADDRESS = "intraband.welder.socket.reuse.address";
+
+	public static final String INTRABAND_WELDER_SOCKET_SERVER_START_PORT = "intraband.welder.socket.server.start.port";
+
+	public static final String INTRABAND_WELDER_SOCKET_SO_LINGER = "intraband.welder.socket.so.linger";
+
+	public static final String INTRABAND_WELDER_SOCKET_SO_TIMEOUT = "intraband.welder.socket.so.timeout";
+
+	public static final String INTRABAND_WELDER_SOCKET_TCP_NO_DELAY = "intraband.welder.socket.tcp.no.delay";
+
 	public static final String INVITATION_EMAIL_MAX_RECIPIENTS = "invitation.email.max.recipients";
 
 	public static final String INVITATION_EMAIL_MESSAGE_BODY = "invitation.email.message.body";

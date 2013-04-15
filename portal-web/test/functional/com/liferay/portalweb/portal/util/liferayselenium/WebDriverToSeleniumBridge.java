@@ -1498,6 +1498,7 @@ public class WebDriverToSeleniumBridge
 	protected void initKeysSpecialChars() {
 		_keysSpecialChars.put("&", "7");
 		_keysSpecialChars.put("$", "4");
+		_keysSpecialChars.put("%", "5");
 		_keysSpecialChars.put("<", ",");
 		_keysSpecialChars.put(">", ".");
 		_keysSpecialChars.put("(", "9");

@@ -41,8 +41,10 @@ public class BlogsActivityInterpreter extends BaseSocialActivityInterpreter {
 	}
 
 	@Override
-	protected String getPath(SocialActivity activity) {
-		return "/blogs/find_entry?entryId=";
+	protected String getPath(
+		SocialActivity activity, ServiceContext serviceContext) {
+
+		return "/blogs/find_entry?entryId=" + activity.getClassPK();
 	}
 
 	@Override

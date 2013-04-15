@@ -49,7 +49,7 @@ import javax.portlet.PortletPreferences;
  */
 public class MBPortletDataHandler extends BasePortletDataHandler {
 
-	public static final String NAMESPACE = "message_board";
+	public static final String NAMESPACE = "message_boards";
 
 	public MBPortletDataHandler() {
 		setAlwaysExportable(true);

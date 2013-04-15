@@ -434,6 +434,24 @@ public abstract class BaseIndexer implements Indexer {
 		}
 	}
 
+	public void reindexDDMStructures(List<Long> ddmStructureIds)
+		throws SearchException {
+
+		try {
+			if (SearchEngineUtil.isIndexReadOnly() || !isIndexerEnabled()) {
+				return;
+			}
+
+			doReindexDDMStructures(ddmStructureIds);
+		}
+		catch (SearchException se) {
+			throw se;
+		}
+		catch (Exception e) {
+			throw new SearchException(e);
+		}
+	}
+
 	public Hits search(SearchContext searchContext) throws SearchException {
 		try {
 			searchContext.setSearchEngineId(getSearchEngineId());
@@ -1230,6 +1248,10 @@ public abstract class BaseIndexer implements Indexer {
 		throws Exception;
 
 	protected abstract void doReindex(String[] ids) throws Exception;
+
+	protected void doReindexDDMStructures(List<Long> structureIds)
+		throws Exception {
+	}
 
 	protected Hits filterSearch(
 		Hits hits, PermissionChecker permissionChecker,

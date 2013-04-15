@@ -47,8 +47,10 @@ public class BookmarksEntryActivityInterpreter
 	}
 
 	@Override
-	protected String getPath(SocialActivity activity) {
-		return "/bookmarks/find_entry?entryId=";
+	protected String getPath(
+		SocialActivity activity, ServiceContext serviceContext) {
+
+		return "/bookmarks/find_entry?entryId=" + activity.getClassPK();
 	}
 
 	@Override

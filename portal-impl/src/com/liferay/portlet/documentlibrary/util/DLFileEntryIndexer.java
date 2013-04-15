@@ -520,6 +520,19 @@ public class DLFileEntryIndexer extends BaseIndexer {
 	}
 
 	@Override
+	protected void doReindexDDMStructures(List<Long> ddmStructureIds)
+		throws Exception {
+
+		List<DLFileEntry> dlFileEntries =
+			DLFileEntryLocalServiceUtil.getDDMStructureFileEntries(
+				ArrayUtil.toLongArray(ddmStructureIds));
+
+		for (DLFileEntry dlFileEntry : dlFileEntries) {
+			doReindex(dlFileEntry);
+		}
+	}
+
+	@Override
 	protected String getPortletId(SearchContext searchContext) {
 		return PORTLET_ID;
 	}
