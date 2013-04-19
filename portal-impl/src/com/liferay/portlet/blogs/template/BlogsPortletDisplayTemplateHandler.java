@@ -22,6 +22,8 @@ import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.PortletKeys;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.portlet.blogs.model.BlogsEntry;
+import com.liferay.portlet.blogs.service.BlogsEntryLocalService;
+import com.liferay.portlet.blogs.service.BlogsEntryService;
 import com.liferay.portlet.portletdisplaytemplate.util.PortletDisplayTemplateConstants;
 
 import java.util.List;
@@ -66,6 +68,18 @@ public class BlogsPortletDisplayTemplateHandler
 		templateVariableGroup.addCollectionVariable(
 			"blog-entries", List.class, PortletDisplayTemplateConstants.ENTRIES,
 			"blog-entry", BlogsEntry.class, "curBlogEntry");
+
+		TemplateVariableGroup blogServicesTemplateVariableGroup =
+			new TemplateVariableGroup("blog-services");
+
+		blogServicesTemplateVariableGroup.setAutocompleteEnabled(false);
+
+		blogServicesTemplateVariableGroup.addServiceLocatorVariables(
+			BlogsEntryLocalService.class, BlogsEntryService.class);
+
+		templateVariableGroups.put(
+			blogServicesTemplateVariableGroup.getLabel(),
+			blogServicesTemplateVariableGroup);
 
 		return templateVariableGroups;
 	}

@@ -22,6 +22,15 @@ import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.PortletKeys;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.portlet.asset.model.AssetEntry;
+import com.liferay.portlet.asset.service.AssetCategoryLocalService;
+import com.liferay.portlet.asset.service.AssetCategoryService;
+import com.liferay.portlet.asset.service.AssetEntryLocalService;
+import com.liferay.portlet.asset.service.AssetEntryService;
+import com.liferay.portlet.asset.service.AssetTagLocalService;
+import com.liferay.portlet.asset.service.AssetTagService;
+import com.liferay.portlet.asset.service.AssetTagStatsLocalService;
+import com.liferay.portlet.asset.service.AssetVocabularyLocalService;
+import com.liferay.portlet.asset.service.AssetVocabularyService;
 import com.liferay.portlet.assetpublisher.util.AssetPublisherHelper;
 import com.liferay.portlet.portletdisplaytemplate.util.PortletDisplayTemplateConstants;
 
@@ -81,6 +90,22 @@ public class AssetPublisherPortletDisplayTemplateHandler
 		fieldsTemplateVariableGroup.addVariable(
 			"asset-entry", AssetEntry.class,
 			PortletDisplayTemplateConstants.ENTRY);
+
+		TemplateVariableGroup assetServicesTemplateVariableGroup =
+			new TemplateVariableGroup("asset-services");
+
+		assetServicesTemplateVariableGroup.setAutocompleteEnabled(false);
+
+		assetServicesTemplateVariableGroup.addServiceLocatorVariables(
+			AssetEntryLocalService.class, AssetEntryService.class,
+			AssetVocabularyLocalService.class, AssetVocabularyService.class,
+			AssetCategoryLocalService.class, AssetCategoryService.class,
+			AssetTagLocalService.class, AssetTagService.class,
+			AssetTagStatsLocalService.class);
+
+		templateVariableGroups.put(
+			assetServicesTemplateVariableGroup.getLabel(),
+			assetServicesTemplateVariableGroup);
 
 		return templateVariableGroups;
 	}

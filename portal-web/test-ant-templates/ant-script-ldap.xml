@@ -18,6 +18,7 @@
 
 		<antcall target="run-ldap-tomcat">
 			<param name="test.name" value="${test.ant.script.suite}" />
+			<param name="test.selenium.implementation" value="webdriver" />
 		</antcall>
 	</target>
 </project>

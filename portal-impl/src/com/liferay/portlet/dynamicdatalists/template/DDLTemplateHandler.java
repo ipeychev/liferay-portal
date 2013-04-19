@@ -15,13 +15,23 @@
 package com.liferay.portlet.dynamicdatalists.template;
 
 import com.liferay.portal.kernel.language.LanguageUtil;
+import com.liferay.portal.kernel.template.TemplateVariableGroup;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.PortletKeys;
 import com.liferay.portlet.ddm.template.BaseDDMTemplateHandler;
 import com.liferay.portlet.dynamicdatalists.model.DDLRecordSet;
+import com.liferay.portlet.dynamicdatalists.service.DDLRecordLocalService;
+import com.liferay.portlet.dynamicdatalists.service.DDLRecordService;
+import com.liferay.portlet.dynamicdatalists.service.DDLRecordSetLocalService;
+import com.liferay.portlet.dynamicdatalists.service.DDLRecordSetService;
+import com.liferay.portlet.dynamicdatamapping.service.DDMStructureLocalService;
+import com.liferay.portlet.dynamicdatamapping.service.DDMStructureService;
+import com.liferay.portlet.dynamicdatamapping.service.DDMTemplateLocalService;
+import com.liferay.portlet.dynamicdatamapping.service.DDMTemplateService;
 
 import java.util.Locale;
+import java.util.Map;
 
 /**
  * @author Jorge Ferrer
@@ -42,6 +52,32 @@ public class DDLTemplateHandler extends BaseDDMTemplateHandler {
 
 	public String getResourceName() {
 		return "com.liferay.portlet.dynamicdatalists";
+	}
+
+	@Override
+	public Map<String, TemplateVariableGroup> getTemplateVariableGroups(
+			long classPK, Locale locale)
+		throws Exception {
+
+		Map<String, TemplateVariableGroup> templateVariableGroups =
+			super.getTemplateVariableGroups(classPK, locale);
+
+		TemplateVariableGroup ddlServicesTemplateVariableGroup =
+			new TemplateVariableGroup("data-list-services");
+
+		ddlServicesTemplateVariableGroup.setAutocompleteEnabled(false);
+
+		ddlServicesTemplateVariableGroup.addServiceLocatorVariables(
+			DDLRecordLocalService.class, DDLRecordService.class,
+			DDLRecordSetLocalService.class, DDLRecordSetService.class,
+			DDMStructureLocalService.class, DDMStructureService.class,
+			DDMTemplateLocalService.class, DDMTemplateService.class);
+
+		templateVariableGroups.put(
+			ddlServicesTemplateVariableGroup.getLabel(),
+			ddlServicesTemplateVariableGroup);
+
+		return templateVariableGroups;
 	}
 
 }

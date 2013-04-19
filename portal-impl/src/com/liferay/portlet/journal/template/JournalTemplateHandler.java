@@ -15,13 +15,21 @@
 package com.liferay.portlet.journal.template;
 
 import com.liferay.portal.kernel.language.LanguageUtil;
+import com.liferay.portal.kernel.template.TemplateVariableGroup;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.PortletKeys;
 import com.liferay.portlet.ddm.template.BaseDDMTemplateHandler;
+import com.liferay.portlet.dynamicdatamapping.service.DDMStructureLocalService;
+import com.liferay.portlet.dynamicdatamapping.service.DDMStructureService;
+import com.liferay.portlet.dynamicdatamapping.service.DDMTemplateLocalService;
+import com.liferay.portlet.dynamicdatamapping.service.DDMTemplateService;
 import com.liferay.portlet.journal.model.JournalArticle;
+import com.liferay.portlet.journal.service.JournalArticleLocalService;
+import com.liferay.portlet.journal.service.JournalArticleService;
 
 import java.util.Locale;
+import java.util.Map;
 
 /**
  * @author Jorge Ferrer
@@ -42,6 +50,31 @@ public class JournalTemplateHandler extends BaseDDMTemplateHandler {
 
 	public String getResourceName() {
 		return "com.liferay.portlet.journal";
+	}
+
+	@Override
+	public Map<String, TemplateVariableGroup> getTemplateVariableGroups(
+			long classPK, Locale locale)
+		throws Exception {
+
+		Map<String, TemplateVariableGroup> templateVariableGroups =
+			super.getTemplateVariableGroups(classPK, locale);
+
+		TemplateVariableGroup journalServicesTemplateVariableGroup =
+			new TemplateVariableGroup("web-content-services");
+
+		journalServicesTemplateVariableGroup.setAutocompleteEnabled(false);
+
+		journalServicesTemplateVariableGroup.addServiceLocatorVariables(
+			JournalArticleLocalService.class, JournalArticleService.class,
+			DDMStructureLocalService.class, DDMStructureService.class,
+			DDMTemplateLocalService.class, DDMTemplateService.class);
+
+		templateVariableGroups.put(
+			journalServicesTemplateVariableGroup.getLabel(),
+			journalServicesTemplateVariableGroup);
+
+		return templateVariableGroups;
 	}
 
 }

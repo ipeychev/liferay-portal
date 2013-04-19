@@ -14,6 +14,8 @@
 
 package com.liferay.httpservice.internal.definition;
 
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.DocumentException;
@@ -47,8 +49,8 @@ public class WebXMLDefinitionLoader {
 	}
 
 	public WebXMLDefinition loadWebXML(Bundle bundle)
-		throws ClassNotFoundException, DocumentException,
-			   IllegalAccessException, InstantiationException {
+		throws DocumentException, IllegalAccessException,
+			   InstantiationException {
 
 		WebXMLDefinition webXML = new WebXMLDefinition();
 
@@ -100,8 +102,7 @@ public class WebXMLDefinitionLoader {
 
 	protected void readFilters(
 			Bundle bundle, Element rootElement, WebXMLDefinition webXML)
-		throws ClassNotFoundException, IllegalAccessException,
-		   	   InstantiationException {
+		throws IllegalAccessException, InstantiationException {
 
 		List<Element> filterElements = rootElement.elements("filter");
 
@@ -110,9 +111,18 @@ public class WebXMLDefinitionLoader {
 
 			String filterClassName = filterElement.elementText("filter-class");
 
-			Class<?> filterClass = bundle.loadClass(filterClassName);
+			Class<?> clazz = null;
 
-			Filter filter = (Filter)filterClass.newInstance();
+			try {
+				clazz = bundle.loadClass(filterClassName);
+			}
+			catch (Exception e) {
+				_log.error("Unable to load filter " + filterClassName);
+
+				continue;
+			}
+
+			Filter filter = (Filter)clazz.newInstance();
 
 			filterDefinition.setFilter(filter);
 
@@ -150,8 +160,7 @@ public class WebXMLDefinitionLoader {
 
 	protected void readListeners(
 			Bundle bundle, Element rootElement, WebXMLDefinition webXML)
-		throws ClassNotFoundException, IllegalAccessException,
-			   InstantiationException {
+		throws IllegalAccessException, InstantiationException {
 
 		List<Element> listenerElements = rootElement.elements("listener");
 
@@ -161,7 +170,16 @@ public class WebXMLDefinitionLoader {
 			String listenerClassName = listenerElement.elementText(
 				"listener-class");
 
-			Class<?> clazz = bundle.loadClass(listenerClassName);
+			Class<?> clazz = null;
+
+			try {
+				clazz = bundle.loadClass(listenerClassName);
+			}
+			catch (Exception e) {
+				_log.error("Unable to load listener " + listenerClassName);
+
+				continue;
+			}
 
 			Object listener = clazz.newInstance();
 
@@ -173,8 +191,7 @@ public class WebXMLDefinitionLoader {
 
 	protected void readServlets(
 			Bundle bundle, Element rootElement, WebXMLDefinition webXML)
-		throws ClassNotFoundException, IllegalAccessException,
-			   InstantiationException {
+		throws IllegalAccessException, InstantiationException {
 
 		List<Element> servletElements = rootElement.elements("servlet");
 
@@ -184,7 +201,16 @@ public class WebXMLDefinitionLoader {
 			String servletClassName = servletElement.elementText(
 				"servlet-class");
 
-			Class<?> servletClass = bundle.loadClass(servletClassName);
+			Class<?> servletClass = null;;
+
+			try {
+				servletClass = bundle.loadClass(servletClassName);
+			}
+			catch (Exception e) {
+				_log.error("Unable to load servlet " + servletClassName);
+
+				continue;
+			}
 
 			Servlet servlet = (Servlet)servletClass.newInstance();
 
@@ -223,6 +249,9 @@ public class WebXMLDefinitionLoader {
 	}
 
 	private static final String _SLASH_STAR = "/*";
+
+	private static Log _log = LogFactoryUtil.getLog(
+		WebXMLDefinitionLoader.class);
 
 	private Element _defaultWebXmlRootElement;
 

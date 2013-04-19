@@ -282,6 +282,7 @@
 		<exception>PageContent</exception>
 		<exception>PageTitle</exception>
 		<exception>PageVersion</exception>
+		<exception>RequiredNode</exception>
 		<exception>WikiFormat</exception>
 	</exceptions>
 </service-builder>

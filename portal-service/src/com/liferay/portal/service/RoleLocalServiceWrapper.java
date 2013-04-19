@@ -987,8 +987,8 @@ public class RoleLocalServiceWrapper implements RoleLocalService,
 	search
 	* @return <code>true</code> if the user is associated with the regular
 	role; <code>false</code> otherwise
-	* @throws PortalException if a role with the name could not be found in the
-	company or if a default user for the company could not be found
+	* @throws PortalException if a default user for the company could not be
+	found
 	* @throws SystemException if a system exception occurred
 	*/
 	public boolean hasUserRole(long userId, long companyId,

@@ -5,6 +5,11 @@
 />
 
 <@insertGroup
+	_group = dataFactory.globalGroup
+	_publicPageCount = 1
+/>
+
+<@insertGroup
 	_group = dataFactory.guestGroup
 	_publicPageCount = 1
 />

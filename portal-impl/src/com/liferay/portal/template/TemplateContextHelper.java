@@ -52,6 +52,14 @@ import com.liferay.portal.kernel.util.Validator_IW;
 import com.liferay.portal.kernel.xml.SAXReader;
 import com.liferay.portal.model.Layout;
 import com.liferay.portal.model.Theme;
+import com.liferay.portal.service.GroupLocalService;
+import com.liferay.portal.service.GroupService;
+import com.liferay.portal.service.LayoutLocalService;
+import com.liferay.portal.service.LayoutService;
+import com.liferay.portal.service.OrganizationLocalService;
+import com.liferay.portal.service.OrganizationService;
+import com.liferay.portal.service.UserLocalService;
+import com.liferay.portal.service.UserService;
 import com.liferay.portal.service.permission.AccountPermissionUtil;
 import com.liferay.portal.service.permission.CommonPermissionUtil;
 import com.liferay.portal.service.permission.GroupPermissionUtil;
@@ -108,6 +116,7 @@ import org.apache.struts.tiles.ComponentContext;
 
 /**
  * @author Tina Tian
+ * @author Jorge Ferrer
  */
 public class TemplateContextHelper {
 
@@ -130,6 +139,21 @@ public class TemplateContextHelper {
 
 		utilTemplateVariableGroup.addVariable(
 			"http-request", HttpServletRequest.class, "request");
+
+		TemplateVariableGroup portalServicesTemplateVariableGroup =
+			new TemplateVariableGroup("portal-services");
+
+		portalServicesTemplateVariableGroup.setAutocompleteEnabled(false);
+
+		portalServicesTemplateVariableGroup.addServiceLocatorVariables(
+			GroupLocalService.class, GroupService.class,
+			LayoutLocalService.class, LayoutService.class,
+			OrganizationLocalService.class, OrganizationService.class,
+			UserLocalService.class, UserService.class);
+
+		templateVariableGroups.put(
+			portalServicesTemplateVariableGroup.getLabel(),
+			portalServicesTemplateVariableGroup);
 
 		return templateVariableGroups;
 	}

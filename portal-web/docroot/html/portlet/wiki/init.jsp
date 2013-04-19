@@ -61,6 +61,7 @@ page import="com.liferay.portlet.wiki.NodeNameException" %><%@
 page import="com.liferay.portlet.wiki.PageContentException" %><%@
 page import="com.liferay.portlet.wiki.PageTitleException" %><%@
 page import="com.liferay.portlet.wiki.PageVersionException" %><%@
+page import="com.liferay.portlet.wiki.RequiredNodeException" %><%@
 page import="com.liferay.portlet.wiki.WikiFormatException" %><%@
 page import="com.liferay.portlet.wiki.importers.WikiImporterKeys" %><%@
 page import="com.liferay.portlet.wiki.model.WikiNode" %><%@

@@ -23,6 +23,10 @@ import com.liferay.portal.util.PortletKeys;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.portlet.portletdisplaytemplate.util.PortletDisplayTemplateConstants;
 import com.liferay.portlet.wiki.model.WikiPage;
+import com.liferay.portlet.wiki.service.WikiNodeLocalService;
+import com.liferay.portlet.wiki.service.WikiNodeService;
+import com.liferay.portlet.wiki.service.WikiPageLocalService;
+import com.liferay.portlet.wiki.service.WikiPageService;
 
 import java.util.Locale;
 import java.util.Map;
@@ -66,6 +70,19 @@ public class WikiPortletDisplayTemplateHandler
 			"wiki-page", WikiPage.class, PortletDisplayTemplateConstants.ENTRY);
 		fieldsTemplateVariableGroup.addVariable(
 			"wiki-page-content", String.class, "formattedContent");
+
+		TemplateVariableGroup wikiServicesTemplateVariableGroup =
+			new TemplateVariableGroup("wiki-services");
+
+		wikiServicesTemplateVariableGroup.setAutocompleteEnabled(false);
+
+		wikiServicesTemplateVariableGroup.addServiceLocatorVariables(
+			WikiPageLocalService.class, WikiPageService.class,
+			WikiNodeLocalService.class, WikiNodeService.class);
+
+		templateVariableGroups.put(
+			wikiServicesTemplateVariableGroup.getLabel(),
+			wikiServicesTemplateVariableGroup);
 
 		return templateVariableGroups;
 	}
