@@ -271,7 +271,7 @@ String title = ddmDisplay.getViewTemplatesTitle(structure, controlPanel, locale)
 	if (buttons.size()) {
 		var toggleDisabled = A.bind('toggleDisabled', Liferay.Util, ':button');
 
-		var resultsGrid = A.one('.results-grid');
+		var resultsGrid = A.one('.aui-searchcontainer-content');
 
 		if (resultsGrid) {
 			resultsGrid.delegate(
