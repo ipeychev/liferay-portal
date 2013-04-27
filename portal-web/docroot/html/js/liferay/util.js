@@ -1789,11 +1789,21 @@
 
 			if (trigger) {
 				var hiddenClass = 'controls-hidden';
+				var iconHiddenClass = 'aui-icon-remove';
+				var iconVisibleClass = 'aui-icon-ok';
 				var visibleClass = 'controls-visible';
 				var currentClass = visibleClass;
+				var currentIconClass = iconVisibleClass;
 
 				if (Liferay._editControlsState != 'visible') {
 					currentClass = hiddenClass;
+					currentIconClass = iconHiddenClass;
+				}
+
+				var icon = trigger.one('.controls-state-icon');
+
+				if (icon) {
+					icon.addClass(currentIconClass);
 				}
 
 				docBody.addClass(currentClass);
@@ -1801,6 +1811,10 @@
 				trigger.on(
 					EVENT_CLICK,
 					function(event) {
+						if (icon) {
+							icon.toggleClass(iconVisibleClass).toggleClass(iconHiddenClass);
+						}
+
 						docBody.toggleClass(visibleClass).toggleClass(hiddenClass);
 
 						Liferay._editControlsState = (docBody.hasClass(visibleClass) ? 'visible' : 'hidden');
