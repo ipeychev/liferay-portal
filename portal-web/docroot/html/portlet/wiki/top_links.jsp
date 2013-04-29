@@ -92,99 +92,76 @@ if (categoryId > 0) {
 			</ul>
 		</c:if>
 
-		<div class="top-links">
-			<ul class="top-links-navigation">
-				<li class="top-link first">
+		<aui:nav-bar>
+			<aui:nav cssClass="aui-nav-pills">
+				<%
+				PortletURL frontPageURL = PortletURLUtil.clone(portletURL, renderResponse);
 
-					<%
-					PortletURL frontPageURL = PortletURLUtil.clone(portletURL, renderResponse);
+				String label = WikiPageConstants.FRONT_PAGE;
+				boolean selected = (Validator.isNull(strutsAction) || (wikiPage != null) && wikiPage.getTitle().equals(label));
 
-					frontPageURL.setParameter("struts_action", "/wiki/view");
-					frontPageURL.setParameter("title", WikiPageConstants.FRONT_PAGE);
-					frontPageURL.setParameter("tag", StringPool.BLANK);
-					%>
+				frontPageURL.setParameter("struts_action", "/wiki/view");
+				frontPageURL.setParameter("title", WikiPageConstants.FRONT_PAGE);
+				frontPageURL.setParameter("tag", StringPool.BLANK);
+				%>
 
-					<liferay-ui:icon
-						image="../aui/home"
-						label="<%= true %>"
-						message="<%= WikiPageConstants.FRONT_PAGE %>"
-						url="<%= Validator.isNull(strutsAction) || ((wikiPage != null) && wikiPage.getTitle().equals(WikiPageConstants.FRONT_PAGE)) ? StringPool.BLANK : frontPageURL.toString() %>"
-					/>
-				</li>
+				<aui:nav-item cssClass='<%= selected ? "aui-active" : StringPool.BLANK %>' href="<%= frontPageURL.toString() %>" label="<%= label %>" selected="<%= selected %>" />
 
-				<li class="top-link">
+				<%
+				label = "recent-changes";
+				selected = strutsAction.equals(strutsPath + "/view_recent_changes");
 
-					<%
-					portletURL.setParameter("struts_action", "/wiki/view_recent_changes");
-					%>
+				portletURL.setParameter("struts_action", "/wiki/view_recent_changes");
+				%>
 
-					<liferay-ui:icon
-						image="../aui/clock"
-						label="<%= true %>"
-						message="recent-changes"
-						url='<%= strutsAction.equals(strutsPath + "/view_recent_changes") ? StringPool.BLANK : portletURL.toString() %>'
-					/>
-				</li>
+				<aui:nav-item cssClass='<%= selected ? "aui-active" : StringPool.BLANK %>' href="<%= portletURL.toString() %>" label="<%= label %>" selected="<%= selected %>" />
 
-				<li class="top-link">
+				<%
+				label = "all-pages";
+				selected = strutsAction.equals(strutsPath + "/view_all_pages");
 
-					<%
-					portletURL.setParameter("struts_action", "/wiki/view_all_pages");
-					%>
+				portletURL.setParameter("struts_action", "/wiki/view_all_pages");
+				%>
 
-					<liferay-ui:icon
-						image="../aui/document" label="<%= true %>"
-						message="all-pages" url='<%= strutsAction.equals(strutsPath + "/view_all_pages") ? StringPool.BLANK : portletURL.toString() %>'
-					/>
-				</li>
+				<aui:nav-item cssClass='<%= selected ? "aui-active" : StringPool.BLANK %>' href="<%= portletURL.toString() %>" label="<%= label %>" selected="<%= selected %>" />
 
-				<li class="top-link">
+				<%
+				label = "orphan-pages";
+				selected = strutsAction.equals(strutsPath + "/view_orphan_pages");
 
-					<%
-					portletURL.setParameter("struts_action", "/wiki/view_orphan_pages");
-					%>
+				portletURL.setParameter("struts_action", "/wiki/view_orphan_pages");
+				%>
 
-					<liferay-ui:icon
-						image="../aui/document-b"
-						label="<%= true %>"
-						message="orphan-pages"
-						url='<%= strutsAction.equals(strutsPath + "/view_orphan_pages") ? StringPool.BLANK : portletURL.toString() %>'
-					/>
-				</li>
+				<aui:nav-item cssClass='<%= selected ? "aui-active" : StringPool.BLANK %>' href="<%= portletURL.toString() %>" label="<%= label %>" selected="<%= selected %>" />
 
-				<li class="top-link last">
+				<%
+				label = "draft-pages";
+				selected = strutsAction.equals(strutsPath + "/view_draft_pages");
 
-					<%
-					portletURL.setParameter("struts_action", "/wiki/view_draft_pages");
-					%>
+				portletURL.setParameter("struts_action", "/wiki/view_draft_pages");
+				%>
 
-					<liferay-ui:icon
-						image="../aui/document-b"
-						label="<%= true %>"
-						message="draft-pages"
-						url='<%= strutsAction.equals(strutsPath + "/view_draft_pages") ? StringPool.BLANK : portletURL.toString() %>'
-					/>
-				</li>
-			</ul>
+				<aui:nav-item cssClass='<%= selected ? "aui-active" : StringPool.BLANK %>' href="<%= portletURL.toString() %>" label="<%= label %>" selected="<%= selected %>" />
+			</aui:nav>
 
 			<liferay-portlet:renderURL varImpl="searchURL">
 				<portlet:param name="struts_action" value="/wiki/search" />
 			</liferay-portlet:renderURL>
 
-			<div class="page-search">
+			<div class="aui-form-search aui-pull-right">
 				<aui:form action="<%= searchURL %>" method="get" name="searchFm">
 					<liferay-portlet:renderURLParams varImpl="searchURL" />
 					<aui:input name="redirect" type="hidden" value="<%= currentURL %>" />
 					<aui:input name="nodeId" type="hidden" value="<%= node.getNodeId() %>" />
 
-					<span class="aui-form-search">
-						<aui:input inlineField="<%= true %>" label="" name="keywords" size="30" title="search-pages" type="text" value="<%= keywords %>" />
+					<div class="aui-input-append">
+						<aui:input cssClass="aui-search-query aui-span2" inlineField="<%= true %>" label="" name="keywords" placeholder="search-pages" size="30" title="search-pages" type="text" value="<%= keywords %>" />
 
-						<aui:button type="submit" value="search" />
-					</span>
+						<aui:button primary="<%= false %>" type="submit" value="search" />
+					</div>
 				</aui:form>
 			</div>
-		</div>
+		</aui:nav-bar>
 	</div>
 
 	<c:if test="<%= windowState.equals(WindowState.MAXIMIZED) %>">

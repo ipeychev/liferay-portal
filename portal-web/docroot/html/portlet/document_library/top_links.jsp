@@ -24,71 +24,46 @@
 
 		long folderId = GetterUtil.getLong((String)request.getAttribute("view.jsp-folderId"));
 
-		long defaultFolderId = GetterUtil.getLong((String)request.getAttribute("view.jsp-defaultFolderId"));
-
 		long repositoryId = GetterUtil.getLong((String)request.getAttribute("view.jsp-repositoryId"));
-
-		boolean viewFolder = GetterUtil.getBoolean((String)request.getAttribute("view.jsp-viewFolder"));
-
-		boolean useAssetEntryQuery = GetterUtil.getBoolean((String)request.getAttribute("view.jsp-useAssetEntryQuery"));
 		%>
 
-		<div class="top-links-container">
-			<div class="top-links">
+		<c:if test="<%= showTabs || showFoldersSearch %>">
+			<aui:nav-bar>
 				<c:if test="<%= showTabs %>">
-					<ul class="top-links-navigation">
-						<li class="top-link first">
+					<aui:nav cssClass="aui-nav-pills">
+						<%
+						PortletURL portletURL = renderResponse.createRenderURL();
 
-							<%
-							String homeMessage = "home";
-							String recentMessage = "recent";
-							String mineMessage = "mine";
+						String label = "home";
+						boolean selected = topLink.equals(label);
 
-							PortletURL portletURL = renderResponse.createRenderURL();
+						portletURL.setParameter("topLink", label);
+						portletURL.setParameter("categoryId", StringPool.BLANK);
+						portletURL.setParameter("tag", StringPool.BLANK);
+						%>
 
-							portletURL.setParameter("topLink", homeMessage);
-							portletURL.setParameter("categoryId", StringPool.BLANK);
-							portletURL.setParameter("tag", StringPool.BLANK);
-							%>
+						<aui:nav-item className='<%= selected ? "aui-active" : StringPool.BLANK %>' href="<%= portletURL.toString() %>" label="<%= label %>" selected="<%= selected %>" />
 
-							<liferay-ui:icon
-								image="../aui/home"
-								label="<%= true %>"
-								message="<%= homeMessage %>"
-								url="<%= (topLink.equals(homeMessage) && (folderId == defaultFolderId) && viewFolder && !useAssetEntryQuery) ? StringPool.BLANK : portletURL.toString() %>"
-							/>
-						</li>
+						<%
+						label = "recent";
+						selected = topLink.equals(label);
 
-						<li class="top-link <%= (themeDisplay.isSignedIn() ? StringPool.BLANK : " last") %>">
+						portletURL.setParameter("topLink", label);
+						%>
 
-							<%
-							portletURL.setParameter("topLink", recentMessage);
-							%>
-
-							<liferay-ui:icon
-								image="../aui/clock"
-								label="<%= true %>"
-								message="<%= recentMessage %>"
-								url="<%= (topLink.equals(recentMessage) && !useAssetEntryQuery) ? StringPool.BLANK : portletURL.toString() %>"
-							/>
-						</li>
+						<aui:nav-item className='<%= selected ? "aui-active" : StringPool.BLANK %>' href="<%= portletURL.toString() %>" label="<%= label %>" selected="<%= selected %>" />
 
 						<c:if test="<%= themeDisplay.isSignedIn() %>">
-							<li class="top-link last">
+							<%
+							label = "mine";
+							selected = topLink.equals(label);
 
-								<%
-								portletURL.setParameter("topLink", mineMessage);
-								%>
+							portletURL.setParameter("topLink", label);
+							%>
 
-								<liferay-ui:icon
-									image="../aui/person"
-									label="<%= true %>"
-									message="<%= mineMessage %>"
-									url="<%= (topLink.equals(mineMessage) && !useAssetEntryQuery) ? StringPool.BLANK : portletURL.toString() %>"
-								/>
-							</li>
+							<aui:nav-item className='<%= selected ? "aui-active" : StringPool.BLANK %>' href="<%= portletURL.toString() %>" label="<%= label %>" selected="<%= selected %>" />
 						</c:if>
-					</ul>
+					</aui:nav>
 				</c:if>
 
 				<c:if test="<%= showFoldersSearch %>">
@@ -96,7 +71,7 @@
 						<portlet:param name="struts_action" value="/document_library_display/search" />
 					</liferay-portlet:renderURL>
 
-					<div class="folder-search">
+					<div class="aui-form-search aui-pull-right">
 						<aui:form action="<%= searchURL %>" method="get" name="searchFm">
 							<liferay-portlet:renderURLParams varImpl="searchURL" />
 							<aui:input name="redirect" type="hidden" value="<%= currentURL %>" />
@@ -105,11 +80,11 @@
 							<aui:input name="breadcrumbsFolderId" type="hidden" value="<%= folderId %>" />
 							<aui:input name="searchFolderIds" type="hidden" value="<%= folderId %>" />
 
-							<span class="aui-form-search">
-								<aui:input id="keywords1" inlineField="<%= true %>" label="" name="keywords" size="30" title="search-documents" type="text" />
+							<div class="aui-input-append">
+								<aui:input cssClass="aui-search-query aui-span2" id="keywords1" inlineField="<%= true %>" label="" name="keywords" placeholder="search-documents" size="30" title="search-documents" type="text" />
 
-								<aui:button type="submit" value="search" />
-							</span>
+								<aui:button primary="<%= false %>" type="submit" value="search" />
+							</div>
 						</aui:form>
 					</div>
 
@@ -119,8 +94,8 @@
 						</aui:script>
 					</c:if>
 				</c:if>
-			</div>
-		</div>
+			</aui:nav-bar>
+		</c:if>
 	</c:when>
 	<c:when test="<%= (showTabs || showFoldersSearch) && portletName.equals(PortletKeys.DOCUMENT_LIBRARY_DISPLAY) %>">
 		<liferay-ui:header

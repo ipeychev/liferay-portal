@@ -380,6 +380,16 @@ body.portlet {
 	}
 }
 
+/* ---------- navbar form search ---------- */
+
+.aui-navbar .aui-navbar-inner .aui-form-search {
+	form {
+	}
+
+	.aui-input-append .aui-control-group {
+	}
+}
+
 .ie6, .ie7 {
 	.portlet-journal-content {
 		.icons-container {

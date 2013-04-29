@@ -632,6 +632,18 @@ body.portlet {
 	}
 }
 
+/* ---------- navbar form search ---------- */
+
+.aui-navbar .aui-navbar-inner .aui-form-search {
+	form {
+		margin: 5px 0 0 0;
+	}
+
+	.aui-input-append .aui-control-group {
+		margin-bottom: 0;
+	}
+}
+
 .ie {
 	.portlet-borderless-bar {
 		@include opacity(0.5);
