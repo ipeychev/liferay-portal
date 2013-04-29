@@ -41,31 +41,13 @@ request.setAttribute("view.jsp-viewCategory", Boolean.TRUE.toString());
 
 <liferay-ui:trash-undo portletURL="<%= undoTrashURL %>" />
 
-<liferay-ui:tabs
-	names="message-boards-home,recent-posts,statistics,banned-users"
-	url="<%= portletURL.toString() %>"
-/>
+<liferay-util:include page="/html/portlet/message_boards_admin/top_links.jsp" />
 
 <c:choose>
 	<c:when test='<%= tabs1.equals("message-boards-home") %>'>
 		<liferay-portlet:renderURL varImpl="searchURL">
 			<portlet:param name="struts_action" value="/message_boards/search" />
 		</liferay-portlet:renderURL>
-
-		<div class="category-search">
-			<aui:form action="<%= searchURL %>" method="get" name="searchFm">
-				<liferay-portlet:renderURLParams varImpl="searchURL" />
-				<aui:input name="redirect" type="hidden" value="<%= currentURL %>" />
-				<aui:input name="breadcrumbsCategoryId" type="hidden" value="<%= categoryId %>" />
-				<aui:input name="searchCategoryId" type="hidden" value="<%= categoryId %>" />
-
-				<span class="aui-form-search">
-					<aui:input id="keywords1" inlineField="<%= true %>" label="" name="keywords" size="30" title="search-messages" type="text" />
-
-					<aui:button type="submit" value="search" />
-				</span>
-			</aui:form>
-		</div>
 
 		<c:if test="<%= windowState.equals(WindowState.MAXIMIZED) && !themeDisplay.isFacebook() %>">
 			<aui:script>
