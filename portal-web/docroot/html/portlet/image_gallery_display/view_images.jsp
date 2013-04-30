@@ -253,7 +253,7 @@ embeddedPlayerURL.setParameter("struts_action", "/image_gallery_display/embedded
 embeddedPlayerURL.setWindowState(LiferayWindowState.POP_UP);
 %>
 
-<aui:script use="aui-image-viewer-gallery,aui-media-viewer-plugin">
+<aui:script use="aui-image-viewer-gallery,aui-image-viewer-media">
 	var viewportRegion = A.getDoc().get('viewportRegion');
 
 	var maxHeight = (viewportRegion.height / 2);
