@@ -124,7 +124,7 @@ YUI.add(
 					requires: [
 						'aui-dialog',
 						'aui-io-request',
-						'aui-tooltip',
+						'aui-tooltip-deprecated',
 						'autocomplete-base',
 						'event-mouseenter',
 						'liferay-dockbar',

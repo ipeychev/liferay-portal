@@ -171,6 +171,6 @@ AUI.add(
 	},
 	'',
 	{
-		requires: ['aui-tooltip', 'event-mouseenter', 'liferay-dockbar']
+		requires: ['aui-tooltip-deprecated', 'event-mouseenter', 'liferay-dockbar']
 	}
 );
