@@ -93,7 +93,8 @@ if (categoryId > 0) {
 		</c:if>
 
 		<aui:nav-bar>
-			<aui:nav cssClass="aui-nav-pills">
+			<aui:nav>
+
 				<%
 				PortletURL frontPageURL = PortletURLUtil.clone(portletURL, renderResponse);
 
@@ -148,18 +149,20 @@ if (categoryId > 0) {
 				<portlet:param name="struts_action" value="/wiki/search" />
 			</liferay-portlet:renderURL>
 
-			<div class="aui-form-search aui-pull-right">
-				<aui:form action="<%= searchURL %>" method="get" name="searchFm">
-					<liferay-portlet:renderURLParams varImpl="searchURL" />
-					<aui:input name="redirect" type="hidden" value="<%= currentURL %>" />
-					<aui:input name="nodeId" type="hidden" value="<%= node.getNodeId() %>" />
+			<div class="aui-navbar-search aui-pull-right">
+				<div class="aui-form-search">
+					<aui:form action="<%= searchURL %>" method="get" name="searchFm">
+						<liferay-portlet:renderURLParams varImpl="searchURL" />
+						<aui:input name="redirect" type="hidden" value="<%= currentURL %>" />
+						<aui:input name="nodeId" type="hidden" value="<%= node.getNodeId() %>" />
 
-					<div class="aui-input-append">
-						<aui:input cssClass="aui-search-query aui-span2" inlineField="<%= true %>" label="" name="keywords" placeholder="search-pages" size="30" title="search-pages" type="text" value="<%= keywords %>" />
+						<div class="aui-input-append">
+							<input class="aui-search-query aui-span9" id="<portlet:namespace/>keywords" name="<portlet:namespace/>keywords" placeholder="<liferay-ui:message key="keywords" />" type="text" value="<%= HtmlUtil.escapeAttribute(keywords) %>" />
 
-						<aui:button primary="<%= false %>" type="submit" value="search" />
-					</div>
-				</aui:form>
+							<aui:button primary="<%= false %>" type="submit" value="search" />
+						</div>
+					</aui:form>
+				</div>
 			</div>
 		</aui:nav-bar>
 	</div>

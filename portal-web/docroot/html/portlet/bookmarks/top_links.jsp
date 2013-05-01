@@ -28,7 +28,8 @@ portletURL.setParameter("tag", StringPool.BLANK);
 %>
 
 <aui:nav-bar>
-	<aui:nav cssClass="aui-nav-pills">
+	<aui:nav>
+
 		<%
 		String label = "home";
 		boolean selected = topLink.equals(label);
@@ -48,6 +49,7 @@ portletURL.setParameter("tag", StringPool.BLANK);
 		<aui:nav-item cssClass='<%= selected ? "aui-active" : StringPool.BLANK %>' href="<%= portletURL.toString() %>" label="<%= label %>" selected="<%= selected %>" />
 
 		<c:if test="<%= themeDisplay.isSignedIn() %>">
+
 			<%
 			label = "mine";
 			selected = topLink.equals(label);
@@ -64,19 +66,21 @@ portletURL.setParameter("tag", StringPool.BLANK);
 			<portlet:param name="struts_action" value="/bookmarks/search" />
 		</liferay-portlet:renderURL>
 
-		<div class="aui-form-search aui-pull-right">
-			<aui:form action="<%= searchURL %>" method="get" name="searchFm">
-				<liferay-portlet:renderURLParams varImpl="searchURL" />
-				<aui:input name="redirect" type="hidden" value="<%= currentURL %>" />
-				<aui:input name="breadcrumbsFolderId" type="hidden" value="<%= folderId %>" />
-				<aui:input name="searchFolderIds" type="hidden" value="<%= folderId %>" />
+		<div class="aui-navbar-search aui-pull-right">
+			<div class="aui-form-search">
+				<aui:form action="<%= searchURL %>" method="get" name="searchFm">
+					<liferay-portlet:renderURLParams varImpl="searchURL" />
+					<aui:input name="redirect" type="hidden" value="<%= currentURL %>" />
+					<aui:input name="breadcrumbsFolderId" type="hidden" value="<%= folderId %>" />
+					<aui:input name="searchFolderIds" type="hidden" value="<%= folderId %>" />
 
-				<div class="aui-input-append">
-					<aui:input cssClass="aui-search-query aui-span2" id="keywords1" inlineField="<%= true %>" label="" name="keywords" placeholder="search-messages" size="30" title="search-bookmarks" type="text"/>
+					<div class="aui-input-append">
+						<input class="aui-search-query aui-span9" id="<portlet:namespace/>keywords1" name="<portlet:namespace/>keywords" placeholder="<liferay-ui:message key="keywords" />" type="text" />
 
-					<aui:button primary="<%= false %>" type="submit" value="search" />
-				</div>
-			</aui:form>
+						<aui:button primary="<%= false %>" type="submit" value="search" />
+					</div>
+				</aui:form>
+			</div>
 		</div>
 	</c:if>
 </aui:nav-bar>
