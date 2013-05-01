@@ -128,7 +128,6 @@ YUI.add(
 						'autocomplete-base',
 						'event-mouseenter',
 						'liferay-dockbar',
-						'liferay-layout-configuration',
 						'liferay-portlet-base'
 					]
 				},
@@ -253,14 +252,6 @@ YUI.add(
 					requires: [
 						'aui-sortable-layout',
 						'dd'
-					]
-				},
-				'liferay-layout-configuration': {
-					fullpath: javaScriptRootPath + '/liferay/layout_configuration.js',
-					requires: [
-						'aui-live-search-deprecated',
-						'dd',
-						'liferay-layout'
 					]
 				},
 				'liferay-layout-freeform': {
