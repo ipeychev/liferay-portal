@@ -122,13 +122,44 @@ YUI.add(
 				'liferay-dockbar-add-content': {
 					fullpath: javaScriptRootPath + '/liferay/dockbar_add_content.js',
 					requires: [
-						'aui-dialog',
 						'aui-io-request',
 						'aui-tooltip-deprecated',
 						'autocomplete-base',
 						'event-mouseenter',
 						'liferay-dockbar',
+						'liferay-dockbar-add-content-content-preview',
+						'liferay-dockbar-add-content-drag-drop',
+						'liferay-dockbar-add-content-search',
 						'liferay-portlet-base'
+					]
+				},
+				'liferay-dockbar-add-content-preview': {
+					fullpath: javaScriptRootPath + '/liferay/dockbar_add_content_preview.js',
+					requires: [
+						'aui-io-request',
+						'aui-tooltip-deprecated',
+						'event-mouseenter'
+					]
+				},
+				'liferay-dockbar-add-content-drag-drop': {
+					fullpath: javaScriptRootPath + '/liferay/dockbar_add_content_drag_drop.js',
+					requires: [
+						'aui-base',
+						'dd',
+						'liferay-dockbar',
+						'liferay-layout',
+						'liferay-layout-column',
+						'liferay-layout-freeform',
+						'liferay-portlet-base'
+					]
+				},
+				'liferay-dockbar-add-content-search': {
+					fullpath: javaScriptRootPath + '/liferay/dockbar_add_content_search.js',
+					requires: [
+						'aui-base',
+						'autocomplete-base',
+						'autocomplete-filters',
+						'liferay-dockbar'
 					]
 				},
 				'liferay-dockbar-underlay': {
