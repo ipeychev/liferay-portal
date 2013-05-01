@@ -31,7 +31,6 @@ page import="com.liferay.portal.kernel.search.SearchResultUtil" %><%@
 page import="com.liferay.portal.kernel.search.Summary" %><%@
 page import="com.liferay.portal.kernel.template.TemplateHandler" %><%@
 page import="com.liferay.portal.kernel.template.TemplateHandlerRegistryUtil" %><%@
-page import="com.liferay.portal.kernel.util.StringPool" %><%@
 page import="com.liferay.portal.portletfilerepository.PortletFileRepositoryUtil" %><%@
 page import="com.liferay.portlet.asset.model.AssetEntry" %><%@
 page import="com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil" %><%@

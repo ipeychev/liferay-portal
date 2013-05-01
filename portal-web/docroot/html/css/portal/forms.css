@@ -1,3 +1,7 @@
+.aui-control-group-inline {
+	display: inline-block;
+}
+
 .lfr-input-resource {
 	width: @model_hints_constants_text_display_width@px;
 }

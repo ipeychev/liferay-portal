@@ -31,7 +31,8 @@ portletURL.setParameter("struts_action", "/message_boards/view");
 %>
 
 <aui:nav-bar>
-	<aui:nav cssClass="aui-nav-pills">
+	<aui:nav>
+
 		<%
 		String label = "message-boards-home";
 
@@ -50,6 +51,7 @@ portletURL.setParameter("struts_action", "/message_boards/view");
 		<aui:nav-item cssClass='<%= topLink.equals(label) ? "aui-active" : StringPool.BLANK %>' href="portletURL.toString()" label="<%= label %>" selected="<%= topLink.equals(label) %>" />
 
 		<c:if test="<%= themeDisplay.isSignedIn() %>">
+
 			<%
 			label = "my-posts";
 
@@ -59,6 +61,7 @@ portletURL.setParameter("struts_action", "/message_boards/view");
 			<aui:nav-item cssClass='<%= topLink.equals(label) ? "aui-active" : StringPool.BLANK %>' href="portletURL.toString()" label="<%= label %>" selected="<%= topLink.equals(label) %>" />
 
 			<c:if test="<%= MBUtil.getEmailMessageAddedEnabled(preferences) || MBUtil.getEmailMessageUpdatedEnabled(preferences) %>">
+
 				<%
 				label = "my-subscriptions";
 
@@ -78,6 +81,7 @@ portletURL.setParameter("struts_action", "/message_boards/view");
 		<aui:nav-item cssClass='<%= topLink.equals(label) ? "aui-active" : StringPool.BLANK %>' href="portletURL.toString()" label="<%= label %>" selected="<%= topLink.equals(label) %>" />
 
 		<c:if test="<%= MBPermission.contains(permissionChecker, scopeGroupId, ActionKeys.BAN_USER) %>">
+
 			<%
 			label = "banned-users";
 
@@ -93,19 +97,21 @@ portletURL.setParameter("struts_action", "/message_boards/view");
 			<portlet:param name="struts_action" value="/message_boards/search" />
 		</liferay-portlet:renderURL>
 
-		<div class="aui-form-search aui-pull-right">
-			<aui:form action="<%= searchURL %>" method="get" name="searchFm">
-				<liferay-portlet:renderURLParams varImpl="searchURL" />
-				<aui:input name="redirect" type="hidden" value="<%= currentURL %>" />
-				<aui:input name="breadcrumbsCategoryId" type="hidden" value="<%= categoryId %>" />
-				<aui:input name="searchCategoryId" type="hidden" value="<%= categoryId %>" />
+		<div class="aui-navbar-search aui-pull-right">
+			<div class="aui-form-search">
+				<aui:form action="<%= searchURL %>" method="get" name="searchFm">
+					<liferay-portlet:renderURLParams varImpl="searchURL" />
+					<aui:input name="redirect" type="hidden" value="<%= currentURL %>" />
+					<aui:input name="breadcrumbsCategoryId" type="hidden" value="<%= categoryId %>" />
+					<aui:input name="searchCategoryId" type="hidden" value="<%= categoryId %>" />
 
-				<div class="aui-input-append">
-					<aui:input cssClass="aui-search-query aui-span2" id="keywords1" inlineField="<%= true %>" label="" name="keywords" placeholder="search-message-boards" size="30" title="search-message" type="text" />
+					<div class="aui-input-append">
+						<input class="aui-search-query aui-span9" id="<portlet:namespace/>keywords1" name="<portlet:namespace/>keywords" placeholder="<liferay-ui:message key="keywords" />" type="text" />
 
-					<aui:button primary="<%= false %>" type="submit" value="search" />
-				</div>
-			</aui:form>
+						<aui:button primary="<%= false %>" type="submit" value="search" />
+					</div>
+				</aui:form>
+			</div>
 		</div>
 
 		<c:if test="<%= windowState.equals(WindowState.MAXIMIZED) && !themeDisplay.isFacebook() %>">

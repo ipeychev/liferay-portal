@@ -30,7 +30,8 @@
 		<c:if test="<%= showTabs || showFoldersSearch %>">
 			<aui:nav-bar>
 				<c:if test="<%= showTabs %>">
-					<aui:nav cssClass="aui-nav-pills">
+					<aui:nav>
+
 						<%
 						PortletURL portletURL = renderResponse.createRenderURL();
 
@@ -54,6 +55,7 @@
 						<aui:nav-item className='<%= selected ? "aui-active" : StringPool.BLANK %>' href="<%= portletURL.toString() %>" label="<%= label %>" selected="<%= selected %>" />
 
 						<c:if test="<%= themeDisplay.isSignedIn() %>">
+
 							<%
 							label = "mine";
 							selected = topLink.equals(label);
@@ -71,21 +73,23 @@
 						<portlet:param name="struts_action" value="/document_library_display/search" />
 					</liferay-portlet:renderURL>
 
-					<div class="aui-form-search aui-pull-right">
-						<aui:form action="<%= searchURL %>" method="get" name="searchFm">
-							<liferay-portlet:renderURLParams varImpl="searchURL" />
-							<aui:input name="redirect" type="hidden" value="<%= currentURL %>" />
-							<aui:input name="repositoryId" type="hidden" value="<%= repositoryId %>" />
-							<aui:input name="folderId" type="hidden" value="<%= folderId %>" />
-							<aui:input name="breadcrumbsFolderId" type="hidden" value="<%= folderId %>" />
-							<aui:input name="searchFolderIds" type="hidden" value="<%= folderId %>" />
+					<div class="aui-navbar-search aui-pull-right">
+						<div class="aui-form-search">
+							<aui:form action="<%= searchURL %>" method="get" name="searchFm">
+								<liferay-portlet:renderURLParams varImpl="searchURL" />
+								<aui:input name="redirect" type="hidden" value="<%= currentURL %>" />
+								<aui:input name="repositoryId" type="hidden" value="<%= repositoryId %>" />
+								<aui:input name="folderId" type="hidden" value="<%= folderId %>" />
+								<aui:input name="breadcrumbsFolderId" type="hidden" value="<%= folderId %>" />
+								<aui:input name="searchFolderIds" type="hidden" value="<%= folderId %>" />
 
-							<div class="aui-input-append">
-								<aui:input cssClass="aui-search-query aui-span2" id="keywords1" inlineField="<%= true %>" label="" name="keywords" placeholder="search-documents" size="30" title="search-documents" type="text" />
+								<div class="aui-input-append">
+									<input class="aui-search-query aui-span9" id="<portlet:namespace/>keywords1" name="<portlet:namespace/>keywords" placeholder="<liferay-ui:message key="keywords" />" type="text" />
 
-								<aui:button primary="<%= false %>" type="submit" value="search" />
-							</div>
-						</aui:form>
+									<aui:button primary="<%= false %>" type="submit" value="search" />
+								</div>
+							</aui:form>
+						</div>
 					</div>
 
 					<c:if test="<%= windowState.equals(WindowState.MAXIMIZED) %>">
