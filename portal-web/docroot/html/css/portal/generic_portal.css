@@ -32,14 +32,6 @@ td {
 	width: 100%;
 }
 
-.lfr-component {
-	&, ul, li, dl, dt, dd {
-		margin: 0;
-		padding: 0;
-		list-style: none;
-	}
-}
-
 .lfr-component li img, img.icon {
 	vertical-align: middle;
 }
