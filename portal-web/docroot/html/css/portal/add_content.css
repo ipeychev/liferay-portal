@@ -115,7 +115,7 @@
 		.add-content-item {
 			cursor: pointer;
 			display: none;
-			padding: 7px 5px;
+			padding: 5px 10px;
 			position: absolute;
 			right: 0;
 			z-index: 1;
@@ -163,7 +163,12 @@
 	}
 
 	.add-content-tab .search-panel .add-content-search {
+		background-image: url(@theme_image_path@/common/search.png);
+		background-position: 5px center;
+		background-repeat: no-repeat;
 		float: left;
+		padding-left: 25px;
+		width: 160px;
 	}
 
 	.lfr-panel.lfr-extended {
@@ -306,6 +311,10 @@
 	.add-application-tab {
 		.lfr-add-content {
 			.lfr-content-category {
+				.aui-accordion-inner {
+					padding-right: 0;
+				}
+
 				.lfr-portlet-item {
 					background-position: 3px 50%;
 					color: #2D2D2D;
@@ -337,6 +346,13 @@
 					}
 				}
 
+				.content-item {
+					&:hover, &.over {
+						background-color: #EBF0F5;
+						text-decoration: underline;
+					}
+				}
+
 				.lfr-portlet-used {
 					color: #999;
 				}
@@ -362,8 +378,25 @@
 	.search-panel {
 		background: #D3DBE4 url(@theme_image_path@/common/shadow_bottom_bg.png) repeat-x 0 100%;
 
+		.aui-control-group {
+			margin-bottom: 0;
+
+			.aui-field-select {
+				width: 40px;
+			}
+
+			.add-applications-search {
+				background-image: url(@theme_image_path@/common/search.png);
+				background-position: 5px center;
+				background-repeat: no-repeat;
+				padding-left: 25px;
+				width: 90%;
+			}
+		}
+
 		.buttons {
 			font-size: 0;
+			padding-top: 5px;
 
 			.button {
 				background: url(@theme_image_path@/add_content/layouts.png) no-repeat 0 0;

@@ -123,7 +123,7 @@
 
 								<c:if test="<%= layout.isTypePortlet() %>">
 									<div class="search-panel">
-										<aui:input cssClass="add-content-search lfr-auto-focus" label="" name="searchApplication" type="text" />
+										<aui:input cssClass="add-applications-search lfr-auto-focus" label="" name="searchApplication" type="text" />
 									</div>
 								</c:if>
 
