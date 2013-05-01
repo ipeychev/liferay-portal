@@ -17,7 +17,7 @@
 <%@ include file="/html/taglib/aui/field_wrapper/init.jsp" %>
 
 	<c:if test='<%= inlineLabel.equals("right") %>'>
-		<label <%= AUIUtil.buildLabel("wrapper", showForLabel, name) %>>
+		<label <%= AUIUtil.buildLabel("wrapper", inlineField, showForLabel, name) %>>
 			<liferay-ui:message key="<%= label %>" />
 
 			<c:if test="<%= required %>">
