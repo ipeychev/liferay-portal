@@ -3,7 +3,6 @@ AUI.add(
 	function(A) {
 		var Lang = A.Lang;
 
-		var LayoutConfiguration = Liferay.LayoutConfiguration;
 		var Portlet = Liferay.Portlet;
 		var Util = Liferay.Util;
 
@@ -478,8 +477,6 @@ AUI.add(
 
 				if (addPanel) {
 					var uri = addPanel.attr('href');
-
-					Liferay.LayoutConfiguration.toggle();
 
 					A.io.request(
 						uri,
