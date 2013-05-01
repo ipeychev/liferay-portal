@@ -306,8 +306,6 @@
 	.add-application-tab {
 		.lfr-add-content {
 			.lfr-content-category {
-				background: url(@theme_image_path@/common/shadow_top_bg.png) repeat-x 0 0;
-
 				.lfr-portlet-item {
 					background-position: 3px 50%;
 					color: #2D2D2D;
