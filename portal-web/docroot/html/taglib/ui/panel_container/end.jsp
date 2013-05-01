@@ -18,30 +18,4 @@
 
 </div>
 
-<aui:script use="aui-toggler,liferay-store">
-	new A.TogglerDelegate({
-		animated: true,
-		container: '#<%= id %>',
-		content: '.aui-toggler-content',
-		header: '.aui-toggler-header',
-		on: {
-			'toggler:expandedChange': function(event) {
-				var header = event.target.get('header');
-
-				var persistId = header.getData('persist-id');
-
-				if (persistId) {
-					var data = {};
-
-					data[persistId] = event.newVal ? "open" : "closed";
-
-					Liferay.Store(data);
-				}
-			}
-		},
-		transition: {
-			duration: .3,
-			easing: 'cubic-bezier'
-		}
-	});
-</aui:script>
+<%@ include file="/html/taglib/ui/panel_container/javascript.jspf" %>
