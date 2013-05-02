@@ -895,7 +895,7 @@ AUI.add(
 
 						instance._tagFormAdd = tagFormAdd;
 
-						var closeButton = tagFormAdd.one('.aui-btn-cancel');
+						var closeButton = tagFormAdd.one('.close-panel');
 
 						closeButton.on(
 							EVENT_CLICK,
