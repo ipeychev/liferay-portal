@@ -2,6 +2,10 @@
 	display: inline-block;
 }
 
+.aui-button-holder {
+	margin-top: 20px;
+}
+
 .lfr-input-resource {
 	width: @model_hints_constants_text_display_width@px;
 }
