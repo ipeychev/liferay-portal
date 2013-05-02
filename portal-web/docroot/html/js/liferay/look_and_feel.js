@@ -51,9 +51,9 @@ AUI.add(
 												if (!event.newVal && Browser.isIe() && Browser.getMajorVersion() == 6) {
 													window.location.reload(true);
 												}
-											}
 
-											instance._destroyColorPickers();
+												instance._destroyColorPickers();
+											}
 										}
 									},
 									title: Liferay.Language.get('look-and-feel')
