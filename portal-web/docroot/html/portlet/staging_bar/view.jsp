@@ -283,9 +283,7 @@ if (layout != null) {
 									<div class="layout-title">
 										<span class="layout-title-label"><liferay-ui:message key="current-page" />:</span>
 
-										<span class="layout-breadcrumb">
-											<liferay-ui:breadcrumb showCurrentGroup="<%= false %>" showGuestGroup="<%= false %>" showParentGroups="<%= false %>" showPortletBreadcrumb="<%= false %>" />
-										</span>
+										<liferay-ui:breadcrumb showCurrentGroup="<%= false %>" showGuestGroup="<%= false %>" showParentGroups="<%= false %>" showPortletBreadcrumb="<%= false %>" />
 									</div>
 
 									<aui:model-context bean="<%= layoutRevision %>" model="<%= LayoutRevision.class %>" />

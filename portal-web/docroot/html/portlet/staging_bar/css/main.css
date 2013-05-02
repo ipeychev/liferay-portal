@@ -172,14 +172,6 @@
 					.layout-title-label {
 						float: left;
 					}
-
-					.layout-breadcrumb {
-						font-size: 1em;
-
-						.breadcrumbs a {
-							color: #EEE;
-						}
-					}
 				}
 			}
 

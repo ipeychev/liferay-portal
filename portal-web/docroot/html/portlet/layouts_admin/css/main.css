@@ -249,54 +249,6 @@
 		}
 	}
 
-	.layout-breadcrumb {
-		ul {
-			background-color: #FFF;
-			border: 1px solid #DEDEDE;
-			border-color: #C0C2C5;
-			margin: 0 0 1em 0;
-		}
-
-		li {
-			background-image: none;
-			margin-right: 0;
-			padding-left: 0.75em;
-			padding-right: 0;
-
-			span {
-				background: url(@theme_image_path@/common/breadcrumbs.png) no-repeat 100% 50%;
-				display: block;
-				padding: 0.5em 15px 0.5em 0;
-
-				a {
-					text-decoration: none;
-				}
-			}
-
-			&.first a {
-				color: #369;
-				font-weight: bold;
-			}
-
-			&.last a {
-				color: #5C85AD;
-				font-size: 1.3em;
-				font-weight: bold;
-			}
-		}
-
-		.last {
-			font-size: 1em;
-			margin-top: 0;
-			padding-right: 0;
-
-			span {
-				background-image: none;
-				padding: 0;
-			}
-		}
-	}
-
 	.customization-settings {
 		.portlet-column {
 			border: 1px solid #CCC;
