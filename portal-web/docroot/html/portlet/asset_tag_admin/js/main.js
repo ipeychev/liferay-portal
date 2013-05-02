@@ -359,7 +359,8 @@ AUI.add(
 										cssClass: CSS_TAG_DIALOG + ' permissions-change',
 										width: 600
 									},
-									title: Liferay.Language.get('edit-permissions')
+									title: Liferay.Language.get('edit-permissions'),
+									uri: 'about:blank'
 								}
 							);
 
