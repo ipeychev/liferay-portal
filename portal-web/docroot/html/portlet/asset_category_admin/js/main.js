@@ -714,7 +714,8 @@ AUI.add(
 										cssClass: 'portlet-asset-categories-admin-dialog permissions-change',
 										width: 600
 									},
-									title: Liferay.Language.get('edit-permissions')
+									title: Liferay.Language.get('edit-permissions'),
+									uri: 'about:blank'
 								}
 							);
 
