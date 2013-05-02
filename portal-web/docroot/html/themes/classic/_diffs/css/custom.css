@@ -240,21 +240,6 @@
 	position: fixed;
 	top: 0;
 	z-index: 440;
-
-	ul {
-		background: #414445;
-		background: rgba(0, 0, 0, 0.8);
-	}
-
-	.breadcrumbs li {
-		a, span {
-			color: #FFF;
-		}
-	}
-
-	li span {
-		background-image: url(@theme_image_path@/common/breadcrumbs_hud.png);
-	}
 }
 
 /* ---------- Misc. ---------- */

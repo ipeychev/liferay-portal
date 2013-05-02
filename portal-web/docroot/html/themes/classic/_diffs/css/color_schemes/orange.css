@@ -233,24 +233,6 @@ body.orange, .orange .portlet {
 		background-color: #ECECEC;
 		background-image: url(@theme_image_path@/application/state_active_bg.png);
 	}
-
-	/* ---------- Site breadcrumbs ---------- */
-
-	.site-breadcrumbs li {
-		&.first a {
-			color: #9A6F33;
-		}
-
-		&.last a {
-			color: #67604B;
-		}
-	}
-
-	.lfr-hudcrumbs .breadcrumbs li {
-		a, span {
-			color: #FFF;
-		}
-	}
 }
 
 /* ---------- IE6 chokes on attribute selectors in a chain, so we separate them into their own rule ---------- */
