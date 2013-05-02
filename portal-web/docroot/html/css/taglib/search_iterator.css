@@ -31,6 +31,10 @@
 	}
 }
 
+.taglib-search-iterator-page-iterator-top {
+	margin-bottom: 15px;
+}
+
 .taglib-page-iterator {
 	clear: both;
 	height: auto;
@@ -44,10 +48,15 @@
 
 	.lfr-pagination-config {
 		float: left;
-		line-height: 2.3em;
+		line-height: 32px;
 
 		.lfr-pagination-delta-selector, .lfr-pagination-page-selector {
 			display: inline;
 		}
+	}
+
+	.search-results {
+		line-height: 32px;
+		margin-left: 10px;
 	}
 }

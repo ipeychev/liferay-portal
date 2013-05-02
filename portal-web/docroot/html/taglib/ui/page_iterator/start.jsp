@@ -123,45 +123,6 @@ NumberFormat numberFormat = NumberFormat.getNumberInstance(locale);
 
 <c:if test="<%= (total > delta) || (total > PropsValues.SEARCH_CONTAINER_PAGE_DELTA_VALUES[0]) %>">
 	<div class="aui-clearfix lfr-pagination">
-		<ul class="aui-pager lfr-pagination-buttons">
-			<c:if test='<%= type.equals("approximate") || type.equals("more") || type.equals("regular") %>'>
-				<li class="first <%= (cur != 1) ? "" : "aui-disabled" %>">
-					<a href="<%= (cur != 1) ? _getHREF(formName, curParam, 1, jsCall, url, urlAnchor) : "javascript:;" %>" target="<%= target %>">
-						&larr; <liferay-ui:message key="first" />
-					</a>
-				</li>
-			</c:if>
-
-			<li class="previous <%= (cur != 1) ? "" : "aui-disabled" %>">
-				<a href="<%= (cur != 1) ? _getHREF(formName, curParam, cur - 1, jsCall, url, urlAnchor) : "javascript:;" %>" target="<%= target %>">
-					<liferay-ui:message key="previous" />
-				</a>
-			</li>
-
-			<li class="next <%= (cur != pages) ? "" : "aui-disabled" %>">
-				<a href="<%= (cur != pages) ? _getHREF(formName, curParam, cur + 1, jsCall, url, urlAnchor) : "javascript:;" %>" target="<%= target %>">
-					<c:if test='<%= (type.equals("approximate") || type.equals("more") || type.equals("regular")) %>'>
-						<c:choose>
-							<c:when test='<%= type.equals("approximate") || type.equals("more") %>'>
-								<liferay-ui:message key="more" />
-							</c:when>
-							<c:otherwise>
-								<liferay-ui:message key="next" />
-							</c:otherwise>
-						</c:choose>
-					</c:if>
-				</a>
-			</li>
-
-			<c:if test='<%= type.equals("regular") %>'>
-				<li class="next <%= (cur != pages) ? "" : "aui-disabled" %>">
-					<a href="<%= (cur != pages) ? _getHREF(formName, curParam, pages, jsCall, url, urlAnchor) : "javascript:;" %>" target="<%= target %>">
-						<liferay-ui:message key="last" /> &rarr;
-					</a>
-				</li>
-			</c:if>
-		</ul>
-
 		<c:if test='<%= type.equals("regular") %>'>
 			<c:if test="<%= PropsValues.SEARCH_CONTAINER_PAGE_DELTA_VALUES.length > 0 %>">
 				<div class="lfr-pagination-config">
@@ -249,7 +210,6 @@ NumberFormat numberFormat = NumberFormat.getNumberInstance(locale);
 									%>
 
 										<liferay-ui:icon
-											cssClass='<%= (delta == curDelta) ? "aui-active" : "" %>'
 											message="<%= String.valueOf(curDelta) %>"
 											url='<%= deltaURL + "&" + namespace + deltaParam + "=" + curDelta + urlAnchor %>'
 										/>
@@ -265,13 +225,50 @@ NumberFormat numberFormat = NumberFormat.getNumberInstance(locale);
 				</c:if>
 			</div>
 		</c:if>
+
+		<c:if test='<%= type.equals("approximate") || type.equals("more") || type.equals("regular") %>'>
+			<%@ include file="/html/taglib/ui/page_iterator/showing_x_results.jspf" %>
+		</c:if>
+
+		<ul class="aui-pager lfr-pagination-buttons">
+			<c:if test='<%= type.equals("approximate") || type.equals("more") || type.equals("regular") %>'>
+				<li class="first <%= (cur != 1) ? "" : "aui-disabled" %>">
+					<a href="<%= (cur != 1) ? _getHREF(formName, curParam, 1, jsCall, url, urlAnchor) : "javascript:;" %>" target="<%= target %>">
+						&larr; <liferay-ui:message key="first" />
+					</a>
+				</li>
+			</c:if>
+
+			<li class="previous <%= (cur != 1) ? "" : "aui-disabled" %>">
+				<a href="<%= (cur != 1) ? _getHREF(formName, curParam, cur - 1, jsCall, url, urlAnchor) : "javascript:;" %>" target="<%= target %>">
+					<liferay-ui:message key="previous" />
+				</a>
+			</li>
+
+			<li class="next <%= (cur != pages) ? "" : "aui-disabled" %>">
+				<a href="<%= (cur != pages) ? _getHREF(formName, curParam, cur + 1, jsCall, url, urlAnchor) : "javascript:;" %>" target="<%= target %>">
+					<c:if test='<%= (type.equals("approximate") || type.equals("more") || type.equals("regular")) %>'>
+						<c:choose>
+							<c:when test='<%= type.equals("approximate") || type.equals("more") %>'>
+								<liferay-ui:message key="more" />
+							</c:when>
+							<c:otherwise>
+								<liferay-ui:message key="next" />
+							</c:otherwise>
+						</c:choose>
+					</c:if>
+				</a>
+			</li>
+
+			<c:if test='<%= type.equals("regular") %>'>
+				<li class="next <%= (cur != pages) ? "" : "aui-disabled" %>">
+					<a href="<%= (cur != pages) ? _getHREF(formName, curParam, pages, jsCall, url, urlAnchor) : "javascript:;" %>" target="<%= target %>">
+						<liferay-ui:message key="last" /> &rarr;
+					</a>
+				</li>
+			</c:if>
+		</ul>
 	</div>
-</c:if>
-
-<div class="separator"><!-- --></div>
-
-<c:if test='<%= type.equals("approximate") || type.equals("more") || type.equals("regular") %>'>
-	<%@ include file="/html/taglib/ui/page_iterator/showing_x_results.jspf" %>
 </c:if>
 
 <c:if test='<%= type.equals("approximate") || type.equals("more") || type.equals("regular") || (type.equals("article") && (total > resultRowsSize)) %>'>
