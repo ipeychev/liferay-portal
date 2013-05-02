@@ -316,7 +316,7 @@ YUI.add(
 				'liferay-look-and-feel': {
 					fullpath: javaScriptRootPath + '/liferay/look_and_feel.js',
 					requires: [
-						'aui-color-picker-deprecated',
+						'aui-color-picker-popover',
 						'aui-io-plugin-deprecated',
 						'aui-io-request',
 						'aui-modal',
