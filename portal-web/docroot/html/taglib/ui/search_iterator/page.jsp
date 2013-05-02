@@ -141,7 +141,7 @@ int sortColumnIndex = -1;
 					}
 				%>
 
-					<th class="aui-table-header <%= cssClass %>" id="<%= namespace + id %>_col-<%= normalizedHeaderName %>"
+					<th class="<%= cssClass %>" id="<%= namespace + id %>_col-<%= normalizedHeaderName %>"
 
 						<%--
 
