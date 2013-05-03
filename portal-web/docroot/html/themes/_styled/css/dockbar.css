@@ -11,7 +11,7 @@
 			margin-right: 9px;
 		}
 
-		.aui-alert-info {
+		.alert-info {
 			@include border-radius(0);
 
 			border: none;
@@ -19,11 +19,11 @@
 		}
 	}
 
-	.aui-navbar-inner {
+	.navbar-inner {
 		padding-left: 20px;
 		padding-right: 20px;
 
-		.aui-container {
+		.container {
 			margin-left: 0;
 			margin-right: 0;
 			width: 100%;
@@ -135,11 +135,11 @@ body {
 
 /* ---------- Menus ---------- */
 
-.aui-dockbarmenu-hidden {
+.dockbarmenu-hidden {
 	visibility: hidden;
 }
 
-.aui-underlay {
+.underlay {
 	.portal-add-content {
 		background-color: transparent;
 		font-size: 11px;
@@ -304,7 +304,7 @@ body {
 		}
 	}
 
-	.aui-menu-scroll {
+	.menu-scroll {
 		height: 300px;
 		overflow-y: auto;
 	}

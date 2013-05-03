@@ -248,12 +248,12 @@
 	background-color: transparent;
 }
 
-.lfr-portlet-title-editable-content .aui-field {
+.lfr-portlet-title-editable-content .field {
 	display: inline;
 	float: none;
 }
 
-.portlet-journal-content .icon-actions {
+.portlet-journal-content .lfr-icon-actions {
 	margin-bottom: 3px;
 }
 
@@ -338,7 +338,7 @@
 }
 
 .portlet-dynamic-data-list-display, .portlet-journal-content, .portlet-polls-display {
-	.icon-actions {
+	.lfr-icon-actions {
 		@extend %portlet-action-bar-custom;
 	}
 }

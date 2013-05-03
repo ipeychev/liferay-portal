@@ -1,6 +1,6 @@
 @import "compass";
 
-.aui-menu-content, .aui-underlay-content {
+.menu-content, .underlay-content {
 	@include box-shadow(2px 4px 7px rgba(0, 0, 0, 0.5));
 }
 
@@ -34,7 +34,7 @@
 	@include box-shadow(inset 0 0 2px #224FA8);
 }
 
-.portlet-document-library-upload-mask .aui-overlaymask-content {
+.portlet-document-library-upload-mask .overlaymask-content {
 	@include border-radius(5px);
 }
 
@@ -43,11 +43,11 @@
 }
 
 .lfr-search-combobox {
-	.aui-field-input-text {
+	.field-input-text {
 		@include border-radius(4px 1px 1px 4px);
 	}
 
-	.aui-button-input {
+	.button-input {
 		@include border-radius(1px 4px 4px 1px);
 	}
 }
@@ -56,7 +56,7 @@
 	@include border-radius(10px);
 }
 
-body > .lfr-menu-list ul, .active-area-proxy, .entry-display-style .entry-thumbnail img, .lfr-api-results, .lfr-translation-manager, .lfr-translation-manager-translation, .lfr-upload-container .cancel-button .modify-pages .delete-tab, .portlet-image-gallery-display .image-thumbnail img, .portlet-journal .lfr-table .journal-metadata, .portlet-search .search-facet .facet-value, .rule-group-instance-container .rule-group-instance, .select-documents, .select-files, .taglib-ratings.stars:hover, .taglib-ratings.stars:hover .liferay-rating-vote, .tags-search-combobox .aui-field-input-text {
+body > .lfr-menu-list ul, .active-area-proxy, .entry-display-style .entry-thumbnail img, .lfr-api-results, .lfr-translation-manager, .lfr-translation-manager-translation, .lfr-upload-container .cancel-button .modify-pages .delete-tab, .portlet-image-gallery-display .image-thumbnail img, .portlet-journal .lfr-table .journal-metadata, .portlet-search .search-facet .facet-value, .rule-group-instance-container .rule-group-instance, .select-documents, .select-files, .taglib-ratings.stars:hover, .taglib-ratings.stars:hover .liferay-rating-vote, .tags-search-combobox .field-input-text {
 	@include border-radius(4px);
 }
 
@@ -64,7 +64,7 @@ body > .lfr-menu-list ul, .active-area-proxy, .entry-display-style .entry-thumbn
 	@include border-radius(5px);
 }
 
-.portlet-journal .lfr-ddm-container .aui-field-wrapper {
+.portlet-journal .lfr-ddm-container .field-wrapper {
 	@include border-radius(6px);
 }
 
@@ -72,12 +72,12 @@ body > .lfr-menu-list ul, .active-area-proxy, .entry-display-style .entry-thumbn
 	@include border-radius(14px);
 }
 
-.aui-menu-content {
+.menu-content {
 	@include border-bottom-left-radius(4px);
 	@include border-bottom-right-radius(4px);
 }
 
-.aui-underlay-content {
+.underlay-content {
 	@include border-bottom-left-radius(8px);
 	@include border-bottom-right-radius(8px);
 }
@@ -101,7 +101,7 @@ body > .lfr-menu-list ul, .active-area-proxy, .entry-display-style .entry-thumbn
 	}
 
 	.search-panel {
-		.add-content-search .aui-field-input {
+		.add-content-search .field-input {
 			@include border-radius(4px);
 		}
 	}
@@ -136,7 +136,7 @@ body > .lfr-menu-list ul, .active-area-proxy, .entry-display-style .entry-thumbn
 	@include box-shadow(inset 0 3em 1em rgba(0, 0, 0, 0.8));
 }
 
-.site-variations-tabview-list .aui-tab-content, .staging-tabview-list .aui-tab-active .aui-tab-content {
+.site-variations-tabview-list .tab-content, .staging-tabview-list .tab-active .tab-content {
 	@include box-shadow(none);
 }
 
@@ -161,11 +161,11 @@ body > .lfr-menu-list ul, .active-area-proxy, .entry-display-style .entry-thumbn
 	@include border-radius(2px);
 }
 
-.lfr-api-service-search .aui-field-input {
+.lfr-api-service-search .field-input {
 	@include box-sizing("border-box");
 }
 
-@mixin aui-progress-bar-stripes {
+@mixin progress-bar-stripes {
 	from {
 		background-position: 40px 0;
 	}
@@ -174,32 +174,32 @@ body > .lfr-menu-list ul, .active-area-proxy, .entry-display-style .entry-thumbn
 	}
 }
 
-@-webkit-keyframes aui-progress-bar-stripes {
-	@include aui-progress-bar-stripes;
+@-webkit-keyframes progress-bar-stripes {
+	@include progress-bar-stripes;
 }
 
-@-moz-keyframes aui-progress-bar-stripes {
-	@include aui-progress-bar-stripes;
+@-moz-keyframes progress-bar-stripes {
+	@include progress-bar-stripes;
 }
 
-@-ms-keyframes aui-progress-bar-stripes {
-	@include aui-progress-bar-stripes;
+@-ms-keyframes progress-bar-stripes {
+	@include progress-bar-stripes;
 }
 
-@-o-keyframes aui-progress-bar-stripes {
-	@include aui-progress-bar-stripes;
+@-o-keyframes progress-bar-stripes {
+	@include progress-bar-stripes;
 }
 
-@keyframes aui-progress-bar-stripes {
-	@include aui-progress-bar-stripes;
+@keyframes progress-bar-stripes {
+	@include progress-bar-stripes;
 }
 
-.lfr-progress-active .aui-progress-bar-status, .lfr-upload-container .file-uploading .progress-bar .progress {
+.lfr-progress-active .progress-bar-status, .lfr-upload-container .file-uploading .progress-bar .progress {
 	$transparent: rgba(255, 255, 255, 0);
 
 	@include background-image(linear-gradient(-45deg, rgba(255, 255, 255, 0.3) 25%, $transparent 25%, $transparent 50%, rgba(255, 255, 255, 0.3) 50%, rgba(255, 255, 255, 0.3) 75%, $transparent 75%, $transparent));
 	@include background-size(40px 40px);
-	@include experimental(animation, aui-progress-bar-stripes 0.5s linear infinite);
+	@include experimental(animation, progress-bar-stripes 0.5s linear infinite);
 	@include single-transition(width, 0.5s, ease-out);
 }
 
@@ -249,7 +249,7 @@ body:first-of-type {
 
 	.portlet-dynamic-data-list-display, .portlet-journal-content, .portlet-polls-display {
 		&:hover {
-			.icon-actions {
+			.lfr-icon-actions {
 				@extend %portlet-action-bar-fx-hover;
 
 				.taglib-text {
@@ -260,7 +260,7 @@ body:first-of-type {
 			}
 		}
 
-		.icon-actions {
+		.lfr-icon-actions {
 			@extend %portlet-action-bar-fx;
 
 			.taglib-text {

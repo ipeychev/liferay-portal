@@ -25,7 +25,7 @@ abbr, acronym {
 }
 
 html {
-	&.aui-dialog-iframe-root-node {
+	&.dialog-iframe-root-node {
 	}
 }
 
@@ -33,7 +33,7 @@ body {
 	&.portal-popup {
 	}
 
-	&.aui-dialog-iframe-popup {
+	&.dialog-iframe-popup {
 	}
 
 	&.portal-iframe {
