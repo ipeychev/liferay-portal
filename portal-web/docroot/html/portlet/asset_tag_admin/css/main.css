@@ -1,22 +1,43 @@
 .portlet-asset-tag-admin {
+
+	.aui-navbar-inner {
+		padding-left: 12px;
+
+		.aui-search-query {
+			width: 260px;
+		}
+	}
+
 	.tags-admin-actions {
 		clear: none;
 		float: left;
 		margin: 0;
 	}
 
-	.tags-admin-container .results-header {
-		background: #F0F5F7;
-		font-weight: bold;
-		padding: 5px 10px;
-		position: relative;
-	}
+	.tags-admin-container {
+		.results-header {
+			background: #F0F5F7;
+			font-weight: bold;
+			padding: 5px 10px;
+			position: relative;		
+		}
 
-	.tags-admin-toolbar {
-		background: #F6F8FB;
-		border-bottom: 1px solid #dedede;
-		overflow: hidden;
-		padding: 5px 0;
+		.toolbar-container {
+			position: relative;
+
+			.tags-admin-toolbar {
+				background: #F6F8FB;
+				border-bottom: 1px solid #dedede;
+				overflow: hidden;
+				padding: 5px 0;
+			}
+
+			.tags-search-combobox {
+				position: absolute;
+				right: 5px;
+				top: 2px;
+			}
+		}
 	}
 
 	.tags-admin-content-wrapper {
@@ -29,7 +50,7 @@
 
 	.tags-admin-edit-tag {
 		.tag-view-container {
-			padding: 0 0.5em 0 0.5em;
+			padding: 0 0.5em 0 0;
 		}
 
 		.tag-details {
@@ -63,10 +84,11 @@
 	}
 
 	.tag-item-check {
-		margin-left: 10px;
-		position: static;
-		margin-top: 10px;
 		float: left;
+		margin-left: 10px;
+		margin-right: 10px;
+		margin-top: 12px;
+		position: static;
 	}
 
 	.tags-admin-content {
@@ -89,13 +111,17 @@
 	}
 
 	.tags-admin-list {
+		ul {
+			margin-left: 0;
+		}
+
 		.selected {
 			a:hover {
 				color: #FFB683;
 			}
 
-			a, .tags-admin-content-wrapper, .tags-admin-content-wrapper:hover {
-				background-color: #6F7D83;
+			a, .tags-admin-content-wrapper:hover {
+				background-color: #3A87AD;
 				color: #FFF;
 			}
 		}
@@ -110,8 +136,6 @@
 		}
 
 		.tags-admin-content-wrapper {
-			background-color: #F5F5F5;
-
 			&:hover {
 				background: #D3DADD;
 			}
@@ -119,30 +143,30 @@
 	}
 
 	.select-tags {
-		border-color: #5F5F5F;
-		float: left;
-		line-height: 0;
-		margin-right: 2px;
-		padding: 0;
-
-		.aui-field-element {
-			padding: 5px 4px 4px;
-			border: 1px solid #FFF;
-			border-color: #F0F1F2 #B2B2B2 #949494 #F0F1F1;
-		}
+		margin-left: 10px;
+		margin-top: -5px;
 	}
 
 	.tags-admin-list-container {
+		.tags-header {
+			display: inline-block;
+			margin-left: 10px;
+		}
+
 		&:after {
 			clear: both;
 			content: "";
 			display: block;
 			height: 0;
 		}
+
 	}
 
-	.tags-admin-search-bar {
-		float: left;
+	.tags-admin-search {
+		background-image: url(@theme_image_path@/common/search.png);
+		background-position: 5px center;
+		background-repeat: no-repeat;
+		padding-left: 25px;
 	}
 
 	.tags-pagination {
@@ -155,8 +179,6 @@
 	}
 
 	.view-tag {
-		margin: 1em;
-
 		.tag-field {
 			clear: left;
 			margin: 1em auto;

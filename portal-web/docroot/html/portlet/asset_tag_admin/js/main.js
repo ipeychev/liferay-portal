@@ -935,7 +935,7 @@ AUI.add(
 
 						tagFormEdit.on(EVENT_SUBMIT, instance._onTagFormSubmit, instance, tagFormEdit);
 
-						var closeButton = tagFormEdit.one('.aui-btn-cancel');
+						var closeButton = tagFormEdit.one('.close-panel');
 
 						closeButton.on(
 							EVENT_CLICK,
@@ -1185,7 +1185,7 @@ AUI.add(
 					_onTagChangePermissions: function(event) {
 						var instance = this;
 
-						var url = event.target.attr('data-url');
+						var url = event.target.attr('data-url') || event.currentTarget.attr('data-url');
 
 						instance._loadPermissions(url);
 					},
