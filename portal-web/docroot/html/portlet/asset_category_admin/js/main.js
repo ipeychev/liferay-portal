@@ -30,15 +30,15 @@ AUI.add(
 
 		var CSS_CATEGORY_ITEM_CHECK = 'category-item-check';
 
-		var CSS_COLUMN_WIDTH_CATEGORY = 'aui-span5';
+		var CSS_COLUMN_WIDTH_CATEGORY = 'span5';
 
-		var CSS_COLUMN_WIDTH_CATEGORY_FULL = 'aui-span8';
+		var CSS_COLUMN_WIDTH_CATEGORY_FULL = 'span8';
 
 		var CSS_MESSAGE_RESPONSE = 'lfr-message-response';
 
-		var CSS_MESSAGE_ERROR = 'aui-alert aui-alert-error';
+		var CSS_MESSAGE_ERROR = 'alert alert-error';
 
-		var CSS_MESSAGE_SUCCESS = 'aui-alert aui-alert-success';
+		var CSS_MESSAGE_SUCCESS = 'alert alert-success';
 
 		var CSS_VOCABULARY_ITEM_CHECK = 'vocabulary-item-check';
 
@@ -84,13 +84,13 @@ AUI.add(
 
 		var REGEX_TREE_NODE_TYPE = /^(vocabulary|category)/;
 
-		var SELECTOR_BUTTON_CANCEL = '.aui-btn-cancel';
+		var SELECTOR_BUTTON_CANCEL = '.btn-cancel';
 
 		var SELECTOR_CATEGORY_ITEM = '.category-item';
 
 		var SELECTOR_CATEGORY_NAME_INPUT = '.category-name input';
 
-		var SELECTOR_CSS_COLUMN = '.aui-column';
+		var SELECTOR_CSS_COLUMN = '.column';
 
 		var SELECTOR_FLOATING_TRIGGER = '.lfr-floating-trigger';
 
@@ -169,11 +169,11 @@ AUI.add(
 				'<span class="category-path" title="{path}">{path}</span>' +
 			'</label>';
 
-		var TPL_MESSAGES_CATEGORY = '<div class="aui-hide lfr-message-response" id="vocabulary-category-messages" />';
+		var TPL_MESSAGES_CATEGORY = '<div class="hide lfr-message-response" id="vocabulary-category-messages" />';
 
-		var TPL_MESSAGES_PORTLET = '<div class="aui-hide lfr-message-response" id="porlet-messages" />';
+		var TPL_MESSAGES_PORTLET = '<div class="hide lfr-message-response" id="porlet-messages" />';
 
-		var TPL_MESSAGES_VOCABULARY = '<div class="aui-hide lfr-message-response" id="vocabulary-messages" />';
+		var TPL_MESSAGES_VOCABULARY = '<div class="hide lfr-message-response" id="vocabulary-messages" />';
 
 		var TPL_SEARCH_QUERY = '%{0}%';
 
@@ -2485,7 +2485,7 @@ AUI.add(
 						var instance = this;
 
 						var output = instance._portletMessageContainer;
-						var typeClass = 'aui-alert aui-alert-' + type;
+						var typeClass = 'alert alert-' + type;
 
 						output.removeClass(CSS_MESSAGE_ERROR).removeClass(CSS_MESSAGE_SUCCESS);
 						output.addClass(typeClass);
@@ -2499,7 +2499,7 @@ AUI.add(
 					_showCateroryMessage: function(message, className) {
 						var categoryMessages = A.one(SELECTOR_VOCABULARY_CATEGORY_MESSAGES);
 
-						className = className || 'aui-alert aui-alert-info';
+						className = className || 'alert alert-info';
 
 						message = message || Liferay.Language.get('there-are-no-categories');
 
@@ -2648,7 +2648,7 @@ AUI.add(
 					_showVocabularyMessage: function(message, className) {
 						var vocabularyMessages = A.one(SELECTOR_VOCABULARY_MESSAGES);
 
-						className = className || 'aui-alert aui-alert-info';
+						className = className || 'alert alert-info';
 
 						message = message || Liferay.Language.get('there-are-no-vocabularies');
 

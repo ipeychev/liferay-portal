@@ -57,7 +57,7 @@ AUI.add(
 
 		var SRC_SEARCH_END = 4;
 
-		var TPL_MESSAGE_SEARCHING = '<div class="aui-alert aui-alert-info">{0}</div><div class="loading-animation" />';
+		var TPL_MESSAGE_SEARCHING = '<div class="alert alert-info">{0}</div><div class="loading-animation" />';
 
 		var JournalNavigation = A.Component.create(
 			{
@@ -290,7 +290,7 @@ AUI.add(
 						var showAdvancedSearch = instance.byId('showAdvancedSearch');
 
 						var searchData = {
-							advancedSearch: !showAdvancedSearch.hasClass('aui-hide'),
+							advancedSearch: !showAdvancedSearch.hasClass('hide'),
 							andOperator: instance._andOperatorNode.get('value'),
 							folderId: selectedFolder.id,
 							content: instance._contentNode.get('value'),
@@ -340,12 +340,12 @@ AUI.add(
 
 						var showAdvancedSearchIcon = showAdvancedSearch.one('i');
 
-						var advancedSearchHidden = advancedSearch.hasClass('aui-hide');
+						var advancedSearchHidden = advancedSearch.hasClass('hide');
 
-						showAdvancedSearchIcon.toggleClass('aui-icon-chevron-down', !advancedSearchHidden);
-						showAdvancedSearchIcon.toggleClass('aui-icon-chevron-up', advancedSearchHidden);
+						showAdvancedSearchIcon.toggleClass('icon-chevron-down', !advancedSearchHidden);
+						showAdvancedSearchIcon.toggleClass('icon-chevron-up', advancedSearchHidden);
 
-						advancedSearch.toggleClass('aui-hide', !advancedSearchHidden);
+						advancedSearch.toggleClass('hide', !advancedSearchHidden);
 					},
 
 					_onPageLoaded: function(event) {

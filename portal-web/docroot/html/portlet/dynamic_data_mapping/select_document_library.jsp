@@ -88,7 +88,7 @@ portletURL.setParameter("folderId", String.valueOf(folderId));
 
 		<liferay-ui:breadcrumb showGuestGroup="<%= false %>" showLayout="<%= false %>" showParentGroups="<%= false %>" />
 
-		<div class="aui-helper-clearfix">
+		<div class="helper-clearfix">
 			<liferay-ui:icon-menu cssClass="lfr-document-library-add-menu" icon='<%= themeDisplay.getPathThemeImages() + "/common/add.png" %>' message="add">
 				<c:if test="<%= DLFolderPermission.contains(permissionChecker, scopeGroupId, folderId, ActionKeys.ADD_FOLDER) %>">
 					<liferay-portlet:renderURL portletName="<%= PortletKeys.DOCUMENT_LIBRARY %>" var="addFolderURL">

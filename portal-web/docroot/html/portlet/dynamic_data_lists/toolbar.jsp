@@ -35,13 +35,13 @@ String toolbarItem = ParamUtil.getString(request, "toolbarItem", "view-all");
 				<portlet:param name="backURL" value="<%= viewRecordsURL %>" />
 			</portlet:renderURL>
 
-			<aui:nav-item href="<%= addRecordSetURL %>" iconClass="aui-icon-plus" label="add" selected='<%= toolbarItem.equals("add") %>' />
+			<aui:nav-item href="<%= addRecordSetURL %>" iconClass="icon-plus" label="add" selected='<%= toolbarItem.equals("add") %>' />
 
-			<aui:nav-item anchorId="manageDDMStructuresLink" iconClass="aui-icon-cog" label="manage-data-definitions" selected='<%= toolbarItem.equals("manage-data-definitions") %>' />
+			<aui:nav-item anchorId="manageDDMStructuresLink" iconClass="icon-cog" label="manage-data-definitions" selected='<%= toolbarItem.equals("manage-data-definitions") %>' />
 		</c:if>
 	</aui:nav>
 
-	<aui:nav-bar-search cssClass="aui-pull-right" file="/html/portlet/dynamic_data_lists/record_set_search.jsp" />
+	<aui:nav-bar-search cssClass="pull-right" file="/html/portlet/dynamic_data_lists/record_set_search.jsp" />
 </aui:nav-bar>
 
 <c:if test="<%= DDLPermission.contains(permissionChecker, scopeGroupId, ActionKeys.ADD_RECORD_SET) %>">

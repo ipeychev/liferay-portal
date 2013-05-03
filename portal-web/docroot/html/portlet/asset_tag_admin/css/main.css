@@ -4,10 +4,10 @@
 		border: none;
 	}
 
-	.aui-navbar-inner {
+	.navbar-inner {
 		padding-left: 12px;
 
-		.aui-search-query {
+		.search-query {
 			width: 260px;
 		}
 	}
@@ -37,7 +37,7 @@
 		}
 	}
 
-	.header-title, .aui-tree-node-content .aui-tree-label {
+	.header-title, .tree-node-content .tree-label {
 		word-wrap: break-word;
 	}
 
@@ -109,7 +109,7 @@
 			margin-left: 0;
 		}
 
-		.aui-active {
+		.active {
 			a:hover {
 				color: #D9EDF7;
 			}
@@ -156,7 +156,7 @@
 		margin: 10px 0;
 		text-align: center;
 
-		.aui-pagination-content {
+		.pagination-content {
 			margin: 0;
 		}
 	}
@@ -182,7 +182,7 @@
 }
 
 .portlet-asset-tag-admin-dialog {
-	.aui-fieldset {
+	.fieldset {
 		margin-bottom: 0;
 	}
 
@@ -191,7 +191,7 @@
 		border-width: 0;
 	}
 
-	.asset-tag-layer .aui-overlay {
+	.asset-tag-layer .overlay {
 		overflow: visible;
 		width: 230px;
 	}
@@ -200,7 +200,7 @@
 		.asset-tag-layer {
 			padding: 0 10px;
 
-			.aui-field-content {
+			.field-content {
 				margin-bottom: 10px;
 			}
 
@@ -209,7 +209,7 @@
 				font-weight: bold;
 			}
 
-			.aui-field {
+			.field {
 				input, select {
 					width: 200px;
 				}
@@ -279,7 +279,7 @@
 	}
 
 	.portlet-asset-tag-admin-dialog {
-		.yui3-widget-bd .asset-tag-layer .aui-field {
+		.yui3-widget-bd .asset-tag-layer .field {
 			width: 200px;
 		}
 	}

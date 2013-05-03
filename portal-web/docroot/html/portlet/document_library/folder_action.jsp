@@ -315,7 +315,7 @@ String iconMenuId = null;
 					%>
 
 					<liferay-ui:icon
-						cssClass="aui-hide upload-multiple-documents"
+						cssClass="hide upload-multiple-documents"
 						image="../document_library/add_multiple_documents"
 						message='<%= portletName.equals(PortletKeys.MEDIA_GALLERY_DISPLAY) ? "multiple-media" : "multiple-documents" %>'
 						url="<%= editFileEntryURL %>"

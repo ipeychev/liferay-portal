@@ -178,7 +178,7 @@ String[][] categorySections = {mainSections};
 						</c:if>
 					</liferay-ui:error>
 
-					<div class="aui-alert aui-alert-block">
+					<div class="alert alert-block">
 						<liferay-ui:message key="the-staging-environment-is-activated-changes-have-to-be-published-to-make-them-available-to-end-users" />
 					</div>
 				</c:if>
@@ -197,12 +197,12 @@ String[][] categorySections = {mainSections};
 
 				<c:choose>
 					<c:when test="<%= !SitesUtil.isLayoutUpdateable(selLayout) %>">
-						<div class="aui-alert aui-alert-block">
+						<div class="alert alert-block">
 							<liferay-ui:message key="this-page-cannot-be-modified-because-it-is-associated-to-a-site-template-does-not-allow-modifications-to-it" />
 						</div>
 					</c:when>
 					<c:when test="<%= !SitesUtil.isLayoutDeleteable(selLayout) %>">
-						<div class="aui-alert aui-alert-block">
+						<div class="alert alert-block">
 							<liferay-ui:message key="this-page-cannot-be-deleted-because-it-is-associated-to-a-site-template" />
 						</div>
 					</c:when>
@@ -214,7 +214,7 @@ String[][] categorySections = {mainSections};
 					UserGroup userGroup = UserGroupLocalServiceUtil.getUserGroup(selLayoutGroup.getClassPK());
 					%>
 
-					<div class="aui-alert aui-alert-block">
+					<div class="alert alert-block">
 						<liferay-ui:message arguments="<%= HtmlUtil.escape(userGroup.getName()) %>" key="this-page-cannot-be-modified-because-it-belongs-to-the-user-group-x" />
 					</div>
 				</c:if>
@@ -229,7 +229,7 @@ String[][] categorySections = {mainSections};
 					<c:if test="<%= LayoutPermissionUtil.contains(permissionChecker, selPlid, ActionKeys.ADD_LAYOUT) && PortalUtil.isLayoutParentable(selLayout.getType()) %>">
 						layoutToolbarButtonGroup.push(
 							{
-								icon: 'aui-icon-plus-sign',
+								icon: 'icon-plus-sign',
 								label: '<%= UnicodeLanguageUtil.get(pageContext, "add-child-page") %>',
 								on: {
 									click: function(event) {
@@ -258,7 +258,7 @@ String[][] categorySections = {mainSections};
 					<c:if test="<%= LayoutPermissionUtil.contains(permissionChecker, selPlid, ActionKeys.PERMISSIONS) %>">
 						layoutToolbarButtonGroup.push(
 							{
-								icon: 'aui-icon-lock',
+								icon: 'icon-lock',
 								label: '<%= UnicodeLanguageUtil.get(pageContext, "permissions") %>',
 								on: {
 									click: function(event) {
@@ -279,7 +279,7 @@ String[][] categorySections = {mainSections};
 					<c:if test="<%= LayoutPermissionUtil.contains(permissionChecker, selPlid, ActionKeys.DELETE) %>">
 						layoutToolbarButtonGroup.push(
 							{
-								icon: 'aui-icon-trash',
+								icon: 'icon-trash',
 								label: '<%= UnicodeLanguageUtil.get(pageContext, "delete") %>',
 								on: {
 									click: function(event) {

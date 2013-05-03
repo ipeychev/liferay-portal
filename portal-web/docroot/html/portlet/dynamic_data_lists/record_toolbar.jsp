@@ -37,7 +37,7 @@ long formDDMTemplateId = ParamUtil.getLong(request, "formDDMTemplateId");
 			</portlet:renderURL>
 
 			{
-				icon: 'aui-icon-time',
+				icon: 'icon-time',
 				label: '<%= UnicodeLanguageUtil.get(pageContext, "view-history") %>',
 				on: {
 					click: function (event) {

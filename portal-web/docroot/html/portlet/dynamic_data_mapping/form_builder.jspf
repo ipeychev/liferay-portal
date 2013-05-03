@@ -30,7 +30,7 @@ String defaultLanguageId = LocalizationUtil.getDefaultLocale(script);
 
 <div class="separator"><!-- --></div>
 
-<div class="aui-hide lfr-message-response aui-alert aui-alert-error" id="<portlet:namespace />messageContainer"></div>
+<div class="hide lfr-message-response alert alert-error" id="<portlet:namespace />messageContainer"></div>
 
 <liferay-ui:tabs
 	names='<%= LanguageUtil.get(pageContext, "view") + "," + LanguageUtil.get(pageContext, "source") %>'
@@ -47,12 +47,12 @@ String defaultLanguageId = LocalizationUtil.getDefaultLocale(script);
 				readOnly="<%= false %>"
 			/>
 
-			<div class="aui-diagram-builder aui-form-builder" id="<portlet:namespace />formBuilder">
-				<div class="aui-diagram-builder-content" id="<portlet:namespace />formBuilderContent">
-					<div class="aui-tabbable">
-						<div class="aui-tabbable-content">
-							<ul class="aui-nav aui-nav-tabs">
-								<li class="aui-active">
+			<div class="diagram-builder form-builder" id="<portlet:namespace />formBuilder">
+				<div class="diagram-builder-content" id="<portlet:namespace />formBuilderContent">
+					<div class="tabbable">
+						<div class="tabbable-content">
+							<ul class="nav nav-tabs">
+								<li class="active">
 									<a href="javascript:;">
 										<liferay-ui:message key="fields" />
 									</a>
@@ -63,15 +63,15 @@ String defaultLanguageId = LocalizationUtil.getDefaultLocale(script);
 									</a>
 								</li>
 							</ul>
-							<div class="aui-tab-content">
-								<div class="aui-tab-pane"></div>
-								<div class="aui-tab-pane"></div>
+							<div class="tab-content">
+								<div class="tab-pane"></div>
+								<div class="tab-pane"></div>
 							</div>
 						</div>
 					</div>
-					<div class="aui-diagram-builder-content-container">
-						<div class="aui-diagram-builder-canvas">
-							<div class="aui-diagram-builder-drop-container"></div>
+					<div class="diagram-builder-content-container">
+						<div class="diagram-builder-canvas">
+							<div class="diagram-builder-drop-container"></div>
 						</div>
 					</div>
 				</div>
@@ -80,8 +80,8 @@ String defaultLanguageId = LocalizationUtil.getDefaultLocale(script);
 	</liferay-ui:section>
 
 	<liferay-ui:section>
-		<div class="aui-form-builder-source-wrapper" id="<portlet:namespace />formBuilderSourceWrapper">
-			<div class="aui-form-builder-source" id="<portlet:namespace />formBuilderEditor"></div>
+		<div class="form-builder-source-wrapper" id="<portlet:namespace />formBuilderSourceWrapper">
+			<div class="form-builder-source" id="<portlet:namespace />formBuilderEditor"></div>
 		</div>
 	</liferay-ui:section>
 </liferay-ui:tabs>
@@ -107,9 +107,9 @@ for (Locale availableLocale : LanguageUtil.getAvailableLocales()) {
 
 	var MESSAGE_SUCCESS = 1;
 
-	var CSS_MESSAGE_ERROR = 'aui-alert aui-alert-error';
+	var CSS_MESSAGE_ERROR = 'alert alert-error';
 
-	var CSS_MESSAGE_SUCCESS = 'aui-alert aui-alert-success';
+	var CSS_MESSAGE_SUCCESS = 'alert alert-success';
 
 	var STR_VALUE = 'value';
 
@@ -185,7 +185,7 @@ for (Locale availableLocale : LanguageUtil.getAvailableLocales()) {
 	};
 
 	var isViewTabActive = function() {
-		return !A.one('#<portlet:namespace />formBuilderTab').ancestor().hasClass('aui-hide');
+		return !A.one('#<portlet:namespace />formBuilderTab').ancestor().hasClass('hide');
 	};
 
 	var reloadFormBuilderData = function(content) {

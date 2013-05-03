@@ -69,7 +69,7 @@ double trashEntriesMaxAge = PropertiesParamUtil.getInteger(groupTypeSettings, re
 			if (trashEntriesMaxAge) {
 				trashEntriesMaxAge.attr('disabled', !trashEnabled);
 
-				trashEntriesMaxAge.ancestor('.aui-field').toggleClass('aui-field-disabled', !trashEnabled);
+				trashEntriesMaxAge.ancestor('.field').toggleClass('field-disabled', !trashEnabled);
 			}
 		}
 	);

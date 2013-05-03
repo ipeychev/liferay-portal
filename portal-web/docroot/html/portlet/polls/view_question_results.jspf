@@ -19,13 +19,13 @@ NumberFormat numberFormat = NumberFormat.getNumberInstance(locale);
 NumberFormat percentFormat = NumberFormat.getPercentInstance(locale);
 %>
 
-<table class="aui-table aui-table-bordered aui-table-hover aui-table-striped">
-<thead class="aui-table-columns">
+<table class="table table-bordered table-hover table-striped">
+<thead class="table-columns">
 <tr>
-	<td class="aui-table-cell">
+	<td class="table-cell">
 		%
 	</td>
-	<td class="aui-table-cell" colspan="4">
+	<td class="table-cell" colspan="4">
 		<liferay-ui:message key="votes" />
 	</td>
 </tr>
@@ -56,27 +56,27 @@ for (int i = 0; i < choices.size(); i++) {
 	int votesPercentWidth = (int)Math.floor(votesPercent * 100);
 %>
 
-<tbody class="aui-table-data">
+<tbody class="table-data">
 <tr>
-	<td class="aui-table-cell">
+	<td class="table-cell">
 		<%= percentFormat.format(votesPercent) %>
 	</td>
-	<td class="aui-table-cell">
+	<td class="table-cell">
 		<%= numberFormat.format(choiceVotes) %>
 	</td>
 
-	<td class="aui-table-cell">
-		<div class="aui-progress-bar aui-progress-bar-horizontal <%= votesPercentWidth == 0 ? "no-progress" : StringPool.BLANK %>" style="height: 1.4em; width: <%= votesPixelWidth %>px;">
-			<div class="aui-progress-bar-content">
-				<div class="aui-progress-bar-status" style="height: 100%; top: auto; width: <%= votesPercentWidth %>%; "></div>
+	<td class="table-cell">
+		<div class="progress-bar progress-bar-horizontal <%= votesPercentWidth == 0 ? "no-progress" : StringPool.BLANK %>" style="height: 1.4em; width: <%= votesPixelWidth %>px;">
+			<div class="progress-bar-content">
+				<div class="progress-bar-status" style="height: 100%; top: auto; width: <%= votesPercentWidth %>%; "></div>
 			</div>
 		</div>
 	</td>
 
-	<td class="aui-table-cell">
+	<td class="table-cell">
 		<strong><%= choice.getName() %>.</strong>
 	</td>
-	<td class="aui-table-cell">
+	<td class="table-cell">
 		<%= choice.getDescription(locale) %>
 	</td>
 </tr>

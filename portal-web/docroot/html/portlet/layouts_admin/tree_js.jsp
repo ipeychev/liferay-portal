@@ -769,7 +769,7 @@ if (!selectableTree) {
 </aui:script>
 
 <div class="lfr-tree-loading" id="<portlet:namespace />treeLoading<%= treeLoading %>">
-	<span class="aui-icon aui-icon-loading lfr-tree-loading-icon"></span>
+	<span class="icon icon-loading lfr-tree-loading-icon"></span>
 </div>
 
 <div class="lfr-tree" id="<portlet:namespace /><%= HtmlUtil.escape(treeId) %>Output"></div>

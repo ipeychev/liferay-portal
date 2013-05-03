@@ -57,13 +57,13 @@ if (!dlFileEntries.isEmpty()) {
 
 <c:choose>
 	<c:when test="<%= dlFileEntry == null %>">
-			<div class="aui-alert aui-alert-success">
+			<div class="alert alert-success">
 				<liferay-ui:message key="there-are-no-longer-any-documents-and-media-files-with-extra-settings" />
 			</div>
 	</c:when>
 	<c:otherwise>
 		<c:if test="<%= (expandoBridgeAttributeNames != null) && !expandoBridgeAttributeNames.isEmpty() %>">
-			<div class="aui-alert aui-alert-error">
+			<div class="alert alert-error">
 				<%= LanguageUtil.format(pageContext, "custom-fields-already-exist-for-these-extra-settings-x", StringUtil.merge(expandoBridgeAttributeNames)) %>
 			</div>
 		</c:if>

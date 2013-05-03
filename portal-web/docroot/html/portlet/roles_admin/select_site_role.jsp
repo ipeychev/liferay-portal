@@ -61,7 +61,7 @@ if (step == 1) {
 				title="site-roles"
 			/>
 
-			<div class="aui-alert aui-alert-info">
+			<div class="alert alert-info">
 				<liferay-ui:message key="please-select-a-site-to-which-you-will-assign-a-site-role" />
 			</div>
 

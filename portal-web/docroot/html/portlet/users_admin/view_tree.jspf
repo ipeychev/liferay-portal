@@ -95,7 +95,7 @@ if (filterManageableOrganizations) {
 					/>
 				</c:when>
 				<c:otherwise>
-					<span class="aui-form-search">
+					<span class="form-search">
 						<aui:input inlineField="<%= true %>" label="" name="keywords" size="30" title="search-users-and-organizations" type="text" />
 
 						<aui:button onClick='<%= "javascript:" + renderResponse.getNamespace() + "search();" %>' value="search" />
@@ -459,7 +459,7 @@ if (filterManageableOrganizations) {
 		</aui:row>
 	</c:when>
 	<c:otherwise>
-		<div class="aui-alert aui-alert-info">
+		<div class="alert alert-info">
 			<liferay-ui:message key="you-do-not-belong-to-an-organization-and-are-not-allowed-to-view-other-organizations" />
 		</div>
 	</c:otherwise>

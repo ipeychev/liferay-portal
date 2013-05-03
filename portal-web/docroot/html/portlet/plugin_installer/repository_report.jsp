@@ -37,12 +37,12 @@
 			<td>
 				<c:choose>
 					<c:when test="<%= status.equals(RepositoryReport.SUCCESS) %>">
-						<div class="aui-alert aui-alert-success">
+						<div class="alert alert-success">
 							<liferay-ui:message key="ok" />
 						</div>
 					</c:when>
 					<c:otherwise>
-						<div class="aui-alert aui-alert-error">
+						<div class="alert alert-error">
 							<%= status %>
 						</div>
 					</c:otherwise>

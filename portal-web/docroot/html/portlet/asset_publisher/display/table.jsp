@@ -67,10 +67,10 @@ request.setAttribute("view.jsp-showIconLabel", false);
 %>
 
 <c:if test="<%= assetEntryIndex == 0 %>">
-	<table class="aui-table aui-table-bordered aui-table-hover aui-table-striped">
-	<thead class="aui-table-columns">
+	<table class="table table-bordered table-hover table-striped">
+	<thead class="table-columns">
 	<tr>
-		<th class="aui-table-header aui-table-sortable-column">
+		<th class="table-header table-sortable-column">
 			<liferay-ui:message key="title" />
 		</th>
 
@@ -78,7 +78,7 @@ request.setAttribute("view.jsp-showIconLabel", false);
 		for (int m = 0; m < metadataFields.length; m++) {
 		%>
 
-			<th class="aui-table-header">
+			<th class="table-header">
 				<liferay-ui:message key="<%= metadataFields[m] %>" />
 			</th>
 
@@ -87,17 +87,17 @@ request.setAttribute("view.jsp-showIconLabel", false);
 		%>
 
 		<c:if test="<%= assetRenderer.hasEditPermission(permissionChecker) && (editPortletURL != null) && !stageableGroup.hasStagingGroup() %>">
-			<th class="aui-table-header"></th>
+			<th class="table-header"></th>
 		</c:if>
 	</tr>
 	</thead>
 
-	<tbody class="aui-table-data">
+	<tbody class="table-data">
 </c:if>
 
 
 <tr>
-	<td class="aui-table-cell">
+	<td class="table-cell">
 		<c:choose>
 			<c:when test="<%= Validator.isNotNull(viewURL) %>">
 				<a href="<%= viewURL %>"><%= HtmlUtil.escape(title) %></a>
@@ -148,7 +148,7 @@ request.setAttribute("view.jsp-showIconLabel", false);
 		else if (metadataFields[m].equals("categories")) {
 		%>
 
-			<td class="aui-table-cell">
+			<td class="table-cell">
 				<liferay-ui:asset-categories-summary
 					className="<%= assetEntry.getClassName() %>"
 					classPK="<%= assetEntry.getClassPK() %>"
@@ -161,7 +161,7 @@ request.setAttribute("view.jsp-showIconLabel", false);
 		else if (metadataFields[m].equals("tags")) {
 		%>
 
-			<td class="aui-table-cell">
+			<td class="table-cell">
 				<liferay-ui:asset-tags-summary
 					className="<%= assetEntry.getClassName() %>"
 					classPK="<%= assetEntry.getClassPK() %>"
@@ -175,7 +175,7 @@ request.setAttribute("view.jsp-showIconLabel", false);
 		if (value != null) {
 	%>
 
-			<td class="aui-table-cell">
+			<td class="table-cell">
 				<liferay-ui:message key="<%= value %>" />
 			</td>
 
@@ -185,7 +185,7 @@ request.setAttribute("view.jsp-showIconLabel", false);
 	%>
 
 	<c:if test="<%= assetRenderer.hasEditPermission(permissionChecker) && (editPortletURL != null) && !stageableGroup.hasStagingGroup() %>">
-		<td class="aui-table-cell">
+		<td class="table-cell">
 			<liferay-util:include page="/html/portlet/asset_publisher/asset_actions.jsp" />
 		</td>
 	</c:if>

@@ -43,12 +43,12 @@ request.setAttribute("record_set_action.jsp-selRecordSet", selRecordSet);
 
 	<liferay-ui:error exception="<%= NoSuchRecordSetException.class %>" message="the-list-could-not-be-found" />
 
-	<div class="aui-alert aui-alert-info">
-		<span class="displaying-help-message-holder <%= selRecordSet == null ? StringPool.BLANK : "aui-hide" %>">
+	<div class="alert alert-info">
+		<span class="displaying-help-message-holder <%= selRecordSet == null ? StringPool.BLANK : "hide" %>">
 			<liferay-ui:message key="please-select-a-list-entry-from-the-list-below" />
 		</span>
 
-		<span class="displaying-record-set-id-holder <%= selRecordSet == null ? "aui-hide" : StringPool.BLANK %>">
+		<span class="displaying-record-set-id-holder <%= selRecordSet == null ? "hide" : StringPool.BLANK %>">
 			<liferay-ui:message key="displaying-list" />: <span class="displaying-record-set-id"><%= selRecordSet != null ? HtmlUtil.escape(selRecordSet.getName(locale)) : StringPool.BLANK %></span>
 		</span>
 	</div>
@@ -190,7 +190,7 @@ request.setAttribute("record_set_action.jsp-selRecordSet", selRecordSet);
 	<aui:input name="preferences--editable--" type="hidden" value="<%= editable %>" />
 	<aui:input name="preferences--spreadsheet--" type="hidden" value="<%= spreadsheet %>" />
 
-	<aui:fieldset cssClass="aui-hide">
+	<aui:fieldset cssClass="hide">
 		<aui:field-wrapper label="portlet-id">
 			<%= portletResource %>
 		</aui:field-wrapper>

@@ -58,12 +58,12 @@ Group parentGroup = themeDisplay.getSiteGroup();
 <div id="<portlet:namespace />pagesContainer">
 	<aui:input id="pagesContainerInput" name="layoutUuid" type="hidden" value="<%= layoutUuid %>" />
 
-	<div class="display-page-item-container aui-hide" id="<portlet:namespace />displayPageItemContainer">
+	<div class="display-page-item-container hide" id="<portlet:namespace />displayPageItemContainer">
 		<span class="display-page-item">
 			<span>
 				<span id="<portlet:namespace />displayPageNameInput"><%= layoutBreadcrumb %></span>
 
-				<span class="display-page-item-remove aui-icon aui-icon-close" id="<portlet:namespace />displayPageItemRemove" tabindex="0"></span>
+				<span class="display-page-item-remove icon icon-close" id="<portlet:namespace />displayPageItemRemove" tabindex="0"></span>
 			</span>
 		</span>
 	</div>
@@ -87,7 +87,7 @@ Group parentGroup = themeDisplay.getSiteGroup();
 			'</div>';
 
 			var TPL_TAB_VIEW = '<div id="<portlet:namespace />{pagesTabViewId}"></div>' +
-				'<div class="aui-alert aui-alert-block selected-page-message" id="<portlet:namespace />selectedPageMessage">' +
+				'<div class="alert alert-block selected-page-message" id="<portlet:namespace />selectedPageMessage">' +
 					'<%= UnicodeLanguageUtil.get(pageContext, "there-is-no-selected-page") %>' +
 				'</div>';
 
@@ -161,7 +161,7 @@ Group parentGroup = themeDisplay.getSiteGroup();
 				var cssClass = 'selected-page-message';
 
 				if (type) {
-					cssClass += ' aui-alert aui-alert-' + type;
+					cssClass += ' alert alert-' + type;
 				}
 
 				selectedNodeMessage.attr('className', cssClass);
@@ -519,7 +519,7 @@ Group parentGroup = themeDisplay.getSiteGroup();
 								disabled: true,
 							</c:if>
 
-							icon: 'aui-icon-search',
+							icon: 'icon-search',
 							label: '<%= UnicodeLanguageUtil.get(pageContext, "select") %>',
 							on: {
 								click: onSelectDisplayPage

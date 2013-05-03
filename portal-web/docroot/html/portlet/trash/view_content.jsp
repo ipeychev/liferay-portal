@@ -197,7 +197,7 @@
 				</c:if>
 
 				<c:if test="<%= (containerModelsCount + baseModelsCount) == 0 %>">
-					<div class="aui-alert aui-alert-info">
+					<div class="alert alert-info">
 						<liferay-ui:message arguments="<%= new String[] {ResourceActionsUtil.getModelResource(locale, className)} %>" key="this-x-does-not-contain-an-entry" />
 					</div>
 				</c:if>
@@ -275,7 +275,7 @@
 
 				entryToolbarGroup.push(
 					{
-						icon: 'aui-icon-backward',
+						icon: 'icon-backward',
 						label: '<%= UnicodeLanguageUtil.get(pageContext, "restore") %>',
 						on: {
 							click: function(event) {
@@ -295,7 +295,7 @@
 
 					entryToolbarGroup.push(
 						{
-							icon: 'aui-icon-remove',
+							icon: 'icon-remove',
 							label: '<%= UnicodeLanguageUtil.get(pageContext, "delete") %>',
 							on: {
 								click: function(event) {
@@ -320,7 +320,7 @@
 
 					entryToolbarGroup.push(
 						{
-							icon: 'aui-icon-backward',
+							icon: 'icon-backward',
 							label: '<%= UnicodeLanguageUtil.get(pageContext, "restore") %>',
 							on: {
 								click: function(event) {
@@ -342,7 +342,7 @@
 
 					entryToolbarGroup.push(
 						{
-							icon: 'aui-icon-remove',
+							icon: 'icon-remove',
 							label: '<%= UnicodeLanguageUtil.get(pageContext, "delete") %>',
 							on: {
 								click: function(event) {

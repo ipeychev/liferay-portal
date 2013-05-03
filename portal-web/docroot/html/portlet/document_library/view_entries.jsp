@@ -326,7 +326,7 @@ request.setAttribute("view_entries.jsp-entryEnd", String.valueOf(entryEnd));
 </div>
 
 <c:if test="<%= results.isEmpty() %>">
-	<div class="entries-empty aui-alert aui-alert-info">
+	<div class="entries-empty alert alert-info">
 		<c:choose>
 			<c:when test="<%= (fileEntryTypeId >= 0) %>">
 				<c:choose>

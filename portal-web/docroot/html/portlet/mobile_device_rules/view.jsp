@@ -58,10 +58,10 @@ portletURL.setParameter("chooseCallback", chooseCallback);
 
 			<aui:nav-bar>
 				<aui:nav>
-					<aui:nav-item href="<%= addRuleGroupURL %>" iconClass="aui-icon-plus" label="add-rule-group" />
+					<aui:nav-item href="<%= addRuleGroupURL %>" iconClass="icon-plus" label="add-rule-group" />
 				</aui:nav>
 
-				<aui:nav-bar-search cssClass="aui-pull-right" file="/html/portlet/mobile_device_rules/rule_group_search.jsp" searchContainer="<%= ruleGroupSearch %>" />
+				<aui:nav-bar-search cssClass="pull-right" file="/html/portlet/mobile_device_rules/rule_group_search.jsp" searchContainer="<%= ruleGroupSearch %>" />
 			</aui:nav-bar>
 		</c:if>
 

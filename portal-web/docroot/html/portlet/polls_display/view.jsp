@@ -27,7 +27,7 @@ PollsQuestion question = (PollsQuestion)request.getAttribute(WebKeys.POLLS_QUEST
 		renderRequest.setAttribute(WebKeys.PORTLET_CONFIGURATOR_VISIBILITY, Boolean.TRUE);
 		%>
 
-		<div class="aui-alert aui-alert-info portlet-configuration">
+		<div class="alert alert-info portlet-configuration">
 			<a href="<%= portletDisplay.getURLConfiguration() %>" onClick="<%= portletDisplay.getURLConfigurationJS() %>">
 				<liferay-ui:message key="please-configure-this-portlet-to-make-it-visible-to-all-users" />
 			</a>
@@ -85,7 +85,7 @@ PollsQuestion question = (PollsQuestion)request.getAttribute(WebKeys.POLLS_QUEST
 					<%@ include file="/html/portlet/polls/view_question_results.jspf" %>
 
 					<c:if test="<%= !themeDisplay.isSignedIn() && !question.isExpired() && !PollsQuestionPermission.contains(permissionChecker, question, ActionKeys.ADD_VOTE) %>">
-						<div class="aui-alert aui-alert-info">
+						<div class="alert alert-info">
 							<a href="<%= themeDisplay.getURLSignIn() %>" target="_top"><liferay-ui:message key="please-sign-in-to-vote" /></a>
 						</div>
 					</c:if>
@@ -122,7 +122,7 @@ boolean showIconsActions = themeDisplay.isSignedIn() && (hasConfigurationPermiss
 	%>
 
 	<div class="lfr-meta-actions icons-container">
-		<div class="icon-actions">
+		<div class="lfr-icon-actions">
 			<c:if test="<%= showEditPollIcon %>">
 				<liferay-portlet:renderURL doAsGroupId="<%= scopeGroupId %>" plid="<%= controlPanelPlid %>" portletName="<%= PortletKeys.POLLS %>" refererPlid="<%= plid %>" var="editPollURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
 					<liferay-portlet:param name="struts_action" value="/polls/edit_question" />
@@ -136,7 +136,7 @@ boolean showIconsActions = themeDisplay.isSignedIn() && (hasConfigurationPermiss
 				%>
 
 				<liferay-ui:icon
-					cssClass="icon-action icon-action-edit"
+					cssClass="lfr-icon-action lfr-icon-action-edit"
 					image="edit"
 					label="<%= true %>"
 					message="edit-question"
@@ -146,7 +146,7 @@ boolean showIconsActions = themeDisplay.isSignedIn() && (hasConfigurationPermiss
 
 			<c:if test="<%= hasConfigurationPermission %>">
 				<liferay-ui:icon
-					cssClass="icon-action icon-action-configuration"
+					cssClass="lfr-icon-action lfr-icon-action-configuration"
 					image="configuration"
 					label="<%= true %>"
 					message="select-question"
@@ -168,7 +168,7 @@ boolean showIconsActions = themeDisplay.isSignedIn() && (hasConfigurationPermiss
 				%>
 
 				<liferay-ui:icon
-					cssClass="icon-action icon-action-add"
+					cssClass="lfr-icon-action lfr-icon-action-add"
 					image="add_article"
 					label="<%= true %>"
 					message="add-question"

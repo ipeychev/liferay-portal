@@ -38,9 +38,9 @@ long groupId = ParamUtil.getLong(request, "groupId", scopeGroupId);
 				<portlet:param name="groupId" value="<%= String.valueOf(groupId) %>" />
 			</portlet:renderURL>
 
-			<aui:nav-item href="<%= addStructureURL %>" iconClass="aui-icon-plus" label="add" selected='<%= toolbarItem.equals("add") %>' />
+			<aui:nav-item href="<%= addStructureURL %>" iconClass="icon-plus" label="add" selected='<%= toolbarItem.equals("add") %>' />
 		</c:if>
 	</aui:nav>
 
-	<aui:nav-bar-search cssClass="aui-pull-right" file="/html/portlet/dynamic_data_mapping/structure_search.jsp" />
+	<aui:nav-bar-search cssClass="pull-right" file="/html/portlet/dynamic_data_mapping/structure_search.jsp" />
 </aui:nav-bar>

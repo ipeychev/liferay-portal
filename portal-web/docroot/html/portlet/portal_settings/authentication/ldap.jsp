@@ -107,7 +107,7 @@ if (ldapAuthEnabled && (ldapServerIds.length <= 0) && Validator.isNull(PrefsProp
 <h3><liferay-ui:message key="ldap-servers" /></h3>
 
 <c:if test="<%= ldapAuthEnabled && (ldapServerIds.length <= 0) %>">
-	<div class="aui-alert aui-alert-info">
+	<div class="alert alert-info">
 		<liferay-ui:message key="default-ldap-server-settings-are-in-use-please-add-an-ldap-server-to-override-the-default-settings" />
 	</div>
 </c:if>
@@ -130,17 +130,17 @@ if (ldapAuthEnabled && (ldapServerIds.length <= 0) && Validator.isNull(PrefsProp
 	<c:if test="<%= ldapServerIds.length > 0 %>">
 		<br /><br />
 
-		<div class="aui-searchcontainer-content ldap-servers">
-			<table class="aui-table aui-table-bordered aui-table-hover aui-table-striped">
-			<thead class="aui-table-columns">
+		<div class="searchcontainer-content ldap-servers">
+			<table class="table table-bordered table-hover table-striped">
+			<thead class="table-columns">
 			<tr>
-				<td class="aui-table-header">
+				<td class="table-header">
 					<liferay-ui:message key="ldap-server-id" />
 				</th>
-				<td class="aui-table-header">
+				<td class="table-header">
 					<liferay-ui:message key="ldap-server-name" />
 				</th>
-				<td class="aui-table-header"></th>
+				<td class="table-header"></th>
 			</tr>
 			</thead>
 
@@ -154,13 +154,13 @@ if (ldapAuthEnabled && (ldapServerIds.length <= 0) && Validator.isNull(PrefsProp
 			%>
 
 				<tr data-ldapServerId="<%= ldapServerId %>">
-					<td class="aui-table-cell">
+					<td class="table-cell">
 						<%= ldapServerId %>
 					</td>
-					<td class="aui-table-cell">
+					<td class="table-cell">
 						<%= ldapServerName %>
 					</td>
-					<td align="right" class="aui-table-cell">
+					<td align="right" class="table-cell">
 						<div class="control">
 							<c:if test="<%= ldapServerIds.length > 1 %>">
 
@@ -319,7 +319,7 @@ if (ldapAuthEnabled && (ldapServerIds.length <= 0) && Validator.isNull(PrefsProp
 
 			var ldapServerIds = [];
 
-			A.all('.ldap-servers .aui-table-data tr').each(
+			A.all('.ldap-servers .table-data tr').each(
 				function(item, index, collection) {
 					ldapServerIds.push(item.getAttribute('data-ldapServerId'));
 				}

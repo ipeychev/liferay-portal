@@ -21,7 +21,7 @@ PortletURL portletURL = renderResponse.createRenderURL();
 %>
 
 <div id="lfr-look-and-feel">
-	<div class="aui-tabbable-content" id="portlet-set-properties">
+	<div class="tabbable-content" id="portlet-set-properties">
 		<liferay-ui:tabs
 			names="portlet-configuration,text-styles,background-styles,border-styles,margin-and-padding,advanced-styling,wap-styling"
 			url="<%= portletURL.toString() %>"
@@ -31,9 +31,9 @@ PortletURL portletURL = renderResponse.createRenderURL();
 			<input id="portlet-area" name="portlet-area" type="hidden" />
 			<input id="portlet-boundary-id" name="portlet-boundary-id" type="hidden" />
 
-			<div class="aui-tab-pane">
+			<div class="tab-pane">
 				<aui:fieldset id="portlet-config">
-					<span class="aui-field-row">
+					<span class="field-row">
 						<aui:input inlineField="<%= true %>" label="portlet-title" name="custom-title" />
 
 						<aui:select inlineField="<%= true %>" label="portlet-title" name="lfr-portlet-language">
@@ -117,7 +117,7 @@ PortletURL portletURL = renderResponse.createRenderURL();
 						<aui:option label="no" value="false" />
 					</aui:select>
 
-					<span class="aui-alert aui-alert-info aui-hide form-hint" id="border-note">
+					<span class="alert alert-info hide form-hint" id="border-note">
 						<liferay-ui:message key="this-change-will-only-be-shown-after-you-refresh-the-page" />
 					</span>
 				</aui:fieldset>
@@ -243,7 +243,7 @@ PortletURL portletURL = renderResponse.createRenderURL();
 							<aui:fieldset label="border-width">
 								<aui:input checked="checked" cssClass="lfr-use-for-all" label="same-for-all" name="lfr-use-for-all-width" type="checkbox" />
 
-								<span class="aui-field-row">
+								<span class="field-row">
 									<aui:input inlineField="<%= true %>" label="top" name="lfr-border-width-top" />
 
 									<aui:select inlineField="<%= true %>" label="" name="lfr-border-width-top-unit">
@@ -253,7 +253,7 @@ PortletURL portletURL = renderResponse.createRenderURL();
 									</aui:select>
 								</span>
 
-								<span class="aui-field-row">
+								<span class="field-row">
 									<aui:input inlineField="<%= true %>" label="right" name="lfr-border-width-right" />
 
 									<aui:select inlineField="<%= true %>" label="" name="lfr-border-width-right-unit">
@@ -263,7 +263,7 @@ PortletURL portletURL = renderResponse.createRenderURL();
 									</aui:select>
 								</span>
 
-								<span class="aui-field-row">
+								<span class="field-row">
 									<aui:input inlineField="<%= true %>" label="bottom" name="lfr-border-width-bottom" />
 
 									<aui:select inlineField="<%= true %>" label="" name="lfr-border-width-bottom-unit">
@@ -273,7 +273,7 @@ PortletURL portletURL = renderResponse.createRenderURL();
 									</aui:select>
 								</span>
 
-								<span class="aui-field-row">
+								<span class="field-row">
 									<aui:input inlineField="<%= true %>" label="left" name="lfr-border-width-left" />
 
 									<aui:select inlineField="<%= true %>" label="" name="lfr-border-width-left-unit">
@@ -355,13 +355,13 @@ PortletURL portletURL = renderResponse.createRenderURL();
 					</aui:row>
 				</aui:fieldset>
 
-				<aui:fieldset cssClass="spacing aui-fieldset" id="spacing-styles">
+				<aui:fieldset cssClass="spacing fieldset" id="spacing-styles">
 					<aui:row>
 						<aui:col cssClass="lfr-padding use-for-all-column" width="<%= 50 %>">
 							<aui:fieldset label="padding">
 								<aui:input checked="checked" cssClass="lfr-use-for-all" label="same-for-all" name="lfr-use-for-all-padding" type="checkbox" />
 
-								<span class="aui-field-row">
+								<span class="field-row">
 									<aui:input inlineField="<%= true %>" label="top" name="lfr-padding-top" />
 
 									<aui:select inlineField="<%= true %>" label="" name="lfr-padding-top-unit">
@@ -371,7 +371,7 @@ PortletURL portletURL = renderResponse.createRenderURL();
 									</aui:select>
 								</span>
 
-								<span class="aui-field-row">
+								<span class="field-row">
 									<aui:input inlineField="<%= true %>" label="right" name="lfr-padding-right" />
 
 									<aui:select inlineField="<%= true %>" label="" name="lfr-padding-right-unit">
@@ -381,7 +381,7 @@ PortletURL portletURL = renderResponse.createRenderURL();
 									</aui:select>
 								</span>
 
-								<span class="aui-field-row">
+								<span class="field-row">
 									<aui:input inlineField="<%= true %>" label="bottom" name="lfr-padding-bottom" />
 
 									<aui:select inlineField="<%= true %>" label="" name="lfr-padding-bottom-unit">
@@ -391,7 +391,7 @@ PortletURL portletURL = renderResponse.createRenderURL();
 									</aui:select>
 								</span>
 
-								<span class="aui-field-row">
+								<span class="field-row">
 									<aui:input inlineField="<%= true %>" label="left" name="lfr-padding-left" />
 
 									<aui:select inlineField="<%= true %>" label="" name="lfr-padding-left-unit">
@@ -407,7 +407,7 @@ PortletURL portletURL = renderResponse.createRenderURL();
 							<aui:fieldset label="margin">
 								<aui:input checked="checked" cssClass="lfr-use-for-all" label="same-for-all" name="lfr-use-for-all-margin" type="checkbox" />
 
-								<span class="aui-field-row">
+								<span class="field-row">
 									<aui:input inlineField="<%= true %>" label="top" name="lfr-margin-top" />
 
 									<aui:select inlineField="<%= true %>" label="" name="lfr-margin-top-unit">
@@ -417,7 +417,7 @@ PortletURL portletURL = renderResponse.createRenderURL();
 									</aui:select>
 								</span>
 
-								<span class="aui-field-row">
+								<span class="field-row">
 									<aui:input inlineField="<%= true %>" label="right" name="lfr-margin-right" />
 
 									<aui:select inlineField="<%= true %>" label="" name="lfr-margin-right-unit">
@@ -427,7 +427,7 @@ PortletURL portletURL = renderResponse.createRenderURL();
 									</aui:select>
 								</span>
 
-								<span class="aui-field-row">
+								<span class="field-row">
 									<aui:input inlineField="<%= true %>" label="bottom" name="lfr-margin-bottom" />
 
 									<aui:select inlineField="<%= true %>" label="" name="lfr-margin-bottom-unit">
@@ -437,7 +437,7 @@ PortletURL portletURL = renderResponse.createRenderURL();
 									</aui:select>
 								</span>
 
-								<span class="aui-field-row">
+								<span class="field-row">
 									<aui:input inlineField="<%= true %>" label="left" name="lfr-margin-left" />
 
 									<aui:select inlineField="<%= true %>" label="" name="lfr-margin-left-unit">

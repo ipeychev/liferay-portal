@@ -31,7 +31,7 @@ boolean hasLayoutUpdatePermission = LayoutPermissionUtil.contains(permissionChec
 String toggleControlsState = GetterUtil.getString(SessionClicks.get(request, "liferay_toggle_controls", ""));
 %>
 
-<aui:nav-bar cssClass="aui-navbar-fixed-top dockbar" data-namespace="<%= renderResponse.getNamespace() %>" id="dockbar">
+<aui:nav-bar cssClass="navbar-fixed-top dockbar" data-namespace="<%= renderResponse.getNamespace() %>" id="dockbar">
 	<aui:nav>
 		<c:if test="<%= group.isControlPanel() %>">
 
@@ -84,11 +84,11 @@ String toggleControlsState = GetterUtil.getString(SessionClicks.get(request, "li
 			}
 			%>
 
-			<aui:nav-item href="<%= backURL %>" iconClass="aui-icon-arrow-left" id="backLink" label='<%= LanguageUtil.format(pageContext, "back-to-x", HtmlUtil.escape(refererGroupDescriptiveName), false) %>' />
+			<aui:nav-item href="<%= backURL %>" iconClass="icon-arrow-left" id="backLink" label='<%= LanguageUtil.format(pageContext, "back-to-x", HtmlUtil.escape(refererGroupDescriptiveName), false) %>' />
 		</c:if>
 
 		<c:if test="<%= !group.isControlPanel() && (!group.hasStagingGroup() || group.isStagingGroup()) && (GroupPermissionUtil.contains(permissionChecker, group.getGroupId(), ActionKeys.ADD_LAYOUT) || hasLayoutUpdatePermission || (layoutTypePortlet.isCustomizable() && layoutTypePortlet.isCustomizedView() && hasLayoutCustomizePermission)) %>">
-			<aui:nav-item dropdown="<%= true %>" iconClass="aui-icon-plus" id="addContent" label="add">
+			<aui:nav-item dropdown="<%= true %>" iconClass="icon-plus" id="addContent" label="add">
 				<c:if test="<%= GroupPermissionUtil.contains(permissionChecker, scopeGroupId, ActionKeys.ADD_LAYOUT) && !group.isLayoutPrototype() %>">
 					<aui:nav-item anchorId="addPage" label="page" />
 				</c:if>
@@ -105,7 +105,7 @@ String toggleControlsState = GetterUtil.getString(SessionClicks.get(request, "li
 		</c:if>
 
 		<c:if test="<%= !group.isControlPanel() && (themeDisplay.isShowLayoutTemplatesIcon() || themeDisplay.isShowManageSiteIcon() || themeDisplay.isShowPageSettingsIcon()) %>">
-			<aui:nav-item dropdown="<%= true %>" iconClass="aui-icon-cog" id="manageContent" label="manage">
+			<aui:nav-item dropdown="<%= true %>" iconClass="icon-cog" id="manageContent" label="manage">
 
 				<%
 				String useDialogFullDialog = StringPool.BLANK;
@@ -133,18 +133,18 @@ String toggleControlsState = GetterUtil.getString(SessionClicks.get(request, "li
 			</aui:nav-item>
 
 			<c:if test="<%= themeDisplay.isShowPageCustomizationIcon() %>">
-				<div class="aui-hide layout-customizable-controls" id="<portlet:namespace />layout-customizable-controls">
+				<div class="hide layout-customizable-controls" id="<portlet:namespace />layout-customizable-controls">
 					<span title='<liferay-ui:message key="customizable-help" />'>
 						<aui:input cssClass="layout-customizable-checkbox" helpMessage='<%= group.isLayoutPrototype() ? "modifiable-help" : "customizable-help" %>' id="TypeSettingsProperties--[COLUMN_ID]-customizable--" label='<%= (group.isLayoutSetPrototype() || group.isLayoutPrototype()) ? "modifiable" : "customizable" %>' name="TypeSettingsProperties--[COLUMN_ID]-customizable--" type="checkbox" useNamespace="<%= false %>" />
 					</span>
 				</div>
 			</c:if>
 
-			<aui:nav-item cssClass="aui-divider-vertical"></aui:nav-item>
+			<aui:nav-item cssClass="divider-vertical"></aui:nav-item>
 
 			<c:if test="<%= !group.isControlPanel() && hasLayoutUpdatePermission || (layoutTypePortlet.isCustomizable() && layoutTypePortlet.isCustomizedView() && hasLayoutCustomizePermission) %>">
 				<liferay-util:buffer var="editControlsLabel">
-					<i class="controls-state-icon <%= toggleControlsState.equals("visible") ? "aui-icon-ok" : "aui-icon-remove" %>"></i>
+					<i class="controls-state-icon <%= toggleControlsState.equals("visible") ? "icon-ok" : "icon-remove" %>"></i>
 
 					<liferay-ui:message key="edit-controls" />
 				</liferay-util:buffer>
@@ -154,29 +154,29 @@ String toggleControlsState = GetterUtil.getString(SessionClicks.get(request, "li
 		</c:if>
 	</aui:nav>
 
-	<aui:nav cssClass="aui-pull-right">
+	<aui:nav cssClass="pull-right">
 		<c:if test="<%= user.hasMySites() %>">
-			<li class="aui-dropdown my-sites" id="mySites">
-				<a class="aui-dropdown-toggle" href="javascript:;">
+			<li class="dropdown my-sites" id="mySites">
+				<a class="dropdown-toggle" href="javascript:;">
 					<liferay-ui:message key="go-to" />
 
-					<b class="aui-caret"></b>
+					<b class="caret"></b>
 				</a>
 
-				<liferay-ui:my-sites cssClass="aui-dropdown-menu my-sites-menu" />
+				<liferay-ui:my-sites cssClass="dropdown-menu my-sites-menu" />
 
 				<aui:script use="aui-base">
 					A.one('#mySites').on(
 						'click',
 						function(event) {
-							event.currentTarget.toggleClass('aui-open');
+							event.currentTarget.toggleClass('open');
 						}
 					);
 				</aui:script>
 			</li>
 		</c:if>
 
-		<aui:nav-item cssClass="aui-divider-vertical"></aui:nav-item>
+		<aui:nav-item cssClass="divider-vertical"></aui:nav-item>
 
 		<%
 		String useDialog = StringPool.BLANK;
@@ -198,7 +198,7 @@ String toggleControlsState = GetterUtil.getString(SessionClicks.get(request, "li
 
 		<liferay-util:buffer var="userName">
 			<c:if test="<%= themeDisplay.isImpersonated() %>">
-				<b class="alert-icon aui-icon-warning-sign"></b>
+				<b class="alert-icon icon-warning-sign"></b>
 			</c:if>
 
 			<img alt="<liferay-ui:message key="manage-my-account" />" src="<%= HtmlUtil.escape(user.getPortraitURL(themeDisplay)) %>" />
@@ -220,7 +220,7 @@ String toggleControlsState = GetterUtil.getString(SessionClicks.get(request, "li
 					}
 					%>
 
-					<div class="aui-alert aui-alert-info"><%= impersonatingUserLabel %></div>
+					<div class="alert alert-info"><%= impersonatingUserLabel %></div>
 
 					<liferay-util:buffer var="leaveImpersonationLabel">
 						<liferay-ui:message key="be-yourself-again" /> (<%= HtmlUtil.escape(realUser.getFullName()) %>)
@@ -267,11 +267,11 @@ String toggleControlsState = GetterUtil.getString(SessionClicks.get(request, "li
 </aui:nav-bar>
 
 <div class="dockbar-messages" id="<portlet:namespace />dockbarMessages">
-	<div class="aui-header"></div>
+	<div class="header"></div>
 
-	<div class="aui-body"></div>
+	<div class="body"></div>
 
-	<div class="aui-footer"></div>
+	<div class="footer"></div>
 </div>
 
 <%
@@ -279,7 +279,7 @@ List<LayoutPrototype> layoutPrototypes = LayoutPrototypeServiceUtil.search(compa
 %>
 
 <c:if test="<%= !layoutPrototypes.isEmpty() %>">
-	<div class="aui-html-template" id="layoutPrototypeTemplate">
+	<div class="html-template" id="layoutPrototypeTemplate">
 		<ul>
 
 			<%

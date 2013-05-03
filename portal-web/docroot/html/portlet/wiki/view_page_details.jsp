@@ -56,28 +56,28 @@ PortalUtil.addPortletBreadcrumbEntry(request, LanguageUtil.get(pageContext, "det
 int count = 0;
 %>
 
-<table class="aui-table aui-table-bordered aui-table-hover aui-table-striped page-info">
+<table class="table table-bordered table-hover table-striped page-info">
 <tr>
-	<th class="aui-table-header">
+	<th class="table-header">
 		<liferay-ui:message key="title" />
 	</th>
-	<td class="aui-table-cell">
+	<td class="table-cell">
 		<%= wikiPage.getTitle() %>
 	</td>
 </tr>
 <tr>
-	<th class="aui-table-header">
+	<th class="table-header">
 		<liferay-ui:message key="format" />
 	</th>
-	<td class="aui-table-cell">
+	<td class="table-cell">
 		<liferay-ui:message key='<%= "wiki.formats." + wikiPage.getFormat() %>'/>
 	</td>
 </tr>
 <tr>
-	<th class="aui-table-header">
+	<th class="table-header">
 		<liferay-ui:message key="latest-version" />
 	</th>
-	<td class="aui-table-cell">
+	<td class="table-cell">
 		<%= wikiPage.getVersion() %>
 
 		<c:if test="<%= wikiPage.isMinorEdit() %>">
@@ -86,26 +86,26 @@ int count = 0;
 	</td>
 </tr>
 <tr>
-	<th class="aui-table-header">
+	<th class="table-header">
 		<liferay-ui:message key="created-by" />
 	</th>
-	<td class="aui-table-cell">
+	<td class="table-cell">
 		<%= HtmlUtil.escape(initialPage.getUserName()) %> (<%= dateFormatDateTime.format(initialPage.getCreateDate()) %>)
 	</td>
 </tr>
 <tr>
-	<th class="aui-table-header">
+	<th class="table-header">
 		<liferay-ui:message key="last-changed-by" />
 	</th>
-	<td class="aui-table-cell">
+	<td class="table-cell">
 		<%= HtmlUtil.escape(wikiPage.getUserName()) %> (<%= dateFormatDateTime.format(wikiPage.getCreateDate()) %>)
 	</td>
 </tr>
 <tr>
-	<th class="aui-table-header">
+	<th class="table-header">
 		<liferay-ui:message key="attachments" />
 	</th>
-	<td class="aui-table-cell">
+	<td class="table-cell">
 		<%= (attachmentsFileEntries != null) ? attachmentsFileEntries.size() : 0 %>
 	</td>
 </tr>
@@ -126,10 +126,10 @@ int count = 0;
 	%>
 
 	<tr>
-		<th class="aui-table-header">
+		<th class="table-header">
 			<liferay-ui:message key="convert-to" />
 		</th>
-		<td class="aui-table-cell">
+		<td class="table-cell">
 			<liferay-ui:icon-list>
 
 			<%
@@ -156,10 +156,10 @@ int count = 0;
 
 <c:if test="<%= enableRSS %>">
 	<tr>
-		<th class="aui-table-header">
+		<th class="table-header">
 			<liferay-ui:message key="rss-subscription" />
 		</th>
-		<td class="aui-table-cell">
+		<td class="table-cell">
 			<liferay-ui:rss
 				delta="<%= rssDelta %>"
 				displayStyle="<%= rssDisplayStyle %>"
@@ -172,7 +172,7 @@ int count = 0;
 
 <c:if test="<%= (WikiPagePermission.contains(permissionChecker, wikiPage, ActionKeys.SUBSCRIBE) || WikiNodePermission.contains(permissionChecker, node, ActionKeys.SUBSCRIBE)) && (WikiUtil.getEmailPageAddedEnabled(preferences) || WikiUtil.getEmailPageUpdatedEnabled(preferences)) %>">
 	<tr>
-		<th class="aui-table-header">
+		<th class="table-header">
 			<liferay-ui:message key="email-subscription" />
 		</th>
 		<td>
@@ -277,10 +277,10 @@ int count = 0;
 
 <c:if test="<%= WikiPagePermission.contains(permissionChecker, wikiPage, ActionKeys.PERMISSIONS) || (WikiPagePermission.contains(permissionChecker, wikiPage, ActionKeys.UPDATE) && WikiNodePermission.contains(permissionChecker, wikiPage.getNodeId(), ActionKeys.ADD_PAGE)) || WikiPagePermission.contains(permissionChecker, wikiPage, ActionKeys.DELETE) %>">
 	<tr>
-		<th class="aui-table-header">
+		<th class="table-header">
 			<liferay-ui:message key="advanced-actions" />
 		</th>
-		<td class="aui-table-cell">
+		<td class="table-cell">
 			<liferay-ui:icon-list>
 				<c:if test="<%= WikiPagePermission.contains(permissionChecker, wikiPage, ActionKeys.PERMISSIONS) %>">
 					<liferay-security:permissionsURL

@@ -40,7 +40,7 @@ portletURL.setParameter("struts_action", "/message_boards/view");
 		portletURL.setParameter("tag", StringPool.BLANK);
 		%>
 
-		<aui:nav-item cssClass='<%= topLink.equals(label) ? "aui-active" : StringPool.BLANK %>' href="portletURL.toString()" label="<%= label %>" selected="<%= topLink.equals(label) %>" />
+		<aui:nav-item cssClass='<%= topLink.equals(label) ? "active" : StringPool.BLANK %>' href="portletURL.toString()" label="<%= label %>" selected="<%= topLink.equals(label) %>" />
 
 		<%
 		label = "recent-posts";
@@ -48,7 +48,7 @@ portletURL.setParameter("struts_action", "/message_boards/view");
 		portletURL.setParameter("topLink", label);
 		%>
 
-		<aui:nav-item cssClass='<%= topLink.equals(label) ? "aui-active" : StringPool.BLANK %>' href="portletURL.toString()" label="<%= label %>" selected="<%= topLink.equals(label) %>" />
+		<aui:nav-item cssClass='<%= topLink.equals(label) ? "active" : StringPool.BLANK %>' href="portletURL.toString()" label="<%= label %>" selected="<%= topLink.equals(label) %>" />
 
 		<c:if test="<%= themeDisplay.isSignedIn() %>">
 
@@ -58,7 +58,7 @@ portletURL.setParameter("struts_action", "/message_boards/view");
 			portletURL.setParameter("topLink", label);
 			%>
 
-			<aui:nav-item cssClass='<%= topLink.equals(label) ? "aui-active" : StringPool.BLANK %>' href="portletURL.toString()" label="<%= label %>" selected="<%= topLink.equals(label) %>" />
+			<aui:nav-item cssClass='<%= topLink.equals(label) ? "active" : StringPool.BLANK %>' href="portletURL.toString()" label="<%= label %>" selected="<%= topLink.equals(label) %>" />
 
 			<c:if test="<%= MBUtil.getEmailMessageAddedEnabled(preferences) || MBUtil.getEmailMessageUpdatedEnabled(preferences) %>">
 
@@ -68,7 +68,7 @@ portletURL.setParameter("struts_action", "/message_boards/view");
 				portletURL.setParameter("topLink", label);
 				%>
 
-				<aui:nav-item cssClass='<%= topLink.equals(label) ? "aui-active" : StringPool.BLANK %>' href="portletURL.toString()" label="<%= label %>" selected="<%= topLink.equals(label) %>" />
+				<aui:nav-item cssClass='<%= topLink.equals(label) ? "active" : StringPool.BLANK %>' href="portletURL.toString()" label="<%= label %>" selected="<%= topLink.equals(label) %>" />
 			</c:if>
 		</c:if>
 
@@ -78,7 +78,7 @@ portletURL.setParameter("struts_action", "/message_boards/view");
 		portletURL.setParameter("topLink", label);
 		%>
 
-		<aui:nav-item cssClass='<%= topLink.equals(label) ? "aui-active" : StringPool.BLANK %>' href="portletURL.toString()" label="<%= label %>" selected="<%= topLink.equals(label) %>" />
+		<aui:nav-item cssClass='<%= topLink.equals(label) ? "active" : StringPool.BLANK %>' href="portletURL.toString()" label="<%= label %>" selected="<%= topLink.equals(label) %>" />
 
 		<c:if test="<%= MBPermission.contains(permissionChecker, scopeGroupId, ActionKeys.BAN_USER) %>">
 
@@ -88,7 +88,7 @@ portletURL.setParameter("struts_action", "/message_boards/view");
 			portletURL.setParameter("topLink", label);
 			%>
 
-			<aui:nav-item cssClass='<%= topLink.equals(label) ? "aui-active" : StringPool.BLANK %>' href="portletURL.toString()" label="<%= label %>" selected="<%= topLink.equals(label) %>" />
+			<aui:nav-item cssClass='<%= topLink.equals(label) ? "active" : StringPool.BLANK %>' href="portletURL.toString()" label="<%= label %>" selected="<%= topLink.equals(label) %>" />
 		</c:if>
 	</aui:nav>
 
@@ -97,16 +97,16 @@ portletURL.setParameter("struts_action", "/message_boards/view");
 			<portlet:param name="struts_action" value="/message_boards/search" />
 		</liferay-portlet:renderURL>
 
-		<div class="aui-navbar-search aui-pull-right">
-			<div class="aui-form-search">
+		<div class="navbar-search pull-right">
+			<div class="form-search">
 				<aui:form action="<%= searchURL %>" method="get" name="searchFm">
 					<liferay-portlet:renderURLParams varImpl="searchURL" />
 					<aui:input name="redirect" type="hidden" value="<%= currentURL %>" />
 					<aui:input name="breadcrumbsCategoryId" type="hidden" value="<%= categoryId %>" />
 					<aui:input name="searchCategoryId" type="hidden" value="<%= categoryId %>" />
 
-					<div class="aui-input-append">
-						<input class="aui-search-query aui-span9" id="<portlet:namespace/>keywords1" name="<portlet:namespace/>keywords" placeholder="<liferay-ui:message key="keywords" />" type="text" />
+					<div class="input-append">
+						<input class="search-query span9" id="<portlet:namespace/>keywords1" name="<portlet:namespace/>keywords" placeholder="<liferay-ui:message key="keywords" />" type="text" />
 
 						<aui:button primary="<%= false %>" type="submit" value="search" />
 					</div>

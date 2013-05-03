@@ -52,7 +52,7 @@ List<SocialRequest> requests = (List<SocialRequest>)request.getAttribute(WebKeys
 				<aui:col width="<%= 50 %>">
 					<c:choose>
 						<c:when test="<%= requestFeedEntry == null %>">
-							<div class="aui-alert aui-alert-error">
+							<div class="alert alert-error">
 								<liferay-ui:message key="request-cannot-be-interpreted-because-it-does-not-have-an-associated-interpreter" />
 							</div>
 						</c:when>

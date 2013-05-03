@@ -228,13 +228,13 @@ request.setAttribute("edit_article.jsp-toLanguageId", toLanguageId);
 				%>
 
 				<c:if test="<%= approved %>">
-					<div class="aui-alert aui-alert-info">
+					<div class="alert alert-info">
 						<liferay-ui:message key="a-new-version-will-be-created-automatically-if-this-content-is-modified" />
 					</div>
 				</c:if>
 
 				<c:if test="<%= pending %>">
-					<div class="aui-alert aui-alert-info">
+					<div class="alert alert-info">
 						<liferay-ui:message key="there-is-a-publication-workflow-in-process" />
 					</div>
 				</c:if>

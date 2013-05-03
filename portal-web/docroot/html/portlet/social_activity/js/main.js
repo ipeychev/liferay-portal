@@ -105,7 +105,7 @@ AUI.add(
 			src: STR_UI
 		};
 
-		var TPL_BUTTON_HOLDER = '<button class="' + [STR_SETTINGS_BUTTON_HOLDER].join(STR_SPACE) + ' aui-btn aui-btn-submit">' + STR_SAVE + '</button>';
+		var TPL_BUTTON_HOLDER = '<button class="' + [STR_SETTINGS_BUTTON_HOLDER].join(STR_SPACE) + ' btn btn-submit">' + STR_SAVE + '</button>';
 
 		var TPL_BOUNDING_BOX_SETTINGS_FIELD = '<li class="' + [CSS_TOKEN, STR_SETTINGS_FIELD, STR_ACTION_FIELD].join(STR_SPACE) + '"></li>';
 
@@ -143,7 +143,7 @@ AUI.add(
 					'</div>',
 				'</tpl>',
 
-				'<div class="aui-hide settings-limit">',
+				'<div class="hide settings-limit">',
 					'<tpl for="rows">',
 						'<div class="settings-limit-row">',
 							'<span class="field field-text">{limitFirstText}</span>',
@@ -170,13 +170,13 @@ AUI.add(
 			'<div class="settings-header yui3-widget-hd">',
 				'<div class="settings-header-label">{headerText}</div>',
 				'<ul class="settings-actions">',
-					'<li class="actions-conjunction aui-hide">{conjunctionText}</li>',
+					'<li class="actions-conjunction hide">{conjunctionText}</li>',
 				'</ul>',
 			'</div>',
 			'<div class="settings-container-label">{containerText}</div>',
 			'<ul class="container-drop-box yui3-widget-bd"></ul>',
-			'<div class="aui-btn-row yui3-widget-ft">',
-				'<button class="aui-btn aui-btn-primary aui-btn-submit">{saveText}</button>',
+			'<div class="btn-row yui3-widget-ft">',
+				'<button class="btn btn-primary btn-submit">{saveText}</button>',
 			'</div>'
 		);
 

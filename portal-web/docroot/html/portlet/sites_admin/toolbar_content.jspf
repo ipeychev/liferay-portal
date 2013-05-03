@@ -53,7 +53,7 @@
 
 	<c:choose>
 		<c:when test="<%= layoutSetPrototypes.isEmpty() && !hasAddLayoutSetPrototypePermission %>">
-			<aui:nav-item href="<%= addSiteURL %>" iconClass="aui-icon-plus" label="add" selected='<%= toolbarItem.equals("add") %>' />
+			<aui:nav-item href="<%= addSiteURL %>" iconClass="icon-plus" label="add" selected='<%= toolbarItem.equals("add") %>' />
 		</c:when>
 		<c:otherwise>
 			<aui:nav-item dropdown="<%= true %>" label="add" selected='<%= toolbarItem.equals("add") %>'>

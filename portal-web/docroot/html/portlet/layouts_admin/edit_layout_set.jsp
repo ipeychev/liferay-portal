@@ -77,7 +77,7 @@ boolean hasExportImportLayoutsPermission = GroupPermissionUtil.contains(permissi
 			<c:if test="<%= hasExportImportLayoutsPermission %>">
 				<c:if test="<%= SessionErrors.contains(liferayPortletRequest, LayoutImportException.class.getName()) || SessionErrors.contains(liferayPortletRequest, LARFileException.class.getName()) || SessionErrors.contains(liferayPortletRequest, LARFileSizeException.class.getName()) || SessionErrors.contains(liferayPortletRequest, LARTypeException.class.getName()) %>">
 					<liferay-util:html-top>
-						<div class="aui-hide" id="<portlet:namespace />importPage">
+						<div class="hide" id="<portlet:namespace />importPage">
 							<liferay-util:include page="/html/portlet/layouts_admin/export_import.jsp">
 								<liferay-util:param name="<%= Constants.CMD %>" value="<%= Constants.IMPORT %>" />
 								<liferay-util:param name="groupId" value="<%= String.valueOf(groupId) %>" />
@@ -128,7 +128,7 @@ boolean hasExportImportLayoutsPermission = GroupPermissionUtil.contains(permissi
 		</c:if>
 	</liferay-ui:error>
 
-	<div class="aui-alert aui-alert-block">
+	<div class="alert alert-block">
 		<liferay-ui:message key="the-staging-environment-is-activated-changes-have-to-be-published-to-make-them-available-to-end-users" />
 	</div>
 </c:if>
@@ -144,7 +144,7 @@ boolean hasExportImportLayoutsPermission = GroupPermissionUtil.contains(permissi
 	<c:if test="<%= !group.isLayoutPrototype() && GroupPermissionUtil.contains(permissionChecker, groupId, ActionKeys.ADD_LAYOUT) %>">
 		layoutSetToolbarGroup.push(
 			{
-				icon: 'aui-icon-plus-sign',
+				icon: 'icon-plus-sign',
 				label: '<%= UnicodeLanguageUtil.get(pageContext, "add-page") %>',
 				on: {
 					click: function(event) {
@@ -179,7 +179,7 @@ boolean hasExportImportLayoutsPermission = GroupPermissionUtil.contains(permissi
 
 		layoutSetToolbarGroup.push(
 			{
-				icon: 'aui-icon-file',
+				icon: 'icon-file',
 				label: '<%= UnicodeLanguageUtil.get(pageContext, "view-pages") %>',
 				on: {
 					click: function(event) {
@@ -196,7 +196,7 @@ boolean hasExportImportLayoutsPermission = GroupPermissionUtil.contains(permissi
 		layoutSetToolbarChildren.push(
 			[
 				{
-					icon: 'aui-icon-circle-arrow-up',
+					icon: 'icon-circle-arrow-up',
 					label: '<%= UnicodeLanguageUtil.get(pageContext, "export") %>',
 					on: {
 						click: function(event) {
@@ -220,7 +220,7 @@ boolean hasExportImportLayoutsPermission = GroupPermissionUtil.contains(permissi
 					}
 				},
 				{
-					icon: 'aui-icon-circle-arrow-down',
+					icon: 'icon-circle-arrow-down',
 					label: '<%= UnicodeLanguageUtil.get(pageContext, "import") %>',
 					on: {
 						click: function(event) {

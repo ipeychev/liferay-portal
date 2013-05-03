@@ -84,7 +84,7 @@ request.setAttribute("view.jsp-tabs1", tabs1);
 		</liferay-ui:search-container-results>
 
 		<aui:nav-bar>
-			<aui:nav-bar-search cssClass="aui-pull-right" file="/html/portlet/directory/user_group_search.jsp" searchContainer="<%= searchContainer %>" />
+			<aui:nav-bar-search cssClass="pull-right" file="/html/portlet/directory/user_group_search.jsp" searchContainer="<%= searchContainer %>" />
 		</aui:nav-bar>
 
 		<div>

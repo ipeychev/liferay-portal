@@ -68,17 +68,17 @@ if (selLayout != null) {
 
 <c:choose>
 	<c:when test="<%= curFreeformLayout %>">
-		<div class="aui-alert aui-alert-block">
+		<div class="alert alert-block">
 			<liferay-ui:message key="it-is-not-possible-to-specify-customization-settings-for-freeform-layouts" />
 		</div>
 	</c:when>
 	<c:when test="<%= prototypeGroup %>">
-		<div class="aui-alert aui-alert-block">
+		<div class="alert alert-block">
 			<liferay-ui:message key="it-is-not-possible-to-specify-customization-settings-for-pages-in-site-templates-or-page-templates" />
 		</div>
 	</c:when>
 	<c:otherwise>
-		<div class="aui-alert aui-alert-info">
+		<div class="alert alert-info">
 			<liferay-ui:message key="customizable-help" />
 		</div>
 	</c:otherwise>

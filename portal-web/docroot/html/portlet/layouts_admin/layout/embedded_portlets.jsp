@@ -35,12 +35,12 @@ rowChecker.setRowIds("removeEmbeddedPortletIds");
 		rowChecker = null;
 		%>
 
-		<div class="aui-alert aui-alert-info">
+		<div class="alert alert-info">
 			<liferay-ui:message key="layout-inherits-from-a-prototype-portlets-cannot-be-manipulated" />
 		</div>
 	</c:when>
 	<c:otherwise>
-		<div class="aui-alert aui-alert-block">
+		<div class="alert alert-block">
 			<liferay-ui:message key="warning-selected-portlets-will-be-removed" />
 		</div>
 	</c:otherwise>

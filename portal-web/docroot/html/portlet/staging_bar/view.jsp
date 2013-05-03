@@ -83,9 +83,9 @@ if (layout != null) {
 	%>
 
 	<div class="staging-bar">
-		<ul class="aui-nav aui-nav-tabs staging-tabview-list">
+		<ul class="nav nav-tabs staging-tabview-list">
 			<c:if test="<%= !group.isStagedRemotely() && ((liveGroup != null) && layout.isPrivateLayout() ? (liveGroup.getPrivateLayoutsPageCount() > 0) : (liveGroup.getPublicLayoutsPageCount() > 0)) %>">
-				<li class="aui-tab <%= (!group.isStagingGroup() ? " aui-active" : StringPool.BLANK) %>">
+				<li class="tab <%= (!group.isStagingGroup() ? " active" : StringPool.BLANK) %>">
 					<aui:a href="<%= !group.isStagingGroup() ? null : liveFriendlyURL %>" label="live" />
 				</li>
 			</c:if>
@@ -104,13 +104,13 @@ if (layout != null) {
 				String remoteURL = StagingUtil.buildRemoteURL(remoteAddress, remotePort, remotePathContext, secureConnection, remoteGroupId, layout.isPrivateLayout());
 				%>
 
-				<li class="aui-tab remote-live-link">
+				<li class="tab remote-live-link">
 					<liferay-ui:icon image="../arrows/05_right" label="<%= true %>" message="go-to-remote-live" target="_blank" url="<%= remoteURL %>" />
 				</li>
 			</c:if>
 
 			<c:if test="<%= stagingGroup != null %>">
-				<li class="aui-tab <%= (layoutSetBranches != null) ? " aui-active" : StringPool.BLANK %>">
+				<li class="tab <%= (layoutSetBranches != null) ? " active" : StringPool.BLANK %>">
 					<aui:a href="<%= (layoutSetBranches != null) ? null : stagingFriendlyURL %>" label="staging">
 						<c:if test="<%= (layoutSetBranches != null) && (layoutSetBranches.size() <= 1) %>">
 							<liferay-ui:staging extended="<%= false %>" showManageBranches="<%= branchingEnabled %>" />
@@ -121,7 +121,7 @@ if (layout != null) {
 		</ul>
 
 		<c:if test="<%= (layoutSetBranches != null) && (layoutSetBranches.size() > 1) %>">
-			<ul class="aui-nav aui-nav-tabs site-variations-nav-tabs">
+			<ul class="nav nav-tabs site-variations-nav-tabs">
 				<c:if test="<%= group.isStagingGroup() || layoutSetBranches.size() <= _MAX_INLINE_BRANCHES %>">
 
 					<%
@@ -137,10 +137,10 @@ if (layout != null) {
 
 						boolean selected = (group.isStagingGroup() || group.isStagedRemotely()) && (curLayoutSetBranch.getLayoutSetBranchId() == layoutRevision.getLayoutSetBranchId());
 
-						String cssClass = "aui-tab";
+						String cssClass = "tab";
 
 						if (selected) {
-							cssClass += " aui-active";
+							cssClass += " active";
 						}
 					%>
 
@@ -169,7 +169,7 @@ if (layout != null) {
 				</c:if>
 
 				<c:if test="<%= layoutSetBranches.size() > _MAX_INLINE_BRANCHES %>">
-					<li class="aui-tab go-to-layout-set-branches-tab">
+					<li class="tab go-to-layout-set-branches-tab">
 						<liferay-ui:icon-menu cssClass="layoutset-branches-menu" direction="down" extended="<%= false %>" icon='<%= themeDisplay.getPathThemeImages() + "/common/staging.png" %>' message='<%= LanguageUtil.format(pageContext, "site-pages-variations-x", layoutSetBranches.size()) %>'>
 
 							<%
@@ -207,7 +207,7 @@ if (layout != null) {
 					<portlet:param name="struts_action" value="/staging_bar/view_layout_set_branches" />
 				</portlet:renderURL>
 
-				<li class="aui-tab manage-layout-set-branches-tab">
+				<li class="tab manage-layout-set-branches-tab">
 					<liferay-ui:icon
 						cssClass="manage-layout-set-branches"
 						id="manageLayoutSetBranches"
@@ -248,7 +248,7 @@ if (layout != null) {
 		%>
 
 		<c:if test="<%= !group.isStagedRemotely() || branchingEnabled %>">
-			<div class="aui-tab-pane staging-tabview-content">
+			<div class="tab-pane staging-tabview-content">
 				<c:choose>
 					<c:when test="<%= (group.isStagingGroup() || group.isStagedRemotely()) && branchingEnabled %>">
 						<div class="layout-set-branch-info">
@@ -293,7 +293,7 @@ if (layout != null) {
 									%>
 
 									<c:if test="<%= layoutRevisions.size() > 1 %>">
-										<ul class="aui-nav aui-nav-tabs variations-tabview-list">
+										<ul class="nav nav-tabs variations-tabview-list">
 
 											<%
 											for (int i = 0; i < layoutRevisions.size(); i ++) {
@@ -310,10 +310,10 @@ if (layout != null) {
 
 												boolean selected = (curLayoutBranch.getLayoutBranchId() == layoutRevision.getLayoutBranchId());
 
-												String cssClass = "aui-tab layout-set-branch";
+												String cssClass = "tab layout-set-branch";
 
 												if (selected) {
-													cssClass += " aui-active";
+													cssClass += " active";
 												}
 											%>
 
@@ -338,7 +338,7 @@ if (layout != null) {
 											%>
 
 											<c:if test="<%= layoutRevisions.size() > _MAX_INLINE_BRANCHES %>">
-												<li class="aui-tab go-to-layout-branches-tab">
+												<li class="tab go-to-layout-branches-tab">
 													<liferay-ui:icon-menu cssClass="layoutset-branches-menu" direction="down" extended="<%= false %>" icon='<%= themeDisplay.getPathThemeImages() + "/common/signal_instance.png" %>' message="page-variations">
 
 														<%
@@ -374,7 +374,7 @@ if (layout != null) {
 												</li>
 											</c:if>
 
-											<li class="aui-tab manage-page-variations-tab">
+											<li class="tab manage-page-variations-tab">
 												<liferay-ui:icon
 													cssClass="manage-layout-branches-tab"
 													id="manageLayoutRevisions"
@@ -387,7 +387,7 @@ if (layout != null) {
 										</ul>
 									</c:if>
 
-									<div class="aui-tab-pane variations-tabview-content">
+									<div class="tab-pane variations-tabview-content">
 										<c:if test="<%= Validator.isNotNull(layoutBranch.getDescription()) %>">
 											<div class="layout-branch-description">
 												<%= HtmlUtil.escape(layoutBranch.getDescription()) %>

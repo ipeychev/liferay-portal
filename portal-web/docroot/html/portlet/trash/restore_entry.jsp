@@ -30,7 +30,7 @@ String overrideMessage = ParamUtil.getString(request, "overrideMessage");
 String renameMessage = ParamUtil.getString(request, "renameMessage");
 %>
 
-<div class="aui-alert aui-alert-block" id="<portlet:namespace />messageContainer">
+<div class="alert alert-block" id="<portlet:namespace />messageContainer">
 	<liferay-ui:message arguments="<%= new String[] {oldName} %>" key="an-entry-with-name-x-already-exists" />
 </div>
 

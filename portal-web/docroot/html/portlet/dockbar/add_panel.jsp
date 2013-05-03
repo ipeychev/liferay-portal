@@ -244,7 +244,7 @@
 								%>
 
 								<c:if test="<%= layout.isTypePortlet() %>">
-									<div class="aui-alert aui-alert-info">
+									<div class="alert alert-info">
 										<liferay-ui:message key="to-add-a-portlet-to-the-page-just-drag-it" />
 									</div>
 								</c:if>

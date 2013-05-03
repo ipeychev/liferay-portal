@@ -23,16 +23,16 @@
 <table class="lfr-table" width="100%">
 <tr>
 	<td class="lfr-top" width="33%">
-		<table class="aui-table aui-table-bordered aui-table-hover aui-table-striped">
-			<thead class="aui-table-columns">
+		<table class="table table-bordered table-hover table-striped">
+			<thead class="table-columns">
 			<tr>
-				<td class="aui-table-cell" colspan="2">
+				<td class="table-cell" colspan="2">
 					<%= LanguageUtil.format(pageContext, "last-x-web-content", String.valueOf(JournalUtil.MAX_STACK_SIZE), false) %>
 				</td>
 			</tr>
 			</thead>
 
-			<tbody class="aui-table-data">
+			<tbody class="table-data">
 
 				<%
 				Stack recentArticles = JournalUtil.getRecentArticles(renderRequest);
@@ -54,10 +54,10 @@
 					</portlet:renderURL>
 
 				<tr>
-					<td class="aui-table-cell">
+					<td class="table-cell">
 						<aui:a href="<%= editArticleURL %>"><%= article.getArticleId() %></aui:a>
 					</td>
-					<td class="aui-table-cell">
+					<td class="table-cell">
 						<aui:a href="<%= editArticleURL %>"><%= article.getTitle(locale) %></aui:a>
 					</td>
 				</tr>
@@ -70,16 +70,16 @@
 		</table>
 	</td>
 	<td width="33%">
-		<table class="aui-table aui-table-bordered aui-table-hover aui-table-striped">
-			<thead class="aui-table-columns">
+		<table class="table table-bordered table-hover table-striped">
+			<thead class="table-columns">
 				<tr>
-					<td class="aui-table-cell" colspan="2">
+					<td class="table-cell" colspan="2">
 						<%= LanguageUtil.format(pageContext, "last-x-structures", String.valueOf(JournalUtil.MAX_STACK_SIZE), false) %>
 					</td>
 				</tr>
 			</thead>
 
-			<tbody class="aui-table-data">
+			<tbody class="table-data">
 
 			<%
 			Stack recentDDMStructures = JournalUtil.getRecentDDMStructures(renderRequest);
@@ -93,7 +93,7 @@
 			%>
 
 				<tr>
-					<td class="aui-table-cell">
+					<td class="table-cell">
 						<%= ddmStructure.getName(locale) %>
 					</td>
 				</tr>
@@ -106,16 +106,16 @@
 		</table>
 	</td>
 	<td width="33%">
-		<table class="aui-table aui-table-bordered aui-table-hover aui-table-striped">
-			<thead class="aui-table-columns">
+		<table class="table table-bordered table-hover table-striped">
+			<thead class="table-columns">
 				<tr>
-					<td class="aui-table-cell" colspan="2">
+					<td class="table-cell" colspan="2">
 						<%= LanguageUtil.format(pageContext, "last-x-templates", String.valueOf(JournalUtil.MAX_STACK_SIZE), false) %>
 					</td>
 				</tr>
 			</thead>
 
-			<tbody class="aui-table-data">
+			<tbody class="table-data">
 
 			<%
 			Stack recentDDMTemplates = JournalUtil.getRecentDDMTemplates(renderRequest);
@@ -129,7 +129,7 @@
 			%>
 
 				<tr>
-					<td class="aui-table-cell">
+					<td class="table-cell">
 						<%= ddmTemplate.getName(locale) %>
 					</td>
 				</tr>

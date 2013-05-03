@@ -39,7 +39,7 @@ if (threadFlag != null) {
 
 <c:if test="<%= (message.getMessageId() != selMessage.getMessageId()) || MBUtil.isViewableMessage(themeDisplay, message) %>">
 	<tr>
-		<td class="aui-table-cell" style="padding-left: <%= depth > 0 ? depth * 10 : 5 %>px; width: 90%;" valign="middle">
+		<td class="table-cell" style="padding-left: <%= depth > 0 ? depth * 10 : 5 %>px; width: 90%;" valign="middle">
 			<c:if test="<%= !message.isRoot() %>">
 				<c:choose>
 					<c:when test="<%= !lastNode %>">
@@ -89,7 +89,7 @@ if (threadFlag != null) {
 				</c:if>
 			</a>
 		</td>
-		<td class="aui-table-cell" style="white-space: nowrap;">
+		<td class="table-cell" style="white-space: nowrap;">
 			<a href="<%= rowHREF %>">
 				<c:if test="<%= !readThread %>">
 					<strong>
@@ -109,7 +109,7 @@ if (threadFlag != null) {
 				</c:if>
 			</a>
 		</td>
-		<td class="aui-table-cell" style="white-space: nowrap;">
+		<td class="table-cell" style="white-space: nowrap;">
 			<a href="<%= rowHREF %>"><%= dateFormatDateTime.format(message.getModifiedDate()) %></a>
 		</td>
 	</tr>

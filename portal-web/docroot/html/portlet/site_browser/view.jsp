@@ -44,7 +44,7 @@ portletURL.setParameter("target", target);
 	>
 		<c:if test='<%= !type.equals("parentSites") %>'>
 			<aui:nav-bar>
-				<aui:nav-bar-search cssClass="aui-pull-right" file="/html/portlet/directory/user_group_search.jsp" searchContainer="<%= searchContainer %>" />
+				<aui:nav-bar-search cssClass="pull-right" file="/html/portlet/directory/user_group_search.jsp" searchContainer="<%= searchContainer %>" />
 			</aui:nav-bar>
 
 			<div>

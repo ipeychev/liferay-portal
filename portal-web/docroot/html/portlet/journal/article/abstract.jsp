@@ -59,7 +59,7 @@ String toLanguageId = (String)request.getAttribute("edit_article.jsp-toLanguageI
 				<aui:input label="use-small-image" name="smallImage" />
 			</div>
 
-			<div class="lfr-journal-small-image-content aui-toggler-content-collapsed">
+			<div class="lfr-journal-small-image-content toggler-content-collapsed">
 				<aui:row>
 					<c:if test="<%= smallImage && (article != null) %>">
 						<aui:col width="<%= 50 %>">

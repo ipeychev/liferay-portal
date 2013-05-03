@@ -34,9 +34,9 @@ String toolbarItem = ParamUtil.getString(request, "toolbarItem", "add");
 
 	<aui:nav-bar>
 		<aui:nav>
-			<aui:nav-item href="<%= addRuleGroupURL %>" iconClass="aui-icon-plus" label="add-rule-group" selected='<%= toolbarItem.equals("add") %>' />
+			<aui:nav-item href="<%= addRuleGroupURL %>" iconClass="icon-plus" label="add-rule-group" selected='<%= toolbarItem.equals("add") %>' />
 		</aui:nav>
 
-		<aui:nav-bar-search cssClass="aui-pull-right" file="/html/portlet/mobile_device_rules/rule_group_search.jsp" />
+		<aui:nav-bar-search cssClass="pull-right" file="/html/portlet/mobile_device_rules/rule_group_search.jsp" />
 	</aui:nav-bar>
 </c:if>

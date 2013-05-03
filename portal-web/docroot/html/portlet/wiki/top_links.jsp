@@ -61,7 +61,7 @@ if (categoryId > 0) {
 
 <c:if test="<%= !print %>">
 	<c:if test="<%= (nodes.size() > 1) && portletName.equals(PortletKeys.WIKI) %>">
-		<aui:nav cssClass="aui-nav-tabs">
+		<aui:nav cssClass="nav-tabs">
 
 			<%
 			for (int i = 0; i < nodes.size(); i++) {
@@ -70,7 +70,7 @@ if (categoryId > 0) {
 				String cssClass = StringPool.BLANK;
 
 				if (curNode.getNodeId() == node.getNodeId()) {
-					cssClass = "aui-active";
+					cssClass = "active";
 				}
 			%>
 
@@ -103,7 +103,7 @@ if (categoryId > 0) {
 			frontPageURL.setParameter("tag", StringPool.BLANK);
 			%>
 
-			<aui:nav-item cssClass='<%= selected ? "aui-active" : StringPool.BLANK %>' href="<%= frontPageURL.toString() %>" label="<%= label %>" selected="<%= selected %>" />
+			<aui:nav-item cssClass='<%= selected ? "active" : StringPool.BLANK %>' href="<%= frontPageURL.toString() %>" label="<%= label %>" selected="<%= selected %>" />
 
 			<%
 			label = "recent-changes";
@@ -112,7 +112,7 @@ if (categoryId > 0) {
 			portletURL.setParameter("struts_action", "/wiki/view_recent_changes");
 			%>
 
-			<aui:nav-item cssClass='<%= selected ? "aui-active" : StringPool.BLANK %>' href="<%= portletURL.toString() %>" label="<%= label %>" selected="<%= selected %>" />
+			<aui:nav-item cssClass='<%= selected ? "active" : StringPool.BLANK %>' href="<%= portletURL.toString() %>" label="<%= label %>" selected="<%= selected %>" />
 
 			<%
 			label = "all-pages";
@@ -121,7 +121,7 @@ if (categoryId > 0) {
 			portletURL.setParameter("struts_action", "/wiki/view_all_pages");
 			%>
 
-			<aui:nav-item cssClass='<%= selected ? "aui-active" : StringPool.BLANK %>' href="<%= portletURL.toString() %>" label="<%= label %>" selected="<%= selected %>" />
+			<aui:nav-item cssClass='<%= selected ? "active" : StringPool.BLANK %>' href="<%= portletURL.toString() %>" label="<%= label %>" selected="<%= selected %>" />
 
 			<%
 			label = "orphan-pages";
@@ -130,7 +130,7 @@ if (categoryId > 0) {
 			portletURL.setParameter("struts_action", "/wiki/view_orphan_pages");
 			%>
 
-			<aui:nav-item cssClass='<%= selected ? "aui-active" : StringPool.BLANK %>' href="<%= portletURL.toString() %>" label="<%= label %>" selected="<%= selected %>" />
+			<aui:nav-item cssClass='<%= selected ? "active" : StringPool.BLANK %>' href="<%= portletURL.toString() %>" label="<%= label %>" selected="<%= selected %>" />
 
 			<%
 			label = "draft-pages";
@@ -139,22 +139,22 @@ if (categoryId > 0) {
 			portletURL.setParameter("struts_action", "/wiki/view_draft_pages");
 			%>
 
-			<aui:nav-item cssClass='<%= selected ? "aui-active" : StringPool.BLANK %>' href="<%= portletURL.toString() %>" label="<%= label %>" selected="<%= selected %>" />
+			<aui:nav-item cssClass='<%= selected ? "active" : StringPool.BLANK %>' href="<%= portletURL.toString() %>" label="<%= label %>" selected="<%= selected %>" />
 		</aui:nav>
 
 		<liferay-portlet:renderURL varImpl="searchURL">
 			<portlet:param name="struts_action" value="/wiki/search" />
 		</liferay-portlet:renderURL>
 
-		<div class="aui-navbar-search aui-pull-right">
-			<div class="aui-form-search">
+		<div class="navbar-search pull-right">
+			<div class="form-search">
 				<aui:form action="<%= searchURL %>" method="get" name="searchFm">
 					<liferay-portlet:renderURLParams varImpl="searchURL" />
 					<aui:input name="redirect" type="hidden" value="<%= currentURL %>" />
 					<aui:input name="nodeId" type="hidden" value="<%= node.getNodeId() %>" />
 
-					<div class="aui-input-append">
-						<input class="aui-search-query aui-span9" id="<portlet:namespace/>keywords" name="<portlet:namespace/>keywords" placeholder="<liferay-ui:message key="keywords" />" type="text" value="<%= HtmlUtil.escapeAttribute(keywords) %>" />
+					<div class="input-append">
+						<input class="search-query span9" id="<portlet:namespace/>keywords" name="<portlet:namespace/>keywords" placeholder="<liferay-ui:message key="keywords" />" type="text" value="<%= HtmlUtil.escapeAttribute(keywords) %>" />
 
 						<aui:button primary="<%= false %>" type="submit" value="search" />
 					</div>

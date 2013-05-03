@@ -20,9 +20,9 @@
 <aui:nav-bar>
 		<aui:nav>
 			<c:if test="<%= AssetPermission.contains(permissionChecker, themeDisplay.getSiteGroupId(), ActionKeys.ADD_TAG) %>">
-				<aui:nav-item id="addTagButton" label="add-tag"/>
+				<aui:nav-item id="addTagButton" label="add-tag" />
 			</c:if>
-			
+
 			<c:if test="<%= AssetPermission.contains(permissionChecker, themeDisplay.getSiteGroupId(), ActionKeys.PERMISSIONS) && GroupPermissionUtil.contains(permissionChecker, themeDisplay.getSiteGroupId(), ActionKeys.PERMISSIONS) %>">
 				<liferay-security:permissionsURL
 					modelResource="com.liferay.portlet.asset"
@@ -32,27 +32,27 @@
 					windowState="<%= LiferayWindowState.POP_UP.toString() %>"
 				/>
 
-				<aui:nav-item data-url="<%= permissionsURL %>" id="tagsPermissionsButton" label="permissions"/>
+				<aui:nav-item data-url="<%= permissionsURL %>" id="tagsPermissionsButton" label="permissions" />
 			</c:if>
-			
 
-			<aui:nav-item label="actions" dropdown="<%= true %>">
-				<aui:nav-item id="deleteSelectedTags" iconCssClass="aui-icon-trash" label="delete"/>
-			
-				<aui:nav-item id="mergeSelectedTags" iconCssClass="aui-icon-random" label="merge"/>			
+
+			<aui:nav-item dropdown="<%= true %>" label="actions">
+				<aui:nav-item iconCssClass="icon-trash" id="deleteSelectedTags" label="delete" />
+
+				<aui:nav-item iconCssClass="icon-random" id="mergeSelectedTags" label="merge" />
 			</aui:nav-item>
 
 		</aui:nav>
 
-		<div class="aui-navbar-search aui-pull-right">
-			<div class="aui-form-search">
-				<input class="aui-search-query aui-span9" id="<portlet:namespace/>tagsAdminSearchInput" name="<portlet:namespace/>tagsAdminSearchInput" type="text" />					
+		<div class="navbar-search pull-right">
+			<div class="form-search">
+				<input class="search-query span9" id="<portlet:namespace/>tagsAdminSearchInput" name="<portlet:namespace/>tagsAdminSearchInput" type="text" />
 			</div>
 		</div>
 
-	</aui:nav-bar>	
+	</aui:nav-bar>
 
-<div class="tags-admin-container lfr-app-column-view">	
+<div class="tags-admin-container lfr-app-column-view">
 	<div class="tags-admin-content-wrapper">
 		<aui:row cssClass="tags-admin-content">
 			<aui:col cssClass="tags-admin-list-container" width="<%= 35 %>">
@@ -61,7 +61,7 @@
 				</span>
 
 				<h3 class="tags-header"><%= LanguageUtil.get(pageContext, "tags") %></h3>
-				
+
 				<div class="tags-admin-list lfr-component"></div>
 
 				<div class="tags-pagination"></div>

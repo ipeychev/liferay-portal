@@ -216,7 +216,7 @@ SitesUtil.addPortletBreadcrumbEntries(group, pagesName, redirectURL, request, re
 
 				var link = event.currentTarget.one('a');
 
-				if (link && !event.target.hasClass('aui-tree-hitarea')) {
+				if (link && !event.target.hasClass('tree-hitarea')) {
 					var href = link.attr('href');
 
 					var hash = location.hash;
@@ -244,7 +244,7 @@ SitesUtil.addPortletBreadcrumbEntries(group, pagesName, redirectURL, request, re
 					layoutsContainer.io.start();
 				}
 			},
-			'.aui-tree-node-content'
+			'.tree-node-content'
 		);
 	</aui:script>
 </c:if>

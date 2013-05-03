@@ -10,7 +10,7 @@
 	.manage-layout-branches-tab {
 		margin-left: 1em;
 
-		&.aui-tab-label {
+		&.tab-label {
 			margin-left: 0;
 		}
 	}
@@ -21,7 +21,7 @@
 		font-size: 1.3em;
 		margin-bottom: 0;
 
-		.aui-tab, .aui-tab-content {
+		.tab, .tab-content {
 			background: none;
 			border-width: 0;
 			height: 28px;
@@ -29,10 +29,10 @@
 			text-align: center;
 		}
 
-		.aui-tab-active .aui-tab-content {
+		.tab-active .tab-content {
 			background-color: #333;
 
-			.aui-tab-label {
+			.tab-label {
 				text-shadow: -1px -1px 0 #000;
 			}
 		}
@@ -49,11 +49,11 @@
 		font-size: 1.2em;
 		margin-bottom: 0;
 
-		.aui-tab, .aui-tab-content {
+		.tab, .tab-content {
 			background: none;
 			border-width: 0;
 
-			.aui-tab-label {
+			.tab-label {
 				padding: 7px 10px;
 
 				a {

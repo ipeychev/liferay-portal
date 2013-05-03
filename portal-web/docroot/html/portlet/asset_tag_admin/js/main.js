@@ -38,9 +38,9 @@ AUI.add(
 
 		var NODE = 'node';
 
-		var TPL_PORTLET_MESSAGES = '<div class="aui-hide lfr-message-response" id="portletMessages" />';
+		var TPL_PORTLET_MESSAGES = '<div class="hide lfr-message-response" id="portletMessages" />';
 
-		var TPL_TAG_LIST_CONTAINER = '<ul class="aui-nav aui-nav-pills aui-nav-stacked">';
+		var TPL_TAG_LIST_CONTAINER = '<ul class="nav nav-pills nav-stacked">';
 
 		var TPL_TAG_LIST = '<li class="tag-item-container results-row {cssClassSelected}" data-tag="{name}" data-tagId="{tagId}" tabIndex="0">' +
 
@@ -51,20 +51,20 @@ AUI.add(
 			'</a>' +
 		'</li>';
 
-		var TPL_TAG_MERGE_BODY = '<div class="aui-container-fluid tags-admin-merge-tag">' +
-			'<div class="aui-row">' +
-				'<div class="aui-column aui-span6">' +
+		var TPL_TAG_MERGE_BODY = '<div class="container-fluid tags-admin-merge-tag">' +
+			'<div class="row">' +
+				'<div class="column span6">' +
 					'<div class="selected-tags-container">' +
 						'<label for="{namespace}selectedTagsList">' + Liferay.Language.get('tags-to-be-merged') + ':</label>' +
 						'<select id="{namespace}selectedTagsList" class="selected-tags-list" multiple>' +
 						'</select>' +
 					'</div>' +
 				'</div>' +
-				'<div class="aui-span1" id="{namespace}sortSelect">' +
+				'<div class="span1" id="{namespace}sortSelect">' +
 						'<button class="tag-move tag-move-up" id="{namespace}tagMoveUp"></button>' +
 						'<button class="tag-move tag-move-down" id="{namespace}tagMoveDown"></button>' +
 				'</div>' +
-				'<div class="aui-column aui-span6">' +
+				'<div class="column span6">' +
 					'<div class="target-tags-container">' +
 						'<label class="tags-label" for="{namespace}targetTagsList">' + Liferay.Language.get('target-tag') + ':</label>' +
 						'<select id="{namespace}targetTagsList" class="target-tags-list">' +
@@ -75,9 +75,9 @@ AUI.add(
 		'</div>';
 
 		var TPL_TAG_MERGE_FOOTER =
-			'<div class="aui-container-fluid tags-admin-merge-tag">' +
-				'<div class="aui-row">' +
-					'<div class="aui-span7">' +
+			'<div class="container-fluid tags-admin-merge-tag">' +
+				'<div class="row">' +
+					'<div class="span7">' +
 						'<div class="tag-options">' +
 							'<input id="{namespace}mergeOnlySelectedTags" type="checkbox">' +
 							'<label class="tags-merge-label" for="{namespace}mergeOnlySelectedTags">' + Liferay.Language.get('merge-only-selected-tags') + '</label>' + '<br>' +
@@ -85,15 +85,15 @@ AUI.add(
 							'<label class="tags-merge-label" for="{namespace}overrideProperties">' + Liferay.Language.get('override-tags-properties') + '</label>' +
 						'</div>' +
 					'</div>' +
-					'<div class="aui-column aui-span5">' +
+					'<div class="column span5">' +
 						'<div id="{namespace}buttonsContainer"></div>' +
 					'</div>' +
 				'</div>' +
 			'</div>';
 
-		var TPL_TAG_MERGE_ITEM = '<option value="{value}" title="{name}" aui-active>{name}</option>';
+		var TPL_TAG_MERGE_ITEM = '<option value="{value}" title="{name}" active>{name}</option>';
 
-		var TPL_TAGS_MESSAGES = '<div class="aui-alert aui-alert-info aui-hide lfr-message-response" id="tagsMessages" />';
+		var TPL_TAGS_MESSAGES = '<div class="alert alert-info hide lfr-message-response" id="tagsMessages" />';
 
 		var AssetTagsAdmin = A.Component.create(
 			{
@@ -1363,7 +1363,7 @@ AUI.add(
 								tags,
 								function(item, index, collection) {
 									if (index === 0) {
-										item.cssClassSelected = 'aui-active';
+										item.cssClassSelected = 'active';
 									}
 									else {
 										item.cssClassSelected = '';
@@ -1463,7 +1463,7 @@ AUI.add(
 						if (tag) {
 							var tagName = instance._getTagName(tag);
 
-							if (tag.hasClass('aui-active')) {
+							if (tag.hasClass('active')) {
 								return tag;
 							}
 
@@ -1473,7 +1473,7 @@ AUI.add(
 
 							instance._unselectAllTags();
 
-							tag.addClass('aui-active');
+							tag.addClass('active');
 
 							instance._displayTagData();
 						}
@@ -1486,8 +1486,8 @@ AUI.add(
 
 						var output = instance._portletMessageContainer;
 
-						output.removeClass('aui-alert-error').removeClass('aui-alert-success');
-						output.addClass('aui-alert aui-alert-' + type);
+						output.removeClass('alert-error').removeClass('alert-success');
+						output.addClass('alert alert-' + type);
 						output.html(message);
 
 						output.show();
@@ -1637,7 +1637,7 @@ AUI.add(
 					_unselectAllTags: function() {
 						var instance = this;
 
-						A.all(instance._tagsItemsSelector).removeClass('aui-active');
+						A.all(instance._tagsItemsSelector).removeClass('active');
 					},
 
 					_updateTag: function(form) {

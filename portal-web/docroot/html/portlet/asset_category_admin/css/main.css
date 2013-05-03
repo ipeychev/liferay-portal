@@ -7,7 +7,7 @@
 			margin-left: 1em;
 		}
 
-		.aui-button, .category-actions {
+		.button, .category-actions {
 			display: block;
 			float: left;
 			margin-left: 0;
@@ -45,7 +45,7 @@
 	}
 
 	.categories-admin-search, .categories-admin-select-search {
-		.aui-field-content {
+		.field-content {
 			display: inline-block;
 		}
 	}
@@ -66,7 +66,7 @@
 		position: relative;
 	}
 
-	.vocabulary-content-wrapper, .header-title, .aui-tree-node-content .aui-tree-label {
+	.vocabulary-content-wrapper, .header-title, .tree-node-content .tree-label {
 		word-wrap: break-word;
 	}
 
@@ -234,7 +234,7 @@
 	}
 
 	.categories-treeview-container {
-		.aui-tree-label {
+		.tree-label {
 			cursor: pointer;
 
 			&:hover {
@@ -242,32 +242,32 @@
 			}
 		}
 
-		.aui-tree-node {
+		.tree-node {
 			background: #F5F5F5;
 
-			.aui-tree-icon {
+			.tree-icon {
 				background: none;
 				height: 0;
 				width: 0;
 			}
 		}
 
-		.aui-tree-node-over {
+		.tree-node-over {
 			background: #D3DADD;
 		}
 
-		.aui-tree-node-content {
+		.tree-node-content {
 			height: 33px;
 
-			.aui-tree-hitarea {
+			.tree-hitarea {
 				padding-top: 13px;
 			}
 
-			&.aui-tree-collapsed .aui-tree-hitarea {
+			&.tree-collapsed .tree-hitarea {
 				background-position: 0 50%;
 			}
 
-			.aui-tree-node-checkbox-container, .aui-tree-label {
+			.tree-node-checkbox-container, .tree-label {
 				display: inline-block;
 				position: relative;
 				top: 8px;
@@ -275,11 +275,11 @@
 			}
 		}
 
-		.aui-tree-node-selected {
+		.tree-node-selected {
 			background: #6F7D83;
 		}
 
-		.aui-tree-node-selected .aui-tree-label {
+		.tree-node-selected .tree-label {
 			color: #FFF;
 			cursor: move;
 		}
@@ -307,14 +307,14 @@
 		margin: 10px 0;
 		text-align: center;
 
-		.aui-pagination-content {
+		.pagination-content {
 			margin: 0;
 		}
 	}
 }
 
 .portlet-asset-categories-admin-dialog {
-	.aui-fieldset {
+	.fieldset {
 		margin-bottom: 0;
 	}
 
@@ -323,7 +323,7 @@
 		border-width: 0;
 	}
 
-	.asset-category-layer .aui-overlay {
+	.asset-category-layer .overlay {
 		overflow: visible;
 		width: 230px;
 	}
@@ -332,7 +332,7 @@
 		.asset-category-layer {
 			padding: 0 10px;
 
-			.aui-field-content {
+			.field-content {
 				margin-bottom: 10px;
 			}
 
@@ -341,7 +341,7 @@
 				font-weight: bold;
 			}
 
-			.aui-field {
+			.field {
 				input, select {
 					width: 200px;
 				}
@@ -353,7 +353,7 @@
 		}
 	}
 
-	.yui3-widget-bd .aui-field.vocabulary-checkbox {
+	.yui3-widget-bd .field.vocabulary-checkbox {
 		margin-top: 1.8em;
 
 		input {

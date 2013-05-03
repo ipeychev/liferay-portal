@@ -25,7 +25,7 @@ SearchContainer searchContainer = (SearchContainer)request.getAttribute("view.js
 
 <c:choose>
 	<c:when test="<%= results.isEmpty() %>">
-		<div class="aui-alert aui-alert-info">
+		<div class="alert alert-info">
 			<%= LanguageUtil.get(pageContext, "there-are-no-media-files-in-this-folder") %>
 		</div>
 	</c:when>
@@ -121,7 +121,7 @@ SearchContainer searchContainer = (SearchContainer)request.getAttribute("view.js
 					</div>
 
 					<c:if test="<%= showActions %>">
-						<div class="aui-hide" id="<portlet:namespace />buttonsContainer_<%= thumbnailId %>">
+						<div class="hide" id="<portlet:namespace />buttonsContainer_<%= thumbnailId %>">
 							<div class="buttons-container float-container" id="<portlet:namespace />buttons_<%= thumbnailId %>">
 								<%@ include file="/html/portlet/image_gallery_display/image_action.jspf" %>
 							</div>

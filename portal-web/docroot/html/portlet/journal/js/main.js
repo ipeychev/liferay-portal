@@ -33,20 +33,20 @@ AUI.add(
 						'<div class="journal-article-move-handler"></div>' +
 						'<label for="" class="journal-article-field-label"><span>{fieldLabel}</span></label>' +
 						'<div class="journal-article-component-container"></div>' +
-						'<span class="aui-field aui-field-choice journal-article-localized-checkbox">' +
-							'<span class="aui-field-content">' +
-								'<span class="aui-field-element aui-field-label-right">' +
+						'<span class="field field-choice journal-article-localized-checkbox">' +
+							'<span class="field-content">' +
+								'<span class="field-element field-label-right">' +
 									'<input type="hidden" value="false" name="{portletNamespace}{instanceId}localized-checkbox">' +
 									'<input type="checkbox" onclick="Liferay.Util.updateCheckboxValue(this); " name="{portletNamespace}{instanceId}localized-checkboxCheckbox" id="{portletNamespace}{instanceId}localized-checkboxCheckbox"> </span>' +
 									'<label for="{portletNamespace}{instanceId}localized-checkboxCheckbox">{localizedLabelLanguage}</label>' +
 								'</span>' +
 							'</span>' +
-						'<div class="aui-alert aui-alert-error journal-article-required-message">{requiredFieldLanguage}</div>' +
+						'<div class="alert alert-error journal-article-required-message">{requiredFieldLanguage}</div>' +
 						'<div class="journal-article-buttons {articleButtonsRowCSSClass}">' +
-							'<span class="aui-field aui-field-inline aui-field-text journal-article-variable-name">' +
-								'<span class="aui-field-content">' +
+							'<span class="field field-inline field-text journal-article-variable-name">' +
+								'<span class="field-content">' +
 									'<label for="{portletNamespace}{instanceId}variableName">{variableNameLanguage}</label>' +
-									'<span class="aui-field-element ">' +
+									'<span class="field-element ">' +
 										'<input type="text" size="25" value="{variableName}" name="{portletNamespace}variableName" id="{portletNamespace}{instanceId}variableName">' +
 									'</span>' +
 								'</span>' +
@@ -64,11 +64,11 @@ AUI.add(
 			'<div class="forbidden-action"></div>' +
 		'</div>';
 
-		var TPL_INSTRUCTIONS_CONTAINER = '<div class="aui-alert aui-alert-info journal-article-instructions-container journal-article-instructions-message"></div>';
+		var TPL_INSTRUCTIONS_CONTAINER = '<div class="alert alert-info journal-article-instructions-container journal-article-instructions-message"></div>';
 
 		var TPL_OPTION = '<option></option>';
 
-		var TPL_PLACEHOLDER = '<div class="aui-tree-placeholder aui-tree-sub-placeholder"></div>';
+		var TPL_PLACEHOLDER = '<div class="tree-placeholder tree-sub-placeholder"></div>';
 
 		var TPL_STRUCTURE_FIELD_INPUT = '<input class="lfr-input-text" type="text" value="" size="40"/>';
 
@@ -414,11 +414,11 @@ AUI.add(
 				var saveStructureButton = instance.getById('saveStructureButton');
 
 				if (editStructureButton) {
-					editStructureButton.ancestor('.aui-btn').show();
+					editStructureButton.ancestor('.btn').show();
 				}
 
 				if (saveStructureButton) {
-					saveStructureButton.ancestor('.aui-btn').show();
+					saveStructureButton.ancestor('.btn').show();
 				}
 
 				instance._attachEditStructureEvents();
@@ -1175,7 +1175,7 @@ AUI.add(
 
 				var editContainerWrapper = instance.getById('journalArticleEditFieldWrapper');
 
-				var isVisible = !editContainerWrapper.ancestor('.aui-overlaycontextpanel-hidden');
+				var isVisible = !editContainerWrapper.ancestor('.overlaycontextpanel-hidden');
 
 				if (isVisible) {
 					setTimeout(
@@ -1314,7 +1314,7 @@ AUI.add(
 				var instance = this;
 
 				var journalMessage = A.one(selector);
-				var className = 'save-structure-message aui-alert aui-alert-' + (type || 'success');
+				var className = 'save-structure-message alert alert-' + (type || 'success');
 
 				journalMessage.attr('className', className);
 				journalMessage.show();
@@ -1916,7 +1916,7 @@ AUI.add(
 						var showLabel = link.one('.show-label').show();
 						var hideLabel = link.one('.hide-label').show();
 
-						var visible = imagePreviewDiv.hasClass('aui-hide');
+						var visible = imagePreviewDiv.hasClass('hide');
 
 						if (visible) {
 							showLabel.hide();
@@ -2144,7 +2144,7 @@ AUI.add(
 						instance.clonedSource.guid();
 
 						instance.clonedSource.show().setStyle('visibility', 'visible');
-						instance.clonedSource.removeClass('aui-hide');
+						instance.clonedSource.removeClass('hide');
 						instance.clonedSource.addClass('dragging');
 
 						instance.createNestedList(
@@ -3177,7 +3177,7 @@ AUI.add(
 							var articleButtonsRowCSSClass = '';
 
 							if (!optionsEditable) {
-								articleButtonsRowCSSClass = 'aui-hide';
+								articleButtonsRowCSSClass = 'hide';
 							}
 
 							var repeatableButtonTemplate = instance.getById('repeatableButtonTemplate');

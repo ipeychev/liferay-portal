@@ -95,7 +95,7 @@
 				<div class="vocabulary-categories"></div>
 			</aui:col>
 
-			<aui:col cssClass="aui-hide vocabulary-edit-category" width="<%= 20 %>">
+			<aui:col cssClass="hide vocabulary-edit-category" width="<%= 20 %>">
 				<div class="results-header">
 					<liferay-ui:message key="category-details" />
 

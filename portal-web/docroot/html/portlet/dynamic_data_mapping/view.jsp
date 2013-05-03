@@ -204,7 +204,7 @@ portletURL.setParameter("tabs1", tabs1);
 	if (buttons.size()) {
 		var toggleDisabled = A.bind('toggleDisabled', Liferay.Util, ':button');
 
-		var resultsGrid = A.one('.aui-searchcontainer-content');
+		var resultsGrid = A.one('.searchcontainer-content');
 
 		if (resultsGrid) {
 			resultsGrid.delegate(

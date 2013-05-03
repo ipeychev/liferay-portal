@@ -9,9 +9,9 @@ AUI.add(
 
 		var STR_CLICK = 'click';
 
-		var STR_PORTLET_MSG_ERROR = 'aui-alert aui-alert-error';
+		var STR_PORTLET_MSG_ERROR = 'alert alert-error';
 
-		var STR_PORTLET_MSG_SUCCESS = 'aui-alert aui-alert-success';
+		var STR_PORTLET_MSG_SUCCESS = 'alert alert-success';
 
 		var Admin = A.Component.create(
 			{

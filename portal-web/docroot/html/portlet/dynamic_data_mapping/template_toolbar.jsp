@@ -52,7 +52,7 @@ long classPK = ParamUtil.getLong(request, "classPK");
 					}
 					%>
 
-					<aui:nav-item href="<%= addTemplateURL %>" iconClass="aui-icon-plus" label="<%= message %>" selected='<%= toolbarItem.equals("add-form-template") %>' />
+					<aui:nav-item href="<%= addTemplateURL %>" iconClass="icon-plus" label="<%= message %>" selected='<%= toolbarItem.equals("add-form-template") %>' />
 				</c:if>
 
 				<c:if test="<%= DDMPermission.contains(permissionChecker, scopeGroupId, ddmResource, ActionKeys.ADD_TEMPLATE) && (Validator.isNull(templateTypeValue) || templateTypeValue.equals(DDMTemplateConstants.TEMPLATE_TYPE_DISPLAY)) %>">
@@ -71,7 +71,7 @@ long classPK = ParamUtil.getLong(request, "classPK");
 					}
 					%>
 
-					<aui:nav-item href="<%= addTemplateURL %>" iconClass="aui-icon-plus" label="<%= message %>" selected='<%= toolbarItem.equals("add-display-template") %>' />
+					<aui:nav-item href="<%= addTemplateURL %>" iconClass="icon-plus" label="<%= message %>" selected='<%= toolbarItem.equals("add-display-template") %>' />
 				</c:if>
 			</c:when>
 			<c:otherwise>
@@ -128,7 +128,7 @@ long classPK = ParamUtil.getLong(request, "classPK");
 		</c:choose>
 	</aui:nav>
 
-	<aui:nav-bar-search cssClass="aui-pull-right" file="/html/portlet/dynamic_data_mapping/template_search.jsp" />
+	<aui:nav-bar-search cssClass="pull-right" file="/html/portlet/dynamic_data_mapping/template_search.jsp" />
 </aui:nav-bar>
 
 <%!

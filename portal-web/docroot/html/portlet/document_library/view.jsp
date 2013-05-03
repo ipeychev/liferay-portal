@@ -103,7 +103,7 @@ request.setAttribute("view.jsp-repositoryId", String.valueOf(repositoryId));
 			String cssClass = "show-sync-message-icon-container";
 
 			if (showSyncMessage || !PropsValues.DL_SHOW_LIFERAY_SYNC_MESSAGE) {
-				cssClass += " aui-hide";
+				cssClass += " hide";
 			}
 			%>
 
@@ -115,8 +115,8 @@ request.setAttribute("view.jsp-repositoryId", String.valueOf(repositoryId));
 				<liferay-util:include page="/html/portlet/document_library/breadcrumb.jsp" />
 			</div>
 
-			<div class="aui-hide" id="<portlet:namespace />syncNotification">
-				<div class="aui-alert aui-alert-info sync-notification" id="<portlet:namespace />syncNotificationContent">
+			<div class="hide" id="<portlet:namespace />syncNotification">
+				<div class="alert alert-info sync-notification" id="<portlet:namespace />syncNotificationContent">
 					<a href="http://www.liferay.com/products/liferay-sync" target="_blank">
 						<liferay-ui:message key="access-these-files-offline-using-liferay-sync" />
 					</a>

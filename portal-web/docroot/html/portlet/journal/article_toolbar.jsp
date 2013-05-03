@@ -42,7 +42,7 @@ if ((article != null) && article.isDraft()) {
 	<c:if test="<%= (article != null) && Validator.isNotNull(structureId) && (classNameId == JournalArticleConstants.CLASSNAME_ID_DEFAULT) %>">
 		toolbarButtonGroup.push(
 			{
-				icon: 'aui-icon-search',
+				icon: 'icon-search',
 				id: '<portlet:namespace />previewArticleButton',
 				label: '<%= UnicodeLanguageUtil.get(pageContext, "preview") %>'
 			}
@@ -52,7 +52,7 @@ if ((article != null) && article.isDraft()) {
 	<c:if test="<%= (article != null) && Validator.isNotNull(structureId) %>">
 		toolbarButtonGroup.push(
 			{
-				icon: 'aui-icon-download',
+				icon: 'icon-download',
 				id: '<portlet:namespace />downloadArticleContentButton',
 				label: '<%= UnicodeLanguageUtil.get(pageContext, "download") %>'
 			}
@@ -69,7 +69,7 @@ if ((article != null) && article.isDraft()) {
 
 		toolbarButtonGroup.push(
 			{
-				icon: 'aui-icon-lock',
+				icon: 'icon-lock',
 				label: '<%= UnicodeLanguageUtil.get(pageContext, "permissions") %>',
 				on: {
 					click: function(event) {
@@ -101,7 +101,7 @@ if ((article != null) && article.isDraft()) {
 	<c:if test="<%= (article != null) && !article.isExpired() && JournalArticlePermission.contains(permissionChecker, article, ActionKeys.EXPIRE) && !article.isApproved() %>">
 		toolbarButtonGroup.push(
 			{
-				icon: 'aui-icon-calendar',
+				icon: 'icon-calendar',
 				label: '<%= UnicodeLanguageUtil.get(pageContext, "expire-this-version") %>',
 				on: {
 					click: function() {
@@ -115,7 +115,7 @@ if ((article != null) && article.isDraft()) {
 	<c:if test="<%= (article != null) && JournalArticlePermission.contains(permissionChecker, article, ActionKeys.DELETE) && !article.isApproved() && !article.isDraft() %>">
 		toolbarButtonGroup.push(
 			{
-				icon: 'aui-icon-trash',
+				icon: 'icon-trash',
 				label: '<liferay-ui:message key="<%= deleteButtonLabel %>" />',
 				on: {
 					click: function() {
@@ -136,7 +136,7 @@ if ((article != null) && article.isDraft()) {
 
 		toolbarButtonGroup.push(
 			{
-				icon: 'aui-icon-time',
+				icon: 'icon-time',
 				label: '<%= UnicodeLanguageUtil.get(pageContext, "view-history") %>',
 				on: {
 					click: function (event) {

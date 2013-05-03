@@ -17,7 +17,7 @@ AUI.add(
 
 		var CSS_APP_VIEW_ENTRY = 'app-view-entry-taglib';
 
-		var CSS_COLUMN_CONTENT = '.aui-column-content';
+		var CSS_COLUMN_CONTENT = '.column-content';
 
 		var CSS_ENTRY_DISPLAY_STYLE = 'entry-display-style';
 
@@ -65,7 +65,7 @@ AUI.add(
 
 		var SELECTOR_IMAGE_ICON = 'img.icon';
 
-		var SELECTOR_SEARCH_CONTAINER = '.aui-searchcontainer';
+		var SELECTOR_SEARCH_CONTAINER = '.searchcontainer';
 
 		var SELECTOR_ENTRY_DISPLAY_STYLE = '.' + CSS_ENTRY_DISPLAY_STYLE;
 
@@ -257,7 +257,7 @@ AUI.add(
 							uploader.fire('fileselect', event);
 						}
 					},
-					'body, .document-container, .aui-overlaymask, .aui-progressbar, [data-folder="true"]'
+					'body, .document-container, .overlaymask, .progressbar, [data-folder="true"]'
 				);
 
 				entriesContainer.delegate(
@@ -666,7 +666,7 @@ AUI.add(
 
 				var folderEntry;
 
-				var overlayContentBox = target.hasClass('aui-overlay-content');
+				var overlayContentBox = target.hasClass('overlay-content');
 
 				if (overlayContentBox) {
 					var overlay = A.Widget.getByNode(target);
@@ -819,7 +819,7 @@ AUI.add(
 
 							var emptyMessage = instance._getEmptyMessage();
 
-							if (emptyMessage && !emptyMessage.hasClass('aui-hide')) {
+							if (emptyMessage && !emptyMessage.hasClass('hide')) {
 								emptyMessage.hide(true);
 							}
 						}

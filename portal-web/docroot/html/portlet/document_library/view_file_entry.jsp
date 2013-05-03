@@ -144,12 +144,12 @@ request.setAttribute("view_file_entry.jsp-fileEntry", fileEntry);
 				</liferay-ui:app-view-toolbar>
 			</c:if>
 
-			<div class="aui-alert aui-alert-error aui-hide" id="<portlet:namespace />openMSOfficeError"></div>
+			<div class="alert alert-error hide" id="<portlet:namespace />openMSOfficeError"></div>
 
 			<c:if test="<%= (fileEntry.getLock() != null) && DLFileEntryPermission.contains(permissionChecker, fileEntry, ActionKeys.UPDATE) %>">
 				<c:choose>
 					<c:when test="<%= fileEntry.hasLock() %>">
-						<div class="aui-alert aui-alert-success">
+						<div class="alert alert-success">
 							<c:choose>
 								<c:when test="<%= lock.isNeverExpires() %>">
 									<liferay-ui:message key="you-now-have-an-indefinite-lock-on-this-document" />
@@ -166,7 +166,7 @@ request.setAttribute("view_file_entry.jsp-fileEntry", fileEntry);
 						</div>
 					</c:when>
 					<c:otherwise>
-						<div class="aui-alert aui-alert-error">
+						<div class="alert alert-error">
 							<%= LanguageUtil.format(pageContext, "you-cannot-modify-this-document-because-it-was-locked-by-x-on-x", new Object[] {HtmlUtil.escape(PortalUtil.getUserName(lock.getUserId(), String.valueOf(lock.getUserId()))), dateFormatDateTime.format(lock.getCreateDate())}, false) %>
 						</div>
 					</c:otherwise>
@@ -338,7 +338,7 @@ request.setAttribute("view_file_entry.jsp-fileEntry", fileEntry);
 						<c:choose>
 							<c:when test="<%= previewFileCount == 0 %>">
 								<c:if test="<%= AudioProcessorUtil.isAudioSupported(fileVersion) || ImageProcessorUtil.isImageSupported(fileVersion) || PDFProcessorUtil.isDocumentSupported(fileVersion) || VideoProcessorUtil.isVideoSupported(fileVersion) %>">
-									<div class="aui-alert aui-alert-info">
+									<div class="alert alert-info">
 										<liferay-ui:message key="generating-preview-will-take-a-few-minutes" />
 									</div>
 								</c:if>
@@ -381,7 +381,7 @@ request.setAttribute("view_file_entry.jsp-fileEntry", fileEntry);
 													<div class="lfr-preview-file-image-container">
 														<img class="lfr-preview-file-image-current" id="<portlet:namespace />previewFileImage" src="<%= previewFileURL + "1" %>" />
 													</div>
-													<span class="lfr-preview-file-actions aui-hide" id="<portlet:namespace />previewFileActions">
+													<span class="lfr-preview-file-actions hide" id="<portlet:namespace />previewFileActions">
 														<span class="lfr-preview-file-toolbar" id="<portlet:namespace />previewToolbar"></span>
 
 														<span class="lfr-preview-file-info">
@@ -516,7 +516,7 @@ request.setAttribute("view_file_entry.jsp-fileEntry", fileEntry);
 							</c:choose>
 						</span>
 
-						<div class="lfr-asset-field url-file-container aui-hide">
+						<div class="lfr-asset-field url-file-container hide">
 							<aui:field-wrapper name="url">
 								<liferay-ui:input-resource
 									id="url"
@@ -526,7 +526,7 @@ request.setAttribute("view_file_entry.jsp-fileEntry", fileEntry);
 						</div>
 
 						<c:if test="<%= portletDisplay.isWebDAVEnabled() && fileEntry.isSupportsSocial() %>">
-							<div class="lfr-asset-field webdav-url-file-container aui-hide">
+							<div class="lfr-asset-field webdav-url-file-container hide">
 
 								<%
 								String webDavHelpMessage = null;
@@ -870,7 +870,7 @@ request.setAttribute("view_file_entry.jsp-fileEntry", fileEntry);
 			function(event) {
 				var URLFileContainer = A.one('.url-file-container');
 
-				URLFileContainer.toggleClass('aui-hide');
+				URLFileContainer.toggleClass('hide');
 			}
 		);
 	}
@@ -881,7 +881,7 @@ request.setAttribute("view_file_entry.jsp-fileEntry", fileEntry);
 			function(event) {
 				var WebDavFileContainer = A.one('.webdav-url-file-container');
 
-				WebDavFileContainer.toggleClass('aui-hide');
+				WebDavFileContainer.toggleClass('hide');
 			}
 		);
 	}
@@ -894,7 +894,7 @@ request.setAttribute("view_file_entry.jsp-fileEntry", fileEntry);
 		<c:if test="<%= DLFileEntryPermission.contains(permissionChecker, fileEntry, ActionKeys.VIEW) %>">
 			fileEntryButtonGroup.push(
 				{
-					icon: 'aui-icon-download',
+					icon: 'icon-download',
 					label: '<%= UnicodeLanguageUtil.get(pageContext, "download") %>',
 					on: {
 						click: function(event) {
@@ -935,7 +935,7 @@ request.setAttribute("view_file_entry.jsp-fileEntry", fileEntry);
 						<portlet:param name="fileEntryId" value="<%= String.valueOf(fileEntry.getFileEntryId()) %>" />
 					</portlet:renderURL>
 
-					icon: 'aui-icon-pencil',
+					icon: 'icon-pencil',
 					label: '<%= UnicodeLanguageUtil.get(pageContext, "edit") %>',
 					on: {
 						click: function(event) {
@@ -951,7 +951,7 @@ request.setAttribute("view_file_entry.jsp-fileEntry", fileEntry);
 						<portlet:param name="fileEntryId" value="<%= String.valueOf(fileEntry.getFileEntryId()) %>" />
 					</portlet:renderURL>
 
-					icon: 'aui-icon-move',
+					icon: 'icon-move',
 					label: '<%= UnicodeLanguageUtil.get(pageContext, "move") %>',
 					on: {
 						click: function(event) {
@@ -965,7 +965,7 @@ request.setAttribute("view_file_entry.jsp-fileEntry", fileEntry);
 				fileEntryButtonGroup.push(
 					{
 
-						icon: 'aui-icon-lock',
+						icon: 'icon-lock',
 						label: '<%= UnicodeLanguageUtil.get(pageContext, "checkout[document]") %>',
 						on: {
 							click: function(event) {
@@ -981,7 +981,7 @@ request.setAttribute("view_file_entry.jsp-fileEntry", fileEntry);
 				fileEntryButtonGroup.push(
 					{
 
-						icon: 'aui-icon-undo',
+						icon: 'icon-undo',
 						label: '<%= UnicodeLanguageUtil.get(pageContext, "cancel-checkout[document]") %>',
 						on: {
 							click: function(event) {
@@ -992,7 +992,7 @@ request.setAttribute("view_file_entry.jsp-fileEntry", fileEntry);
 					},
 					{
 
-						icon: 'aui-icon-unlock',
+						icon: 'icon-unlock',
 						label: '<%= UnicodeLanguageUtil.get(pageContext, "checkin") %>',
 						on: {
 							click: function(event) {
@@ -1015,7 +1015,7 @@ request.setAttribute("view_file_entry.jsp-fileEntry", fileEntry);
 						var="permissionsURL"
 					/>
 
-					icon: 'aui-icon-permissions',
+					icon: 'icon-permissions',
 					label: '<%= UnicodeLanguageUtil.get(pageContext, "permissions") %>',
 					on: {
 						click: function(event) {
@@ -1034,7 +1034,7 @@ request.setAttribute("view_file_entry.jsp-fileEntry", fileEntry);
 						<portlet:param name="folderId" value="<%= String.valueOf(fileEntry.getFolderId()) %>" />
 					</portlet:renderURL>
 
-					icon: 'aui-icon-trash',
+					icon: 'icon-trash',
 					label: '<%= UnicodeLanguageUtil.get(pageContext, "move-to-the-recycle-bin") %>',
 					on: {
 						click: function(event) {
@@ -1055,7 +1055,7 @@ request.setAttribute("view_file_entry.jsp-fileEntry", fileEntry);
 						<portlet:param name="folderId" value="<%= String.valueOf(fileEntry.getFolderId()) %>" />
 					</portlet:renderURL>
 
-					icon: 'aui-icon-delete',
+					icon: 'icon-delete',
 					label: '<%= UnicodeLanguageUtil.get(pageContext, "delete") %>',
 					on: {
 						click: function(event) {

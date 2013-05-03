@@ -98,7 +98,7 @@ if (pluginType.equals(Plugin.TYPE_PORTLET)) {
 					%>
 
 					<c:if test="<%= rolesCount > maxNumberOfRolesChecked %>">
-						<div class="aui-alert aui-alert-block">
+						<div class="alert alert-block">
 							<%= LanguageUtil.format(pageContext, "the-portal-has-more-roles-than-the-maximum-that-can-be-checked-x", maxNumberOfRolesChecked) %>
 						</div>
 					</c:if>

@@ -55,7 +55,7 @@ AUI.add(
 
 		var SRC_SEARCH = 3;
 
-		var TPL_MESSAGE_SEARCHING = '<div class="aui-alert aui-alert-info">{0}</div><div class="loading-animation" />';
+		var TPL_MESSAGE_SEARCHING = '<div class="alert alert-info">{0}</div><div class="loading-animation" />';
 
 		var WIN = A.config.win;
 
@@ -555,7 +555,7 @@ AUI.add(
 
 						if (AObject.owns(requestParams, namespacedShowRepositoryTabs) &&
 							!requestParams[namespacedShowRepositoryTabs] &&
-							!entriesContainer.one('ul.aui-nav-tabs')) {
+							!entriesContainer.one('ul.nav-tabs')) {
 
 							requestParams[namespacedShowRepositoryTabs] = true;
 
