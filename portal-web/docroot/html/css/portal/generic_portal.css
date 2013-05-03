@@ -50,11 +50,15 @@ td {
 	position: static;
 }
 
+.popup-alert-close {
+	margin-left: 5px;
+}
+
 .popup-alert-notice, .popup-alert-warning {
-	left: 0;
+	left: 10px;
 	position: fixed;
-	top: 0;
-	width: 100%;
+	right: 10px;
+	top: 50px;
 	z-index: 10000;
 }
 

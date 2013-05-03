@@ -60,7 +60,7 @@ if (categoryId > 0) {
 </c:if>
 
 <c:if test="<%= !print %>">
-	<c:if test="<%= (nodes.size() > 1) && portletName.equals(PortletKeys.WIKI)%>">
+	<c:if test="<%= (nodes.size() > 1) && portletName.equals(PortletKeys.WIKI) %>">
 		<aui:nav cssClass="aui-nav-tabs">
 
 			<%
@@ -81,6 +81,7 @@ if (categoryId > 0) {
 				</portlet:renderURL>
 
 				<aui:nav-item cssClass="<%= cssClass %>" href="<%= viewPageURL %>" label="<%= curNode.getName() %>" />
+
 			<%
 			}
 			%>

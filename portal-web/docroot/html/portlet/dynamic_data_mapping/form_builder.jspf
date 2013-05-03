@@ -70,10 +70,10 @@ String defaultLanguageId = LocalizationUtil.getDefaultLocale(script);
 						</div>
 					</div>
 					<div class="aui-diagram-builder-content-container">
-		                <div class="aui-diagram-builder-canvas">
-		                    <div class="aui-diagram-builder-drop-container"></div>
-		                </div>
-		            </div>
+						<div class="aui-diagram-builder-canvas">
+							<div class="aui-diagram-builder-drop-container"></div>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>

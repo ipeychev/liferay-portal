@@ -202,7 +202,7 @@
 		<label <%= labelTag %>>
 			<%= labelContent %>
 	</c:if>
-	<c:if test='<%= choiceField %>'>
+	<c:if test="<%= choiceField %>">
 		<%= labelContent %>
 	</c:if>
 

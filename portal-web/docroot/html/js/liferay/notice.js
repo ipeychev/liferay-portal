@@ -133,7 +133,9 @@ AUI.add(
 				}
 
 				if (instance._useCloseButton) {
-					var html = '<input class="submit popup-alert-close" type="submit" value="' + instance._closeText + '" />';
+					var html =  '<button class="aui-btn submit popup-alert-close">' +
+									instance._closeText
+								'</button>';
 
 					notice.append(html);
 
