@@ -26,6 +26,6 @@ if (portletTitle == null) {
 }
 %>
 
-<div class="aui-alert aui-alert-error">
+<div class="alert alert-error">
 	<%= LanguageUtil.format(pageContext, "is-temporarily-unavailable", portletTitle, false) %>
 </div>

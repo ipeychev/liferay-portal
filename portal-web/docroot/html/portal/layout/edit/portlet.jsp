@@ -16,7 +16,7 @@
 
 <%@ include file="/html/portal/layout/edit/init.jsp" %>
 
-<div class="aui-hide" id="<portlet:namespace />copyPortletsFromPage">
+<div class="hide" id="<portlet:namespace />copyPortletsFromPage">
 
 	<p>
 		<liferay-ui:message arguments="<%= HtmlUtil.escape(selLayout.getName(locale)) %>" key="the-portlets-in-page-x-will-be-replaced-with-the-portlets-in-the-page-you-select-below" />
@@ -81,7 +81,7 @@
 
 		var button = new A.Button(
 			{
-				icon: 'aui-icon-list-alt',
+				icon: 'icon-list-alt',
 				label: '<%= UnicodeLanguageUtil.get(pageContext, "copy-portlets-from-page") %>',
 				on: {
 					click: function(event) {
