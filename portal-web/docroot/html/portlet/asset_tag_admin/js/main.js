@@ -40,14 +40,14 @@ AUI.add(
 
 		var TPL_PORTLET_MESSAGES = '<div class="aui-hide lfr-message-response" id="portletMessages" />';
 
+		var TPL_TAG_LIST_CONTAINER = '<ul class="aui-nav aui-nav-pills aui-nav-stacked">';
+
 		var TPL_TAG_LIST = '<li class="tag-item-container results-row {cssClassSelected}" data-tag="{name}" data-tagId="{tagId}" tabIndex="0">' +
-			'<div class="tags-admin-content-wrapper">' +
-					'<input type="checkbox" class="tag-item-check" name="tag-item-check" data-tagId="{tagId}" data-tagName="{name}">' +
-					'<span class="tag-item">' +
-						'<a href="javascript:;" data-tagId="{tagId}" tabIndex="-1">{name}</a>' +
-					'</span>' +
-					'<a href="javascript:;" class="tag-item-actions-trigger" data-tagId="{tagId}"></a>' +
-			'</div>' +
+
+			'<a href="javascript:;" data-tagId="{tagId}" tabIndex="-1">{name}' +
+				'<input type="checkbox" class="tag-item-check" name="tag-item-check" data-tagId="{tagId}" data-tagName="{name}">' +
+				'<span tabindex="0" class="tag-item-actions-trigger" data-tagId="{tagId}"></span>' +
+			'</a>' +
 		'</li>';
 
 		var TPL_TAG_MERGE_BODY = '<div class="aui-container-fluid tags-admin-merge-tag">' +
@@ -90,7 +90,7 @@ AUI.add(
 				'</div>' +
 			'</div>';
 
-		var TPL_TAG_MERGE_ITEM = '<option value="{value}" title="{name}" selected>{name}</option>';
+		var TPL_TAG_MERGE_ITEM = '<option value="{value}" title="{name}" aui-active>{name}</option>';
 
 		var TPL_TAGS_MESSAGES = '<div class="aui-alert aui-alert-info aui-hide lfr-message-response" id="tagsMessages" />';
 
@@ -1354,7 +1354,7 @@ AUI.add(
 						var selectedTagName;
 
 						if (tags.length > 0) {
-							var buffer = ['<ul>'];
+							var buffer = [TPL_TAG_LIST_CONTAINER];
 
 							instance._tags = tags;
 
@@ -1362,7 +1362,7 @@ AUI.add(
 								tags,
 								function(item, index, collection) {
 									if (index === 0) {
-										item.cssClassSelected = 'selected';
+										item.cssClassSelected = 'aui-active';
 									}
 									else {
 										item.cssClassSelected = '';
@@ -1462,7 +1462,7 @@ AUI.add(
 						if (tag) {
 							var tagName = instance._getTagName(tag);
 
-							if (tag.hasClass('selected')) {
+							if (tag.hasClass('aui-active')) {
 								return tag;
 							}
 
@@ -1472,7 +1472,7 @@ AUI.add(
 
 							instance._unselectAllTags();
 
-							tag.addClass('selected');
+							tag.addClass('aui-active');
 
 							instance._displayTagData();
 						}
@@ -1636,7 +1636,7 @@ AUI.add(
 					_unselectAllTags: function() {
 						var instance = this;
 
-						A.all(instance._tagsItemsSelector).removeClass('selected');
+						A.all(instance._tagsItemsSelector).removeClass('aui-active');
 					},
 
 					_updateTag: function(form) {

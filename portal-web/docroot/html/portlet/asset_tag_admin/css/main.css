@@ -1,5 +1,9 @@
 .portlet-asset-tag-admin {
 
+	.lfr-app-column-view {
+		border: none;
+	}
+
 	.aui-navbar-inner {
 		padding-left: 12px;
 
@@ -33,11 +37,7 @@
 		}
 	}
 
-	.tags-admin-content-wrapper {
-		position: relative;
-	}
-
-	.tags-admin-content-wrapper, .header-title, .aui-tree-node-content .aui-tree-label {
+	.header-title, .aui-tree-node-content .aui-tree-label {
 		word-wrap: break-word;
 	}
 
@@ -59,35 +59,33 @@
 	}
 
 	.tag-item-actions-trigger {
-		 display: block;
-		 margin-top: -8px;
-		 position: absolute;
-		 top: 50%;
-	}
-
-	.tag-item-actions-trigger {
 		background-image: url(@theme_image_path@/common/edit.png);
 		background-repeat: no-repeat;
 		clip: rect(0pt, 0pt, 0pt, 0pt);
+		display: block;
 		height: 16px;
 		margin-top: -8px;
 		padding: 0;
-		right: 0;
+		position: absolute;
+		right: 5px;
+		top: 50%;
 		width: 16px;
 	}
 
 	.tag-item-check {
 		float: left;
-		margin-left: 10px;
 		margin-right: 10px;
-		margin-top: 12px;
+		margin-top: 2px;
 		position: static;
 	}
 
 	.tags-admin-content {
+		.tag-item-container {
+			position: relative;
+		}
+
 		li.tag-item-container, li.tag-item {
 			font-weight: bold;
-			list-style: none;
 		}
 	}
 
@@ -108,14 +106,9 @@
 			margin-left: 0;
 		}
 
-		.selected {
+		.aui-active {
 			a:hover {
-				color: #FFB683;
-			}
-
-			a, .tags-admin-content-wrapper:hover {
-				background-color: #3A87AD;
-				color: #FFF;
+				color: #D9EDF7;
 			}
 		}
 
@@ -125,12 +118,6 @@
 			a {
 				background-color: #90EE90;
 				color: #90EE90;
-			}
-		}
-
-		.tags-admin-content-wrapper {
-			&:hover {
-				background: #D3DADD;
 			}
 		}
 	}
@@ -143,7 +130,7 @@
 	.tags-admin-list-container {
 		.tags-header {
 			display: inline-block;
-			margin-left: 10px;
+			margin-left: 5px;
 		}
 
 		&:after {
@@ -283,10 +270,6 @@
 
 .ie6, .ie7 {
 	.portlet-asset-tag-admin {
-		.tags-admin-content-wrapper {
-			width: 100%;
-		}
-
 		.tag-item-actions-trigger, .tag-item-check {
 			cursor: pointer;
 		}
