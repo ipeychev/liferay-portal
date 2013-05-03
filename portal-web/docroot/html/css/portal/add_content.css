@@ -1,7 +1,7 @@
 @import "compass";
 
 .lfr-content-preview-popup {
-	&.aui-tooltip {
+	&.tooltip {
 		max-width: 250px;
 	}
 
@@ -53,7 +53,7 @@
 	top: 0;
 	width: 330px;
 
-	.aui-tabview-list {
+	.tabview-list {
 		margin: 5px;
 		padding-left: 5px;
 	}
@@ -311,7 +311,7 @@
 	.add-application-tab {
 		.lfr-add-content {
 			.lfr-content-category {
-				.aui-accordion-inner {
+				.accordion-inner {
 					padding-right: 0;
 				}
 
@@ -378,10 +378,10 @@
 	.search-panel {
 		background: #D3DBE4 url(@theme_image_path@/common/shadow_bottom_bg.png) repeat-x 0 100%;
 
-		.aui-control-group {
+		.control-group {
 			margin-bottom: 0;
 
-			.aui-field-select {
+			.field-select {
 				width: 40px;
 			}
 
@@ -454,7 +454,7 @@
 			background: url(@theme_image_path@/common/shadow_top_bg.png) repeat-x 0 0;
 
 			.app-view-entry-taglib.entry-display-style {
-				&.aui-focus {
+				&.focus {
 					text-shadow: 0 0;
 				}
 
