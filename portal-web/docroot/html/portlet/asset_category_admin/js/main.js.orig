@@ -32,7 +32,11 @@ AUI.add(
 
 		var CSS_COLUMN_WIDTH_CATEGORY = 'span5';
 
-		var CSS_COLUMN_WIDTH_CATEGORY_FULL = 'span9';
+<<<<<<< HEAD
+		var CSS_COLUMN_WIDTH_CATEGORY_FULL = 'span8';
+=======
+		var CSS_COLUMN_WIDTH_CATEGORY_FULL = 'aui-span9';
+>>>>>>> LPS-34941 - Fix the UI of Categories Admin portlet caused by the migration to Bootstrap
 
 		var CSS_MESSAGE_RESPONSE = 'lfr-message-response';
 
@@ -86,12 +90,21 @@ AUI.add(
 
 		var REGEX_TREE_NODE_TYPE = /^(vocabulary|category)/;
 
+<<<<<<< HEAD
+		var SELECTOR_BUTTON_CANCEL = '.btn-cancel';
+=======
 		var SELECTOR_BUTTON_CANCEL = '.close-panel';
+>>>>>>> LPS-34941 - Fix the UI of Categories Admin portlet caused by the migration to Bootstrap
 
 		var SELECTOR_CATEGORY_ITEM = '.category-item';
 
 		var SELECTOR_CATEGORY_NAME_INPUT = '.category-name input';
 
+<<<<<<< HEAD
+		var SELECTOR_CSS_COLUMN = '.column';
+
+=======
+>>>>>>> LPS-34941 - Fix the UI of Categories Admin portlet caused by the migration to Bootstrap
 		var SELECTOR_FLOATING_TRIGGER = '.lfr-floating-trigger';
 
 		var SELECTOR_UPDATE_CATEGORY_FORM = 'form.update-category-form';
@@ -136,7 +149,7 @@ AUI.add(
 
 		var STR_QUERY = 'query';
 
-		var STR_SELECTED = 'active';
+		var STR_SELECTED = 'aui-active';
 
 		var STR_SPACE = ' ';
 
@@ -177,7 +190,7 @@ AUI.add(
 
 		var TPL_SEARCH_QUERY = '%{0}%';
 
-		var TPL_VOCABULARY_LIST_CONTAINER = '<ul class="nav nav-pills nav-stacked">';
+		var TPL_VOCABULARY_LIST_CONTAINER = '<ul class="aui-nav aui-nav-pills aui-nav-stacked">';
 
 		var TPL_VOCABULARY_LIST =
 			'<li class="vocabulary-category results-row {cssClassSelected}" data-vocabulary="{titleCurrentValue}" data-vocabularyId="{vocabularyId}" tabIndex="0">' +
