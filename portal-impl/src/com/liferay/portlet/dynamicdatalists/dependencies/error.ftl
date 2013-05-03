@@ -1,5 +1,5 @@
 <div class="dynamic-data-lists-template-error">
-	<span class="aui-alert aui-alert-error">
+	<span class="alert alert-error">
 		<@liferay.language key="an-error-occurred-while-processing-the-template" />
 	</span>
 

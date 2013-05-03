@@ -3,7 +3,7 @@
 
 <#if entries?has_content>
 	<style>
-		#<@liferay_portlet.namespace />carousel .aui-carousel-item {
+		#<@liferay_portlet.namespace />carousel .carousel-item {
 			height: 250px;
 			width: 700px;
 		}
@@ -14,7 +14,7 @@
 
 		<#list entries as entry>
 			<#if imageMimeTypes?seq_contains(entry.getMimeType()) >
-				<div class="aui-carousel-item" style="background: url(${dlUtil.getPreviewURL(entry, entry.getFileVersion(), themeDisplay, "")}) no-repeat;" ></div>
+				<div class="carousel-item" style="background: url(${dlUtil.getPreviewURL(entry, entry.getFileVersion(), themeDisplay, "")}) no-repeat;" ></div>
 			</#if>
 		</#list>
 	</div>
