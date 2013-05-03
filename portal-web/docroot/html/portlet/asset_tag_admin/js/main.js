@@ -43,10 +43,9 @@ AUI.add(
 		var TPL_TAG_LIST_CONTAINER = '<ul class="nav nav-pills nav-stacked">';
 
 		var TPL_TAG_LIST = '<li class="tag-item-container results-row {cssClassSelected}" data-tag="{name}" data-tagId="{tagId}" tabIndex="0">' +
-
 			'<a href="javascript:;" data-tagId="{tagId}" tabIndex="-1">' +
 				'<input type="checkbox" class="tag-item-check" name="tag-item-check" data-tagId="{tagId}" data-tagName="{name}">' +
-				'<span class="tag-item-name">{name}</span>' +
+				'<span class="tag-item-name" data-tagId="{tagId}">{name}</span>' +
 				'<span tabindex="0" class="tag-item-actions-trigger" data-tagId="{tagId}"></span>' +
 			'</a>' +
 		'</li>';
@@ -132,7 +131,7 @@ AUI.add(
 						instance._hideMessageTask = A.debounce('hide', 7000, portletMessageContainer);
 
 						instance._tagsList.on(EVENT_CLICK, instance._onTagsListClick, instance);
-						instance._tagsList.on('key', instance._onTagsListSelect, 'up:13', instance);
+						instance._tagsList.on('key', instance._onTagsListClick, 'up:13', instance);
 
 						instance._tagViewContainer.on(EVENT_CLICK, instance._onTagViewContainerClick, instance);
 
