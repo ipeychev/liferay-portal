@@ -17,7 +17,7 @@
 <%@ include file="/html/portlet/asset_tag_admin/init.jsp" %>
 
 <aui:form name="fm">
-<aui:nav-bar>
+	<aui:nav-bar>
 		<aui:nav>
 			<c:if test="<%= AssetPermission.contains(permissionChecker, themeDisplay.getSiteGroupId(), ActionKeys.ADD_TAG) %>">
 				<aui:nav-item id="addTagButton" label="add-tag" />
