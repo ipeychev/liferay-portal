@@ -56,7 +56,7 @@
 	<div class="tags-admin-content-wrapper">
 		<aui:row cssClass="tags-admin-content">
 			<aui:col cssClass="tags-admin-list-container" width="<%= 35 %>">
-				<span class="checkAllTags">
+				<span>
 					<aui:input cssClass="select-tags" inline="<%= true %>" label="" name="checkAllTags" title='<%= LanguageUtil.get(pageContext, "check-all-tags") %>' type="checkbox" />
 				</span>
 

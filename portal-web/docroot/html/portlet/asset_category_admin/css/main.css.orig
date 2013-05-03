@@ -3,18 +3,26 @@
 		border: none;
 	}
 
-	.form-search {
+	.aui-form-search {
 		float: left;
 
-		.search-query {
+<<<<<<< HEAD
+		.button, .category-actions {
+			display: block;
+			float: left;
+			margin-left: 0;
+			margin-right: 0.3em;
+=======
+		.aui-search-query {
 			margin-right: 0;
 			padding-right: 0;
 			width: 200px;
+>>>>>>> LPS-34941 - Fix the UI of Categories Admin portlet caused by the migration to Bootstrap
 		}
 
 	}
 
-	.control-group {
+	.aui-control-group {
 		float: left;
 		margin-bottom: 0;
 
@@ -35,7 +43,7 @@
 		}
 
 		.vocabulary-categories-container {
-			.tree-node-selected .tree-label {
+			.aui-tree-node-selected .aui-tree-label {
 				background: none;
 			}
 		}
@@ -52,6 +60,15 @@
 		background: #CCC;
 	}
 
+<<<<<<< HEAD
+	.categories-admin-search, .categories-admin-select-search {
+		.field-content {
+			display: inline-block;
+		}
+	}
+
+=======
+>>>>>>> LPS-34941 - Fix the UI of Categories Admin portlet caused by the migration to Bootstrap
 	.select-vocabularies, .select-categories {
 		float: left;
 		margin-left: 2px;
@@ -65,7 +82,15 @@
 		padding: 0;
 	}
 
-	.vocabulary-item-name, .header-title, .tree-node-content .tree-label {
+<<<<<<< HEAD
+	.vocabulary-content-wrapper {
+		position: relative;
+	}
+
+	.vocabulary-content-wrapper, .header-title, .tree-node-content .tree-label {
+=======
+	.vocabulary-item-name, .header-title, .aui-tree-node-content .aui-tree-label {
+>>>>>>> LPS-34941 - Fix the UI of Categories Admin portlet caused by the migration to Bootstrap
 		word-wrap: break-word;
 	}
 
@@ -162,7 +187,7 @@
 				background: #EEE;
 			}
 
-			&.active {
+			&.aui-active {
 				background-color: #08C;
 				color: #FFF;
 
@@ -186,8 +211,8 @@
 			width: 50%;
 
 			.category-item-check {
-				margin-right: 8px;
-				margin-top: 0;
+				margin-right: 3px;
+				vertical-align: middle;
 			}
 		}
 
@@ -228,24 +253,45 @@
 			}
 		}
 
+<<<<<<< HEAD
 		.tree-node {
+			background: #F5F5F5;
+
 			.tree-icon {
+=======
+		.aui-tree-node {
+			.aui-tree-icon {
+>>>>>>> LPS-34941 - Fix the UI of Categories Admin portlet caused by the migration to Bootstrap
 				background: none;
 				height: 0;
 				width: 0;
 			}
 		}
 
+<<<<<<< HEAD
 		.tree-node-over {
+			background: #D3DADD;
+=======
+		.aui-tree-node-over {
 			background: #EEE;
+>>>>>>> LPS-34941 - Fix the UI of Categories Admin portlet caused by the migration to Bootstrap
 		}
 
 		.tree-node-content {
 			height: 33px;
 
+<<<<<<< HEAD
 			.tree-hitarea {
+				padding-top: 13px;
+			}
+
+			&.tree-collapsed .tree-hitarea {
+				background-position: 0 50%;
+=======
+			.aui-tree-hitarea {
 				margin-left: 5px;
 				margin-top: 10px;
+>>>>>>> LPS-34941 - Fix the UI of Categories Admin portlet caused by the migration to Bootstrap
 			}
 
 			.tree-node-checkbox-container, .tree-label {
@@ -256,13 +302,23 @@
 			}
 		}
 
+<<<<<<< HEAD
 		.tree-node-selected {
+			background: #6F7D83;
+		}
+
+		.tree-node-selected .tree-label {
+			color: #FFF;
+			cursor: move;
+=======
+		.aui-tree-node-selected {
 			background: #08C;
 			
-			.tree-label {
+			.aui-tree-label {
 				color: #FFF;
 				cursor: move;
 			}
+>>>>>>> LPS-34941 - Fix the UI of Categories Admin portlet caused by the migration to Bootstrap
 		}
 	}
 

@@ -26,6 +26,12 @@
     }
 }
 
+.portlet-asset-category-admin {
+	.tree-node-selected, .tree-node-over, .category-item {
+		@include border-radius(5px);
+	}
+}
+
 .portlet-journal .lfr-table .journal-metadata {
 	@include box-shadow(inset 1px 1px 8px #CCC);
 }
