@@ -47,8 +47,8 @@ String defaultLanguageId = LocalizationUtil.getDefaultLocale(script);
 				readOnly="<%= false %>"
 			/>
 
-			<div class="aui-diagram-builder" id="<portlet:namespace />formBuilder">
-				<div class="aui-diagram-builder-content aui-helper-clearfix" id="<portlet:namespace />formBuilderContent">
+			<div class="aui-diagram-builder aui-form-builder" id="<portlet:namespace />formBuilder">
+				<div class="aui-diagram-builder-content" id="<portlet:namespace />formBuilderContent">
 					<div class="aui-tabbable">
 						<div class="aui-tabbable-content">
 							<ul class="aui-nav aui-nav-tabs">
@@ -63,12 +63,17 @@ String defaultLanguageId = LocalizationUtil.getDefaultLocale(script);
 									</a>
 								</li>
 							</ul>
-							<div class="aui-tab-content aui-diagram-builder-content-container">
+							<div class="aui-tab-content">
 								<div class="aui-tab-pane"></div>
 								<div class="aui-tab-pane"></div>
 							</div>
 						</div>
 					</div>
+					<div class="aui-diagram-builder-content-container">
+		                <div class="aui-diagram-builder-canvas">
+		                    <div class="aui-diagram-builder-drop-container"></div>
+		                </div>
+		            </div>
 				</div>
 			</div>
 		</div>

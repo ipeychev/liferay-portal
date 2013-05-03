@@ -33,7 +33,7 @@
 	}
 
 	.lfr-ddm-link-icon {
-		background-image: url(@theme_image_path@/aui/hyperlink.png);
+		background-image: url(@theme_image_path@/dynamic_data_mapping/hyperlink.png);
 	}
 
 	.lfr-ddm-link-to-page a {
@@ -70,7 +70,7 @@
 	}
 
 	.lfr-ddm-text-html, .lfr-ddm-text-html-icon {
-		background-image: url(@theme_image_path@/aui/textarea.png);
+		background-image: url(@theme_image_path@/dynamic_data_mapping/textarea.png);
 	}
 
 	.lfr-ddm-text-html {
@@ -182,7 +182,7 @@
 	}
 
 	.lfr-wcm-image {
-		background: url(@theme_image_path@/aui/image.png) no-repeat 0 20px;
+		background: url(@theme_image_path@/dynamic_data_mapping/image.png) no-repeat 0 20px;
 		padding-top: 35px;
 	}
 
