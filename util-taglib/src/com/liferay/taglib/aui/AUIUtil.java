@@ -28,26 +28,26 @@ public class AUIUtil {
 	/**
 	 * @deprecated As of 6.2.0
 	 */
-	public static final String BUTTON_INPUT_PREFIX = "aui-btn-input";
+	public static final String BUTTON_INPUT_PREFIX = "btn-input";
 
-	public static final String BUTTON_PREFIX = "aui-btn";
+	public static final String BUTTON_PREFIX = "btn";
 
-	public static final String FIELD_PREFIX = "aui-field";
-
-	/**
-	 * @deprecated As of 6.2.0
-	 */
-	public static final String INPUT_PREFIX = "aui-field-input";
+	public static final String FIELD_PREFIX = "field";
 
 	/**
 	 * @deprecated As of 6.2.0
 	 */
-	public static final String LABEL_CHOICE_PREFIX = "aui-choice-label";
+	public static final String INPUT_PREFIX = "field-input";
 
 	/**
 	 * @deprecated As of 6.2.0
 	 */
-	public static final String LABEL_FIELD_PREFIX = "aui-field-label";
+	public static final String LABEL_CHOICE_PREFIX = "choice-label";
+
+	/**
+	 * @deprecated As of 6.2.0
+	 */
+	public static final String LABEL_FIELD_PREFIX = "field-label";
 
 	public static String buildCss(
 		String prefix, boolean disabled, boolean first, boolean last,
@@ -59,7 +59,7 @@ public class AUIUtil {
 
 		if (disabled) {
 			sb.append(StringPool.SPACE);
-			sb.append("aui-disabled");
+			sb.append("disabled");
 		}
 
 		if (first) {
@@ -124,16 +124,16 @@ public class AUIUtil {
 		}
 
 		if (baseType.equals("checkbox") || baseType.equals("radio")) {
-			sb.append("class=\"aui-" + baseType);
+			sb.append("class=\"" + baseType);
 
 			if (inlineField) {
-				sb.append(" aui-inline");
+				sb.append(" inline");
 			}
 
 			sb.append("\" ");
 		}
 		else {
-			sb.append("class=\"aui-control-label\" ");
+			sb.append("class=\"control-label\" ");
 		}
 
 		if (showForLabel) {

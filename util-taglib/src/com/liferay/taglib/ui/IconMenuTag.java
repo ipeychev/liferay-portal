@@ -259,8 +259,7 @@ public class IconMenuTag extends BaseBodyTagSupport implements BodyTag {
 					pageContext.getServletContext(), getStartPage())) {
 
 				if (_showExpanded) {
-					jspWriter.write(
-						"<ul class=\"aui-dropdown-menu lfr-menu-list");
+					jspWriter.write("<ul class=\"dropdown-menu lfr-menu-list");
 					jspWriter.write(" lfr-menu-expanded ");
 					jspWriter.print(_cssClass);
 					jspWriter.write("\" id=\"");
@@ -268,7 +267,7 @@ public class IconMenuTag extends BaseBodyTagSupport implements BodyTag {
 					jspWriter.write("\">");
 				}
 				else {
-					jspWriter.write("<div class=\"aui-btn-group");
+					jspWriter.write("<div class=\"btn-group");
 
 					if (Validator.isNotNull(_cssClass)) {
 						jspWriter.write(StringPool.SPACE);
@@ -276,21 +275,20 @@ public class IconMenuTag extends BaseBodyTagSupport implements BodyTag {
 					}
 
 					if (_direction.equals("up")) {
-						jspWriter.write(" aui-dropup");
+						jspWriter.write(" dropup");
 					}
 
-					jspWriter.write(
-						"\"><a class=\"aui-dropdown-toggle direction-");
+					jspWriter.write("\"><a class=\"dropdown-toggle direction-");
 					jspWriter.write(_direction);
 					jspWriter.write(" max-display-items-");
 					jspWriter.write(String.valueOf(_maxDisplayItems));
 
 					if (_disabled) {
-						jspWriter.write(" aui-disabled");
+						jspWriter.write(" disabled");
 					}
 
 					if (_extended) {
-						jspWriter.write(" aui-btn");
+						jspWriter.write(" btn");
 					}
 
 					String message = _message;
@@ -306,7 +304,7 @@ public class IconMenuTag extends BaseBodyTagSupport implements BodyTag {
 					jspWriter.write("\">");
 
 					if (_showArrow && _direction.equals("left")) {
-						jspWriter.write("<i class=\"aui-caret\"></i>&nbsp;");
+						jspWriter.write("<i class=\"caret\"></i>&nbsp;");
 					}
 
 					if (Validator.isNotNull(_icon)) {
@@ -318,7 +316,7 @@ public class IconMenuTag extends BaseBodyTagSupport implements BodyTag {
 					jspWriter.write(message);
 
 					if (_showArrow && !_direction.equals("left")) {
-						jspWriter.write("&nbsp;<i class=\"aui-caret\"></i>");
+						jspWriter.write("&nbsp;<i class=\"caret\"></i>");
 					}
 
 					jspWriter.write("</a>");
@@ -328,8 +326,7 @@ public class IconMenuTag extends BaseBodyTagSupport implements BodyTag {
 						"Liferay.Menu.register('" + _id + "');", bodyContent,
 						pageContext);
 
-					jspWriter.write(
-						"<ul class=\"aui-dropdown-menu lfr-menu-list");
+					jspWriter.write("<ul class=\"dropdown-menu lfr-menu-list");
 					jspWriter.write(" direction-");
 					jspWriter.write(_direction);
 					jspWriter.write("\">");
