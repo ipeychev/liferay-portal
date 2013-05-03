@@ -1,9 +1,9 @@
-.aui-input-localized {
-	.aui-palette-item {
+.input-localized {
+	.palette-item {
 	    border: 0;
 	}
 
-	.aui-palette-item-inner {
+	.palette-item-inner {
 	    height: 11px;
 	    width: 16px;
 
@@ -12,10 +12,10 @@
     	}
 	}
 
-	.aui-palette-item,
-	.aui-palette-item-inner,
-	.aui-palette-item-hover,
-	.aui-palette-item-hover .aui-palette-item-inner {
+	.palette-item,
+	.palette-item-inner,
+	.palette-item-hover,
+	.palette-item-hover .palette-item-inner {
 	    border-color: transparent;
 	}
 
@@ -23,12 +23,12 @@
 	    opacity: 0.15;
 	}
 
-	.aui-palette-item-selected .lfr-input-localized-flag,
-	.aui-palette-item-hover .lfr-input-localized-flag {
+	.palette-item-selected .lfr-input-localized-flag,
+	.palette-item-hover .lfr-input-localized-flag {
 	    opacity: 1;
 	}
 
-	.aui-palette-container {
+	.palette-container {
 	    margin-bottom: 12px;
 	}
 }
