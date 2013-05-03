@@ -98,9 +98,9 @@ else if (yearNullable) {
 }
 %>
 
-<div class="aui-datepicker aui-datepicker-display aui-helper-clearfix <%= cssClass %> lfr-input-date" id="<%= randomNamespace %>displayDate">
-	<div class="aui-datepicker-content" id="<%= randomNamespace %>displayDateContent">
-		<div class="aui-datepicker-select-wrapper">
+<div class="datepicker datepicker-display helper-clearfix <%= cssClass %> lfr-input-date" id="<%= randomNamespace %>displayDate">
+	<div class="datepicker-content" id="<%= randomNamespace %>displayDateContent">
+		<div class="datepicker-select-wrapper">
 			<c:choose>
 				<c:when test="<%= monthAndYearParam.equals(namespace) %>">
 
@@ -135,9 +135,9 @@ else if (yearNullable) {
 				</c:when>
 			</c:choose>
 		</div>
-		<div class="aui-datepicker-button-wrapper">
-			<button class="aui-buttonitem aui-buttonitem-content aui-buttonitem-icon-only aui-component yui3-widget" title="<liferay-ui:message key="display-a-datepicker" />" type="button">
-				<span class="aui-buttonitem-icon aui-icon aui-icon-calendar"></span>
+		<div class="datepicker-button-wrapper">
+			<button class="buttonitem buttonitem-content buttonitem-icon-only component yui3-widget" title="<liferay-ui:message key="display-a-datepicker" />" type="button">
+				<span class="buttonitem-icon icon icon-calendar"></span>
 			</button>
 		</div>
 	</div>

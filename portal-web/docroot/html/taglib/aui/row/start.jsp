@@ -16,4 +16,4 @@
 
 <%@ include file="/html/taglib/aui/row/init.jsp" %>
 
-<div class="aui-row<%= fluid ? "-fluid" : StringPool.BLANK %> <%= cssClass %>" id="<%= id %>" <%= InlineUtil.buildDynamicAttributes(dynamicAttributes) %>>
+<div class="row<%= fluid ? "-fluid" : StringPool.BLANK %> <%= cssClass %>" id="<%= id %>" <%= InlineUtil.buildDynamicAttributes(dynamicAttributes) %>>

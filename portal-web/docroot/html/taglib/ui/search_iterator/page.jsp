@@ -62,12 +62,12 @@ int sortColumnIndex = -1;
 %>
 
 <c:if test="<%= resultRows.isEmpty() && (emptyResultsMessage != null) %>">
-	<div class="aui-alert aui-alert-info">
+	<div class="alert alert-info">
 		<%= LanguageUtil.get(pageContext, emptyResultsMessage) %>
 	</div>
 </c:if>
 
-<div class="lfr-search-container <%= resultRows.isEmpty() ? "aui-hide" : StringPool.BLANK %>">
+<div class="lfr-search-container <%= resultRows.isEmpty() ? "hide" : StringPool.BLANK %>">
 	<c:if test="<%= PropsValues.SEARCH_CONTAINER_SHOW_PAGINATION_TOP && (resultRows.size() > 10) && paginate %>">
 		<div class="taglib-search-iterator-page-iterator-top">
 			<liferay-ui:search-paginator id='<%= id + "PageIteratorTop" %>' searchContainer="<%= searchContainer %>" type="<%= type %>" />
@@ -75,10 +75,10 @@ int sortColumnIndex = -1;
 	</c:if>
 
 	<div id="<%= namespace + id %>SearchContainer">
-		<table class="aui-table aui-table-bordered aui-table-hover aui-table-striped">
+		<table class="table table-bordered table-hover table-striped">
 
 		<c:if test="<%= headerNames != null %>">
-			<thead class="aui-table-columns">
+			<thead class="table-columns">
 				<tr>
 
 				<%
@@ -117,17 +117,17 @@ int sortColumnIndex = -1;
 						cssClass = "only";
 					}
 					else if (i == 0) {
-						cssClass = "aui-table-first-header";
+						cssClass = "table-first-header";
 					}
 					else if (i == (headerNames.size() - 1)) {
-						cssClass = "aui-table-last-header";
+						cssClass = "table-last-header";
 					}
 
 					if (orderCurrentHeader) {
-						cssClass += " aui-table-sortable-column aui-table-sorted";
+						cssClass += " table-sortable-column table-sorted";
 
 						if (HtmlUtil.escapeAttribute(orderByType).equals("desc")) {
-							cssClass += " aui-table-sorted-desc";
+							cssClass += " table-sorted-desc";
 						}
 
 						sortColumnIndex = i;
@@ -156,7 +156,7 @@ int sortColumnIndex = -1;
 					>
 
 						<c:if test="<%= orderKey != null %>">
-							<div class="aui-table-sort-liner">
+							<div class="table-sort-liner">
 
 
 								<%
@@ -202,7 +202,7 @@ int sortColumnIndex = -1;
 						<c:if test="<%= orderKey != null %>">
 								</a>
 
-								<span class="aui-table-sort-indicator"></span>
+								<span class="table-sort-indicator"></span>
 							</div>
 						</c:if>
 					</th>
@@ -215,11 +215,11 @@ int sortColumnIndex = -1;
 			</thead>
 		</c:if>
 
-		<tbody class="aui-table-data">
+		<tbody class="table-data">
 
 		<c:if test="<%= resultRows.isEmpty() && (emptyResultsMessage != null) %>">
 			<tr>
-				<td class="aui-table-cell">
+				<td class="table-cell">
 					<%= LanguageUtil.get(pageContext, emptyResultsMessage) %>
 				</td>
 			</tr>
@@ -294,11 +294,11 @@ int sortColumnIndex = -1;
 				}
 
 				if (j == sortColumnIndex) {
-					columnClassName += " aui-table-sortable-column";
+					columnClassName += " table-sortable-column";
 				}
 			%>
 
-				<td class="aui-table-cell">
+				<td class="table-cell">
 
 					<%
 					entry.print(pageContext);
@@ -324,7 +324,7 @@ int sortColumnIndex = -1;
 				for (int i = 0; i < headerNames.size(); i++) {
 				%>
 
-					<td class="aui-table-cell"></td>
+					<td class="table-cell"></td>
 
 				<%
 				}

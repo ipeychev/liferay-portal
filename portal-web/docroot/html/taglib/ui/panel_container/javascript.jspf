@@ -18,8 +18,8 @@
 	new A.TogglerDelegate({
 		animated: true,
 		container: '#<%= id %>',
-		content: '.aui-toggler-content',
-		header: '.aui-toggler-header',
+		content: '.toggler-content',
+		header: '.toggler-header',
 		on: {
 			'toggler:expandedChange': function(event) {
 				var header = event.target.get('header');

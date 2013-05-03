@@ -23,7 +23,7 @@ boolean translateMessage = GetterUtil.getBoolean((String)request.getAttribute("l
 %>
 
 <c:if test="<%= SessionMessages.contains(portletRequest, key) %>">
-	<div class="aui-alert aui-alert-success">
+	<div class="alert alert-success">
 		<c:choose>
 			<c:when test="<%= translateMessage %>">
 				<%= LanguageUtil.get(pageContext, message) %>

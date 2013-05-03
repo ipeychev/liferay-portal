@@ -27,7 +27,7 @@ int depth = ((Integer)request.getAttribute(WebKeys.MESSAGE_BOARDS_TREE_WALKER_DE
 %>
 
 <tr>
-	<td class="aui-table-cell" style="padding-left: <%= depth * 10 %>px; width: 90%">
+	<td class="table-cell" style="padding-left: <%= depth * 10 %>px; width: 90%">
 		<c:if test="<%= !message.isRoot() %>">
 			<c:choose>
 				<c:when test="<%= !lastNode %>">
@@ -45,8 +45,8 @@ int depth = ((Integer)request.getAttribute(WebKeys.MESSAGE_BOARDS_TREE_WALKER_DE
 
 		<a href="<%= rowHREF %>"><%= HtmlUtil.escape(StringUtil.shorten(message.getBody(), 50, StringPool.TRIPLE_PERIOD)) %></a>
 	</td>
-	<td class="aui-table-cell"></td>
-	<td class="aui-table-cell" nowrap="nowrap">
+	<td class="table-cell"></td>
+	<td class="table-cell" nowrap="nowrap">
 		<a href="<%= rowHREF %>">
 
 		<c:choose>
@@ -67,8 +67,8 @@ int depth = ((Integer)request.getAttribute(WebKeys.MESSAGE_BOARDS_TREE_WALKER_DE
 
 		</a>
 	</td>
-	<td class="aui-table-cell"></td>
-	<td class="aui-table-cell" nowrap="nowrap">
+	<td class="table-cell"></td>
+	<td class="table-cell" nowrap="nowrap">
 		<a href="<%= rowHREF %>">
 		<%= dateFormatDateTime.format(message.getModifiedDate()) %>
 		</a>

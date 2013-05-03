@@ -29,7 +29,7 @@ if (Validator.isNotNull(anchorId)) {
 }
 
 if (dropdown) {
-	cssClass += " aui-dropdown";
-	anchorCssClass += " aui-dropdown-toggle";
+	cssClass += " dropdown";
+	anchorCssClass += " dropdown-toggle";
 }
 %>

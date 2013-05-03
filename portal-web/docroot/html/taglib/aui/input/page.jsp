@@ -20,7 +20,7 @@
 	<liferay-ui:message key="<%= label %>" />
 
 	<c:if test="<%= required && showRequiredLabel %>">
-		<span class="aui-label-required">(<liferay-ui:message key="required" />)</span>
+		<span class="label-required">(<liferay-ui:message key="required" />)</span>
 	</c:if>
 
 	<c:if test="<%= Validator.isNotNull(helpMessage) %>">
@@ -28,7 +28,7 @@
 	</c:if>
 
 	<c:if test="<%= changesContext %>">
-		<span class="aui-hide-accessible"><liferay-ui:message key="changing-the-value-of-this-field-will-reload-the-page" />)</span>
+		<span class="hide-accessible"><liferay-ui:message key="changing-the-value-of-this-field-will-reload-the-page" />)</span>
 	</c:if>
 </liferay-util:buffer>
 
@@ -47,7 +47,7 @@
 <c:if test="<%= Validator.isNotNull(prefix) || Validator.isNotNull(suffix) %>">
 	<div class="<%= addOnCss %>">
 		<c:if test="<%= Validator.isNotNull(prefix) %>">
-			<span class="aui-add-on"><liferay-ui:message key="<%= prefix %>" /></span>
+			<span class="add-on"><liferay-ui:message key="<%= prefix %>" /></span>
 		</c:if>
 </c:if>
 
@@ -192,7 +192,7 @@
 
 <c:if test="<%= Validator.isNotNull(prefix) || Validator.isNotNull(suffix) %>">
 		<c:if test="<%= Validator.isNotNull(suffix) %>">
-			<span class="aui-add-on"><liferay-ui:message key="<%= suffix %>" /></span>
+			<span class="add-on"><liferay-ui:message key="<%= suffix %>" /></span>
 		</c:if>
 	</div>
 </c:if>

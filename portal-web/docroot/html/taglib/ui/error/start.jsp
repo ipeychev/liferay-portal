@@ -23,6 +23,6 @@ String message = (String)request.getAttribute("liferay-ui:error:message");
 
 <c:if test="<%= (key != null) && Validator.isNull(message) %>">
 	<c:if test="<%= SessionErrors.contains(portletRequest, key) %>">
-		<div class="aui-alert aui-alert-error">
+		<div class="alert alert-error">
 	</c:if>
 </c:if>

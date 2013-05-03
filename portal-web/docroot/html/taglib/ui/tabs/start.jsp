@@ -101,7 +101,7 @@ String onClick = GetterUtil.getString((String)request.getAttribute("liferay-ui:t
 		<c:otherwise>
 			<input name="<%= namespace %><%= param %>TabsScroll" type="hidden" />
 
-			<ul class="aui-nav aui-nav-tabs">
+			<ul class="nav nav-tabs">
 		</c:otherwise>
 	</c:choose>
 
@@ -157,10 +157,10 @@ String onClick = GetterUtil.getString((String)request.getAttribute("liferay-ui:t
 
 		boolean selected = (values.length == 1) || value.equals(values[i]);
 
-		String cssClassName = "aui-tab";
+		String cssClassName = "tab";
 
 		if (selected) {
-			cssClassName += " aui-active";
+			cssClassName += " active";
 		}
 	%>
 
@@ -198,7 +198,7 @@ String onClick = GetterUtil.getString((String)request.getAttribute("liferay-ui:t
 			</c:when>
 			<c:otherwise>
 				<li>
-					<a class="aui-tab" href="<%= backURL %>" id="<%= namespace %><%= param %>TabsBack"><%= Validator.isNotNull(backLabel) ? backLabel : "&laquo;" + LanguageUtil.get(pageContext, "back") %></a>
+					<a class="tab" href="<%= backURL %>" id="<%= namespace %><%= param %>TabsBack"><%= Validator.isNotNull(backLabel) ? backLabel : "&laquo;" + LanguageUtil.get(pageContext, "back") %></a>
 				</li>
 			</c:otherwise>
 		</c:choose>

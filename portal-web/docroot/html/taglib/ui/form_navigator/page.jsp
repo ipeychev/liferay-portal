@@ -62,8 +62,8 @@ if (Validator.isNotNull(historyKey)) {
 <div class="taglib-form-navigator">
 	<aui:input name="modifiedSections" type="hidden" />
 
-	<div class="taglib-form-navigator aui-row-fluid" id="<portlet:namespace />tabs">
-		<div class="aui-span8">
+	<div class="taglib-form-navigator row-fluid" id="<portlet:namespace />tabs">
+		<div class="span8">
 
 			<%
 			for (String section : allSections) {
@@ -73,7 +73,7 @@ if (Validator.isNotNull(historyKey)) {
 
 				<!-- Begin fragment <%= sectionId %> -->
 
-				<div class="form-section <%= (curSection.equals(section) || curSection.equals(sectionId)) ? "aui-active" : "aui-hide" %>" id="<%= sectionId %>">
+				<div class="form-section <%= (curSection.equals(section) || curSection.equals(sectionId)) ? "active" : "hide" %>" id="<%= sectionId %>">
 					<liferay-util:include page="<%= sectionJsp %>" portletId="<%= portletDisplay.getRootPortletId() %>" />
 				</div>
 
@@ -85,7 +85,7 @@ if (Validator.isNotNull(historyKey)) {
 
 		</div>
 
-		<ul class="aui-nav aui-nav-list aui-span4 aui-well form-navigator">
+		<ul class="nav nav-list span4 well form-navigator">
 			<%= Validator.isNotNull(htmlTop) ? htmlTop : StringPool.BLANK %>
 
 			<%
@@ -105,7 +105,7 @@ if (Validator.isNotNull(historyKey)) {
 			%>
 
 					<c:if test="<%= Validator.isNotNull(category) %>">
-						<h1 class="aui-nav-header"><liferay-ui:message key="<%= category %>" /></h1>
+						<h1 class="nav-header"><liferay-ui:message key="<%= category %>" /></h1>
 					</c:if>
 
 					<%
@@ -131,7 +131,7 @@ if (Validator.isNotNull(historyKey)) {
 						}
 
 						if (curSection.equals(section) || curSection.equals(sectionId)) {
-							cssClass += " aui-active";
+							cssClass += " active";
 						}
 
 						if (ArrayUtil.contains(modifiedSections, sectionId)) {
@@ -160,7 +160,7 @@ if (Validator.isNotNull(historyKey)) {
 
 			<c:if test="<%= showButtons %>">
 				<aui:button-row>
-					<aui:button cssClass="aui-btn-primary" type="submit" />
+					<aui:button cssClass="btn-primary" type="submit" />
 
 					<aui:button href="<%= backURL %>" type="cancel" />
 				</aui:button-row>
@@ -212,7 +212,7 @@ if (Validator.isNotNull(historyKey)) {
 
 		tabNode.toggleClass(
 			'section-error',
-			A.one('#' + sectionId).one('.aui-error-field')
+			A.one('#' + sectionId).one('.error-field')
 		);
 	}
 

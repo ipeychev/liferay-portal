@@ -49,15 +49,15 @@ if (Validator.isNotNull(breadcrumbString)) {
 	int yIndex = y + keyLength;
 
 	if (x == y) {
-		breadcrumbString = StringUtil.insert(breadcrumbString, " class=\"aui-active only\"", xIndex);
+		breadcrumbString = StringUtil.insert(breadcrumbString, " class=\"active only\"", xIndex);
 	}
 	else {
-		breadcrumbString = StringUtil.insert(breadcrumbString, " class=\"aui-active last\"", yIndex);
+		breadcrumbString = StringUtil.insert(breadcrumbString, " class=\"active last\"", yIndex);
 		breadcrumbString = StringUtil.insert(breadcrumbString, " class=\"first\"", xIndex);
 	}
 }
 %>
 
-<ul class="aui-breadcrumb">
+<ul class="breadcrumb">
 	<%= breadcrumbString %>
 </ul>

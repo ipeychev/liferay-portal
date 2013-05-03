@@ -16,7 +16,7 @@
 
 <%@ include file="/html/taglib/aui/nav_item/init.jsp" %>
 
-<li class="<%= cssClass %><%= selected ? " aui-active" : StringPool.BLANK %>" id="<%= id %>" <%= InlineUtil.buildDynamicAttributes(dynamicAttributes) %>>
+<li class="<%= cssClass %><%= selected ? " active" : StringPool.BLANK %>" id="<%= id %>" <%= InlineUtil.buildDynamicAttributes(dynamicAttributes) %>>
 	<c:if test="<%= Validator.isNotNull(label) %>">
 		<c:if test="<%= Validator.isNotNull(href) %>">
 			<a class="<%= anchorCssClass %>" href="<%= href %>" id="<%= anchorId %>" title="<liferay-ui:message key="<%= title %>" />">
@@ -28,7 +28,7 @@
 				<liferay-ui:message key="<%= label %>" />
 
 				<c:if test="<%= dropdown %>">
-					<b class="aui-caret"></b>
+					<b class="caret"></b>
 				</c:if>
 		<c:if test="<%= Validator.isNotNull(href) %>">
 			</a>
@@ -40,10 +40,10 @@
 			A.one('#<%= id %>').on(
 				'click',
 				function(event) {
-					event.currentTarget.toggleClass('aui-open');
+					event.currentTarget.toggleClass('open');
 				}
 			);
 		</aui:script>
 
-		<ul class="aui-dropdown-menu">
+		<ul class="dropdown-menu">
 	</c:if>

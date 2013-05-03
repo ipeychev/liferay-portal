@@ -57,7 +57,7 @@ private void _buildGuestGroupBreadcrumb(ThemeDisplay themeDisplay, StringBundler
 		sb.append(layoutSetFriendlyURL);
 		sb.append("\">");
 		sb.append(HtmlUtil.escape(themeDisplay.getAccount().getName()));
-		sb.append("</a><span class=\"aui-divider\">/</span>");
+		sb.append("</a><span class=\"divider\">/</span>");
 		sb.append("</li>");
 	}
 }
@@ -95,7 +95,7 @@ private void _buildLayoutBreadcrumb(Layout selLayout, String selLayoutParam, boo
 
 	breadcrumbSB.append(">");
 	breadcrumbSB.append(HtmlUtil.escape(layoutName));
-	breadcrumbSB.append("</a><span class=\"aui-divider\">/</span>");
+	breadcrumbSB.append("</a><span class=\"divider\">/</span>");
 	breadcrumbSB.append("</li>");
 
 	if (selLayout.getParentLayoutId() != LayoutConstants.DEFAULT_PARENT_LAYOUT_ID) {
@@ -175,7 +175,7 @@ private void _buildParentGroupsBreadcrumb(LayoutSet layoutSet, PortletURL portle
 		sb.append(layoutSetFriendlyURL);
 		sb.append("\">");
 		sb.append(HtmlUtil.escape(group.getDescriptiveName()));
-		sb.append("</a><span class=\"aui-divider\">/</span>");
+		sb.append("</a><span class=\"divider\">/</span>");
 		sb.append("</li>");
 	}
 }
@@ -244,7 +244,7 @@ private void _buildPortletBreadcrumb(HttpServletRequest request, boolean showCur
 		}
 
 		if (showAnchor) {
-			sb.append("<span class=\"aui-divider\">/</span>");
+			sb.append("<span class=\"divider\">/</span>");
 		}
 
 		sb.append("</li>");

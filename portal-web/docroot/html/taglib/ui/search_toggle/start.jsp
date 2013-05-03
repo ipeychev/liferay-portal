@@ -16,24 +16,24 @@
 
 <%@ include file="/html/taglib/ui/search_toggle/init.jsp" %>
 <style>
-	.taglib-search-toggle .aui-popover .aui-arrow {
+	.taglib-search-toggle .popover .arrow {
 		left: 70%;
 	}
 </style>
 <div class="taglib-search-toggle">
-	<div class="aui-form-search">
-		<div class="aui-input-append" id="<%= id %>simple">
-			<input class="aui-search-query aui-span9" id="<%= id + displayTerms.KEYWORDS %>" name="<%= displayTerms.KEYWORDS %>" placeholder="<liferay-ui:message key="keywords" />" type="text" value="<%= displayTerms.getKeywords() %>" />
+	<div class="form-search">
+		<div class="input-append" id="<%= id %>simple">
+			<input class="search-query span9" id="<%= id + displayTerms.KEYWORDS %>" name="<%= displayTerms.KEYWORDS %>" placeholder="<liferay-ui:message key="keywords" />" type="text" value="<%= displayTerms.getKeywords() %>" />
 
-			<button class="aui-btn" type="submit">
+			<button class="btn" type="submit">
 				<%= LanguageUtil.get(pageContext, buttonLabel, "search") %>
 			</button>
 		</div>
-		<button class="aui-btn-link" id="<%= id %>toggleAdvanced" type="button">
-			<i class="aui-icon-cog"></i>
+		<button class="btn-link" id="<%= id %>toggleAdvanced" type="button">
+			<i class="icon-cog"></i>
 		</button>
 	</div>
-	<div class="aui-popover taglib-search-toggle-advanced" id="<%= id %>advanced">
+	<div class="popover taglib-search-toggle-advanced" id="<%= id %>advanced">
 		<input id="<%= id + displayTerms.ADVANCED_SEARCH %>" name="<%= displayTerms.ADVANCED_SEARCH %>" type="hidden" value="false" />
 
 		<div id="<%= id %>advancedContent">

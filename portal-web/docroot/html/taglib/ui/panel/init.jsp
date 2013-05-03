@@ -48,16 +48,16 @@ String headerCssClass = StringPool.BLANK;
 String panelState = GetterUtil.getString(SessionClicks.get(request, id, null), defaultState);
 
 if (collapsible) {
-	contentCssClass += "aui-toggler-content";
-	headerCssClass += "aui-toggler-header";
+	contentCssClass += "toggler-content";
+	headerCssClass += "toggler-header";
 }
 
 if (panelState.equals("open")) {
-	contentCssClass += " aui-toggler-content-expanded";
-	headerCssClass += " aui-toggler-header-expanded";
+	contentCssClass += " toggler-content-expanded";
+	headerCssClass += " toggler-header-expanded";
 }
 else {
-	contentCssClass += " aui-toggler-content-collapsed";
-	headerCssClass += " aui-toggler-header-collapsed";
+	contentCssClass += " toggler-content-collapsed";
+	headerCssClass += " toggler-header-collapsed";
 }
 %>

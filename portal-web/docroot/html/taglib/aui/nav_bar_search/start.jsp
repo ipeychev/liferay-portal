@@ -16,7 +16,7 @@
 
 <%@ include file="/html/taglib/aui/nav_bar_search/init.jsp" %>
 
-<div class="aui-navbar-search <%= cssClass %>" id="<%= id %>" <%= InlineUtil.buildDynamicAttributes(dynamicAttributes) %>>
+<div class="navbar-search <%= cssClass %>" id="<%= id %>" <%= InlineUtil.buildDynamicAttributes(dynamicAttributes) %>>
 	<c:if test="<%= Validator.isNotNull(file) %>">
 		<liferay-ui:search-form
 			page="<%= file %>"

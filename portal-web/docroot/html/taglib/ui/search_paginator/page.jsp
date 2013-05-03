@@ -56,7 +56,7 @@ if (iteratorURL != null) {
 		/>
 	</c:when>
 	<c:when test="<%= Validator.isNotNull(searchContainer.getEmptyResultsMessage()) %>">
-		<div class="aui-alert aui-alert-info">
+		<div class="alert alert-info">
 			<%= searchContainer.getEmptyResultsMessage() %>
 		</div>
 	</c:when>

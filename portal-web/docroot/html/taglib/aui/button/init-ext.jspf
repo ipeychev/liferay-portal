@@ -45,6 +45,6 @@ else {
 }
 
 if (primary == Boolean.TRUE) {
-	cssClass += " aui-btn-primary";
+	cssClass += " btn-primary";
 }
 %>

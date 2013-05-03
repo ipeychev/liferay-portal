@@ -23,13 +23,13 @@ if (Validator.isNotNull(name)) {
 	name = namespace + name;
 }
 
-String controlGroupCss = "aui-control-group";
+String controlGroupCss = "control-group";
 
 if (inlineField) {
-	controlGroupCss = controlGroupCss.concat(" aui-control-group-inline");
+	controlGroupCss = controlGroupCss.concat(" control-group-inline");
 }
 
 if (Validator.isNotNull(inlineLabel)) {
-	controlGroupCss = controlGroupCss.concat(" aui-form-inline");
+	controlGroupCss = controlGroupCss.concat(" form-inline");
 }
 %>

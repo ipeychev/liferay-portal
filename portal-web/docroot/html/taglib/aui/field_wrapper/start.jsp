@@ -17,7 +17,7 @@
 <%@ include file="/html/taglib/aui/field_wrapper/init.jsp" %>
 
 <%
-String fieldCss = AUIUtil.buildCss("aui-field-wrapper", false, first, last, cssClass);
+String fieldCss = AUIUtil.buildCss("field-wrapper", false, first, last, cssClass);
 %>
 
 <div class="<%= controlGroupCss %> <%= fieldCss %>" <%= AUIUtil.buildData(data) %>>
@@ -26,7 +26,7 @@ String fieldCss = AUIUtil.buildCss("aui-field-wrapper", false, first, last, cssC
 			<liferay-ui:message key="<%= label %>" />
 
 			<c:if test="<%= required %>">
-				<span class="aui-label-required">(<liferay-ui:message key="required" />)</span>
+				<span class="label-required">(<liferay-ui:message key="required" />)</span>
 			</c:if>
 
 			<c:if test="<%= Validator.isNotNull(helpMessage) %>">

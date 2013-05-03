@@ -26,13 +26,13 @@
 			</c:if>
 
 			<c:if test="<%= changesContext %>">
-				<span class="aui-hide-accessible">(<liferay-ui:message key="changing-the-value-of-this-field-will-reload-the-page" />)</span>
+				<span class="hide-accessible">(<liferay-ui:message key="changing-the-value-of-this-field-will-reload-the-page" />)</span>
 			</c:if>
 		</label>
 	</c:if>
 
 	<c:if test="<%= Validator.isNotNull(prefix) %>">
-		<span class="aui-prefix">
+		<span class="prefix">
 			<liferay-ui:message key="<%= prefix %>" />
 		</span>
 	</c:if>

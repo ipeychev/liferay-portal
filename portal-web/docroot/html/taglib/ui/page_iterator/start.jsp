@@ -122,7 +122,7 @@ NumberFormat numberFormat = NumberFormat.getNumberInstance(locale);
 </c:if>
 
 <c:if test="<%= (total > delta) || (total > PropsValues.SEARCH_CONTAINER_PAGE_DELTA_VALUES[0]) %>">
-	<div class="aui-clearfix lfr-pagination">
+	<div class="clearfix lfr-pagination">
 		<c:if test='<%= type.equals("regular") %>'>
 			<c:if test="<%= PropsValues.SEARCH_CONTAINER_PAGE_DELTA_VALUES.length > 0 %>">
 				<div class="lfr-pagination-config">
@@ -230,22 +230,22 @@ NumberFormat numberFormat = NumberFormat.getNumberInstance(locale);
 			<%@ include file="/html/taglib/ui/page_iterator/showing_x_results.jspf" %>
 		</c:if>
 
-		<ul class="aui-pager lfr-pagination-buttons">
+		<ul class="pager lfr-pagination-buttons">
 			<c:if test='<%= type.equals("approximate") || type.equals("more") || type.equals("regular") %>'>
-				<li class="first <%= (cur != 1) ? "" : "aui-disabled" %>">
+				<li class="first <%= (cur != 1) ? "" : "disabled" %>">
 					<a href="<%= (cur != 1) ? _getHREF(formName, curParam, 1, jsCall, url, urlAnchor) : "javascript:;" %>" target="<%= target %>">
 						&larr; <liferay-ui:message key="first" />
 					</a>
 				</li>
 			</c:if>
 
-			<li class="previous <%= (cur != 1) ? "" : "aui-disabled" %>">
+			<li class="previous <%= (cur != 1) ? "" : "disabled" %>">
 				<a href="<%= (cur != 1) ? _getHREF(formName, curParam, cur - 1, jsCall, url, urlAnchor) : "javascript:;" %>" target="<%= target %>">
 					<liferay-ui:message key="previous" />
 				</a>
 			</li>
 
-			<li class="next <%= (cur != pages) ? "" : "aui-disabled" %>">
+			<li class="next <%= (cur != pages) ? "" : "disabled" %>">
 				<a href="<%= (cur != pages) ? _getHREF(formName, curParam, cur + 1, jsCall, url, urlAnchor) : "javascript:;" %>" target="<%= target %>">
 					<c:if test='<%= (type.equals("approximate") || type.equals("more") || type.equals("regular")) %>'>
 						<c:choose>
@@ -261,7 +261,7 @@ NumberFormat numberFormat = NumberFormat.getNumberInstance(locale);
 			</li>
 
 			<c:if test='<%= type.equals("regular") %>'>
-				<li class="next <%= (cur != pages) ? "" : "aui-disabled" %>">
+				<li class="next <%= (cur != pages) ? "" : "disabled" %>">
 					<a href="<%= (cur != pages) ? _getHREF(formName, curParam, pages, jsCall, url, urlAnchor) : "javascript:;" %>" target="<%= target %>">
 						<liferay-ui:message key="last" /> &rarr;
 					</a>

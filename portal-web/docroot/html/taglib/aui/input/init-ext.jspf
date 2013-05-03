@@ -61,21 +61,21 @@ if (choiceField && Validator.isNull(inlineLabel)) {
 String addOnCss = StringPool.BLANK;
 
 if (Validator.isNotNull(prefix)) {
-	addOnCss = addOnCss.concat("aui-input-prepend ");
+	addOnCss = addOnCss.concat("input-prepend ");
 }
 
 if (Validator.isNotNull(suffix)) {
-	addOnCss = addOnCss.concat("aui-input-append");
+	addOnCss = addOnCss.concat("input-append");
 }
 
-String controlGroupCss = "aui-control-group";
+String controlGroupCss = "control-group";
 
 if (inlineField) {
-	controlGroupCss = controlGroupCss.concat(" aui-control-group-inline");
+	controlGroupCss = controlGroupCss.concat(" control-group-inline");
 }
 
 if (Validator.isNotNull(inlineLabel)) {
-	controlGroupCss = controlGroupCss.concat(" aui-form-inline");
+	controlGroupCss = controlGroupCss.concat(" form-inline");
 }
 
 String baseTypeCss = TextFormatter.format(baseType.toLowerCase(), TextFormatter.K);

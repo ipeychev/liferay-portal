@@ -19,7 +19,7 @@
 	</select>
 
 	<c:if test="<%= Validator.isNotNull(suffix) %>">
-		<span class="aui-suffix">
+		<span class="suffix">
 			<liferay-ui:message key="<%= suffix %>" />
 		</span>
 	</c:if>
@@ -33,7 +33,7 @@
 			</c:if>
 
 			<c:if test="<%= changesContext %>">
-				<span class="aui-hide-accessible"><liferay-ui:message key="changing-the-value-of-this-field-will-reload-the-page" />)</span>
+				<span class="hide-accessible"><liferay-ui:message key="changing-the-value-of-this-field-will-reload-the-page" />)</span>
 			</c:if>
 		</label>
 	</c:if>

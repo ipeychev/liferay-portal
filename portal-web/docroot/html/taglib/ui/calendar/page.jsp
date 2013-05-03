@@ -54,9 +54,9 @@ int weekNumber = 1;
 %>
 
 <div class="taglib-calendar">
-	<table class="aui-table aui-table-bordered aui-table-hover aui-table-striped calendar-panel">
+	<table class="table table-bordered table-hover table-striped calendar-panel">
 
-	<thead class="aui-table-columns">
+	<thead class="table-columns">
 	<c:if test="<%= Validator.isNotNull(headerPattern) || (headerFormat != null) %>">
 
 		<%
@@ -68,7 +68,7 @@ int weekNumber = 1;
 		%>
 
 		<tr class="calendar-header">
-			<th class="aui-table-header" colspan="7">
+			<th class="table-header" colspan="7">
 				<%= dateFormat.format(Time.getDate(selCal.getTime(), timeZone)) %>
 			</th>
 		</tr>
@@ -81,7 +81,7 @@ int weekNumber = 1;
 			int daysIndex = (selCal.getFirstDayOfWeek() + i - 1) % 7;
 		%>
 
-			<th class="aui-table-header">
+			<th class="table-header">
 				<%= LanguageUtil.get(pageContext, CalendarUtil.DAYS_ABBREVIATION[daysIndex]) %>
 			</th>
 
@@ -92,7 +92,7 @@ int weekNumber = 1;
 	</tr>
 	</thead>
 
-	<tbody class="aui-table-data">
+	<tbody class="table-data">
 	<tr>
 
 		<%
@@ -108,7 +108,7 @@ int weekNumber = 1;
 		maxDayOfPrevMonth = (maxDayOfPrevMonth - dayOfWeek) + 1;
 
 		for (int i = 1; i < dayOfWeek; i++) {
-			String className = "aui-table-cell calendar-inactive calendar-previous-month";
+			String className = "table-cell calendar-inactive calendar-previous-month";
 
 			if (i == 1) {
 				className += " first";
@@ -146,7 +146,7 @@ int weekNumber = 1;
 			String className = "";
 
 			if (i == selDay) {
-				className = "aui-table-cell calendar-current-day portlet-section-selected";
+				className = "table-cell calendar-current-day portlet-section-selected";
 			}
 
 			if (hasData) {
@@ -173,7 +173,7 @@ int weekNumber = 1;
 		int dayOfNextMonth = 1;
 
 		for (int i = 7; i >= dayOfWeek; i--) {
-			String className = "aui-table-cell calendar-inactive calendar-next-month";
+			String className = "table-cell calendar-inactive calendar-next-month";
 
 			if (dayOfWeek == 1) {
 				className += " first";
@@ -195,7 +195,7 @@ int weekNumber = 1;
 
 				<%
 				for (int i = 1; i <= 7; i++) {
-					String className = "aui-table-cell calendar-inactive calendar-next-month";
+					String className = "table-cell calendar-inactive calendar-next-month";
 
 					if (i == 1) {
 						className += " first";

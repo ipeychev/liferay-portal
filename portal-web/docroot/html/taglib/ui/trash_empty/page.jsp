@@ -24,7 +24,7 @@ String portletURL = (String)request.getAttribute("liferay-ui:trash-empty:portlet
 int totalEntries = GetterUtil.getInteger(request.getAttribute("liferay-ui:trash-empty:totalEntries"));
 %>
 
-<div class="aui-alert aui-alert-info taglib-trash-empty">
+<div class="alert alert-info taglib-trash-empty">
 	<aui:form action="<%= portletURL %>" name="emptyForm">
 
 		<%

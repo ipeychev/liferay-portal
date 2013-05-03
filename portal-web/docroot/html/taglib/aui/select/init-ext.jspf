@@ -38,7 +38,7 @@ else if (Validator.isNotNull(title)) {
 	title = LanguageUtil.get(pageContext, title);
 }
 
-String controlGroupCss = "aui-control-group";
+String controlGroupCss = "control-group";
 
 if (inlineField) {
 	controlGroupCss = controlGroupCss.concat(" aui-control-group-inline");

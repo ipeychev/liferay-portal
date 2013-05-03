@@ -16,6 +16,6 @@
 
 <%@ include file="/html/taglib/aui/nav_bar/init.jsp" %>
 
-<div class="aui-navbar <%= cssClass %>" id="<%= id %>" <%= InlineUtil.buildDynamicAttributes(dynamicAttributes) %>>
-	<div class="aui-navbar-inner">
-		<div class="aui-container">
+<div class="navbar <%= cssClass %>" id="<%= id %>" <%= InlineUtil.buildDynamicAttributes(dynamicAttributes) %>>
+	<div class="navbar-inner">
+		<div class="container">

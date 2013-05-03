@@ -16,4 +16,4 @@
 
 <%@ include file="/html/taglib/ui/panel_container/init.jsp" %>
 
-<div class="aui-accordion <%= cssClass %>" id="<%= id %>">
+<div class="accordion <%= cssClass %>" id="<%= id %>">

@@ -77,7 +77,7 @@ else {
 Format dateFormatDateTime = FastDateFormatFactoryUtil.getDateTime(locale, timeZone);
 %>
 
-<div class="aui-hide lfr-message-response" id="<portlet:namespace />discussion-status-messages"></div>
+<div class="hide lfr-message-response" id="<portlet:namespace />discussion-status-messages"></div>
 
 <c:if test="<%= (messagesCount > 1) || MBDiscussionPermission.contains(permissionChecker, company.getCompanyId(), scopeGroupId, permissionClassName, permissionClassPK, userId, ActionKeys.VIEW) %>">
 	<div class="taglib-discussion">
@@ -117,7 +117,7 @@ Format dateFormatDateTime = FastDateFormatFactoryUtil.getDateTime(locale, timeZo
 
 					<c:choose>
 						<c:when test="<%= TrashUtil.isInTrash(className, classPK) %>">
-							<div class="aui-alert aui-alert-block">
+							<div class="alert alert-block">
 								<liferay-ui:message key="commenting-is-disabled-because-this-entry-is-in-the-recycle-bin" />
 							</div>
 						</c:when>
@@ -189,13 +189,13 @@ Format dateFormatDateTime = FastDateFormatFactoryUtil.getDateTime(locale, timeZo
 						</c:if>
 
 						<aui:button-row>
-							<aui:button cssClass="aui-btn-comment" id='<%= namespace + randomNamespace + "postReplyButton" + i %>' onClick='<%= randomNamespace + "postReply(" + i + ");" %>' value="<%= postReplyButtonLabel %>" />
+							<aui:button cssClass="btn-comment" id='<%= namespace + randomNamespace + "postReplyButton" + i %>' onClick='<%= randomNamespace + "postReply(" + i + ");" %>' value="<%= postReplyButtonLabel %>" />
 
 							<%
 							String taglibCancel = "document.getElementById('" + randomNamespace + "postReplyForm" + i + "').style.display = 'none'; document.getElementById('" + namespace + randomNamespace + "postReplyBody" + i + "').value = ''; void('');";
 							%>
 
-							<aui:button cssClass="aui-btn-comment" onClick="<%= taglibCancel %>" type="cancel" />
+							<aui:button cssClass="btn-comment" onClick="<%= taglibCancel %>" type="cancel" />
 						</aui:button-row>
 					</div>
 				</aui:fieldset>
@@ -205,22 +205,22 @@ Format dateFormatDateTime = FastDateFormatFactoryUtil.getDateTime(locale, timeZo
 				<a name="<%= randomNamespace %>messages_top"></a>
 
 				<c:if test="<%= treeWalker != null %>">
-				<table class="tree-walker aui-table aui-table-bordered aui-table-hover aui-table-striped">
-					<thead class="aui-table-columns">
+				<table class="tree-walker table table-bordered table-hover table-striped">
+					<thead class="table-columns">
 					<tr>
-						<th class="aui-table-header" colspan="2">
+						<th class="table-header" colspan="2">
 							<liferay-ui:message key="threaded-replies" />
 						</th>
-						<th class="aui-table-header" colspan="2">
+						<th class="table-header" colspan="2">
 							<liferay-ui:message key="author" />
 						</th>
-						<th class="aui-table-header">
+						<th class="table-header">
 							<liferay-ui:message key="date" />
 						</th>
 					</tr>
 					</thead>
 
-					<tbody class="aui-table-data">
+					<tbody class="table-data">
 
 					<%
 					int[] range = treeWalker.getChildrenRange(rootMessage);
@@ -435,13 +435,13 @@ Format dateFormatDateTime = FastDateFormatFactoryUtil.getDateTime(locale, timeZo
 									<aui:input id='<%= randomNamespace + "postReplyBody" + i %>' label="" name='<%= "postReplyBody" + i %>' style='<%= "height: " + ModelHintsConstants.TEXTAREA_DISPLAY_HEIGHT + "px; width: " + ModelHintsConstants.TEXTAREA_DISPLAY_WIDTH + "px;" %>' type="textarea" wrap="soft" />
 
 									<aui:button-row>
-										<aui:button cssClass="aui-btn-comment" id='<%= namespace + randomNamespace + "postReplyButton" + i %>' onClick='<%= randomNamespace + "postReply(" + i + ");" %>' value='<%= themeDisplay.isSignedIn() ? "reply" : "reply-as" %>' />
+										<aui:button cssClass="btn-comment" id='<%= namespace + randomNamespace + "postReplyButton" + i %>' onClick='<%= randomNamespace + "postReply(" + i + ");" %>' value='<%= themeDisplay.isSignedIn() ? "reply" : "reply-as" %>' />
 
 										<%
 										String taglibCancel = "document.getElementById('" + randomNamespace + "postReplyForm" + i + "').style.display = 'none'; document.getElementById('" + namespace + randomNamespace + "postReplyBody" + i + "').value = ''; void('');";
 										%>
 
-										<aui:button cssClass="aui-btn-comment" onClick="<%= taglibCancel %>" type="cancel" />
+										<aui:button cssClass="btn-comment" onClick="<%= taglibCancel %>" type="cancel" />
 									</aui:button-row>
 								</div>
 
@@ -616,7 +616,7 @@ Format dateFormatDateTime = FastDateFormatFactoryUtil.getDateTime(locale, timeZo
 
 				form = A.one(form);
 
-				var commentButtonList = form.all('.aui-btn-comment');
+				var commentButtonList = form.all('.btn-comment');
 
 				A.io.request(
 					form.attr('action'),
@@ -712,9 +712,9 @@ Format dateFormatDateTime = FastDateFormatFactoryUtil.getDateTime(locale, timeZo
 
 				var messageContainer = A.one('#<portlet:namespace />discussion-status-messages');
 
-				messageContainer.removeClass('aui-alert-error').removeClass('aui-alert-success');
+				messageContainer.removeClass('alert-error').removeClass('alert-success');
 
-				messageContainer.addClass('aui-alert aui-alert-' + type);
+				messageContainer.addClass('alert alert-' + type);
 
 				messageContainer.html(message);
 

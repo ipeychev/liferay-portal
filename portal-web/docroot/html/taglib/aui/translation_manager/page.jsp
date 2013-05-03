@@ -26,7 +26,7 @@
 			<%= LocaleUtil.fromLanguageId(defaultLanguageId).getDisplayName(locale) %>
 		</span>
 
-		<select class="aui-hide lfr-translation-manager-default-locale">
+		<select class="hide lfr-translation-manager-default-locale">
 
 			<%
 			Locale[] locales = LanguageUtil.getAvailableLocales();

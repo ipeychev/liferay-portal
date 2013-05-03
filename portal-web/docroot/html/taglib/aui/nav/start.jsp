@@ -16,4 +16,4 @@
 
 <%@ include file="/html/taglib/aui/nav/init.jsp" %>
 
-<ul class="aui-nav <%= cssClass %>" id="<%= id %>" <%= InlineUtil.buildDynamicAttributes(dynamicAttributes) %>>
+<ul class="nav <%= cssClass %>" id="<%= id %>" <%= InlineUtil.buildDynamicAttributes(dynamicAttributes) %>>

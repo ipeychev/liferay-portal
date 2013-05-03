@@ -16,9 +16,9 @@
 
 <%@ include file="/html/taglib/ui/panel/init.jsp" %>
 
-<div class="aui-accordion-group <%= cssClass %>" id="<%= id %>">
-	<div class="aui-accordion-heading <%= headerCssClass %>" data-persist-id="<%= persistState ? id : StringPool.BLANK %>">
-		<a class="aui-accordion-toggle" href="#<%= id %>Content">
+<div class="accordion-group <%= cssClass %>" id="<%= id %>">
+	<div class="accordion-heading <%= headerCssClass %>" data-persist-id="<%= persistState ? id : StringPool.BLANK %>">
+		<a class="accordion-toggle" href="#<%= id %>Content">
 			<liferay-ui:message key="<%= title %>" />
 
 			<c:if test="<%= Validator.isNotNull(helpMessage) %>">
@@ -27,4 +27,4 @@
 		</a>
 	</div>
 	<div class="<%= contentCssClass %>" id="<%= id %>Content">
-		<div class="aui-accordion-inner">
+		<div class="accordion-inner">
