@@ -68,22 +68,6 @@ body.html-editor {
 	width: 100%;
 }
 
-/* ---------- Alerts and popups ---------- */
-
-.alert-background {
-	background: #000;
-}
-
-.popup-alert-notice {
-	background-color: #FFC;
-	border-bottom-color: #FC0;
-}
-
-.popup-alert-warning {
-	background-color: #FDD;
-	border-bottom-color: #F00;
-}
-
 /* ---------- Portal add content ---------- */
 
 /* ---------- Loading animation ---------- */

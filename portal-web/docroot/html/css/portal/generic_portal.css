@@ -51,18 +51,11 @@ td {
 }
 
 .popup-alert-notice, .popup-alert-warning {
-	border-bottom: 1px solid transparent;
 	left: 0;
-	padding: 10px;
-	padding-left: 25px;
 	position: fixed;
 	top: 0;
 	width: 100%;
 	z-index: 10000;
-
-	input {
-		vertical-align: middle;
-	}
 }
 
 .lfr-token-list {
@@ -112,26 +105,8 @@ td {
 	font-weight: bold;
 }
 
-.popup-alert-notice, .popup-alert-warning {
-	background: #ffc url() no-repeat 5px 50%;
+.popup-alert-notice .countdown-timer {
 	font-size: 1.1em;
-}
-
-.popup-alert-notice {
-	background-color: #ffc;
-	background-image: url(@theme_image_path@/messages/alert.png);
-	border-bottom-color: #fc0;
-
-	.countdown-timer {
-		font-size: 1.1em;
-		font-weight: bold;
-	}
-}
-
-.popup-alert-warning {
-	background-color: #fcc;
-	background-image: url(@theme_image_path@/messages/error.png);
-	border-bottom-color: #f00;
 	font-weight: bold;
 }
 
