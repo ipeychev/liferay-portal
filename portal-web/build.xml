@@ -117,13 +117,16 @@
 					<path>
 						<dirset
 							dir="${alloy.build.dir}"
-							includes="aui-*-deprecated"
+							includes="aui-*"
 						/>
 					</path>
 					<sequential>
 						<basename property="dir.name" file="@{dir}" />
 						<if>
-							<available file="docroot/html/js/aui/${dir.name}/assets/skins/sam/${dir.name}.css" />
+							<and>
+								<available file="docroot/html/js/aui/${dir.name}/assets/skins/sam/${dir.name}.css" />
+								<matches pattern="-deprecated" string="${dir.name}" />
+							</and>
 							<then>
 								<concat append="true" destfile="${alloy.temp.dir}/aui_deprecated.css">
 									<filelist
