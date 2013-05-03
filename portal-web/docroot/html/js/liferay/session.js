@@ -469,7 +469,7 @@ AUI.add(
 								{
 									closeText: instance._extendText,
 									content: instance._warningText,
-									noticeClass: 'aui-hide',
+									noticeClass: 'hide',
 									onClose: function() {
 										instance._host.extend();
 									},

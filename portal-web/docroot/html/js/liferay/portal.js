@@ -23,7 +23,7 @@
 		var tabSection = event.tabSection;
 
 		if (tabItem) {
-			tabItem.radioClass('aui-active');
+			tabItem.radioClass('active');
 		}
 
 		if (tabSection) {

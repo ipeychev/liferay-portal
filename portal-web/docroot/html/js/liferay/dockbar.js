@@ -358,7 +358,7 @@ AUI.add(
 
 							instance._loadAddPanel();
 
-							addContent.removeClass('aui-open');
+							addContent.removeClass('open');
 						}
 					);
 				}
@@ -371,7 +371,7 @@ AUI.add(
 						function(event) {
 							event.preventDefault();
 
-							manageContent.removeClass('aui-open');
+							manageContent.removeClass('open');
 
 							instance._openWindow(
 								{
@@ -408,7 +408,7 @@ AUI.add(
 									customizationsHandle = null;
 								}
 
-								manageContent.removeClass('aui-open');
+								manageContent.removeClass('open');
 
 								columns.each(
 									function(item, index, collection) {

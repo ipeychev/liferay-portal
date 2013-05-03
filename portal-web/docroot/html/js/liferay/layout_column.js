@@ -5,7 +5,7 @@ AUI.add(
 
 		var Layout = Liferay.Layout;
 
-		var CSS_DRAGGING = 'aui-dragging';
+		var CSS_DRAGGING = 'dragging';
 
 		Layout.getLastPortletNode = function(column) {
 			var instance = this;

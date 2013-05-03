@@ -43,15 +43,15 @@ AUI.add(
 
 					INPUT_HIDDEN_TEMPLATE: '<input id="{inputNamespace}{value}" name="{inputNamespace}{value}" type="hidden" value="" />',
 
-					ITEM_TEMPLATE:  '<td class="aui-palette-item {selectedClassName}" data-column={column} data-index={index} data-row={row} data-value="{value}">' +
-										'<a href="" class="aui-palette-item-inner" onclick="return false;">' +
+					ITEM_TEMPLATE:  '<td class="palette-item {selectedClassName}" data-column={column} data-index={index} data-row={row} data-value="{value}">' +
+										'<a href="" class="palette-item-inner" onclick="return false;">' +
 											'<img class="lfr-input-localized-flag" data-languageId="{value}" src="' + themeDisplay.getPathThemeImages() + '/language/{value}.png" />' +
 										'</a>' +
 									'</td>',
 
-					TOOLTIP_TEMPLATE:   '<div class="aui-tooltip aui-top">' +
-											'<div class="aui-tooltip-arrow"></div>' +
-											'<div class="aui-tooltip-inner"></div>' +
+					TOOLTIP_TEMPLATE:   '<div class="tooltip top">' +
+											'<div class="tooltip-arrow"></div>' +
+											'<div class="tooltip-inner"></div>' +
 										'</div>',
 
 					_animating: null,
@@ -111,7 +111,7 @@ AUI.add(
 
 						var tooltip = instance._fetchOrCreateTooltip();
 
-						tooltip.one('.aui-tooltip-inner').html(content);
+						tooltip.one('.tooltip-inner').html(content);
 
 						var nodeRegion = alignNode.get('region');
 						var tooltipRegion = tooltip.get('region');
@@ -127,7 +127,7 @@ AUI.add(
 					_afterRenderUI: function() {
 						var instance = this;
 
-						instance._flags = instance.get('boundingBox').one('.aui-palette-container');
+						instance._flags = instance.get('boundingBox').one('.palette-container');
 
 						instance.hideFlags();
 					},

@@ -121,10 +121,10 @@ AUI.add(
 					_onFieldFocusChange: function(event) {
 						var instance = this;
 
-						var row = event.currentTarget.ancestor('.aui-field');
+						var row = event.currentTarget.ancestor('.field');
 
 						if (row) {
-							row.toggleClass('aui-field-focused', (event.type == 'focus'));
+							row.toggleClass('field-focused', (event.type == 'focus'));
 						}
 					},
 

@@ -25,7 +25,7 @@ AUI.add(
 				getByChild: function(child) {
 					var instance = this;
 
-					var node = A.one(child).ancestor('.aui-modal', true);
+					var node = A.one(child).ancestor('.modal', true);
 
 					return A.Widget.getByNode(node);
 				},

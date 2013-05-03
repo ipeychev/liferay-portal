@@ -21,13 +21,13 @@ AUI.add(
 
 		var TPL_LOADING_COUNT = '<span class="lfr-preview-file-loading-count"></span>';
 
-		var TPL_LOADING_INDICATOR = '<div class="lfr-preview-file-loading-indicator aui-hide">{0}&nbsp;</div>';
+		var TPL_LOADING_INDICATOR = '<div class="lfr-preview-file-loading-indicator hide">{0}&nbsp;</div>';
 
-		var TPL_MAX_ARROW_LEFT = '<a href="javascript:;" class="aui-image-viewer-arrow aui-image-viewer-arrow-left lfr-preview-file-arrow lfr-preview-file-arrow-left"></a>';
+		var TPL_MAX_ARROW_LEFT = '<a href="javascript:;" class="image-viewer-arrow image-viewer-arrow-left lfr-preview-file-arrow lfr-preview-file-arrow-left"></a>';
 
-		var TPL_MAX_ARROW_RIGHT = '<a href="javascript:;" class="aui-image-viewer-arrow aui-image-viewer-arrow-right lfr-preview-file-arrow lfr-preview-file-arrow-right"></a>';
+		var TPL_MAX_ARROW_RIGHT = '<a href="javascript:;" class="image-viewer-arrow image-viewer-arrow-right lfr-preview-file-arrow lfr-preview-file-arrow-right"></a>';
 
-		var TPL_MAX_CLOSE = '<a href="javascript:;" class="aui-image-viewer-close lfr-preview-file-close"></a>';
+		var TPL_MAX_CLOSE = '<a href="javascript:;" class="image-viewer-close lfr-preview-file-close"></a>';
 
 		var TPL_MAX_CONTROLS = '<span class="lfr-preview-file-image-overlay-controls"></span>';
 
@@ -147,7 +147,7 @@ AUI.add(
 						if (previewFileCountDown < maxIndex && imageListContentEl.scrollTop >= (imageListContentEl.scrollHeight - 700)) {
 							var loadingIndicator = instance._getLoadingIndicator();
 
-							if (loadingIndicator.hasClass('aui-hide')) {
+							if (loadingIndicator.hasClass('hide')) {
 								var end = Math.min(maxIndex, previewFileCountDown + 10);
 								var start = Math.max(0, previewFileCountDown + 1);
 
@@ -370,19 +370,19 @@ AUI.add(
 								children: [
 									[
 										{
-											icon: 'aui-icon-circle-arrow-left',
+											icon: 'icon-circle-arrow-left',
 											on: {
 												click: A.bind('_updateIndex', instance, -1)
 											}
 										},
 										{
-											icon: 'aui-icon-zoom-in',
+											icon: 'icon-zoom-in',
 											on: {
 												click: A.bind('_maximizePreview', instance)
 											}
 										},
 										{
-											icon: 'aui-icon-circle-arrow-right',
+											icon: 'icon-circle-arrow-right',
 											on: {
 												click: A.bind('_updateIndex', instance, 1)
 											}

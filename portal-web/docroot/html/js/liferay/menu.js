@@ -11,11 +11,11 @@ AUI.add(
 
 		var ARIA_ATTR_ROLE = 'role';
 
-		var CSS_BTN_PRIMARY = 'aui-btn-primary';
+		var CSS_BTN_PRIMARY = 'btn-primary';
 
 		var CSS_EXTENDED = 'lfr-extended';
 
-		var CSS_OPEN = 'aui-open';
+		var CSS_OPEN = 'open';
 
 		var DEFAULT_ALIGN_POINTS = ['tl', 'bl'];
 
@@ -69,7 +69,7 @@ AUI.add(
 
 		var STR_BLANK = '';
 
-		var TPL_MENU = '<div class="aui-open" />';
+		var TPL_MENU = '<div class="open" />';
 
 		var TPL_SEARCH_BOX = '<div class="lfr-menu-list-search-container">' +
 				'<input autocomplete="off" aria-autocomplete="list" aria-expanded="true" aria-labelledby="{searchLabeledBy}" aria-owns="{searchOwns}" class="lfr-menu-list-search" id="{searchId}" role="combobox" type="text">' +
@@ -381,8 +381,8 @@ AUI.add(
 						A.Plugin.NodeFocusManager,
 						{
 							circular: true,
-							descendants: 'li:not(.aui-hide) a,input',
-							focusClass: 'aui-focus',
+							descendants: 'li:not(.hide) a,input',
+							focusClass: 'focus',
 							keys: {
 								next: 'down:40',
 								previous: 'down:38'

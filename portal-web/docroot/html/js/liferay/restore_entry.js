@@ -168,7 +168,7 @@ AUI.add(
 
 						restoreTrashEntryFm.on('submit', instance._onRestoreTrashEntryFmSubmit, instance, restoreTrashEntryFm);
 
-						var closeButton = restoreTrashEntryFm.one('.aui-btn-cancel');
+						var closeButton = restoreTrashEntryFm.one('.btn-cancel');
 
 						closeButton.on('click', instance._popup.hide, instance._popup);
 

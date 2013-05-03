@@ -856,7 +856,7 @@
 
 			var dialog = event.dialog;
 
-			iframeBody.addClass('aui-dialog-iframe-popup');
+			iframeBody.addClass('dialog-iframe-popup');
 
 			var detachEventHandles = function() {
 				AArray.invoke(eventHandles, 'detach');
@@ -878,7 +878,7 @@
 				)
 			];
 
-			var cancelButton = iframeBody.one('.aui-btn-cancel');
+			var cancelButton = iframeBody.one('.btn-cancel');
 
 			if (cancelButton) {
 				cancelButton.after(
@@ -1531,7 +1531,7 @@
 					}
 
 					if (!diff) {
-						var buttonRow = pageBody.one('.aui-button-holder');
+						var buttonRow = pageBody.one('.button-holder');
 						var templateEditor = pageBody.one('.lfr-template-editor');
 
 						if (buttonRow && templateEditor) {
@@ -1666,7 +1666,7 @@
 			if (button) {
 				button.set('disabled', false);
 
-				button.ancestor('.aui-btn').removeClass('aui-btn-disabled');
+				button.ancestor('.btn').removeClass('btn-disabled');
 			}
 		},
 		['aui-base']
@@ -1789,8 +1789,8 @@
 
 			if (trigger) {
 				var hiddenClass = 'controls-hidden';
-				var iconHiddenClass = 'aui-icon-remove';
-				var iconVisibleClass = 'aui-icon-ok';
+				var iconHiddenClass = 'icon-remove';
+				var iconVisibleClass = 'icon-ok';
 				var visibleClass = 'controls-visible';
 				var currentClass = visibleClass;
 				var currentIconClass = iconVisibleClass;
@@ -1839,7 +1839,7 @@
 				function(item, index, collection) {
 					item.attr('disabled', state);
 
-					item.toggleClass('aui-disabled', state);
+					item.toggleClass('disabled', state);
 				}
 			);
 		},

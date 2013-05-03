@@ -86,14 +86,14 @@ AUI().add(
 
 						var closeTool = new A.Button(
 							{
-								icon: 'aui-icon-remove',
+								icon: 'icon-remove',
 								title: Liferay.Language.get('close')
 							}
 						);
 
 						closeTool.render(instance.get('boundingBox'));
 
-						closeTool.get('contentBox').addClass('aui-underlay-close');
+						closeTool.get('contentBox').addClass('underlay-close');
 
 						instance.set('headerContent', closeTool.get('boundingBox'));
 

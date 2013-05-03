@@ -541,7 +541,7 @@ AUI.add(
 				var customCSSClassName = instance._getNodeById('lfr-custom-css-class-name');
 				var customCSSContainer = customCSS;
 				var customCSSClassNameContainer = customCSSClassName;
-				var customPortletNoteHTML = '<p class="aui-alert aui-alert-info form-hint"></p>';
+				var customPortletNoteHTML = '<p class="alert alert-info form-hint"></p>';
 				var customPortletNote = A.one('#lfr-portlet-info');
 				var refreshText = EMPTY;
 
@@ -643,7 +643,7 @@ AUI.add(
 					addIdLink = A.Node.create('<a href="javascript:;" id="lfr-add-id">' + Liferay.Language.get('add-a-css-rule-for-just-this-portlet') + '</a>');
 					addClassLink = A.Node.create('<a href="javascript:;" id="lfr-add-class">' + Liferay.Language.get('add-a-css-rule-for-all-portlets-like-this-one') + '</a>');
 
-					var updateOnTypeHolder = A.Node.create('<span class="aui-field"><span class="aui-field-content"></span></span>');
+					var updateOnTypeHolder = A.Node.create('<span class="field"><span class="field-content"></span></span>');
 					var updateOnTypeLabel = A.Node.create('<label>' + Liferay.Language.get('update-my-styles-as-i-type') + ' </label>');
 
 					updateOnType = A.Node.create('<input id="lfr-update-on-type" type=CHECKBOX />');
@@ -916,7 +916,7 @@ AUI.add(
 				instance._tabs = new A.TabView(
 					{
 						srcNode: newPanel,
-						panelNode: newPanel.one('.aui-tab-pane')
+						panelNode: newPanel.one('.tab-pane')
 					}
 				).render();
 
@@ -1082,11 +1082,11 @@ AUI.add(
 
 						var fieldset = checkBox.ancestor(FIELDSET);
 
-						var otherHolders = fieldset.all('.aui-field-row');
+						var otherHolders = fieldset.all('.field-row');
 						var firstIndex = 0;
 
 						if (!otherHolders.size()) {
-							otherHolders = fieldset.all('.aui-field-content');
+							otherHolders = fieldset.all('.field-content');
 							firstIndex = 1;
 						}
 
@@ -1096,7 +1096,7 @@ AUI.add(
 							function(holderItem, holderIndex, holderCollection) {
 								if (holderIndex > firstIndex) {
 									var fields = holderItem.all('input, select');
-									var colorPickerImages = holderItem.all('.aui-buttonitem');
+									var colorPickerImages = holderItem.all('.buttonitem');
 
 									var action = SHOW;
 									var disabled = false;
@@ -1147,11 +1147,11 @@ AUI.add(
 
 						if (type == SUCCESS) {
 							message = Liferay.Language.get('your-request-processed-successfully');
-							messageClass = 'aui-alert aui-alert-success';
+							messageClass = 'alert alert-success';
 						}
 						else {
 							message = Liferay.Language.get('your-settings-could-not-be-saved');
-							messageClass = 'aui-alert aui-alert-error';
+							messageClass = 'alert alert-error';
 						}
 
 						if (!ajaxResponseMsg) {

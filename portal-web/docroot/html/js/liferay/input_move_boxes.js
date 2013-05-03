@@ -13,11 +13,11 @@ AUI.add(
 					[
 					{
 						cssClass: 'reorder-up',
-						icon: 'aui-icon-circle-arrow-up'
+						icon: 'icon-circle-arrow-up'
 					},
 					{
 						cssClass: 'reorder-down',
-						icon: 'aui-icon-circle-arrow-down'
+						icon: 'icon-circle-arrow-down'
 					}
 				]
 			]
@@ -165,12 +165,12 @@ AUI.add(
 											'vertical',
 											{
 												cssClass: 'move-left',
-												icon: 'aui-icon-circle-arrow-left',
+												icon: 'icon-circle-arrow-left',
 												title: strings.MOVE_LEFT
 											},
 											{
 												cssClass: 'move-right',
-												icon: 'aui-icon-circle-arrow-right',
+												icon: 'icon-circle-arrow-right',
 												title: strings.MOVE_RIGHT
 											}
 										]

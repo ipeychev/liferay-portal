@@ -13,7 +13,7 @@ AUI.add(
 
 		var REGEX_CSS_TYPE = A.DOM._getRegExp('\\blfr-message-(alert|error|help|info|success)\\b', 'g');
 
-		var TPL_HIDE_NOTICES = '<button type="button" class="aui-close">&#x00D7;</button>';
+		var TPL_HIDE_NOTICES = '<button type="button" class="close">&#x00D7;</button>';
 
 		var Message = A.Component.create(
 			{
@@ -54,8 +54,8 @@ AUI.add(
 				},
 
 				HTML_PARSER: {
-					closeButton: '.aui-close',
-					hideAllNotices: '.aui-btn-link'
+					closeButton: '.close',
+					hideAllNotices: '.btn-link'
 				},
 
 				CSS_PREFIX: 'lfr-message',

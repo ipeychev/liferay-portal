@@ -77,7 +77,7 @@ AUI.add(
 						}
 
 						if (cssClass) {
-							messageNode.removeClass('aui-alert-error').removeClass('aui-alert-success');
+							messageNode.removeClass('alert-error').removeClass('alert-success');
 
 							messageNode.addClass(cssClass);
 						}

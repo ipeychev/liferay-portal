@@ -82,7 +82,7 @@ AUI.add(
 				NAME: 'navigation',
 
 				prototype: {
-					TPL_DELETE_BUTTON: '<span class="delete-tab aui-hide">X</span>',
+					TPL_DELETE_BUTTON: '<span class="delete-tab hide">X</span>',
 
 					initializer: function(config) {
 						var instance = this;
@@ -361,7 +361,7 @@ AUI.add(
 						var deleteTab = event.currentTarget.one('.delete-tab');
 
 						if (deleteTab) {
-							deleteTab[action]('aui-hide');
+							deleteTab[action]('hide');
 						}
 					},
 

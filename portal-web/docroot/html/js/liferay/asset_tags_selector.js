@@ -209,7 +209,7 @@ AUI.add(
 								{
 									dialog: {
 										cssClass: CSS_POPUP,
-										hideClass: 'aui-hide-accessible'
+										hideClass: 'hide-accessible'
 									}
 								}
 							);
@@ -336,7 +336,7 @@ AUI.add(
 
 										fieldsets.each(
 											function(item, index, collection) {
-												var visibleEntries = item.one('label:not(.aui-hide)');
+												var visibleEntries = item.one('label:not(.hide)');
 
 												var action = 'addClass';
 
@@ -428,7 +428,7 @@ AUI.add(
 
 						var buttonGroup = [
 							{
-								icon: 'aui-icon-plus',
+								icon: 'icon-plus',
 								label: Liferay.Language.get('add'),
 								on: {
 									click: A.bind(instance._onAddEntryClick, instance)
@@ -436,7 +436,7 @@ AUI.add(
 								title: Liferay.Language.get('add-tags')
 							},
 							{
-								icon: 'aui-icon-search',
+								icon: 'icon-search',
 								label: Liferay.Language.get('select'),
 								on: {
 									click: A.bind(instance._showSelectPopup, instance)
@@ -448,7 +448,7 @@ AUI.add(
 						if (instance.get('contentCallback')) {
 							buttonGroup.push(
 								{
-									icon: 'aui-icon-comment',
+									icon: 'icon-comment',
 									label: Liferay.Language.get('suggestions'),
 									on: {
 										click: A.bind(instance._showSuggestionsPopup, instance)
