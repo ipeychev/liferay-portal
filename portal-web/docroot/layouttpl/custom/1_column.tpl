@@ -1,6 +1,6 @@
 <div class="columns-1" id="main-content" role="main">
-	<div class="portlet-layout aui-row-fluid">
-		<div class="aui-span-12 portlet-column portlet-column-only" id="column-1">
+	<div class="portlet-layout row-fluid">
+		<div class="span-12 portlet-column portlet-column-only" id="column-1">
 			$processor.processColumn("column-1", "portlet-column-content portlet-column-content-only")
 		</div>
 	</div>
