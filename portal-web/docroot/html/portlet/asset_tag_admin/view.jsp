@@ -46,9 +46,7 @@
 
 		<div class="aui-navbar-search aui-pull-right">
 			<div class="aui-form-search">
-				<input class="aui-search-query aui-span9" id="<portlet:namespace/>tagsAdminSearchInput" name="<portlet:namespace/>tagsAdminSearchInput" placeholder="<liferay-ui:message key="search" />" type="text" />
-
-					
+				<input class="aui-search-query aui-span9" id="<portlet:namespace/>tagsAdminSearchInput" name="<portlet:namespace/>tagsAdminSearchInput" type="text" />					
 			</div>
 		</div>
 
