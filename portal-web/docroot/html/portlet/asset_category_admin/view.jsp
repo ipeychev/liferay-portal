@@ -21,11 +21,11 @@
 <aui:nav-bar>
 		<aui:nav>
 			<c:if test="<%= AssetPermission.contains(permissionChecker, themeDisplay.getSiteGroupId(), ActionKeys.ADD_VOCABULARY) %>">
-				<aui:nav-item id="addVocabularyButton" label="add-vocabulary"/>
+				<aui:nav-item id="addVocabularyButton" label="add-vocabulary" />
 			</c:if>
 
-			<c:if test="<%= AssetPermission.contains(permissionChecker, themeDisplay.getSiteGroupId(), ActionKeys.ADD_CATEGORY) %>">		
-				<aui:nav-item disabled="<%= true %>" id="addCategoryButton" label="add-category"/>	
+			<c:if test="<%= AssetPermission.contains(permissionChecker, themeDisplay.getSiteGroupId(), ActionKeys.ADD_CATEGORY) %>">
+				<aui:nav-item disabled="<%= true %>" id="addCategoryButton" label="add-category" />
 			</c:if>
 
 			<c:if test="<%= AssetPermission.contains(permissionChecker, themeDisplay.getSiteGroupId(), ActionKeys.PERMISSIONS) && GroupPermissionUtil.contains(permissionChecker, themeDisplay.getSiteGroupId(), ActionKeys.PERMISSIONS) %>">
@@ -37,11 +37,11 @@
 					windowState="<%= LiferayWindowState.POP_UP.toString() %>"
 				/>
 
-				<aui:nav-item data-url="<%= permissionsURL %>" id="categoryPermissionsButton" label="permissions"/>
+				<aui:nav-item data-url="<%= permissionsURL %>" id="categoryPermissionsButton" label="permissions" />
 			</c:if>
 
-			<aui:nav-item label="actions" dropdown="<%= true %>">
-				<aui:nav-item id="deleteSelectedItems" iconCssClass="icon-trash" label="delete"/>
+			<aui:nav-item dropdown="<%= true %>" label="actions">
+				<aui:nav-item iconCssClass="icon-trash" id="deleteSelectedItems" label="delete" />
 			</aui:nav-item>
 		</aui:nav>
 
@@ -51,7 +51,7 @@
 				<aui:option label="vocabularies" selected="<%= true %>" />
 			</aui:select>
 			<div class="form-search">
-				<input class="search-query span9" id="<portlet:namespace/>categoriesAdminSearchInput" name="<portlet:namespace/>tagsAdminSearchInput" type="text" />					
+				<input class="search-query span9" id="<portlet:namespace/>categoriesAdminSearchInput" name="<portlet:namespace/>tagsAdminSearchInput" type="text" />
 			</div>
 		</div>
 </aui:nav-bar>
@@ -66,7 +66,7 @@
 				</span>
 
 				<h3 class="vocabularies-header"><%= LanguageUtil.get(pageContext, "vocabularies") %></h3>
-					
+
 				<div class="vocabulary-message lfr-component"></div>
 
 				<div class="vocabulary-list lfr-component"></div>
