@@ -126,14 +126,14 @@
 	}
 
 	.select-tags {
-		margin-left: 10px;
+		margin-left: 12px;
 		margin-top: -5px;
 	}
 
 	.tags-admin-list-container {
 		.tags-header {
 			display: inline-block;
-			margin-left: 5px;
+			margin-left: 2px;
 		}
 
 		&:after {

@@ -17,7 +17,7 @@
 <%@ include file="/html/portlet/asset_tag_admin/init.jsp" %>
 
 <aui:form name="fm">
-<aui:nav-bar>
+	<aui:nav-bar>
 		<aui:nav>
 			<c:if test="<%= AssetPermission.contains(permissionChecker, themeDisplay.getSiteGroupId(), ActionKeys.ADD_TAG) %>">
 				<aui:nav-item id="addTagButton" label="add-tag" />
@@ -56,7 +56,7 @@
 	<div class="tags-admin-content-wrapper">
 		<aui:row cssClass="tags-admin-content">
 			<aui:col cssClass="tags-admin-list-container" width="<%= 35 %>">
-				<span class="checkAllTags">
+				<span>
 					<aui:input cssClass="select-tags" inline="<%= true %>" label="" name="checkAllTags" title='<%= LanguageUtil.get(pageContext, "check-all-tags") %>' type="checkbox" />
 				</span>
 

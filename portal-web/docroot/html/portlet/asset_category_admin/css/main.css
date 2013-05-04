@@ -1,35 +1,43 @@
 .portlet-asset-category-admin {
-	.categories-admin-actions {
-		display: inline-block;
-		margin: 0;
+	.lfr-app-column-view {
+		border: none;
+	}
 
-		.permissions-button {
-			margin-left: 1em;
-		}
+	.form-search {
+		float: left;
 
-		.button, .category-actions {
-			display: block;
-			float: left;
-			margin-left: 0;
-			margin-right: 0.3em;
-		}
-
-		.category-actions {
-			margin-left: 0.3em;
+		.search-query {
 			margin-right: 0;
+			padding-right: 0;
+			width: 200px;
+		}
+
+	}
+
+	.control-group {
+		float: left;
+		margin-bottom: 0;
+
+		.categories-admin-select-search {
+			width: auto;
 		}
 	}
 
 	.categories-admin-container {
-		.categories-actions-toolbar {
-			margin-left: 1em;
+		.select-vocabularies-container, .select-categories-container {
+			display: inline-block;
+			margin-left: 10px;
 		}
 
-		.results-header {
-			background: #F0F5F7;
-			font-weight: bold;
-			padding: 5px 10px;
-			position: relative;
+		.vocabularies-header, .categories-header {
+			display: inline-block;
+			margin-left: 2px;
+		}
+
+		.vocabulary-categories-container {
+			.tree-node-selected .tree-label {
+				background: none;
+			}
 		}
 	}
 
@@ -44,29 +52,20 @@
 		background: #CCC;
 	}
 
-	.categories-admin-search, .categories-admin-select-search {
-		.field-content {
-			display: inline-block;
-		}
-	}
-
 	.select-vocabularies, .select-categories {
 		float: left;
+		margin-left: 2px;
 	}
 
 	.select-categories {
-		margin-left: 8px;
+		margin-left: 10px;
 	}
 
 	.vocabulary-list-container-content, .vocabulary-categories-container-content, .vocabulary-edit-category-content {
 		padding: 0;
 	}
 
-	.vocabulary-content-wrapper {
-		position: relative;
-	}
-
-	.vocabulary-content-wrapper, .header-title, .tree-node-content .tree-label {
+	.vocabulary-item-name, .header-title, .tree-node-content .tree-label {
 		word-wrap: break-word;
 	}
 
@@ -85,13 +84,15 @@
 	}
 
 	.vocabulary-item-check {
-		margin-left: 10px;
-		position: static;
-		margin-top: 10px;
 		float: left;
+		margin-right: 5px;
+		margin-top: 0;
+		position: static;
 	}
 
 	.vocabulary-category {
+		position: relative;
+
 		&:hover .vocabulary-item-actions-trigger, &:focus .vocabulary-item-actions-trigger, .vocabulary-item-actions-trigger:focus {
 			clip: rect(auto auto auto auto);
 		}
@@ -138,26 +139,11 @@
 					color: #FFB683;
 				}
 			}
-
-			a, .vocabulary-content-wrapper, .vocabulary-content-wrapper:hover {
-				background-color: #6F7D83;
-				color: #FFF;
-			}
-		}
-
-		.vocabulary-content-wrapper {
-			background-color: #F5F5F5;
-
-			&:hover {
-				background: #D3DADD;
-			}
 		}
 	}
 
 	.vocabulary-categories {
 		.category-item {
-			background-color: #F5F5F5;
-			color: #5C85AD;
 			cursor: pointer;
 			display: block;
 			font-weight: bold;
@@ -173,15 +159,15 @@
 			}
 
 			&:hover {
-				background: #D3DADD;
+				background: #EEE;
 			}
 
-			&.selected {
-				background-color: #6F7D83;
+			&.active {
+				background-color: #08C;
 				color: #FFF;
 
 				&:hover {
-					background-color: #6F7D83;
+					background-color: #08C;
 					color: #FFB683;
 				}
 			}
@@ -200,8 +186,8 @@
 			width: 50%;
 
 			.category-item-check {
-				margin-right: 3px;
-				vertical-align: middle;
+				margin-right: 8px;
+				margin-top: 0;
 			}
 		}
 
@@ -230,7 +216,7 @@
 	}
 
 	#vocabulary-category-messages {
-		margin: 10px;
+		margin: 0 10px 10px 10px;
 	}
 
 	.categories-treeview-container {
@@ -243,8 +229,6 @@
 		}
 
 		.tree-node {
-			background: #F5F5F5;
-
 			.tree-icon {
 				background: none;
 				height: 0;
@@ -253,18 +237,15 @@
 		}
 
 		.tree-node-over {
-			background: #D3DADD;
+			background: #EEE;
 		}
 
 		.tree-node-content {
 			height: 33px;
 
 			.tree-hitarea {
-				padding-top: 13px;
-			}
-
-			&.tree-collapsed .tree-hitarea {
-				background-position: 0 50%;
+				margin-left: 5px;
+				margin-top: 10px;
 			}
 
 			.tree-node-checkbox-container, .tree-label {
@@ -276,12 +257,12 @@
 		}
 
 		.tree-node-selected {
-			background: #6F7D83;
-		}
-
-		.tree-node-selected .tree-label {
-			color: #FFF;
-			cursor: move;
+			background: #08C;
+			
+			.tree-label {
+				color: #FFF;
+				cursor: move;
+			}
 		}
 	}
 
@@ -368,10 +349,6 @@
 
 .ie6, .ie7 {
 	.portlet-asset-category-admin {
-		.vocabulary-content-wrapper {
-			width: 100%;
-		}
-
 		.vocabulary-item-actions-trigger {
 			cursor: pointer;
 		}
