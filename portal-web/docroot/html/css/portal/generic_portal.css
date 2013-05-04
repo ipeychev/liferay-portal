@@ -28,6 +28,11 @@ td {
 	}
 }
 
+.dialog-iframe-bd {
+	overflow-x: hidden;
+	overflow-y: auto;
+}
+
 .lfr-grid {
 	width: 100%;
 }
