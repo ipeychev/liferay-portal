@@ -39,6 +39,10 @@
 				width: 200px;
 			}
 		}
+
+		.user-table, .delete-organizations {
+			margin-bottom: 15px;
+		}
 	}
 
 	#header-bottom {
@@ -207,7 +211,7 @@
 	.view-all-link {
 		color: #666;
 		font-weight: normal;
-		margin-left: 0.5em;
+		margin-bottom: 15px;
 	}
 
 	.lfr-asset-column-details {
