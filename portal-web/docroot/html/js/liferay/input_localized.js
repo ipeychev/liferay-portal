@@ -305,6 +305,6 @@ AUI.add(
 	},
 	'',
 	{
-		requires: ['aui-base', 'aui-component', 'aui-event-input', 'aui-palette', 'liferay-available-languages']
+		requires: ['aui-base', 'aui-component', 'aui-event-input', 'aui-palette', 'portal-available-languages']
 	}
 );

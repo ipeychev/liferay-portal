@@ -33,7 +33,7 @@ Locale[] locales = LanguageUtil.getAvailableLocales();
 
 
 AUI.add(
-	'liferay-available-languages',
+	'portal-available-languages',
 	function(A) {
 		var available = {};
 
