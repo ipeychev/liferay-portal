@@ -1,21 +1,21 @@
-YUI.Env.core.push('liferay-loader', 'liferay-browser-selectors');
+var LiferayAUI = Liferay.AUI;
 
-YUI.add(
-	'liferay-loader',
-	function(A, NAME) {
+var COMBINE = LiferayAUI.getCombine();
 
-		var LiferayAUI = Liferay.AUI;
+var PATH_JAVASCRIPT = LiferayAUI.getJavaScriptRootPath();
 
-		var javaScriptRootPath = LiferayAUI.getJavaScriptRootPath();
-
-		A.mix(
-			YUI.Env[A.version].modules,
-			{
-				/*
-				 * Liferay Modules
-				 */
+window.YUI_config = {
+	base: PATH_JAVASCRIPT + '/aui/',
+	combine: COMBINE,
+	comboBase: LiferayAUI.getComboPath(),
+	filter: Liferay.AUI.getFilter(),
+	groups: {
+		liferay: {
+			base: PATH_JAVASCRIPT + '/liferay/',
+			combine: COMBINE,
+			modules: {
 				'liferay-app-view-folders': {
-					fullpath: javaScriptRootPath + '/liferay/app_view_folders.js',
+					path: 'app_view_folders.js',
 					requires: [
 						'aui-base',
 						'aui-parse-content',
@@ -27,7 +27,7 @@ YUI.add(
 					]
 				},
 				'liferay-app-view-move': {
-					fullpath: javaScriptRootPath + '/liferay/app_view_move.js',
+					path: 'app_view_move.js',
 					requires: [
 						'aui-base',
 						'dd-constrain',
@@ -41,7 +41,7 @@ YUI.add(
 					]
 				},
 				'liferay-app-view-paginator': {
-					fullpath: javaScriptRootPath + '/liferay/app_view_paginator.js',
+					path: 'app_view_paginator.js',
 					requires: [
 						'aui-pagination',
 						'aui-parse-content',
@@ -50,7 +50,7 @@ YUI.add(
 					]
 				},
 				'liferay-app-view-select': {
-					fullpath: javaScriptRootPath + '/liferay/app_view_select.js',
+					path: 'app_view_select.js',
 					requires: [
 						'liferay-app-view-move',
 						'liferay-history-manager',
@@ -59,14 +59,14 @@ YUI.add(
 					]
 				},
 				'liferay-asset-categories-selector': {
-					fullpath: javaScriptRootPath + '/liferay/asset_categories_selector.js',
+					path: 'asset_categories_selector.js',
 					requires: [
 						'aui-tree',
 						'liferay-asset-tags-selector'
 					]
 				},
 				'liferay-asset-tags-selector': {
-					fullpath: javaScriptRootPath + '/liferay/asset_tags_selector.js',
+					path: 'asset_tags_selector.js',
 					requires: [
 						'array-extras',
 						'async-queue',
@@ -83,7 +83,7 @@ YUI.add(
 					]
 				},
 				'liferay-auto-fields': {
-					fullpath: javaScriptRootPath + '/liferay/auto_fields.js',
+					path: 'auto_fields.js',
 					requires: [
 						'aui-base',
 						'aui-data-set-deprecated',
@@ -94,18 +94,12 @@ YUI.add(
 						'liferay-undo-manager'
 					]
 				},
-				'liferay-available-languages': {
-					fullpath: javaScriptRootPath + '/liferay/available_languages.jsp?languageId=' + themeDisplay.getLanguageId(),
-					requires: [
-						'liferay-language'
-					]
-				},
 				'liferay-browser-selectors': {
-					fullpath: javaScriptRootPath + '/liferay/browser_selectors.js',
+					path: 'browser_selectors.js',
 					requires: ['yui-base']
 				},
 				'liferay-ddm-repeatable-fields': {
-					fullpath: javaScriptRootPath + '/liferay/ddm_repeatable_fields.js',
+					path: 'ddm_repeatable_fields.js',
 					requires: [
 						'aui-base',
 						'aui-io-request',
@@ -113,14 +107,14 @@ YUI.add(
 					]
 				},
 				'liferay-dockbar': {
-					fullpath: javaScriptRootPath + '/liferay/dockbar.js',
+					path: 'dockbar.js',
 					requires: [
 						'aui-node',
 						'event-touch'
 					]
 				},
 				'liferay-dockbar-add-content': {
-					fullpath: javaScriptRootPath + '/liferay/dockbar_add_content.js',
+					path: 'dockbar_add_content.js',
 					requires: [
 						'aui-io-request',
 						'aui-tooltip-deprecated',
@@ -134,7 +128,7 @@ YUI.add(
 					]
 				},
 				'liferay-dockbar-add-content-preview': {
-					fullpath: javaScriptRootPath + '/liferay/dockbar_add_content_preview.js',
+					path: 'dockbar_add_content_preview.js',
 					requires: [
 						'aui-io-request',
 						'aui-tooltip-deprecated',
@@ -142,7 +136,7 @@ YUI.add(
 					]
 				},
 				'liferay-dockbar-add-content-drag-drop': {
-					fullpath: javaScriptRootPath + '/liferay/dockbar_add_content_drag_drop.js',
+					path: 'dockbar_add_content_drag_drop.js',
 					requires: [
 						'aui-base',
 						'dd',
@@ -154,7 +148,7 @@ YUI.add(
 					]
 				},
 				'liferay-dockbar-add-content-search': {
-					fullpath: javaScriptRootPath + '/liferay/dockbar_add_content_search.js',
+					path: 'dockbar_add_content_search.js',
 					requires: [
 						'aui-base',
 						'autocomplete-base',
@@ -163,7 +157,7 @@ YUI.add(
 					]
 				},
 				'liferay-dockbar-underlay': {
-					fullpath: javaScriptRootPath + '/liferay/dockbar_underlay.js',
+					path: 'dockbar_underlay.js',
 					requires: [
 						'aui-button',
 						'aui-io-plugin-deprecated',
@@ -171,13 +165,13 @@ YUI.add(
 					]
 				},
 				'liferay-dynamic-select': {
-					fullpath: javaScriptRootPath + '/liferay/dynamic_select.js',
+					path: 'dynamic_select.js',
 					requires: [
 						'aui-base'
 					]
 				},
 				'liferay-form': {
-					fullpath: javaScriptRootPath + '/liferay/form.js',
+					path: 'form.js',
 					plugins: {
 						'liferay-form-placeholders': {
 							condition: {
@@ -196,36 +190,32 @@ YUI.add(
 					]
 				},
 				'liferay-form-placeholders': {
-					fullpath: javaScriptRootPath + '/liferay/form_placeholders.js',
+					path: 'form_placeholders.js',
 					requires: [
 						'liferay-form',
 						'plugin'
 					]
 				},
 				'liferay-history': {
-					fullpath: javaScriptRootPath + '/liferay/history.js',
-					// TODO
-					requires: (function() {
-						var WIN = A.config.win;
-
-						var HISTORY = WIN.history;
-
-						var module = 'history-hash';
-
-						if (HISTORY &&
-							HISTORY.pushState &&
-							HISTORY.replaceState &&
-							('onpopstate' in WIN || A.UA.gecko >= 2)) {
-
-							module = 'liferay-history-html5';
-						}
-
-						return [
-							'querystring-parse-simple', module];
-					})()
+					path: 'history.js',
+					requires: [ 'history-hash', 'liferay-history-html5', 'querystring-parse-simple' ]
 				},
 				'liferay-history-html5': {
-					fullpath: javaScriptRootPath + '/liferay/history_html5.js',
+					path: 'history_html5.js',
+					condition: {
+						name: 'liferay-history-html5',
+						test: function(A) {
+							var WIN = A.config.win;
+
+							var HISTORY = WIN.history;
+
+							return (HISTORY &&
+									HISTORY.pushState &&
+									HISTORY.replaceState &&
+									('onpopstate' in WIN || A.UA.gecko >= 2));
+						},
+						trigger: 'liferay-history'
+					},
 					requires: [
 						'liferay-history',
 						'history-html5',
@@ -233,74 +223,74 @@ YUI.add(
 					]
 				},
 				'liferay-history-manager': {
-					fullpath: javaScriptRootPath + '/liferay/history_manager.js',
+					path: 'history_manager.js',
 					requires: [
 						'liferay-history'
 					]
 				},
 				'liferay-hudcrumbs': {
-					fullpath: javaScriptRootPath + '/liferay/hudcrumbs.js',
+					path: 'hudcrumbs.js',
 					requires: [
 						'aui-base',
 						'plugin'
 					]
 				},
 				'liferay-icon': {
-					fullpath: javaScriptRootPath + '/liferay/icon.js',
+					path: 'icon.js',
 					requires: [
 						'aui-base'
 					]
 				},
 				'liferay-inline-editor-base': {
-					fullpath: javaScriptRootPath + '/liferay/inline_editor_base.js',
+					path: 'inline_editor_base.js',
 					requires: [
 						'aui-base',
 						'aui-overlay-base-deprecated'
 					]
 				},
 				'liferay-input-localized': {
-					fullpath: javaScriptRootPath + '/liferay/input_localized.js',
+					path: 'input_localized.js',
 					requires: [
 						'aui-base',
 						'aui-component',
 						'aui-event-input',
 						'aui-palette',
-						'liferay-available-languages'
+						'portal-available-languages'
 					]
 				},
 				'liferay-input-move-boxes': {
-					fullpath: javaScriptRootPath + '/liferay/input_move_boxes.js',
+					path: 'input_move_boxes.js',
 					requires: [
 						'aui-base',
 						'aui-toolbar'
 					]
 				},
 				'liferay-layout': {
-					fullpath: javaScriptRootPath + '/liferay/layout.js'
+					path: 'layout.js'
 				},
 				'liferay-layout-column': {
-					fullpath: javaScriptRootPath + '/liferay/layout_column.js',
+					path: 'layout_column.js',
 					requires: [
 						'aui-sortable-layout',
 						'dd'
 					]
 				},
 				'liferay-layout-freeform': {
-					fullpath: javaScriptRootPath + '/liferay/layout_freeform.js',
+					path: 'layout_freeform.js',
 					requires: [
 						'aui-resize-deprecated',
 						'liferay-layout-column'
 					]
 				},
 				'liferay-list-view': {
-					fullpath: javaScriptRootPath + '/liferay/list_view.js',
+					path: 'list_view.js',
 					requires: [
 						'aui-base',
 						'transition'
 					]
 				},
 				'liferay-logo-editor': {
-					fullpath: javaScriptRootPath + '/liferay/logo_editor.js',
+					path: 'logo_editor.js',
 					requires: [
 						'aui-image-cropper',
 						'aui-io-request',
@@ -308,13 +298,13 @@ YUI.add(
 					]
 				},
 				'liferay-logo-selector': {
-					fullpath: javaScriptRootPath + '/liferay/logo_selector.js',
+					path: 'logo_selector.js',
 					requires: [
 						'aui-base'
 					]
 				},
 				'liferay-look-and-feel': {
-					fullpath: javaScriptRootPath + '/liferay/look_and_feel.js',
+					path: 'look_and_feel.js',
 					requires: [
 						'aui-color-picker-popover',
 						'aui-io-plugin-deprecated',
@@ -324,21 +314,21 @@ YUI.add(
 					]
 				},
 				'liferay-menu': {
-					fullpath: javaScriptRootPath + '/liferay/menu.js',
+					path: 'menu.js',
 					requires: [
 						'aui-debounce',
 						'aui-node'
 					]
 				},
 				'liferay-message': {
-					fullpath: javaScriptRootPath + '/liferay/message.js',
+					path: 'message.js',
 					requires: [
 						'aui-base',
 						'liferay-store'
 					]
 				},
 				'liferay-navigation': {
-					fullpath: javaScriptRootPath + '/liferay/navigation.js',
+					path: 'navigation.js',
 					plugins: {
 						'liferay-navigation-touch': {
 							condition: {
@@ -352,33 +342,33 @@ YUI.add(
 					}
 				},
 				'liferay-navigation-interaction': {
-					fullpath: javaScriptRootPath + '/liferay/navigation_interaction.js',
+					path: 'navigation_interaction.js',
 					requires: [
 						'node-focusmanager',
 						'plugin'
 					]
 				},
 				'liferay-navigation-touch': {
-					fullpath: javaScriptRootPath + '/liferay/navigation_touch.js',
+					path: 'navigation_touch.js',
 					requires: [
 						'event-touch',
 						'liferay-navigation'
 					]
 				},
 				'liferay-notice': {
-					fullpath: javaScriptRootPath + '/liferay/notice.js',
+					path: 'notice.js',
 					requires: [
 						'aui-base'
 					]
 				},
 				'liferay-node': {
-					fullpath: javaScriptRootPath + '/liferay/node.js',
+					path: 'node.js',
 					requires: [
 						'dom-base'
 					]
 				},
 				'liferay-poller': {
-					fullpath: javaScriptRootPath + '/liferay/poller.js',
+					path: 'poller.js',
 					requires: [
 						'aui-base',
 						'io',
@@ -386,14 +376,14 @@ YUI.add(
 					]
 				},
 				'liferay-portlet-base': {
-					fullpath: javaScriptRootPath + '/liferay/portlet_base.js',
+					path: 'portlet_base.js',
 					requires: [
 						'aui-base',
 						'liferay-node'
 					]
 				},
 				'liferay-portlet-url': {
-					fullpath: javaScriptRootPath + '/liferay/portlet_url.js',
+					path: 'portlet_url.js',
 					requires: [
 						'aui-base',
 						'aui-io-request',
@@ -401,7 +391,7 @@ YUI.add(
 					]
 				},
 				'liferay-preview': {
-					fullpath: javaScriptRootPath + '/liferay/preview.js',
+					path: 'preview.js',
 					requires: [
 						'aui-base',
 						'aui-overlay-mask-deprecated',
@@ -409,20 +399,20 @@ YUI.add(
 					]
 				},
 				'liferay-progress': {
-					fullpath: javaScriptRootPath + '/liferay/progress.js',
+					path: 'progress.js',
 					requires: [
 						'aui-progressbar'
 					]
 				},
 				'liferay-ratings': {
-					fullpath: javaScriptRootPath + '/liferay/ratings.js',
+					path: 'ratings.js',
 					requires: [
 						'aui-io-request',
 						'aui-rating'
 					]
 				},
 				'liferay-restore-entry': {
-					fullpath: javaScriptRootPath + '/liferay/restore_entry.js',
+					path: 'restore_entry.js',
 					requires: [
 						'aui-io-plugin-deprecated',
 						'aui-io-request',
@@ -431,7 +421,7 @@ YUI.add(
 					]
 				},
 				'liferay-search-container': {
-					fullpath: javaScriptRootPath + '/liferay/search_container.js',
+					path: 'search_container.js',
 					requires: [
 						'aui-base',
 						'aui-datatable-core',
@@ -439,14 +429,14 @@ YUI.add(
 					]
 				},
 				'liferay-service-datasource': {
-					fullpath: javaScriptRootPath + '/liferay/service_datasource.js',
+					path: 'service_datasource.js',
 					requires: [
 						'aui-base',
 						'datasource-local'
 					]
 				},
 				'liferay-session': {
-					fullpath: javaScriptRootPath + '/liferay/session.js',
+					path: 'session.js',
 					requires: [
 						'aui-io-request',
 						'aui-task-manager',
@@ -455,53 +445,53 @@ YUI.add(
 					]
 				},
 				'liferay-staging': {
-					fullpath: javaScriptRootPath + '/liferay/staging.js',
+					path: 'staging.js',
 					requires: [
 						'aui-io-plugin-deprecated',
 						'aui-modal'
 					]
 				},
 				'liferay-staging-branch': {
-					fullpath: javaScriptRootPath + '/liferay/staging_branch.js',
+					path: 'staging_branch.js',
 					requires: [
 						'liferay-staging'
 					]
 				},
 				'liferay-staging-version': {
-					fullpath: javaScriptRootPath + '/liferay/staging_version.js',
+					path: 'staging_version.js',
 					requires: [
 						'aui-button',
 						'liferay-staging'
 					]
 				},
 				'liferay-store': {
-					fullpath: javaScriptRootPath + '/liferay/store.js',
+					path: 'store.js',
 					requires: [
 						'aui-io-request'
 					]
 				},
 				'liferay-token-list': {
-					fullpath: javaScriptRootPath + '/liferay/token_list.js',
+					path: 'token_list.js',
 					requires: [
 						'aui-base',
 						'aui-template'
 					]
 				},
 				'liferay-translation-manager': {
-					fullpath: javaScriptRootPath + '/liferay/translation_manager.js',
+					path: 'translation_manager.js',
 					requires: [
 						'aui-base'
 					]
 				},
 				'liferay-undo-manager': {
-					fullpath: javaScriptRootPath + '/liferay/undo_manager.js',
+					path: 'undo_manager.js',
 					requires: [
 						'aui-data-set-deprecated',
 						'base'
 					]
 				},
 				'liferay-upload': {
-					fullpath: javaScriptRootPath + '/liferay/upload.js',
+					path: 'upload.js',
 					requires: [
 						'aui-io-request',
 						'aui-template-deprecated',
@@ -511,58 +501,64 @@ YUI.add(
 					]
 				},
 				'liferay-util-list-fields': {
-					fullpath: javaScriptRootPath + '/liferay/util_list_fields.js',
+					path: 'util_list_fields.js',
 					requires: [
 						'aui-base'
 					]
 				},
 				'liferay-util-window': {
-					fullpath: javaScriptRootPath + '/liferay/util_window.js',
+					path: 'util_window.js',
 					requires: [
 						'aui-dialog-iframe-deprecated',
 						'aui-modal'
 					]
 				},
 				'liferay-xml-formatter': {
-					fullpath: javaScriptRootPath + '/liferay/xml_formatter.js',
+					path: 'xml_formatter.js',
 					requires: [
 						'aui-base'
 					]
-				},
-				/*
-				 * Misc Modules
-				 */
+				}
+			},
+			root: PATH_JAVASCRIPT + '/liferay/'
+		},
+
+		misc: {
+			base: PATH_JAVASCRIPT + '/misc/',
+			combine: COMBINE,
+			modules: {
 				'swfupload': {
-					fullpath: javaScriptRootPath + '/misc/swfupload/swfupload.js'
+					path: '/swfupload/swfupload.js'
 				},
 				'swfobject': {
-					fullpath: javaScriptRootPath + '/misc/swfobject.js'
-				},
-				/*
-				 * Portal Modules
-				 */
+					path: '/swfobject.js'
+				}
+			},
+			root: PATH_JAVASCRIPT + '/misc/'
+		},
+
+		portal: {
+			base: PATH_JAVASCRIPT + '/liferay/',
+			combine: false,
+			modules: {
 				'portal-aui-lang': {
-					fullpath: javaScriptRootPath + LiferayAUI.getLangPath(),
+					path: LiferayAUI.getLangPath(),
 					requires: [
-						'aui-calendar-deprecated'
+						'aui-calendar'
+					]
+				},
+				'portal-available-languages': {
+					path: LiferayAUI.getAvailableLangPath(),
+					requires: [
+						'liferay-language'
 					]
 				}
-			}
-		);
-
-		// addPlugin(
-		// 	{
-		// 		group: 'alloy',
-		// 		name: 'portal-aui-lang',
-		// 		test: function(A) {
-		// 			return true;
-		// 		},
-		// 		trigger: 'calendar-deprecated'
-		// 	}
-		// );
+			},
+			root: PATH_JAVASCRIPT + '/liferay/'
+		}
 	},
-	'',
-	{
-		requires: []
-	}
-);
+	root: PATH_JAVASCRIPT + '/aui/',
+	useBrowserConsole: false
+};
+
+YUI.Env.core.push('liferay-browser-selectors');
