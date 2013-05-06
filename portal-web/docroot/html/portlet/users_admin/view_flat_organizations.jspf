@@ -95,7 +95,7 @@ if (filterManageableOrganizations) {
 			<c:if test="<%= !results.isEmpty() %>">
 				<div class="separator"><!-- --></div>
 
-				<aui:button onClick='<%= renderResponse.getNamespace() + "deleteOrganizations();" %>' value="delete" />
+				<aui:button cssClass="delete-organizations" onClick='<%= renderResponse.getNamespace() + "deleteOrganizations();" %>' value="delete" />
 			</c:if>
 
 			<liferay-ui:search-iterator />

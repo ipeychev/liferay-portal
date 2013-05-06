@@ -256,6 +256,9 @@ if (filterManageableOrganizations) {
 
 							<%= organizationsTitle %>
 
+						</liferay-util:buffer>
+
+						<liferay-ui:panel collapsible="<%= true %>" extended="<%= true %>" id="usersAdminOrganizationsPanel" persistState="<%= true %>" title="<%= organizationsPanelTitle %>">
 							<c:if test="<%= organization == null %>">
 								<portlet:renderURL var="viewOrgsURL">
 									<portlet:param name="struts_action" value="/users_admin/view" />
@@ -264,11 +267,8 @@ if (filterManageableOrganizations) {
 									<portlet:param name="saveUsersListView" value="<%= Boolean.TRUE.toString() %>" />
 								</portlet:renderURL>
 
-								<span class="view-all-link">(<a href="<%= viewOrgsURL %>" id="<portlet:namespace />allOrganizationsLink"><liferay-ui:message key="search-all-organizations" /></a>)</span>
+								<div class="view-all-link"><a href="<%= viewOrgsURL %>" id="<portlet:namespace />allOrganizationsLink"><liferay-ui:message key="search-all-organizations" /></a></div>
 							</c:if>
-						</liferay-util:buffer>
-
-						<liferay-ui:panel collapsible="<%= true %>" extended="<%= true %>" id="usersAdminOrganizationsPanel" persistState="<%= true %>" title="<%= organizationsPanelTitle %>">
 
 							<%
 							SearchContainer organizationSearch = new OrganizationSearch(renderRequest, "cur1", currentURLObj);
@@ -304,7 +304,7 @@ if (filterManageableOrganizations) {
 										</liferay-ui:search-container-results>
 
 										<c:if test="<%= !results.isEmpty() %>">
-											<aui:button onClick='<%= renderResponse.getNamespace() + "deleteOrganizations();" %>' value="delete" />
+											<aui:button cssClass="delete-organizations" onClick='<%= renderResponse.getNamespace() + "deleteOrganizations();" %>' value="delete" />
 										</c:if>
 									</c:when>
 									<c:otherwise>
@@ -402,10 +402,6 @@ if (filterManageableOrganizations) {
 							%>
 
 							<%= usersTitle %>
-
-							<c:if test="<%= organization == null %>">
-								<span class="view-all-link">(<a href="<%= viewUsersURL %>" id="<portlet:namespace />allUsersLink"><liferay-ui:message key="search-all-users" /></a>)</span>
-							</c:if>
 						</liferay-util:buffer>
 
 						<c:choose>
@@ -424,6 +420,10 @@ if (filterManageableOrganizations) {
 								%>
 
 								<liferay-ui:panel collapsible="<%= true %>" extended="<%= true %>" id="usersAdminUsersPanel" persistState="<%= true %>" title="<%= usersPanelTitle %>">
+									<c:if test="<%= organization == null %>">
+										<div class="view-all-link"><a href="<%= viewUsersURL %>" id="<portlet:namespace />allUsersLink"><liferay-ui:message key="search-all-users" /></a></div>
+									</c:if>
+
 									<%@ include file="/html/portlet/users_admin/view_flat_users.jspf" %>
 								</liferay-ui:panel>
 							</c:otherwise>

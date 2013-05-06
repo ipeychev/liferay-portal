@@ -232,20 +232,20 @@ NumberFormat numberFormat = NumberFormat.getNumberInstance(locale);
 
 		<ul class="pager lfr-pagination-buttons">
 			<c:if test='<%= type.equals("approximate") || type.equals("more") || type.equals("regular") %>'>
-				<li class="first <%= (cur != 1) ? "" : "disabled" %>">
+				<li class="<%= (cur != 1) ? "" : "disabled" %>">
 					<a href="<%= (cur != 1) ? _getHREF(formName, curParam, 1, jsCall, url, urlAnchor) : "javascript:;" %>" target="<%= target %>">
 						&larr; <liferay-ui:message key="first" />
 					</a>
 				</li>
 			</c:if>
 
-			<li class="previous <%= (cur != 1) ? "" : "disabled" %>">
+			<li class="<%= (cur != 1) ? "" : "disabled" %>">
 				<a href="<%= (cur != 1) ? _getHREF(formName, curParam, cur - 1, jsCall, url, urlAnchor) : "javascript:;" %>" target="<%= target %>">
 					<liferay-ui:message key="previous" />
 				</a>
 			</li>
 
-			<li class="next <%= (cur != pages) ? "" : "disabled" %>">
+			<li class="<%= (cur != pages) ? "" : "disabled" %>">
 				<a href="<%= (cur != pages) ? _getHREF(formName, curParam, cur + 1, jsCall, url, urlAnchor) : "javascript:;" %>" target="<%= target %>">
 					<c:if test='<%= (type.equals("approximate") || type.equals("more") || type.equals("regular")) %>'>
 						<c:choose>
@@ -261,7 +261,7 @@ NumberFormat numberFormat = NumberFormat.getNumberInstance(locale);
 			</li>
 
 			<c:if test='<%= type.equals("regular") %>'>
-				<li class="next <%= (cur != pages) ? "" : "disabled" %>">
+				<li class="<%= (cur != pages) ? "" : "disabled" %>">
 					<a href="<%= (cur != pages) ? _getHREF(formName, curParam, pages, jsCall, url, urlAnchor) : "javascript:;" %>" target="<%= target %>">
 						<liferay-ui:message key="last" /> &rarr;
 					</a>
