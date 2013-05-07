@@ -189,7 +189,7 @@ AUI.add(
 			'</div>' +
 		'</li>';
 
-		var TPL_VOCABULARY_OPTION = '<option {selected} value="{vocabularyId}">{titleCurrentValue}</option>';
+		var TPL_VOCABULARY_OPTION = '<option value="{vocabularyId}">{titleCurrentValue}</option>';
 
 		var TPL_CATEGORIES_TREE_CONTAINER = '<div class="categories-treeview-container" id="categoriesTreeContainer"></div>';
 
@@ -1810,13 +1810,7 @@ AUI.add(
 								A.each(
 									vocabularies,
 									function(item, index, collection) {
-										item[STR_SELECTED] = STR_EMPTY;
-
-										debugger;
-
 										if (item.vocabularyId === selectedVocabularyId) {
-											item[STR_SELECTED] = STR_SELECTED;
-
 											selectedVocabularyIndex = index;
 										}
 
@@ -1834,8 +1828,6 @@ AUI.add(
 								);
 
 								selectNode.append(buffer.join(STR_EMPTY));
-
-								debugger;
 
 								selectNode.set('selectedIndex', selectedVocabularyIndex);
 							}
