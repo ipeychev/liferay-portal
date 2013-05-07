@@ -1800,18 +1800,21 @@ AUI.add(
 
 							if (selectNode) {
 								selectedVocabularyId = toInt(selectedVocabularyId);
-								var selectedVocabularyIndex;
 
 								selectNode.empty();
 
 								var buffer = [];
+
+								var selectedVocabularyIndex;
 
 								A.each(
 									vocabularies,
 									function(item, index, collection) {
 										item[STR_SELECTED] = STR_EMPTY;
 
-										if (item.vocabularyId == selectedVocabularyId) {
+										debugger;
+
+										if (item.vocabularyId === selectedVocabularyId) {
 											item[STR_SELECTED] = STR_SELECTED;
 
 											selectedVocabularyIndex = index;
@@ -1832,7 +1835,9 @@ AUI.add(
 
 								selectNode.append(buffer.join(STR_EMPTY));
 
-								selectNode._node.selectedIndex = selectedVocabularyIndex;
+								debugger;
+
+								selectNode.set('selectedIndex', selectedVocabularyIndex);
 							}
 						}
 					},
