@@ -93,36 +93,40 @@ Group scopeGroup = themeDisplay.getScopeGroup();
 		</c:if>
 	</aui:nav>
 
-	<span id="<portlet:namespace />displayStyleButtonsContainer">
-		<c:if test='<%= !strutsAction.equals("/document_library/search") %>'>
-			<liferay-util:include page="/html/portlet/document_library/display_style_buttons.jsp" />
-		</c:if>
-	</span>
+	<div class="pull-right">
+		<span class="pull-left display-style-buttons-container" id="<portlet:namespace />displayStyleButtonsContainer">
+			<c:if test='<%= !strutsAction.equals("/document_library/search") %>'>
+				<liferay-util:include page="/html/portlet/document_library/display_style_buttons.jsp" />
+			</c:if>
+		</span>
 
-	<div class="navbar-search pull-right">
-		<div class="form-search">
-			<liferay-portlet:resourceURL varImpl="searchURL">
-				<portlet:param name="struts_action" value="/document_library/search" />
-				<portlet:param name="repositoryId" value="<%= String.valueOf(repositoryId) %>" />
-				<portlet:param name="searchRepositoryId" value="<%= String.valueOf(folderId) %>" />
-				<portlet:param name="folderId" value="<%= String.valueOf(folderId) %>" />
-				<portlet:param name="searchFolderId" value="<%= String.valueOf(folderId) %>" />
-			</liferay-portlet:resourceURL>
+		<div class="navbar-search pull-left">
+			<div class="form-search">
+				<liferay-portlet:resourceURL varImpl="searchURL">
+					<portlet:param name="struts_action" value="/document_library/search" />
+					<portlet:param name="repositoryId" value="<%= String.valueOf(repositoryId) %>" />
+					<portlet:param name="searchRepositoryId" value="<%= String.valueOf(folderId) %>" />
+					<portlet:param name="folderId" value="<%= String.valueOf(folderId) %>" />
+					<portlet:param name="searchFolderId" value="<%= String.valueOf(folderId) %>" />
+				</liferay-portlet:resourceURL>
 
-			<aui:form action="<%= searchURL.toString() %>" method="get" name="fm1" onSubmit="event.preventDefault();">
-				<liferay-portlet:renderURLParams varImpl="searchURL" />
-				<aui:input name="redirect" type="hidden" value="<%= currentURL %>" />
-				<aui:input name="breadcrumbsFolderId" type="hidden" value="<%= folderId %>" />
-				<aui:input name="searchFolderIds" type="hidden" value="<%= folderId %>" />
+				<aui:form action="<%= searchURL.toString() %>" method="get" name="fm1" onSubmit="event.preventDefault();">
+					<liferay-portlet:renderURLParams varImpl="searchURL" />
+					<aui:input name="redirect" type="hidden" value="<%= currentURL %>" />
+					<aui:input name="breadcrumbsFolderId" type="hidden" value="<%= folderId %>" />
+					<aui:input name="searchFolderIds" type="hidden" value="<%= folderId %>" />
 
-				<div class="input-append">
-					<input class="search-query span9" id="<portlet:namespace/>keywords" placeholder="<liferay-ui:message key="keywords" />" type="text" />
+					<div class="input-append">
+						<input class="search-query span9" id="<portlet:namespace/>keywords" placeholder="<liferay-ui:message key="keywords" />" type="text" />
 
-					<aui:button primary="<%= false %>" type="submit" value="search" />
-				</div>
-			</aui:form>
+						<aui:button primary="<%= false %>" type="submit" value="search" />
+					</div>
+				</aui:form>
+			</div>
 		</div>
+
 	</div>
+
 </aui:nav-bar>
 
 <aui:script>
