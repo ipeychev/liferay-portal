@@ -600,8 +600,6 @@ AUI.add(
 						var folders = instance.one('#folderContainer', content);
 
 						if (folders) {
-							var listViewDataContainer = A.one('.lfr-list-view-data-container');
-
 							instance._listView.set(STR_DATA, folders.html());
 						}
 					},
