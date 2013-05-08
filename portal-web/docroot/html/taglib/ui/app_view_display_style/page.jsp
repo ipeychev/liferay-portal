@@ -28,6 +28,8 @@ Map<String, String> requestParams = (Map<String, String>)request.getAttribute("l
 
 			<%
 			for (int i = 0; i < displayStyles.length; i++) {
+				String dataStyle = displayStyles[i];
+
 				String iconClass = displayStyles[i];
 
 				if (iconClass.equals("icon")) {
@@ -41,7 +43,7 @@ Map<String, String> requestParams = (Map<String, String>)request.getAttribute("l
 				}
 			%>
 
-				<button class='btn <%= displayStyle.equals(displayStyles[i]) ? "active" : StringPool.BLANK %>'><i class="<%= iconClass %>"></i></button>
+				<button data-displayStyle="<%= dataStyle %>" class='btn <%= displayStyle.equals(displayStyles[i]) ? "active" : StringPool.BLANK %>'><i class="<%= iconClass %>"></i></button>
 
 			<%
 			}
@@ -55,7 +57,7 @@ Map<String, String> requestParams = (Map<String, String>)request.getAttribute("l
 	<aui:script use="aui-base,aui-toolbar">
 		var buttonRow = A.one('#<portlet:namespace />displayStyleButtons');
 
-		function onButtonClick(displayStyle) {
+		function changeDisplayStyle(displayStyle) {
 			var config = {};
 
 			<%
@@ -91,7 +93,14 @@ Map<String, String> requestParams = (Map<String, String>)request.getAttribute("l
 
 		displayStyleToolbar = new A.Toolbar(
 			{
-				boundingBox: buttonRow
+				boundingBox: buttonRow,
+				on: {
+					click: function(event) {
+						var btnNode = this.getEnclosingWidget(event).getSelectedButtons()[0];
+
+						changeDisplayStyle(btnNode.attr('data-displayStyle'));
+					}
+				}
 			}
 		).render();
 
