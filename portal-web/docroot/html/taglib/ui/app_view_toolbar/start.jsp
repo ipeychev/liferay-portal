@@ -21,7 +21,7 @@ boolean includeSelectAll = GetterUtil.getBoolean(request.getAttribute("liferay-u
 String searchJsp = (String)request.getAttribute("liferay-ui:app_view_toolbar:searchJsp");
 %>
 
-<div class="app-view-taglib lfr-header-row">
+<div class="app-view-taglib">
 	<div class="lfr-header-row-content">
 		<c:if test="<%= Validator.isNotNull(searchJsp) %>">
 			<liferay-util:include page="<%= searchJsp %>" />
