@@ -30,7 +30,7 @@ Group scopeGroup = themeDisplay.getScopeGroup();
 
 <aui:nav-bar>
 	<aui:nav>
-		<aui:nav-item dropdown="<%= true %>" label="actions">
+		<aui:nav-item class="helper-hidden" dropdown="<%= true %>" id="actionsButtonContainer" label="actions">
 			<c:if test="<%= !scopeGroup.isStaged() || scopeGroup.isStagingGroup() || !scopeGroup.isStagedPortlet(PortletKeys.DOCUMENT_LIBRARY) %>">
 
 				<%
