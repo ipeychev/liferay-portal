@@ -318,6 +318,7 @@ AUI.add(
 
 						var entryConfig = instance.get('entry');
 
+debugger;
 						var dataExpandFolder = item.attr('data-expand-folder');
 						var dataStructureId = item.attr(entryConfig.typeId);
 						var dataFolderId = item.attr(DATA_FOLDER_ID);
@@ -595,6 +596,7 @@ AUI.add(
 					},
 
 					_setFolders: function(content) {
+						debugger;
 						var instance = this;
 
 						var folders = instance.one('#folderContainer', content);

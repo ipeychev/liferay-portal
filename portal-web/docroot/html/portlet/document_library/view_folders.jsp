@@ -97,9 +97,12 @@ else if (((folderId != rootFolderId) && (parentFolderId == 0)) || ((folderId == 
 <div id="<portlet:namespace />listViewContainer">
 	<div id="<portlet:namespace />folderContainer">
 		<aui:nav cssClass="nav-list well">
-			<li class="nav-header">
-				<%= parentTitle %>
-			</li>
+			<c:if test="<%= Validator.isNotNull(parentTitle)%>">
+				<li class="nav-header">
+					<%= parentTitle %>
+				</li>
+			</c:if>
+
 			<c:choose>
 				<c:when test="<%= ((folderId == rootFolderId) && !expandFolder) || ((folder != null) && (folder.isRoot() && !folder.isDefaultRepository() && !expandFolder)) %>">
 
@@ -135,7 +138,7 @@ else if (((folderId != rootFolderId) && (parentFolderId == 0)) || ((folderId == 
 
 					Map<String, Object> dataView = new HashMap<String, Object>();
 
-					dataView.put("folder", Boolean.TRUE.toString());
+					dataView.put("folder", true);
 					dataView.put("folder-id", rootFolderId);
 					dataView.put("navigation", "home");
 					dataView.put("title", LanguageUtil.get(pageContext, "home"));
@@ -297,7 +300,7 @@ else if (((folderId != rootFolderId) && (parentFolderId == 0)) || ((folderId == 
 
 								dataView = new HashMap<String, Object>();
 
-								dataView.put("folder", Boolean.TRUE.toString());
+								dataView.put("folder", true);
 								dataView.put("folder-id", mountFolder.getFolderId());
 								dataView.put("repository-id", mountFolder.getRepositoryId());
 								dataView.put("title", mountFolder.getName());
@@ -412,7 +415,7 @@ else if (((folderId != rootFolderId) && (parentFolderId == 0)) || ((folderId == 
 						dataView = new HashMap<String, Object>();
 
 						dataView.put("folder-id", curFolder.getFolderId());
-						dataView.put("folder", Boolean.TRUE.toString());
+						dataView.put("folder", true);
 						dataView.put("repository-id", curFolder.getRepositoryId());
 						dataView.put("title", curFolder.getName());
 						%>
@@ -423,7 +426,7 @@ else if (((folderId != rootFolderId) && (parentFolderId == 0)) || ((folderId == 
 							dataView="<%= dataView %>"
 							entryTitle="<%= curFolder.getName() %>"
 							expandURL="<%= expandViewURL.toString() %>"
-							iconImage='<%= (DLAppServiceUtil.getFoldersAndFileEntriesAndFileShortcutsCount(curFolder.getRepositoryId(), curFolder.getFolderId(), WorkflowConstants.STATUS_APPROVED, true) > 0) ? "folder_full_document" : "folder_empty" %>'
+							iconImage='<%= (DLAppServiceUtil.getFoldersAndFileEntriesAndFileShortcutsCount(curFolder.getRepositoryId(), curFolder.getFolderId(), WorkflowConstants.STATUS_APPROVED, true) > 0) ? "icon-folder-open" : "icon-folder-close" %>'
 							selected="<%= (curFolder.getFolderId() == folderId) %>"
 							showExpand="<%= DLAppServiceUtil.getFoldersCount(repositoryId, curFolder.getFolderId()) > 0 %>"
 							viewURL="<%= viewURL.toString() %>"

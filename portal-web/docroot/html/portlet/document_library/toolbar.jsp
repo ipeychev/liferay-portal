@@ -30,45 +30,45 @@ Group scopeGroup = themeDisplay.getScopeGroup();
 
 <aui:nav-bar>
 	<aui:nav>
-		<aui:nav-item dropdown="<%= true %>" label="actions">
+		<aui:nav-item class="helper-hidden" dropdown="<%= true %>" id="actionsButtonContainer" label="actions">
 			<c:if test="<%= !scopeGroup.isStaged() || scopeGroup.isStagingGroup() || !scopeGroup.isStagedPortlet(PortletKeys.DOCUMENT_LIBRARY) %>">
 
 				<%
 				String taglibOnClick = "javascript:Liferay.fire('" + renderResponse.getNamespace() + "editEntry', {action: '" + Constants.CANCEL_CHECKOUT + "'});";
 				%>
 
-				<aui:nav-item href="<%= taglibOnClick %>" iconCssClass="icon-trash" label="cancel-checkout[document]" />
+				<aui:nav-item href="<%= taglibOnClick %>" iconClass="icon-trash" label="cancel-checkout[document]" />
 
 				<%
 				taglibOnClick = "javascript:Liferay.fire('" + renderResponse.getNamespace() + "editEntry', {action: '" + Constants.CHECKIN + "'});";
 				%>
 
-				<aui:nav-item href="<%= taglibOnClick %>" iconCssClass="icon-trash" label="checkin" />
+				<aui:nav-item href="<%= taglibOnClick %>" iconClass="icon-trash" label="checkin" />
 
 				<%
 				taglibOnClick = "javascript:Liferay.fire('" + renderResponse.getNamespace() + "editEntry', {action: '" + Constants.CHECKOUT + "'});";
 				%>
 
-				<aui:nav-item href="<%= taglibOnClick %>" iconCssClass="icon-trash" label="checkout[document]" />
+				<aui:nav-item href="<%= taglibOnClick %>" iconClass="icon-trash" label="checkout[document]" />
 
 				<%
 				taglibOnClick = "javascript:Liferay.fire('" + renderResponse.getNamespace() + "editEntry', {action: '" + Constants.MOVE + "'});";
 				%>
 
-				<aui:nav-item href="<%= taglibOnClick %>" iconCssClass="icon-trash" label="move" />
+				<aui:nav-item href="<%= taglibOnClick %>" iconClass="icon-trash" label="move" />
 			</c:if>
 
 			<%
 			String taglibURL = "javascript:Liferay.fire('" + renderResponse.getNamespace() + "editEntry', {action: '" + Constants.MOVE_TO_TRASH + "'});";
 			%>
 
-			<aui:nav-item href="<%= taglibURL %>" iconCssClass="icon-trash" id="moveToTrashAction" label="move-to-the-recycle-bin" />
+			<aui:nav-item href="<%= taglibURL %>" iconClass="icon-trash" id="moveToTrashAction" label="move-to-the-recycle-bin" />
 
 			<%
 			taglibURL = "Liferay.fire('" + renderResponse.getNamespace() + "editEntry', {action: '" + Constants.DELETE + "'});";
 			%>
 
-			<aui:nav-item href="<%= taglibURL %>" iconCssClass="icon-trash" id="deleteAction" label="delete" />
+			<aui:nav-item href="<%= taglibURL %>" iconClass="icon-trash" id="deleteAction" label="delete" />
 		</aui:nav-item>
 
 		<liferay-util:include page="/html/portlet/document_library/add_button.jsp" />
@@ -82,13 +82,13 @@ Group scopeGroup = themeDisplay.getScopeGroup();
 				String taglibURL = "javascript:" + renderResponse.getNamespace() + "openFileEntryTypeView()";
 				%>
 
-				<aui:nav-item href="<%= taglibURL %>" iconCssClass="icon-trash" label="document-types" />
+				<aui:nav-item href="<%= taglibURL %>" iconClass="icon-trash" label="document-types" />
 
 				<%
 				taglibURL = "javascript:" + renderResponse.getNamespace() + "openDDMStructureView()";
 				%>
 
-				<aui:nav-item href="<%= taglibURL %>" iconCssClass="icon-trash" label="metadata-sets" />
+				<aui:nav-item href="<%= taglibURL %>" iconClass="icon-trash" label="metadata-sets" />
 			</aui:nav-item>
 		</c:if>
 	</aui:nav>
