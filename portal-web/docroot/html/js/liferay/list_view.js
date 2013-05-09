@@ -189,9 +189,14 @@ AUI.add(
 
 						dataContainer.show();
 
-						var transitionConfig = instance.get('transitionConfig');
+//						var transitionConfig = instance.get('transitionConfig');
 
-						dataContainer.transition(transitionConfig, instance._transitionCompleteProxy);
+//						dataContainer.transition(transitionConfig, instance._transitionCompleteProxy);
+
+						instance.get(CONTENT_BOX).setContent(dataContainer.getDOM().childNodes);
+
+						dataContainer.hide();
+						dataContainer.empty();
 					},
 
 					_setData: function(value) {
