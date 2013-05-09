@@ -128,6 +128,7 @@ if (!categories.isEmpty() || !portlets.isEmpty()) {
 							data.put("instanceable", portletInstanceable);
 							data.put("plid", plid);
 							data.put("portlet-id", portlet.getPortletId());
+							data.put("search", divId.toString().replace(':', '-'));
 							data.put("title", PortalUtil.getPortletTitle(portlet, application, locale));
 
 							String cssClass = "lfr-portlet-item";
