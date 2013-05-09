@@ -45,6 +45,10 @@ public class BaseNavItemTag extends com.liferay.taglib.util.IncludeTag {
 		return _cssClass;
 	}
 
+	public java.lang.Object getData() {
+		return _data;
+	}
+
 	public boolean getDropdown() {
 		return _dropdown;
 	}
@@ -89,6 +93,12 @@ public class BaseNavItemTag extends com.liferay.taglib.util.IncludeTag {
 		_cssClass = cssClass;
 
 		setScopedAttribute("cssClass", cssClass);
+	}
+
+	public void setData(java.lang.Object data) {
+		_data = data;
+
+		setScopedAttribute("data", data);
 	}
 
 	public void setDropdown(boolean dropdown) {
@@ -138,6 +148,7 @@ public class BaseNavItemTag extends com.liferay.taglib.util.IncludeTag {
 		_anchorCssClass = null;
 		_anchorId = null;
 		_cssClass = null;
+		_data = null;
 		_dropdown = false;
 		_href = "javascript:void(0);";
 		_iconClass = null;
@@ -162,6 +173,7 @@ public class BaseNavItemTag extends com.liferay.taglib.util.IncludeTag {
 		setNamespacedAttribute(request, "anchorCssClass", _anchorCssClass);
 		setNamespacedAttribute(request, "anchorId", _anchorId);
 		setNamespacedAttribute(request, "cssClass", _cssClass);
+		setNamespacedAttribute(request, "data", _data);
 		setNamespacedAttribute(request, "dropdown", _dropdown);
 		setNamespacedAttribute(request, "href", _href);
 		setNamespacedAttribute(request, "iconClass", _iconClass);
@@ -182,6 +194,7 @@ public class BaseNavItemTag extends com.liferay.taglib.util.IncludeTag {
 	private java.lang.String _anchorCssClass = null;
 	private java.lang.String _anchorId = null;
 	private java.lang.String _cssClass = null;
+	private java.lang.Object _data = null;
 	private boolean _dropdown = false;
 	private java.lang.Object _href = "javascript:void(0);";
 	private java.lang.String _iconClass = null;

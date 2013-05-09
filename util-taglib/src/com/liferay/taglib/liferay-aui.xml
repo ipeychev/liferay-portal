@@ -690,6 +690,11 @@
 				<outputType>java.lang.String</outputType>
 			</attribute>
 			<attribute>
+				<name>data</name>
+				<inputType>java.lang.Object</inputType>
+				<outputType>java.util.Map</outputType>				
+			</attribute>
+			<attribute>
 				<name>dropdown</name>
 				<inputType>boolean</inputType>
 				<outputType>boolean</outputType>
