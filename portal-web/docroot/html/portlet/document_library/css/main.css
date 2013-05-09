@@ -138,8 +138,14 @@
 		background-color: #FDD;
 	}
 
-	.expand-folder {
-		float: right;
+	.expand-folder-container {
+		position: absolute;
+		right: 0;
+		top: 0;
+
+		.expand-folder {
+			float: right;
+		}
 	}
 
 	.folder-search {

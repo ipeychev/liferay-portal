@@ -135,6 +135,7 @@ else if (((folderId != rootFolderId) && (parentFolderId == 0)) || ((folderId == 
 					Map<String, Object> dataExpand = new HashMap<String, Object>();
 
 					dataExpand.put("folder-id", rootFolderId);
+					dataExpand.put("expand-folder", Boolean.TRUE);
 
 					Map<String, Object> dataView = new HashMap<String, Object>();
 
@@ -297,6 +298,7 @@ else if (((folderId != rootFolderId) && (parentFolderId == 0)) || ((folderId == 
 								dataExpand = new HashMap<String, Object>();
 
 								dataExpand.put("folder-id", mountFolder.getFolderId());
+								dataExpand.put("expand-folder", Boolean.TRUE);
 
 								dataView = new HashMap<String, Object>();
 
@@ -368,6 +370,7 @@ else if (((folderId != rootFolderId) && (parentFolderId == 0)) || ((folderId == 
 					Map<String, Object> dataExpand = new HashMap<String, Object>();
 
 					dataExpand.put("folder-id", parentFolderId);
+					dataExpand.put("direction-right", Boolean.TRUE);
 
 					Map<String, Object> dataView = new HashMap<String, Object>();
 
@@ -411,6 +414,7 @@ else if (((folderId != rootFolderId) && (parentFolderId == 0)) || ((folderId == 
 						dataExpand = new HashMap<String, Object>();
 
 						dataExpand.put("folder-id", curFolder.getFolderId());
+						dataExpand.put("expand-folder", Boolean.TRUE);
 
 						dataView = new HashMap<String, Object>();
 
