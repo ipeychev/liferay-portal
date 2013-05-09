@@ -208,6 +208,7 @@ if (folder != null) {
 					height: '<%= PrefsPropsUtil.getLong(PropsKeys.DL_FILE_ENTRY_THUMBNAIL_MAX_HEIGHT) %>',
 					width: '<%= PrefsPropsUtil.getLong(PropsKeys.DL_FILE_ENTRY_THUMBNAIL_MAX_WIDTH) %>'
 				},
+				'listViewConfig.useTransition': false,
 				mainUrl: '<%= mainURL %>',
 				strutsAction: '/document_library/view'
 			},
