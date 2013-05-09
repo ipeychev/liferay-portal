@@ -37,6 +37,10 @@ public class BaseNavItemTag extends com.liferay.taglib.util.IncludeTag {
 		return _anchorCssClass;
 	}
 
+	public java.lang.Object getAnchorData() {
+		return _anchorData;
+	}
+
 	public java.lang.String getAnchorId() {
 		return _anchorId;
 	}
@@ -81,6 +85,12 @@ public class BaseNavItemTag extends com.liferay.taglib.util.IncludeTag {
 		_anchorCssClass = anchorCssClass;
 
 		setScopedAttribute("anchorCssClass", anchorCssClass);
+	}
+
+	public void setAnchorData(java.lang.Object anchorData) {
+		_anchorData = anchorData;
+
+		setScopedAttribute("anchorData", anchorData);
 	}
 
 	public void setAnchorId(java.lang.String anchorId) {
@@ -146,6 +156,7 @@ public class BaseNavItemTag extends com.liferay.taglib.util.IncludeTag {
 	@Override
 	protected void cleanUp() {
 		_anchorCssClass = null;
+		_anchorData = null;
 		_anchorId = null;
 		_cssClass = null;
 		_data = null;
@@ -171,6 +182,7 @@ public class BaseNavItemTag extends com.liferay.taglib.util.IncludeTag {
 	@Override
 	protected void setAttributes(HttpServletRequest request) {
 		setNamespacedAttribute(request, "anchorCssClass", _anchorCssClass);
+		setNamespacedAttribute(request, "anchorData", _anchorData);
 		setNamespacedAttribute(request, "anchorId", _anchorId);
 		setNamespacedAttribute(request, "cssClass", _cssClass);
 		setNamespacedAttribute(request, "data", _data);
@@ -192,6 +204,7 @@ public class BaseNavItemTag extends com.liferay.taglib.util.IncludeTag {
 		"/html/taglib/aui/nav_item/start.jsp";
 
 	private java.lang.String _anchorCssClass = null;
+	private java.lang.Object _anchorData = null;
 	private java.lang.String _anchorId = null;
 	private java.lang.String _cssClass = null;
 	private java.lang.Object _data = null;
