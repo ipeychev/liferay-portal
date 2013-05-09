@@ -37,25 +37,25 @@ Group scopeGroup = themeDisplay.getScopeGroup();
 				String taglibOnClick = "javascript:Liferay.fire('" + renderResponse.getNamespace() + "editEntry', {action: '" + Constants.CANCEL_CHECKOUT + "'});";
 				%>
 
-				<aui:nav-item href="<%= taglibOnClick %>" iconCssClass="icon-trash" id="deleteSelectedTags" label="cancel-checkout[document]" />
+				<aui:nav-item href="<%= taglibOnClick %>" iconCssClass="icon-trash" label="cancel-checkout[document]" />
 
 				<%
 				taglibOnClick = "javascript:Liferay.fire('" + renderResponse.getNamespace() + "editEntry', {action: '" + Constants.CHECKIN + "'});";
 				%>
 
-				<aui:nav-item href="<%= taglibOnClick %>" iconCssClass="icon-trash" id="deleteSelectedTags" label="checkin" />
+				<aui:nav-item href="<%= taglibOnClick %>" iconCssClass="icon-trash" label="checkin" />
 
 				<%
 				taglibOnClick = "javascript:Liferay.fire('" + renderResponse.getNamespace() + "editEntry', {action: '" + Constants.CHECKOUT + "'});";
 				%>
 
-				<aui:nav-item href="<%= taglibOnClick %>" iconCssClass="icon-trash" id="deleteSelectedTags" label="checkout[document]" />
+				<aui:nav-item href="<%= taglibOnClick %>" iconCssClass="icon-trash" label="checkout[document]" />
 
 				<%
 				taglibOnClick = "javascript:Liferay.fire('" + renderResponse.getNamespace() + "editEntry', {action: '" + Constants.MOVE + "'});";
 				%>
 
-				<aui:nav-item href="<%= taglibOnClick %>" iconCssClass="icon-trash" id="deleteSelectedTags" label="move" />
+				<aui:nav-item href="<%= taglibOnClick %>" iconCssClass="icon-trash" label="move" />
 			</c:if>
 
 			<%
