@@ -38,7 +38,6 @@ if (browseUp) {
 	data.put("direction-right", Boolean.TRUE);
 }
 else {
-	data.put("expand-folder", Boolean.TRUE);
 	data.put("view-folders", Boolean.FALSE);
 }
 %>
@@ -54,8 +53,8 @@ else {
 	</c:if>
 
 	<c:if test="<%= showExpand %>">
-		<span>
-			<a class="<%= "expand-" + cssClass %>" <%= AUIUtil.buildData(dataView) %> data-view-entries="<%= Boolean.FALSE.toString() %>" <%= AUIUtil.buildData(dataExpand) %> href="<%= expandURL.toString() %>">
+		<span class="expand-folder-container">
+			<a class="<%= "expand-" + cssClass %>" data-view-entries="<%= Boolean.FALSE.toString() %>" <%= AUIUtil.buildData(dataExpand) %> href="<%= expandURL.toString() %>">
 				<liferay-ui:icon cssClass='<%= "expand-" + cssClass + "-arrow" %>' image='<%= browseUp ? "../aui/carat-1-l" : "../aui/carat-1-r" %>' message="expand" />
 			</a>
 		</span>
