@@ -1,9 +1,8 @@
 @import "compass";
 
 .btn-toolbar {
-	.control-group {
+	.control-group-inline {
 		display: inline;
-		padding-right: 5px;
 
 		input {
 			margin-bottom: 0;
@@ -12,6 +11,10 @@
 		select {
 			margin-bottom: 0;
 		}
+	}
+
+	.control-group-inline, .btn-group {
+		margin-right: 5px;
 	}
 }
 
@@ -25,11 +28,31 @@
 	}
 }
 
+.lfr-add-item {
+	color: #3EA9DB;
+	cursor: move;
+	margin: 0;
+
+	&:hover {
+		background-color: #eeeeee;
+		color: #006076;
+
+		.add-content-item {
+			display: inline;
+		}
+	}
+
+	.add-content-item {
+		cursor: pointer;
+		display: none;
+	}
+}
+
 .lfr-content-preview-popup {
 
 	&.tooltip {
 		max-width: 250px;
-		padding-left: 25px;
+		padding-left: 16px;
 	}
 
 	.lfr-content-preview-popup-content {

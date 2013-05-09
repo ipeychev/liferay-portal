@@ -61,7 +61,7 @@
 							<div class="container-fluid">
 
 							<div class="btn-toolbar">
-								<aui:input cssClass="input-medium" label="" name="searchContentInput" type="text" />
+								<aui:input cssClass="input-medium" inlineField="<%= true %>" label="" name="searchContentInput" type="text" />
 
 								<%
 								String displayStyleDefault = GetterUtil.getString(SessionClicks.get(request, "liferay_addpanel_displaystyle", "descriptive"));
@@ -69,7 +69,7 @@
 								String displayStyle = ParamUtil.getString(request, "displayStyle", displayStyleDefault);
 								%>
 
-								<div class="control-group" id="<portlet:namespace />styleButtons">
+								<div class="btn-group" id="<portlet:namespace />styleButtons">
 									<aui:button cssClass='<%= displayStyle.equals("icon") ? "active" : StringPool.BLANK %>'
 										icon="icon-th-large"
 										data-style="icon" />
@@ -83,7 +83,7 @@
 										data-style="list" />
 								</div>
 
-								<aui:select cssClass="input-mini" label="" name="numItems">
+								<aui:select cssClass="input-mini" inlineField="<%= true %>" label="" name="numItems">
 
 									<%
 									for (int curDelta : PropsValues.SEARCH_CONTAINER_PAGE_DELTA_VALUES) {
@@ -153,60 +153,54 @@
 										<div class="lfr-add-content">
 											<liferay-ui:panel collapsible="<%= layout.isTypePortlet() %>" cssClass="lfr-content-category lfr-component panel-page-category" extended="<%= true %>" id="<%= panelId %>" persistState="<%= true %>" title='<%= LanguageUtil.get(pageContext, "highlighted") %>'>
 
-												<%
-												for (Portlet portlet : portlets) {
-													if (!PortletPermissionUtil.contains(permissionChecker, layout, portlet.getPortletId(), ActionKeys.ADD_TO_PAGE)) {
-														continue;
-													}
+												<aui:nav cssClass="nav-list">
+													<%
+													for (Portlet portlet : portlets) {
+														if (!PortletPermissionUtil.contains(permissionChecker, layout, portlet.getPortletId(), ActionKeys.ADD_TO_PAGE)) {
+															continue;
+														}
 
-													boolean portletInstanceable = portlet.isInstanceable();
+														boolean portletInstanceable = portlet.isInstanceable();
 
-													boolean portletUsed = layoutTypePortlet.hasPortletId(portlet.getPortletId());
+														boolean portletUsed = layoutTypePortlet.hasPortletId(portlet.getPortletId());
 
-													boolean portletLocked = (!portletInstanceable && portletUsed);
+														boolean portletLocked = (!portletInstanceable && portletUsed);
 
-													Map<String, Object> data = new HashMap<String, Object>();
+														Map<String, Object> data = new HashMap<String, Object>();
 
-													data.put("id", renderResponse.getNamespace() + "portletItem" + portlet.getPortletId());
-													data.put("instanceable", portletInstanceable);
-													data.put("plid", plid);
-													data.put("portlet-id", portlet.getPortletId());
-													data.put("title", PortalUtil.getPortletTitle(portlet, application, locale));
+														data.put("draggable", "true");
+														data.put("id", renderResponse.getNamespace() + "portletItem" + portlet.getPortletId());
+														data.put("instanceable", portletInstanceable);
+														data.put("plid", plid);
+														data.put("portlet-id", portlet.getPortletId());
+														data.put("title", PortalUtil.getPortletTitle(portlet, application, locale));
 
-													String cssClass = "lfr-portlet-item";
+														String cssClass = "lfr-add-item";
 
-													if (portletLocked) {
-														cssClass += " lfr-portlet-used";
-													}
+														if (portletLocked) {
+															cssClass += " lfr-portlet-used";
+														}
 
-													if (portletInstanceable) {
-														cssClass += " lfr-instanceable";
-													}
-												%>
+														if (portletInstanceable) {
+															cssClass += " lfr-instanceable";
+														}
+													%>
 
-													<div class="content-item">
+													<aui:nav-item cssClass="lfr-add-item <%= cssClass %>"
+														data='<%= data %>'
+														href=""
+														iconClass='<%= portletInstanceable ? "icon-th-large" : "icon-stop" %>'
+														label="<%= PortalUtil.getPortletTitle(portlet, application, locale) %>" >
+
 														<span <%= AUIUtil.buildData(data) %> class='pull-right add-content-item <%= portletLocked ? "lfr-portlet-used" : StringPool.BLANK %>'>
 															<liferay-ui:message key="add" />
 														</span>
+													</aui:nav-item>
 
-														<%
-														data.put("draggable", Boolean.TRUE.toString());
-														%>
-
-														<liferay-ui:app-view-entry
-															cssClass="<%= cssClass %>"
-															data="<%= data %>"
-															displayStyle="list"
-															showCheckbox="<%= false %>"
-															showLinkTitle="<%= false %>"
-															thumbnailSrc="<%= StringPool.BLANK %>"
-															title="<%= PortalUtil.getPortletTitle(portlet, application, locale) %>"
-														/>
-													</div>
-
-												<%
-												}
-												%>
+													<%
+													}
+													%>
+												</aui:nav>
 
 											</liferay-ui:panel>
 										</div>
