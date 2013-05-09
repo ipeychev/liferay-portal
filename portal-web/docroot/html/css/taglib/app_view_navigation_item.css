@@ -1,14 +1,4 @@
-.nav-container {
-	.app-view-navigation-entry {
-		list-style: none;
-		margin-top: 2px;
-		position: relative;
-
-		.active-area {
-			background-color: #5AD300;
-		}
-	}
-
+.navigation-pane {
 	.body-row {
 		height: 100%;
 		overflow: hidden;
@@ -27,20 +17,13 @@
 		}
 
 		.app-view-navigation-entry {
-			&.folder.error, a {
+			position: relative;
+			
+			&.folder.error {
 				color: #34404F;
 				display: block;
 				padding: 6px 8px;
 				text-decoration: none;
-			}
-
-			&.selected {
-				background-color: #00a2ea;
-
-				a {
-					color: #FFF;
-					font-weight: bold;
-				}
 			}
 
 			.overlay.entry-action {

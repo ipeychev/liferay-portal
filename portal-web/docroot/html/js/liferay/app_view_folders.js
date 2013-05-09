@@ -9,7 +9,7 @@ AUI.add(
 
 		var owns = AObject.owns;
 
-		var CSS_SELECTED = 'selected';
+		var CSS_SELECTED = 'active';
 
 		var DATA_DIRECTION_RIGHT = 'data-direction-right';
 
@@ -306,7 +306,7 @@ AUI.add(
 					_afterListViewItemChange: function(event) {
 						var instance = this;
 
-						var selFolder = A.one('.folder.selected');
+						var selFolder = A.one('.folder.active');
 
 						if (selFolder) {
 							selFolder.removeClass(CSS_SELECTED);
