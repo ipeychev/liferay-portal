@@ -112,9 +112,9 @@ boolean viewPreview = ParamUtil.getBoolean(request, "viewPreview");
 					data.put("title", title);
 				%>
 
-					<div class="content-item display-style-<%= HtmlUtil.escapeAttribute(displayStyle) %>">
+					<div class='content-item display-style-<%= displayStyle %> <%= displayStyle.equals("icon") ? "span6" : "span12" %>'>
 						<c:if test='<%= !displayStyle.equals("icon") %>'>
-							<span <%= AUIUtil.buildData(data) %> class="add-content-item">
+							<span <%= AUIUtil.buildData(data) %> class="add-content-item pull-right">
 								<liferay-ui:message key="add" />
 							</span>
 						</c:if>

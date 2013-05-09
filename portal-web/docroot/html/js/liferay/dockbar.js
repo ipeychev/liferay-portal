@@ -18,7 +18,7 @@ AUI.add(
 
 		var EVENT_CLICK = 'click';
 
-		var TPL_ADD_CONTENT = '<div class="lfr-add-panel" />';
+		var TPL_ADD_CONTENT = '<div class="span4" />';
 
 		var TPL_LOADING = '<div class="loading-animation" />';
 
@@ -217,7 +217,7 @@ AUI.add(
 
 						addPanelNode.plug(A.Plugin.ParseContent);
 
-						BODY.appendChild(addPanelNode);
+						A.one('#wrapper .row-fluid').prepend(addPanelNode);
 
 						addPanelNode.set('id', instance._namespace + 'addPanelSidebar');
 
@@ -241,9 +241,13 @@ AUI.add(
 					instance._addPanel();
 
 					addPanelNode.show();
+
+					A.one('#wrapper-portlets').replaceClass('span12', 'span8');
 				}
 				else {
 					addPanelNode.hide();
+
+					A.one('#wrapper-portlets').replaceClass('span8', 'span12');
 				}
 			},
 

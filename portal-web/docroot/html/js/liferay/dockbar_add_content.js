@@ -15,7 +15,7 @@ AUI.add(
 
 		var DATA_STYLE = 'data-style';
 
-		var SELECTOR_BUTTON = '.button';
+		var SELECTOR_BUTTON = '.btn';
 
 		var STR_ACTION = 'action';
 
@@ -44,12 +44,11 @@ AUI.add(
 						instance._addApplicationForm = instance.byId('addApplicationForm');
 						instance._addContentForm = instance.byId('addContentForm');
 						instance._addPanelContainer = instance.byId('addPanelContainer');
-						instance._closePanel = instance.byId('closePanel');
+						instance._closePanel = instance._addPanelContainer.one('#closePanel');
 						instance._entriesContainer = instance.byId('entriesContainer');
 						instance._numItems = instance.byId('numItems');
 						instance._searchContentInput = instance.byId('searchContentInput');
 						instance._styleButtonsList = instance.byId('styleButtons');
-
 						instance._styleButtons = instance._styleButtonsList.all(SELECTOR_BUTTON);
 
 						instance._bindUI();
@@ -211,7 +210,7 @@ AUI.add(
 
 						var currentTarget = event.currentTarget;
 
-						currentTarget.radioClass('selected');
+						currentTarget.radioClass('active');
 
 						var displayStyle = currentTarget.attr(DATA_STYLE);
 
@@ -253,7 +252,7 @@ AUI.add(
 					_refreshContentList: function(event) {
 						var instance = this;
 
-						var styleButton = instance._styleButtonsList.one('.selected');
+						var styleButton = instance._styleButtonsList.one('.active');
 
 						var displayStyle = styleButton.attr(DATA_STYLE);
 
