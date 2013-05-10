@@ -36,7 +36,7 @@ boolean viewPreview = ParamUtil.getBoolean(request, "viewPreview");
 			%>
 
 			<liferay-ui:panel collapsible="<%= false %>" cssClass="clearfix lfr-component panel-page-category recent" extended="<%= true %>" id="manageRecentPanel" persistState="<%= true %>" title="<%= panelTitle %>">
-				<aui:nav cssClass="nav-list">
+				<aui:nav cssClass="nav-list no-margin-nav-list">
 
 					<%
 					int deltaDefault = GetterUtil.getInteger(SessionClicks.get(request, "liferay_addpanel_numitems", "10"));
@@ -114,7 +114,7 @@ boolean viewPreview = ParamUtil.getBoolean(request, "viewPreview");
 						data.put("title", title);
 					%>
 
-						<aui:nav-item cssClass='<%= displayStyle.equals("icon") ? "span6 content-shortcut lfr-add-item" : "has-preview content-shortcut lfr-add-item" %>'
+						<aui:nav-item cssClass='<%= displayStyle.equals("icon") ? "span6 content-shortcut lfr-add-item" : "row-fluid has-preview content-shortcut lfr-add-item" %>'
 							data="<%= data %>"
 							href=""
 							iconClass='<%= displayStyle.equals("icon") ? "" : "icon-file" %>'
@@ -122,10 +122,10 @@ boolean viewPreview = ParamUtil.getBoolean(request, "viewPreview");
 
 							<c:choose>
 								<c:when test='<%= !displayStyle.equals("list") %>' >
-									<img src='<%= displayStyle.equals("list") ? assetRenderer.getIconPath(liferayPortletRequest) : assetRenderer.getThumbnailPath(liferayPortletRequest) %>' />
+									<img class='<%= displayStyle.equals("descriptive") ? "span4" : StringPool.BLANK %>' src='<%= assetRenderer.getThumbnailPath(liferayPortletRequest) %>' />
 
 									<c:if test='<%= displayStyle.equals("descriptive") %>' >
-										<div class="pull-right">
+										<div class="span8">
 											<div><%= title %></div>
 											<div><%= StringUtil.shorten(assetRenderer.getSummary(themeDisplay.getLocale()), 120) %></div>
 										</div>

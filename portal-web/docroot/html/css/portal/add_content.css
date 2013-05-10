@@ -31,7 +31,8 @@
 .lfr-add-item {
 	color: #3EA9DB;
 	cursor: move;
-	margin: 0;
+	margin: 0 -15px 0 -15px;
+	padding: 0 15px 0 15px;
 
 	&:hover {
 		background-color: #eeeeee;
@@ -45,80 +46,8 @@
 	.add-content-item {
 		cursor: pointer;
 		display: none;
-	}
-}
-
-.lfr-content-preview-popup {
-
-	&.tooltip {
-		max-width: 250px;
-		padding-left: 16px;
-	}
-
-	.lfr-content-preview-popup-content {
-		margin: 0;
-		overflow: hidden;
-		padding: 10px;
-		width: 230px;
-
-		.add-button-preview {
-			float: right;
-		}
-
-		.asset-information {
-			margin-bottom: 20px;
-		}
-
-		.asset-image-preview {
-			margin-bottom: 5px;
-			text-align: center;
-
-			img {
-				max-width: 230px;
-			}
-		}
-
-		.asset-metadata {
-			margin-bottom: 20px;
-
-			.categories {
-				margin-bottom: 5px;
-			}
-		}
-
-		.asset-summary {
-			margin-bottom: 20px;
-		}
-
-		.asset-title {
-			margin-bottom: 5px;
-		}
-	}
-}
-
-/* Skin */
-
-.lfr-content-preview-popup {
-	.lfr-content-preview-popup-content {
-		background: #FFF;
-		border-width: 0;
-
-		.asset-information {
-			font-size: 10px;
-
-			.user-name {
-				color: #369;
-			}
-		}
-
-		.asset-summary {
-			font-size: 12px;
-		}
-
-		.asset-title {
-			color: #369;
-			font-size: 14px;
-		}
+		margin-left: -15px;
+		margin-right: 15px;
 	}
 }
 
