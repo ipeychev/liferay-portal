@@ -15,9 +15,8 @@
 package com.liferay.portlet.blogs.lar;
 
 import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
-import com.liferay.portal.kernel.dao.orm.DynamicQuery;
-import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.lar.BasePortletDataHandler;
+import com.liferay.portal.kernel.lar.ManifestSummary;
 import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.lar.PortletDataHandlerBoolean;
 import com.liferay.portal.kernel.lar.PortletDataHandlerControl;
@@ -27,7 +26,7 @@ import com.liferay.portal.util.PropsValues;
 import com.liferay.portlet.blogs.model.BlogsEntry;
 import com.liferay.portlet.blogs.service.BlogsEntryLocalServiceUtil;
 import com.liferay.portlet.blogs.service.BlogsStatsUserLocalServiceUtil;
-import com.liferay.portlet.blogs.service.persistence.BlogsEntryActionableDynamicQuery;
+import com.liferay.portlet.blogs.service.persistence.BlogsEntryExportActionableDynamicQuery;
 
 import java.util.List;
 
@@ -95,28 +94,10 @@ public class BlogsPortletDataHandler extends BasePortletDataHandler {
 		rootElement.addAttribute(
 			"group-id", String.valueOf(portletDataContext.getScopeGroupId()));
 
-		ActionableDynamicQuery actionableDynamicQuery =
-			new BlogsEntryActionableDynamicQuery() {
+		ActionableDynamicQuery ationableDynamicQuery =
+			new BlogsEntryExportActionableDynamicQuery(portletDataContext);
 
-			@Override
-			protected void addCriteria(DynamicQuery dynamicQuery) {
-				portletDataContext.addDateRangeCriteria(
-					dynamicQuery, "modifiedDate");
-			}
-
-			@Override
-			protected void performAction(Object object) throws PortalException {
-				BlogsEntry entry = (BlogsEntry)object;
-
-				StagedModelDataHandlerUtil.exportStagedModel(
-					portletDataContext, entry);
-			}
-
-		};
-
-		actionableDynamicQuery.setGroupId(portletDataContext.getScopeGroupId());
-
-		actionableDynamicQuery.performActions();
+		ationableDynamicQuery.performActions();
 
 		return getExportDataRootElementString(rootElement);
 	}
@@ -142,6 +123,21 @@ public class BlogsPortletDataHandler extends BasePortletDataHandler {
 		}
 
 		return null;
+	}
+
+	@Override
+	protected void doPrepareManifestSummary(
+			PortletDataContext portletDataContext)
+		throws Exception {
+
+		ActionableDynamicQuery entryActionableDynamicQuery =
+			new BlogsEntryExportActionableDynamicQuery(portletDataContext);
+
+		ManifestSummary manifestSummary =
+			portletDataContext.getManifestSummary();
+
+		manifestSummary.addModelCount(
+			BlogsEntry.class, entryActionableDynamicQuery.performCount());
 	}
 
 }
