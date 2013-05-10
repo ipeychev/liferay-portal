@@ -54,8 +54,10 @@ else {
 	</c:if>
 
 	<c:if test="<%= showExpand %>">
-		<a class="<%= "expand-" + cssClass %>" <%= AUIUtil.buildData(dataView) %> data-view-entries="<%= Boolean.FALSE.toString() %>" <%= AUIUtil.buildData(dataExpand) %> href="<%= expandURL.toString() %>">
-			<liferay-ui:icon cssClass='<%= "expand-" + cssClass + "-arrow" %>' image='<%= browseUp ? "../aui/carat-1-l" : "../aui/carat-1-r" %>' message="expand" />
-		</a>
+		<span>
+			<a class="<%= "expand-" + cssClass %>" <%= AUIUtil.buildData(dataView) %> data-view-entries="<%= Boolean.FALSE.toString() %>" <%= AUIUtil.buildData(dataExpand) %> href="<%= expandURL.toString() %>">
+				<liferay-ui:icon cssClass='<%= "expand-" + cssClass + "-arrow" %>' image='<%= browseUp ? "../aui/carat-1-l" : "../aui/carat-1-r" %>' message="expand" />
+			</a>
+		</span>
 	</c:if>
 </aui:nav-item>
