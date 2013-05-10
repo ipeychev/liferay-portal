@@ -23,6 +23,7 @@ import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.lar.ExportImportPathUtil;
+import com.liferay.portal.kernel.lar.ManifestSummary;
 import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.lar.PortletDataContextListener;
 import com.liferay.portal.kernel.lar.PortletDataException;
@@ -70,6 +71,7 @@ import com.liferay.portal.service.ResourcePermissionLocalServiceUtil;
 import com.liferay.portal.service.RoleLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.TeamLocalServiceUtil;
+import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portlet.asset.NoSuchEntryException;
 import com.liferay.portlet.asset.model.AssetCategory;
@@ -141,13 +143,13 @@ import jodd.bean.BeanUtil;
  * @author Raymond Augé
  * @author Bruno Farache
  * @author Alexander Chow
+ * @author Mate Thurzo
  */
 public class PortletDataContextImpl implements PortletDataContext {
 
 	public PortletDataContextImpl(
 			long companyId, long groupId, Map<String, String[]> parameterMap,
-			Set<String> primaryKeys, Date startDate, Date endDate,
-			ZipWriter zipWriter)
+			Date startDate, Date endDate, ZipWriter zipWriter)
 		throws PortletDataException {
 
 		validateDateRange(startDate, endDate);
@@ -167,7 +169,6 @@ public class PortletDataContextImpl implements PortletDataContext {
 		_groupId = groupId;
 		_scopeGroupId = groupId;
 		_parameterMap = parameterMap;
-		_primaryKeys = primaryKeys;
 		_dataStrategy = null;
 		_userIdStrategy = null;
 		_startDate = startDate;
@@ -180,8 +181,7 @@ public class PortletDataContextImpl implements PortletDataContext {
 
 	public PortletDataContextImpl(
 		long companyId, long groupId, Map<String, String[]> parameterMap,
-		Set<String> primaryKeys, UserIdStrategy userIdStrategy,
-		ZipReader zipReader) {
+		UserIdStrategy userIdStrategy, ZipReader zipReader) {
 
 		_companyId = companyId;
 
@@ -198,12 +198,32 @@ public class PortletDataContextImpl implements PortletDataContext {
 		_groupId = groupId;
 		_scopeGroupId = groupId;
 		_parameterMap = parameterMap;
-		_primaryKeys = primaryKeys;
 		_dataStrategy = MapUtil.getString(
 			parameterMap, PortletDataHandlerKeys.DATA_STRATEGY,
 			PortletDataHandlerKeys.DATA_STRATEGY_MIRROR);
 		_userIdStrategy = userIdStrategy;
 		_zipReader = zipReader;
+		_zipWriter = null;
+
+		initXStream();
+	}
+
+	public PortletDataContextImpl(
+			ThemeDisplay themeDisplay, Date startDate, Date endDate)
+		throws PortletDataException {
+
+		validateDateRange(startDate, endDate);
+
+		_companyId = themeDisplay.getCompanyId();
+		_groupId = themeDisplay.getScopeGroupId();
+		_scopeGroupId = themeDisplay.getScopeGroupId();
+		_parameterMap = null;
+		_primaryKeys = null;
+		_dataStrategy = null;
+		_userIdStrategy = null;
+		_startDate = startDate;
+		_endDate = endDate;
+		_zipReader = null;
 		_zipWriter = null;
 
 		initXStream();
@@ -333,6 +353,10 @@ public class PortletDataContextImpl implements PortletDataContext {
 			if (className != null) {
 				element.addAttribute("class-name", className);
 			}
+		}
+
+		if (isPathProcessed(path)) {
+			return;
 		}
 
 		if (classedModel instanceof AuditedModel) {
@@ -608,38 +632,60 @@ public class PortletDataContextImpl implements PortletDataContext {
 	}
 
 	public Element addReferenceElement(
-		Element element, ClassedModel classedModel) {
+		StagedModel referrerStagedModel, Element element,
+		ClassedModel classedModel, boolean missing) {
 
 		return addReferenceElement(
-			element, classedModel, classedModel.getModelClassName(),
-			StringPool.BLANK);
+			referrerStagedModel, element, classedModel,
+			classedModel.getModelClassName(), StringPool.BLANK, missing);
 	}
 
 	public Element addReferenceElement(
-		Element element, ClassedModel classedModel, Class<?> clazz) {
+		StagedModel referrerStagedModel, Element element,
+		ClassedModel classedModel, Class<?> clazz, boolean missing) {
 
 		return addReferenceElement(
-			element, classedModel, clazz.getName(), StringPool.BLANK);
+			referrerStagedModel, element, classedModel, clazz.getName(),
+			StringPool.BLANK, missing);
 	}
 
 	public Element addReferenceElement(
-		Element element, ClassedModel classedModel, String binPath) {
+		StagedModel referrerStagedModel, Element element,
+		ClassedModel classedModel, String binPath, boolean missing) {
 
 		return addReferenceElement(
-			element, classedModel, classedModel.getModelClassName(), binPath);
+			referrerStagedModel, element, classedModel,
+			classedModel.getModelClassName(), binPath, missing);
 	}
 
 	public Element addReferenceElement(
-		Element element, ClassedModel classedModel, String className,
-		String binPath) {
+		StagedModel referrerStagedModel, Element element,
+		ClassedModel classedModel, String className, String binPath,
+		boolean missing) {
 
-		Element referencesElement = element.element("references");
-
-		if (referencesElement == null) {
-			referencesElement = element.addElement("references");
+		if (missing) {
+			addReferenceElement(
+				referrerStagedModel, element, classedModel, className, binPath,
+				false);
 		}
 
-		Element referenceElement = referencesElement.addElement("reference");
+		Element referenceElement = null;
+
+		if (!missing) {
+			Element referencesElement = element.element("references");
+
+			if (referencesElement == null) {
+				referencesElement = element.addElement("references");
+			}
+
+			referenceElement = referencesElement.addElement("reference");
+		}
+		else {
+			Element referencesElement = _missingReferencesElement;
+
+			referenceElement = referencesElement.addElement(
+				"missing-reference");
+		}
 
 		referenceElement.addAttribute("class-name", className);
 
@@ -661,7 +707,22 @@ public class PortletDataContextImpl implements PortletDataContext {
 			referenceElement.addAttribute("uuid", stagedModel.getUuid());
 		}
 
+		if (missing) {
+			referenceElement.addAttribute(
+				"referrerClassName", referrerStagedModel.getModelClassName());
+		}
+
 		return referenceElement;
+	}
+
+	public boolean addScopedPrimaryKey(Class<?> clazz, String primaryKey) {
+		boolean value = hasScopedPrimaryKey(clazz, primaryKey);
+
+		if (!value) {
+			_scopedPrimaryKeys.add(getPrimaryKeyString(clazz, primaryKey));
+		}
+
+		return value;
 	}
 
 	public void addZipEntry(String path, byte[] bytes) throws SystemException {
@@ -730,6 +791,10 @@ public class PortletDataContextImpl implements PortletDataContext {
 		catch (IOException ioe) {
 			throw new SystemException(ioe);
 		}
+	}
+
+	public void clearScopedPrimaryKeys() {
+		_scopedPrimaryKeys.clear();
 	}
 
 	public ServiceContext createServiceContext(
@@ -918,12 +983,20 @@ public class PortletDataContextImpl implements PortletDataContext {
 		return getImportDataElement(clazz.getSimpleName(), "path", path);
 	}
 
-	public String getLayoutPath(long layoutId) {
-		return ExportImportPathUtil.getLayoutPath(this, layoutId);
+	public String getLayoutPath(long plid) {
+		return ExportImportPathUtil.getLayoutPath(this, plid);
 	}
 
 	public Map<String, Lock> getLocks() {
 		return _locksMap;
+	}
+
+	public ManifestSummary getManifestSummary() {
+		return _manifestSummary;
+	}
+
+	public Element getMissingReferencesElement() {
+		return _missingReferencesElement;
 	}
 
 	public Map<?, ?> getNewPrimaryKeysMap(Class<?> clazz) {
@@ -990,6 +1063,10 @@ public class PortletDataContextImpl implements PortletDataContext {
 
 	public String getRootPath() {
 		return ExportImportPathUtil.getRootPath(this);
+	}
+
+	public Set<String> getScopedPrimaryKeys() {
+		return _scopedPrimaryKeys;
 	}
 
 	public long getScopeGroupId() {
@@ -1128,6 +1205,11 @@ public class PortletDataContextImpl implements PortletDataContext {
 
 	public boolean hasPrimaryKey(Class<?> clazz, String primaryKey) {
 		return _primaryKeys.contains(getPrimaryKeyString(clazz, primaryKey));
+	}
+
+	public boolean hasScopedPrimaryKey(Class<?> clazz, String primaryKey) {
+		return _scopedPrimaryKeys.contains(
+			getPrimaryKeyString(clazz, primaryKey));
 	}
 
 	public void importClassedModel(
@@ -1439,11 +1521,21 @@ public class PortletDataContextImpl implements PortletDataContext {
 		}
 	}
 
+	public boolean isPathExportedInScope(String path) {
+		return addScopedPrimaryKey(String.class, path);
+	}
+
+	public boolean isPathNotExportedInScope(String path) {
+		return !isPathExportedInScope(path);
+	}
+
 	public boolean isPathNotProcessed(String path) {
 		return !isPathProcessed(path);
 	}
 
 	public boolean isPathProcessed(String path) {
+		addScopedPrimaryKey(String.class, path);
+
 		return addPrimaryKey(String.class, path);
 	}
 
@@ -1491,6 +1583,10 @@ public class PortletDataContextImpl implements PortletDataContext {
 
 	public void setImportDataRootElement(Element importDataRootElement) {
 		_importDataRootElement = importDataRootElement;
+	}
+
+	public void setMissingReferencesElement(Element missingReferencesElement) {
+		_missingReferencesElement = missingReferencesElement;
 	}
 
 	public void setOldPlid(long oldPlid) {
@@ -1913,6 +2009,8 @@ public class PortletDataContextImpl implements PortletDataContext {
 	private long _groupId;
 	private Element _importDataRootElement;
 	private Map<String, Lock> _locksMap = new HashMap<String, Lock>();
+	private ManifestSummary _manifestSummary = new ManifestSummary();
+	private Element _missingReferencesElement;
 	private Map<String, Map<?, ?>> _newPrimaryKeysMaps =
 		new HashMap<String, Map<?, ?>>();
 	private Set<String> _notUniquePerLayout = new HashSet<String>();
@@ -1922,10 +2020,11 @@ public class PortletDataContextImpl implements PortletDataContext {
 		new HashMap<String, List<KeyValuePair>>();
 	private long _plid;
 	private PortletDataContextListener _portletDataContextListener;
-	private Set<String> _primaryKeys;
+	private Set<String> _primaryKeys = new HashSet<String>();
 	private boolean _privateLayout;
 	private Map<String, List<RatingsEntry>> _ratingsEntriesMap =
 		new HashMap<String, List<RatingsEntry>>();
+	private Set<String> _scopedPrimaryKeys = new HashSet<String>();
 	private long _scopeGroupId;
 	private String _scopeLayoutUuid;
 	private String _scopeType;

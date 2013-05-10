@@ -90,7 +90,6 @@ import java.io.IOException;
 
 import java.util.Date;
 import java.util.Enumeration;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -108,6 +107,136 @@ import org.apache.commons.lang.time.StopWatch;
  * @author Mate Thurzo
  */
 public class PortletExporter {
+
+	public void exportPortletData(
+			PortletDataContext portletDataContext, Portlet portlet,
+			Layout layout, javax.portlet.PortletPreferences jxPreferences,
+			Element parentElement)
+		throws Exception {
+
+		if (portlet == null) {
+			return;
+		}
+
+		PortletDataHandler portletDataHandler =
+			portlet.getPortletDataHandlerInstance();
+
+		if (portletDataHandler == null) {
+			return;
+		}
+
+		String portletId = portlet.getPortletId();
+
+		Group liveGroup = layout.getGroup();
+
+		if (liveGroup.isStagingGroup()) {
+			liveGroup = liveGroup.getLiveGroup();
+		}
+
+		boolean staged = liveGroup.isStagedPortlet(portlet.getRootPortletId());
+
+		if (!staged && ExportImportThreadLocal.isLayoutExportInProcess()) {
+			if (_log.isDebugEnabled()) {
+				_log.debug(
+					"Not exporting data for " + portletId +
+						" because it is configured not to be staged");
+			}
+
+			return;
+		}
+
+		if (_log.isDebugEnabled()) {
+			_log.debug("Exporting data for " + portletId);
+		}
+
+		StringBundler sb = new StringBundler(4);
+
+		sb.append(
+			ExportImportPathUtil.getPortletPath(portletDataContext, portletId));
+		sb.append(StringPool.SLASH);
+
+		if (portlet.isPreferencesUniquePerLayout()) {
+			sb.append(layout.getPlid());
+		}
+		else {
+			sb.append(portletDataContext.getScopeGroupId());
+		}
+
+		sb.append("/portlet-data.xml");
+
+		String path = sb.toString();
+
+		if (!portletDataContext.isPathNotProcessed(path)) {
+			return;
+		}
+
+		long lastPublishDate = GetterUtil.getLong(
+			jxPreferences.getValue("last-publish-date", StringPool.BLANK));
+
+		Date startDate = portletDataContext.getStartDate();
+
+		if ((lastPublishDate > 0) && (startDate != null) &&
+			(lastPublishDate < startDate.getTime())) {
+
+			portletDataContext.setStartDate(new Date(lastPublishDate));
+		}
+
+		String data = null;
+
+		long groupId = portletDataContext.getGroupId();
+
+		portletDataContext.setGroupId(portletDataContext.getScopeGroupId());
+
+		try {
+			data = portletDataHandler.exportData(
+				portletDataContext, portletId, jxPreferences);
+		}
+		catch (Exception e) {
+			throw new SystemException(e);
+		}
+		finally {
+			portletDataContext.setGroupId(groupId);
+			portletDataContext.setStartDate(startDate);
+		}
+
+		if (Validator.isNull(data)) {
+			if (_log.isDebugEnabled()) {
+				_log.debug(
+					"Not exporting data for " + portletId +
+						" because null data was returned");
+			}
+
+			return;
+		}
+
+		Element portletDataElement = parentElement.addElement("portlet-data");
+
+		portletDataElement.addAttribute("path", path);
+
+		portletDataContext.addZipEntry(path, data);
+
+		Date endDate = portletDataContext.getEndDate();
+
+		if (endDate != null) {
+			try {
+				jxPreferences.setValue(
+					"last-publish-date", String.valueOf(endDate.getTime()));
+
+				jxPreferences.store();
+			}
+			catch (UnsupportedOperationException uoe) {
+				if (_log.isDebugEnabled()) {
+					_log.debug(
+						"Not updating the portlet setup for " + portletId +
+							" because no setup was returned for the current " +
+								"page");
+				}
+			}
+			catch (Exception e) {
+				_log.error(e, e);
+			}
+		}
+	}
 
 	@Deprecated
 	public byte[] exportPortletInfo(
@@ -250,8 +379,8 @@ public class PortletExporter {
 		}
 
 		PortletDataContext portletDataContext = new PortletDataContextImpl(
-			layout.getCompanyId(), scopeGroupId, parameterMap,
-			new HashSet<String>(), startDate, endDate, zipWriter);
+			layout.getCompanyId(), scopeGroupId, parameterMap, startDate,
+			endDate, zipWriter);
 
 		portletDataContext.setPortetDataContextListener(
 			new PortletDataContextListenerImpl(portletDataContext));
@@ -296,6 +425,12 @@ public class PortletExporter {
 		headerElement.addAttribute(
 			"root-portlet-id", PortletConstants.getRootPortletId(portletId));
 
+		Element missingReferencesElement = rootElement.addElement(
+			"missing-references");
+
+		portletDataContext.setMissingReferencesElement(
+			missingReferencesElement);
+
 		exportPortlet(
 			portletDataContext, layoutCache, portletId, layout, rootElement,
 			defaultUserId, exportPermissions, exportPortletArchivedSetups,
@@ -322,6 +457,8 @@ public class PortletExporter {
 		if (_log.isInfoEnabled()) {
 			_log.info("Exporting portlet took " + stopWatch.getTime() + " ms");
 		}
+
+		portletDataContext.clearScopedPrimaryKeys();
 
 		try {
 			portletDataContext.addZipEntry(
@@ -965,136 +1102,6 @@ public class PortletExporter {
 			}
 
 			portletDataContext.addPrimaryKey(String.class, path);
-		}
-	}
-
-	protected void exportPortletData(
-			PortletDataContext portletDataContext, Portlet portlet,
-			Layout layout, javax.portlet.PortletPreferences jxPreferences,
-			Element parentElement)
-		throws Exception {
-
-		if (portlet == null) {
-			return;
-		}
-
-		PortletDataHandler portletDataHandler =
-			portlet.getPortletDataHandlerInstance();
-
-		if (portletDataHandler == null) {
-			return;
-		}
-
-		String portletId = portlet.getPortletId();
-
-		Group liveGroup = layout.getGroup();
-
-		if (liveGroup.isStagingGroup()) {
-			liveGroup = liveGroup.getLiveGroup();
-		}
-
-		boolean staged = liveGroup.isStagedPortlet(portlet.getRootPortletId());
-
-		if (!staged && ExportImportThreadLocal.isLayoutExportInProcess()) {
-			if (_log.isDebugEnabled()) {
-				_log.debug(
-					"Not exporting data for " + portletId +
-						" because it is configured not to be staged");
-			}
-
-			return;
-		}
-
-		if (_log.isDebugEnabled()) {
-			_log.debug("Exporting data for " + portletId);
-		}
-
-		StringBundler sb = new StringBundler(4);
-
-		sb.append(
-			ExportImportPathUtil.getPortletPath(portletDataContext, portletId));
-		sb.append(StringPool.SLASH);
-
-		if (portlet.isPreferencesUniquePerLayout()) {
-			sb.append(layout.getPlid());
-		}
-		else {
-			sb.append(portletDataContext.getScopeGroupId());
-		}
-
-		sb.append("/portlet-data.xml");
-
-		String path = sb.toString();
-
-		if (!portletDataContext.isPathNotProcessed(path)) {
-			return;
-		}
-
-		long lastPublishDate = GetterUtil.getLong(
-			jxPreferences.getValue("last-publish-date", StringPool.BLANK));
-
-		Date startDate = portletDataContext.getStartDate();
-
-		if ((lastPublishDate > 0) && (startDate != null) &&
-			(lastPublishDate < startDate.getTime())) {
-
-			portletDataContext.setStartDate(new Date(lastPublishDate));
-		}
-
-		String data = null;
-
-		long groupId = portletDataContext.getGroupId();
-
-		portletDataContext.setGroupId(portletDataContext.getScopeGroupId());
-
-		try {
-			data = portletDataHandler.exportData(
-				portletDataContext, portletId, jxPreferences);
-		}
-		catch (Exception e) {
-			throw new SystemException(e);
-		}
-		finally {
-			portletDataContext.setGroupId(groupId);
-			portletDataContext.setStartDate(startDate);
-		}
-
-		if (Validator.isNull(data)) {
-			if (_log.isDebugEnabled()) {
-				_log.debug(
-					"Not exporting data for " + portletId +
-						" because null data was returned");
-			}
-
-			return;
-		}
-
-		Element portletDataElement = parentElement.addElement("portlet-data");
-
-		portletDataElement.addAttribute("path", path);
-
-		portletDataContext.addZipEntry(path, data);
-
-		Date endDate = portletDataContext.getEndDate();
-
-		if (endDate != null) {
-			try {
-				jxPreferences.setValue(
-					"last-publish-date", String.valueOf(endDate.getTime()));
-
-				jxPreferences.store();
-			}
-			catch (UnsupportedOperationException uoe) {
-				if (_log.isDebugEnabled()) {
-					_log.debug(
-						"Not updating the portlet setup for " + portletId +
-							" because no setup was returned for the current " +
-								"page");
-				}
-			}
-			catch (Exception e) {
-				_log.error(e, e);
-			}
 		}
 	}
 
