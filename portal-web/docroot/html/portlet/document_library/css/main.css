@@ -142,10 +142,6 @@
 		position: absolute;
 		right: 0;
 		top: 0;
-
-		.expand-folder {
-			float: right;
-		}
 	}
 
 	.folder-search {
