@@ -105,25 +105,25 @@ if (!inlineEdit) {
 		</c:if>
 
 		<script type="text/javascript">
-			Liferay.namespace('EDITORS')['<%= editorImpl %>'] = true;
+			Liferay.namespace('EDITORS')['<%= HtmlUtil.escapeJS(editorImpl) %>'] = true;
 		</script>
 	</liferay-util:html-top>
 </c:if>
 
 <aui:script>
-	window['<%= name %>'] = {
+	window['<%= HtmlUtil.escapeJS(name) %>'] = {
 		destroy: function() {
-			CKEDITOR.instances['<%= name %>'].destroy();
+			CKEDITOR.instances['<%= HtmlUtil.escapeJS(name) %>'].destroy();
 
-			window['<%= name %>'] = null;
+			window['<%= HtmlUtil.escapeJS(name) %>'] = null;
 		},
 
 		focus: function() {
-			CKEDITOR.instances['<%= name %>'].focus();
+			CKEDITOR.instances['<%= HtmlUtil.escapeJS(name) %>'].focus();
 		},
 
 		getCkData: function() {
-			var data = CKEDITOR.instances['<%= name %>'].getData();
+			var data = CKEDITOR.instances['<%= HtmlUtil.escapeJS(name) %>'].getData();
 
 			if (CKEDITOR.env.gecko && (CKEDITOR.tools.trim(data) == '<br />')) {
 				data = '';
@@ -133,11 +133,11 @@ if (!inlineEdit) {
 		},
 
 		getHTML: function() {
-			return window['<%= name %>'].getCkData();
+			return window['<%= HtmlUtil.escapeJS(name) %>'].getCkData();
 		},
 
 		getText: function() {
-			return window['<%= name %>'].getCkData();
+			return window['<%= HtmlUtil.escapeJS(name) %>'].getCkData();
 		},
 
 		<%
@@ -145,11 +145,11 @@ if (!inlineEdit) {
 		%>
 
 			onChangeCallback: function () {
-				var ckEditor = CKEDITOR.instances['<%= name %>'];
+				var ckEditor = CKEDITOR.instances['<%= HtmlUtil.escapeJS(name) %>'];
 				var dirty = ckEditor.checkDirty();
 
 				if (dirty) {
-					<%= HtmlUtil.escapeJS(onChangeMethod) %>(window['<%= name %>'].getText());
+					<%= HtmlUtil.escapeJS(onChangeMethod) %>(window['<%= HtmlUtil.escapeJS(name) %>'].getText());
 
 					ckEditor.resetDirty();
 				}
@@ -160,7 +160,7 @@ if (!inlineEdit) {
 		%>
 
 		setHTML: function(value) {
-			CKEDITOR.instances['<%= name %>'].setData(value);
+			CKEDITOR.instances['<%= HtmlUtil.escapeJS(name) %>'].setData(value);
 		}
 	};
 </aui:script>
@@ -177,8 +177,8 @@ if (inlineEdit && (inlineEditSaveURL != null)) {
 }
 %>
 
-<div class="<%= cssClass %>">
-	<textarea id="<%= textareaName %>" name="<%= textareaName %>" style="display: none;"></textarea>
+<div class="<%= HtmlUtil.escape(cssClass) %>">
+	<textarea id="<%= HtmlUtil.escapeAttribute(textareaName) %>" name="<%= HtmlUtil.escapeAttribute(textareaName) %>" style="display: none;"></textarea>
 </div>
 
 <script type="text/javascript">
@@ -224,7 +224,7 @@ if (inlineEdit && (inlineEditSaveURL != null)) {
 			</c:otherwise>
 		</c:choose>
 
-			'<%= name %>',
+			'<%= HtmlUtil.escapeJS(name) %>',
 			{
 				customConfig: '<%= PortalUtil.getPathContext() %>/html/js/editor/ckeditor/<%= HtmlUtil.escapeJS(ckEditorConfigFileName) %>?p_l_id=<%= plid %>&p_p_id=<%= HttpUtil.encodeURL(portletId) %>&p_main_path=<%= HttpUtil.encodeURL(mainPath) %>&doAsUserId=<%= HttpUtil.encodeURL(doAsUserId) %>&doAsGroupId=<%= HttpUtil.encodeURL(String.valueOf(doAsGroupId)) %>&cssPath=<%= HttpUtil.encodeURL(themeDisplay.getPathThemeCss()) %>&cssClasses=<%= HttpUtil.encodeURL(cssClasses) %>&imagesPath=<%= HttpUtil.encodeURL(themeDisplay.getPathThemeImages()) %>&languageId=<%= HttpUtil.encodeURL(LocaleUtil.toLanguageId(locale)) %>&resizable=<%= resizable %>&inlineEdit=<%= inlineEdit %><%= configParams %>',
 				filebrowserBrowseUrl: '<%= PortalUtil.getPathContext() %>/html/js/editor/ckeditor/editor/filemanager/browser/liferay/browser.html?Connector=<%= connectorURL %><%= fileBrowserParams %>',
@@ -233,13 +233,13 @@ if (inlineEdit && (inlineEditSaveURL != null)) {
 			}
 		);
 
-		var ckEditor = CKEDITOR.instances['<%= name %>'];
+		var ckEditor = CKEDITOR.instances['<%= HtmlUtil.escapeJS(name) %>'];
 
 		<c:if test="<%= inlineEdit && (inlineEditSaveURL != null) %>">
 			new Liferay.CKEditorInline(
 				{
 					editor: ckEditor,
-					editorName: '<%= name %>',
+					editorName: '<%= HtmlUtil.escapeJS(name) %>',
 					saveURL: '<%= inlineEditSaveURL %>'
 				}
 			);
@@ -292,7 +292,7 @@ if (inlineEdit && (inlineEditSaveURL != null)) {
 					setInterval(
 						function() {
 							try {
-								window['<%= name %>'].onChangeCallback();
+								window['<%= HtmlUtil.escapeJS(name) %>'].onChangeCallback();
 							}
 							catch (e) {
 							}
@@ -313,7 +313,7 @@ if (inlineEdit && (inlineEditSaveURL != null)) {
 
 			Liferay.provide(
 				window,
-				'<%= name %>creoleDialogHandlers',
+				'<%= HtmlUtil.escapeJS(name) %>creoleDialogHandlers',
 				function(event) {
 					var A = AUI();
 
@@ -369,7 +369,7 @@ if (inlineEdit && (inlineEditSaveURL != null)) {
 				['aui-base']
 			);
 
-			ckEditor.on('dialogShow', window['<%= name %>creoleDialogHandlers']);
+			ckEditor.on('dialogShow', window['<%= HtmlUtil.escapeJS(name) %>creoleDialogHandlers']);
 
 		<%
 		}

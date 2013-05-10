@@ -22,18 +22,18 @@ String initMethod = (String)request.getAttribute("liferay-ui:input-editor:initMe
 String name = namespace + GetterUtil.getString((String)request.getAttribute("liferay-ui:input-editor:name"));
 %>
 
-<div class="lfr-textarea message-edit <%= cssClass %>">
-	<textarea id="<%= name %>" name="<%= name %>"></textarea>
+<div class="lfr-textarea message-edit <%= HtmlUtil.escapeAttribute(cssClass) %>">
+	<textarea id="<%= HtmlUtil.escapeAttribute(name) %>" name="<%= HtmlUtil.escapeAttribute(name) %>"></textarea>
 </div>
 
 <aui:script use="liferay-bbcode-editor">
-	window['<%= name %>'] = new Liferay.Editor.bbCode(
+	window['<%= HtmlUtil.escapeJS(name) %>'] = new Liferay.Editor.bbCode(
 		{
-			textarea: '#<%= name %>'
+			textarea: '#<%= HtmlUtil.escapeJS(name) %>'
 		}
 	);
 
 	<c:if test="<%= Validator.isNotNull(initMethod) %>">
-		window['<%= name %>'].setHTML(<%= HtmlUtil.escape(namespace + initMethod) %>());
+		window['<%= HtmlUtil.escapeJS(name) %>'].setHTML(<%= HtmlUtil.escapeJS(namespace + initMethod) %>());
 	</c:if>
 </aui:script>

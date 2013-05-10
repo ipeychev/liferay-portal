@@ -75,19 +75,19 @@ String toolbarSet = (String)request.getAttribute("liferay-ui:input-editor:toolba
 		<script src="<%= HtmlUtil.escape(PortalUtil.getStaticResourceURL(request, themeDisplay.getCDNHost() + themeDisplay.getPathJavaScript() + "/editor/fckeditor/fckeditor.js", javaScriptLastModified)) %>" type="text/javascript"></script>
 
 		<script type="text/javascript">
-			Liferay.namespace('EDITORS')['<%= editorImpl %>'] = true;
+			Liferay.namespace('EDITORS')['<%= HtmlUtil.escapeJS(editorImpl) %>'] = true;
 		</script>
 	</liferay-util:html-top>
 </c:if>
 
 <aui:script>
-	window['<%= name %>'] = {
+	window['<%= HtmlUtil.escapeJS(name) %>'] = {
 		destroy: function() {
-			var fckEditor = FCKeditorAPI.GetInstance('<%= name %>');
+			var fckEditor = FCKeditorAPI.GetInstance('<%= HtmlUtil.escapeJS(name) %>');
 
 			if (fckEditor) {
-				var configEl = document.getElementById('<%= name %>__Config');
-				var frameEl = document.getElementById('<%= name %>__Frame');
+				var configEl = document.getElementById('<%= HtmlUtil.escapeJS(name) %>__Config');
+				var frameEl = document.getElementById('<%= HtmlUtil.escapeJS(name) %>__Frame');
 
 				if (configEl) {
 					configEl.parentNode.removeChild(configEl);
@@ -97,39 +97,39 @@ String toolbarSet = (String)request.getAttribute("liferay-ui:input-editor:toolba
 					frameEl.parentNode.removeChild(frameEl);
 				}
 
-				delete FCKeditorAPI.__Instances['<%= name %>'];
+				delete FCKeditorAPI.__Instances['<%= HtmlUtil.escapeJS(name) %>'];
 			}
 
-			window['<%= name %>'] = null;
+			window['<%= HtmlUtil.escapeJS(name) %>'] = null;
 		},
 
 		focus: function() {
-			FCKeditorAPI.GetInstance('<%= name %>').Focus();
+			FCKeditorAPI.GetInstance('<%= HtmlUtil.escapeJS(name) %>').Focus();
 		},
 
 		getHTML: function() {
-			return FCKeditorAPI.GetInstance('<%= name %>').GetXHTML();
+			return FCKeditorAPI.GetInstance('<%= HtmlUtil.escapeJS(name) %>').GetXHTML();
 		},
 
 		getText: function() {
-			return FCKeditorAPI.GetInstance('<%= name %>').GetXHTML();
+			return FCKeditorAPI.GetInstance('<%= HtmlUtil.escapeJS(name) %>').GetXHTML();
 		},
 
 		initFckArea: function() {
-			var textArea = document.getElementById('<%= name %>');
+			var textArea = document.getElementById('<%= HtmlUtil.escapeJS(name) %>');
 
 			<c:if test="<%= Validator.isNotNull(initMethod) %>">
-				textArea.value = <%= HtmlUtil.escape(namespace + initMethod) %>();
+				textArea.value = <%= HtmlUtil.escapeJS(namespace + initMethod) %>();
 			</c:if>
 
-			var fckEditor = new FCKeditor('<%= name %>');
+			var fckEditor = new FCKeditor('<%= HtmlUtil.escapeJS(name) %>');
 
 			fckEditor.Config['CustomConfigurationsPath'] = '<%= PortalUtil.getPathContext() %>/html/js/editor/fckeditor/fckconfig.jsp?p_l_id=<%= plid %>&p_p_id=<%= HttpUtil.encodeURL(portletId) %>&p_main_path=<%= HttpUtil.encodeURL(mainPath) %>&doAsUserId=<%= HttpUtil.encodeURL(doAsUserId) %>&doAsGroupId=<%= HttpUtil.encodeURL(String.valueOf(doAsGroupId)) %>&cssPath=<%= HttpUtil.encodeURL(themeDisplay.getPathThemeCss()) %>&cssClasses=<%= HttpUtil.encodeURL(cssClasses) %>&languageId=<%= HttpUtil.encodeURL(LocaleUtil.toLanguageId(locale)) %><%= configParamsSB.toString() %>';
 
 			fckEditor.BasePath = '<%= PortalUtil.getPathContext() %>/html/js/editor/fckeditor/';
 			fckEditor.Width = '100%';
 			fckEditor.Height = '100%';
-			fckEditor.ToolbarSet = '<%= HtmlUtil.escape(toolbarSet) %>';
+			fckEditor.ToolbarSet = '<%= HtmlUtil.escapeJS(toolbarSet) %>';
 
 			fckEditor.ReplaceTextarea();
 
@@ -171,7 +171,7 @@ String toolbarSet = (String)request.getAttribute("liferay-ui:input-editor:toolba
 				setInterval(
 					function() {
 						try {
-							window['<%= name %>'].onChangeCallback();
+							window['<%= HtmlUtil.escapeJS(name) %>'].onChangeCallback();
 						}
 						catch (e) {
 						}
@@ -190,12 +190,12 @@ String toolbarSet = (String)request.getAttribute("liferay-ui:input-editor:toolba
 		%>
 
 			onChangeCallback: function() {
-				var dirty = FCKeditorAPI.GetInstance('<%= name %>').IsDirty();
+				var dirty = FCKeditorAPI.GetInstance('<%= HtmlUtil.escapeJS(name) %>').IsDirty();
 
 				if (dirty) {
-					<%= HtmlUtil.escapeJS(onChangeMethod) %>(window['<%= name %>'].getText());
+					<%= HtmlUtil.escapeJS(onChangeMethod) %>(window['<%= HtmlUtil.escapeJS(name) %>'].getText());
 
-					FCKeditorAPI.GetInstance('<%= name %>').ResetIsDirty();
+					FCKeditorAPI.GetInstance('<%= HtmlUtil.escapeJS(name) %>').ResetIsDirty();
 				}
 			},
 
@@ -204,13 +204,13 @@ String toolbarSet = (String)request.getAttribute("liferay-ui:input-editor:toolba
 		%>
 
 		setHTML: function(value) {
-			FCKeditorAPI.GetInstance('<%= name %>').SetHTML(value);
+			FCKeditorAPI.GetInstance('<%= HtmlUtil.escapeJS(name) %>').SetHTML(value);
 		}
 	};
 
-	window['<%= name %>'].initFckArea();
+	window['<%= HtmlUtil.escapeJS(name) %>'].initFckArea();
 </aui:script>
 
-<div class="<%= cssClass %>">
-	<textarea id="<%= name %>" name="<%= name %>" style="display: none;"></textarea>
+<div class="<%= HtmlUtil.escapeAttribute(cssClass) %>">
+	<textarea id="<%= HtmlUtil.escapeAttribute(name) %>" name="<%= HtmlUtil.escapeAttribute(name) %>" style="display: none;"></textarea>
 </div>

@@ -42,34 +42,34 @@ boolean skipEditorLoading = GetterUtil.getBoolean((String)request.getAttribute("
 		<script src="<%= HtmlUtil.escape(PortalUtil.getStaticResourceURL(request, themeDisplay.getCDNHost() + themeDisplay.getPathJavaScript() + "/editor/tiny_mce/tiny_mce.js", javaScriptLastModified)) %>" type="text/javascript"></script>
 
 		<script type="text/javascript">
-			Liferay.namespace('EDITORS')['<%= editorImpl %>'] = true;
+			Liferay.namespace('EDITORS')['<%= HtmlUtil.escapeJS(editorImpl) %>'] = true;
 		</script>
 	</liferay-util:html-top>
 </c:if>
 
-<div class="<%= cssClass %>">
-	<textarea id="<%= name %>" name="<%= name %>" style="height: 100%; width: 100%;"></textarea>
+<div class="<%= HtmlUtil.escapeAttribute(cssClass) %>">
+	<textarea id="<%= HtmlUtil.escapeAttribute(name) %>" name="<%= HtmlUtil.escapeAttribute(name) %>" style="height: 100%; width: 100%;"></textarea>
 </div>
 
 <aui:script>
-	window['<%= name %>'] = {
+	window['<%= HtmlUtil.escapeJS(name) %>'] = {
 		onChangeCallbackCounter: 0,
 
 		destroy: function() {
-			tinyMCE.editors['<%= name %>'].destroy();
+			tinyMCE.editors['<%= HtmlUtil.escapeJS(name) %>'].destroy();
 
-			window['<%= name %>'] = null;
+			window['<%= HtmlUtil.escapeJS(name) %>'] = null;
 		},
 
 		focus: function() {
-			tinyMCE.editors['<%= name %>'].focus();
+			tinyMCE.editors['<%= HtmlUtil.escapeJS(name) %>'].focus();
 		},
 
 		fileBrowserCallback: function(field_name, url, type) {
 		},
 
 		getHTML: function() {
-			return tinyMCE.editors['<%= name %>'].getContent();
+			return tinyMCE.editors['<%= HtmlUtil.escapeJS(name) %>'].getContent();
 		},
 
 		init: function(value) {
@@ -80,12 +80,12 @@ boolean skipEditorLoading = GetterUtil.getBoolean((String)request.getAttribute("
 				 value = '';
 			 }
 
-			window['<%= name %>'].setHTML(value);
+			window['<%= HtmlUtil.escapeJS(name) %>'].setHTML(value);
 		},
 
 		initInstanceCallback: function() {
 			<c:if test="<%= Validator.isNotNull(initMethod) %>">
-				window['<%= name %>'].init(<%= HtmlUtil.escape(namespace + initMethod) %>());
+				window['<%= HtmlUtil.escapeJS(name) %>'].init(<%= HtmlUtil.escapeJS(namespace + initMethod) %>());
 			</c:if>
 		},
 
@@ -105,11 +105,11 @@ boolean skipEditorLoading = GetterUtil.getBoolean((String)request.getAttribute("
 				// problem from the portal's perspective because it's passing the
 				// content via a javascript method (initMethod).
 
-				var onChangeCallbackCounter = window['<%= name %>'].onChangeCallbackCounter;
+				var onChangeCallbackCounter = window['<%= HtmlUtil.escapeJS(name) %>'].onChangeCallbackCounter;
 
 				if (onChangeCallbackCounter > 0) {
 
-					<%= HtmlUtil.escapeJS(onChangeMethod) %>(window['<%= name %>'].getHTML());
+					<%= HtmlUtil.escapeJS(onChangeMethod) %>(window['<%= HtmlUtil.escapeJS(name) %>'].getHTML());
 
 				}
 
@@ -121,17 +121,17 @@ boolean skipEditorLoading = GetterUtil.getBoolean((String)request.getAttribute("
 		%>
 
 		setHTML: function(value) {
-			tinyMCE.editors['<%= name %>'].setContent(value);
+			tinyMCE.editors['<%= HtmlUtil.escapeJS(name) %>'].setContent(value);
 		}
 	};
 
 	tinyMCE.init(
 		{
 			convert_urls: false,
-			elements: '<%= name %>',
+			elements: '<%= HtmlUtil.escapeJS(name) %>',
 			extended_valid_elements: 'a[name|href|target|title|onclick],img[class|src|border=0|alt|title|hspace|vspace|width|height|align|onmouseover|onmouseout|name|usemap],hr[class|width|size|noshade],font[face|size|color|style],span[class|align|style]',
-			file_browser_callback: window['<%= name %>'].fileBrowserCallback,
-			init_instance_callback: window['<%= name %>'].initInstanceCallback,
+			file_browser_callback: window['<%= HtmlUtil.escapeJS(name) %>'].fileBrowserCallback,
+			init_instance_callback: window['<%= HtmlUtil.escapeJS(name) %>'].initInstanceCallback,
 			invalid_elements: 'script',
 			language: '<%= HtmlUtil.escape(locale.getLanguage()) %>',
 			mode: 'textareas',
@@ -140,7 +140,7 @@ boolean skipEditorLoading = GetterUtil.getBoolean((String)request.getAttribute("
 			if (Validator.isNotNull(onChangeMethod)) {
 			%>
 
-				onchange_callback: window['<%= name %>'].onChangeCallback,
+				onchange_callback: window['<%= HtmlUtil.escapeJS(name) %>'].onChangeCallback,
 
 			<%
 			}
