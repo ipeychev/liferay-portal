@@ -124,6 +124,7 @@ if (!categories.isEmpty() || !portlets.isEmpty()) {
 							<%
 							Map<String, Object> data = new HashMap<String, Object>();
 
+							data.put("draggable", true);
 							data.put("id", renderResponse.getNamespace() + "portletItem" + portlet.getPortletId());
 							data.put("instanceable", portletInstanceable);
 							data.put("plid", plid);
