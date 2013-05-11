@@ -17,6 +17,8 @@ AUI.add(
 
 		var SELECTOR_BUTTON = '.btn';
 
+		var SELECTOR_ADD_CONTENT_ITEM = '.add-content-item';
+
 		var STR_ACTION = 'action';
 
 		var STR_CLICK = 'click';
@@ -129,7 +131,7 @@ AUI.add(
 
 						instance._closePanel.on(STR_CLICK, Dockbar.loadPanel, Dockbar);
 
-						instance._addPanelContainer.delegate(STR_CLICK, instance._addApplication, '.add-content-item', instance);
+						instance._addPanelContainer.delegate(STR_CLICK, instance._addApplication, SELECTOR_ADD_CONTENT_ITEM, instance);
 
 						instance._styleButtonsList.delegate(STR_CLICK, instance._onChangeDisplayStyle, SELECTOR_BUTTON, instance);
 
@@ -240,7 +242,7 @@ AUI.add(
 					_onPortletClose: function(event) {
 						var instance = this;
 
-						var item = instance._addPanelContainer.one('.lfr-portlet-item[data-plid=' + event.plid + '][data-portlet-id=' + event.portletId + '][data-instanceable=false]');
+						var item = instance._addPanelContainer.one('.lfr-content-item[data-plid=' + event.plid + '][data-portlet-id=' + event.portletId + '][data-instanceable=false]');
 
 						if (item && item.hasClass(CSS_LFR_PORTLET_USED)) {
 							var portletId = item.attr(DATA_PORTLET_ID);

@@ -1,65 +1,81 @@
 @import "compass";
 
-.btn-toolbar {
-	.control-group-inline {
-		display: inline;
+.add-content-menu {
+	.btn-toolbar {
+		.control-group-inline {
+			display: inline;
 
-		input {
-			margin-bottom: 0;
+			input {
+				margin-bottom: 0;
+			}
+
+			select {
+				margin-bottom: 0;
+			}
 		}
 
-		select {
-			margin-bottom: 0;
+		.control-group-inline, .btn-group {
+			margin-right: 5px;
+		}
+	}
+
+	.container-fluid {
+		.accordion-inner {
+			padding-left: 0;
+			padding-right: 0;
+
+			.content-item {
+				margin-left: 5px;
+			}
 		}
 	}
 
-	.control-group-inline, .btn-group {
-		margin-right: 5px;
-	}
-}
+	.lfr-content-item {
+		color: #3EA9DB;
+		cursor: move;
+		margin: 0 -15px 0 -15px;
+		padding: 0 15px 0 15px;
 
-.container-fluid {
-	.accordion-inner {
-		padding-left: 0;
+		&:hover {
+			background-color: #eeeeee;
+			color: #006076;
 
-		.content-item {
-			margin-left: 5px;
+			.add-content-item {
+				display: inline;
+			}
 		}
-	}
-}
-
-.lfr-add-item {
-	color: #3EA9DB;
-	cursor: move;
-	margin: 0 -15px 0 -15px;
-	padding: 0 15px 0 15px;
-
-	&:hover {
-		background-color: #eeeeee;
-		color: #006076;
 
 		.add-content-item {
-			display: inline;
+			cursor: pointer;
+			display: none;
+			margin-left: -15px;
+			margin-right: 15px;
+		}
+
+		&.lfr-portlet-used {
+			color: #bbbbbb;
+			cursor: default;
+
+			.add-content-item {
+				display: none;
+			}
+		}
+
+		&.lfr-archived-setup {
+			padding-left: 30px;
 		}
 	}
 
-	.add-content-item {
-		cursor: pointer;
-		display: none;
-		margin-left: -15px;
-		margin-right: 15px;
+	.portal-add-content .portlet-msg-info {
+		color: #333;
 	}
-}
 
-.portal-add-content .portlet-msg-info {
-	color: #333;
-}
+	.lfr-install-more {
+		border-top-color: #CCC;
 
-.lfr-install-more {
-	border-top-color: #CCC;
-
-	a {
-		background: url(@theme_image_path@/common/install_more.png) no-repeat 0 50%;
-		font-weight: bold;
+		a {
+			background: url(@theme_image_path@/common/install_more.png) no-repeat 0 50%;
+			font-weight: bold;
+		}
 	}
 }

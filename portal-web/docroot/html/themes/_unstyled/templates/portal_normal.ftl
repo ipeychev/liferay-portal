@@ -20,9 +20,9 @@ ${theme.include(body_top_include)}
 	<@liferay.dockbar />
 </#if>
 
-<div class="container-fluid" id="wrapper-portlets">
+<div class="container-fluid" id="wrapper">
 	<div class="row-fluid">
-		<div class="span12" id="wrapper-portlets">
+		<div class="span12" id="content-wrapper">
 			<header id="banner" role="banner">
 				<div id="heading">
 					<h1 class="site-title">

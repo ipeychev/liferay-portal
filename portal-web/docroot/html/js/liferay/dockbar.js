@@ -236,18 +236,16 @@ AUI.add(
 				var addPanelNode = instance._getPanelNode();
 
 				if (BODY.hasClass(CSS_ADD_CONTENT)) {
-					instance._setPanelOffset();
-
 					instance._addPanel();
 
 					addPanelNode.show();
 
-					A.one('#wrapper-portlets').replaceClass('span12', 'span8');
+					A.one('#content-wrapper').replaceClass('span12', 'span8');
 				}
 				else {
 					addPanelNode.hide();
 
-					A.one('#wrapper-portlets').replaceClass('span8', 'span12');
+					A.one('#content-wrapper').replaceClass('span8', 'span12');
 				}
 			},
 
@@ -270,12 +268,6 @@ AUI.add(
 				var instance = this;
 
 				instance._getPanelNode().html(TPL_LOADING);
-			},
-
-			_setPanelOffset: function() {
-				var instance = this;
-
-				instance._addPanelNode.setStyle('top', instance.dockBar.height());
 			},
 
 			_toggleAppShortcut: function(item, force) {

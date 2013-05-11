@@ -137,13 +137,9 @@ if (!categories.isEmpty() || !portlets.isEmpty()) {
 							if (portletLocked) {
 								cssClass += " lfr-portlet-used";
 							}
-
-							if (portletInstanceable) {
-								cssClass += " lfr-instanceable";
-							}
 							%>
 
-							<aui:nav-item cssClass="lfr-add-item"
+							<aui:nav-item cssClass="lfr-content-item"
 								data="<%= data %>"
 								href=""
 								iconClass='<%= portletInstanceable ? "icon-th-large" : "icon-stop" %>'
@@ -178,29 +174,20 @@ if (!categories.isEmpty() || !portlets.isEmpty()) {
 								portletItemData.put("plid", plid);
 								portletItemData.put("portlet-id", portlet.getPortletId());
 								portletItemData.put("portlet-item-id", portletItem.getPortletItemId());
+								portletItemData.put("search", divId.toString().replace(':', '-'));
 								portletItemData.put("title", HtmlUtil.escape(portletItem.getName()));
 							%>
 
-								<div class="content-item" data-search="<%= divId.toString().replace(':', '-') %>">
-									<span <%= AUIUtil.buildData(data) %> class="add-content-item">
+								<aui:nav-item cssClass="lfr-content-item lfr-archived-setup"
+									data="<%= portletItemData %>"
+									href=""
+									iconClass='<%= portletInstanceable ? "icon-th-large" : "icon-stop" %>'
+									label="<%= HtmlUtil.escape(portletItem.getName()) %>" >
+
+									<span <%= AUIUtil.buildData(portletItemData) %> class='pull-right add-content-item <%= portletLocked ? "lfr-portlet-used" : StringPool.BLANK %>'>
 										<liferay-ui:message key="add" />
 									</span>
-
-									<%
-									portletItemData.put("draggable", Boolean.TRUE.toString());
-									%>
-
-									<liferay-ui:app-view-entry
-										cssClass="lfr-portlet-item lfr-archived-setup"
-										data="<%= portletItemData %>"
-										displayStyle="list"
-										showCheckbox="<%= false %>"
-										showLinkTitle="<%= false %>"
-										thumbnailSrc="<%= StringPool.BLANK %>"
-										title="<%= HtmlUtil.escape(portletItem.getName()) %>"
-									/>
-								</div>
-
+								</aui:nav-item>
 							<%
 							}
 							%>

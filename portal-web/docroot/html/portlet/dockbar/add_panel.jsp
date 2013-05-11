@@ -57,11 +57,11 @@
 							<portlet:param name="redirect" value="<%= currentURL %>" />
 						</portlet:resourceURL>
 
-						<aui:form action="<%= updateContentListURL %>" cssClass="add-content-tab" name="addContentForm" onSubmit="event.preventDefault();">
+						<aui:form action="<%= updateContentListURL %>" name="addContentForm" onSubmit="event.preventDefault();">
 							<div class="container-fluid">
 
-							<div class="btn-toolbar">
-								<aui:input cssClass="input-medium" inlineField="<%= true %>" label="" name="searchContentInput" type="text" />
+							<div class="btn-toolbar">							
+								<aui:input cssClass="input-medium search-query" inlineField="<%= true %>" label="" name="searchContentInput" placeholder='<%= LanguageUtil.get(pageContext, "search") %>' type="text" />
 
 								<%
 								String displayStyleDefault = GetterUtil.getString(SessionClicks.get(request, "liferay_addpanel_displaystyle", "descriptive"));
@@ -117,7 +117,7 @@
 						%>
 
 						<div class="container-fluid">
-							<aui:form action='<%= themeDisplay.getPathMain() + "/portal/update_layout?p_auth=" + AuthTokenUtil.getToken(request) + "&p_l_id=" + plid + "&p_v_l_s_g_id=" + themeDisplay.getSiteGroupId() %>' cssClass="add-application-tab" method="post" name="addApplicationForm">
+							<aui:form action='<%= themeDisplay.getPathMain() + "/portal/update_layout?p_auth=" + AuthTokenUtil.getToken(request) + "&p_l_id=" + plid + "&p_v_l_s_g_id=" + themeDisplay.getSiteGroupId() %>' method="post" name="addApplicationForm">
 								<aui:input name="doAsUserId" type="hidden" value="<%= themeDisplay.getDoAsUserId() %>" />
 								<aui:input name="<%= Constants.CMD %>" type="hidden" value="template" />
 								<aui:input name="<%= WebKeys.REFERER %>" type="hidden" value="<%= refererURL.toString() %>" />
@@ -125,7 +125,7 @@
 
 								<c:if test="<%= layout.isTypePortlet() %>">
 									<div class="search-panel btn-toolbar">
-										<aui:input cssClass="span12 add-applications-search lfr-auto-focus" label="" name="searchApplication" type="text" />
+										<aui:input cssClass="search-query span12" label="" name="searchApplication" placeholder='<%= LanguageUtil.get(pageContext, "search") %>' type="text"  />
 									</div>
 								</c:if>
 
@@ -175,18 +175,14 @@
 														data.put("portlet-id", portlet.getPortletId());
 														data.put("title", PortalUtil.getPortletTitle(portlet, application, locale));
 
-														String cssClass = "lfr-add-item";
+														String cssClass = "lfr-content-item";
 
 														if (portletLocked) {
 															cssClass += " lfr-portlet-used";
 														}
-
-														if (portletInstanceable) {
-															cssClass += " lfr-instanceable";
-														}
 													%>
 
-													<aui:nav-item cssClass="lfr-add-item <%= cssClass %>"
+													<aui:nav-item cssClass="lfr-content-item <%= cssClass %>"
 														data='<%= data %>'
 														href=""
 														iconClass='<%= portletInstanceable ? "icon-th-large" : "icon-stop" %>'

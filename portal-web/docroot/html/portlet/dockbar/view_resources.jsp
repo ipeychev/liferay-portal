@@ -114,7 +114,7 @@ boolean viewPreview = ParamUtil.getBoolean(request, "viewPreview");
 						data.put("title", title);
 					%>
 
-						<aui:nav-item cssClass='<%= displayStyle.equals("icon") ? "span6 content-shortcut lfr-add-item" : "row-fluid has-preview content-shortcut lfr-add-item" %>'
+						<aui:nav-item cssClass='<%= displayStyle.equals("icon") ? "span6 content-shortcut lfr-content-item" : "row-fluid has-preview content-shortcut lfr-content-item" %>'
 							data="<%= data %>"
 							href=""
 							iconClass='<%= displayStyle.equals("icon") ? "" : "icon-file" %>'
