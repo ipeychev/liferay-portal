@@ -111,6 +111,12 @@ AUI.add(
 				instance.messageIdList = [];
 			},
 
+			getPanelNode: function() {
+				var instance = this;
+
+				return instance._getPanelNode();
+			},
+
 			loadPanel: function() {
 				var instance = this;
 

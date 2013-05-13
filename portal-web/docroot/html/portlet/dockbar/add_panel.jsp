@@ -61,7 +61,7 @@
 							<div class="container-fluid">
 
 							<div class="btn-toolbar">							
-								<aui:input cssClass="input-medium search-query" inlineField="<%= true %>" label="" name="searchContentInput" placeholder='<%= LanguageUtil.get(pageContext, "search") %>' type="text" />
+								<aui:input cssClass="input-medium search-query" inlineField="<%= true %>" label="" name="searchContentInput" type="text" />
 
 								<%
 								String displayStyleDefault = GetterUtil.getString(SessionClicks.get(request, "liferay_addpanel_displaystyle", "descriptive"));
@@ -125,7 +125,7 @@
 
 								<c:if test="<%= layout.isTypePortlet() %>">
 									<div class="search-panel btn-toolbar">
-										<aui:input cssClass="search-query span12" label="" name="searchApplication" placeholder='<%= LanguageUtil.get(pageContext, "search") %>' type="text"  />
+										<aui:input cssClass="search-query span12" label="" name="searchApplication" type="text"  />
 									</div>
 								</c:if>
 

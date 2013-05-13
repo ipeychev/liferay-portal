@@ -25,11 +25,17 @@ AUI.add(
 			initializer: function(config) {
 				var instance = this;
 
+				instance._eventHandles = [];
+
 				instance._loadPreviewTask = A.debounce('_loadPreviewFn', 200, instance);
 
-				instance.after(instance._createToolTip, instance, '_afterSuccess');
+				instance._bindUIACPreview();
+			},
 
-				instance._createToolTip();
+			destructor: function() {
+				var instance = this;
+
+				new A.EventHandle(instance._eventHandles).detach();
 			},
 
 			_afterPreviewFailure: function(event) {
@@ -53,39 +59,19 @@ AUI.add(
 				tooltip.set(BODY_CONTENT, event.currentTarget.get('responseData'));
 				tooltip.align();
 
-				tooltip.get(STR_BOUNDING_BOX).one('.add-button-preview').on('click', instance._addApplication, instance);
+				instance._eventHandles.push(
+					tooltip.get(STR_BOUNDING_BOX).one('.add-button-preview').on('click', instance._addApplication, instance)
+				);
 			},
 
-			_createToolTip: function() {
+			_bindUIACPreview: function() {
 				var instance = this;
 
-				if (instance._tooltip) {
-					instance._tooltip.destroy();
-				}
-
-				if (instance._tooltipClickOutsideHandle) {
-					instance._tooltipClickOutsideHandle.detach();
-				}
-
-				instance._tooltip = new A.Popover(
-					{
-						align: {
-							points: [A.WidgetPositionAlign.LC, A.WidgetPositionAlign.RC]
-						},
-						constrain: true,
-						position: 'right',
-						zIndex: 500
-					}
-				).render();
-
-				instance._tooltip.hide();
-
-				instance._tooltipClickOutsideHandle = instance._tooltip.get(STR_BOUNDING_BOX).on('clickoutside', instance._tooltip.hide, instance._tooltip);
-
-				A.one('.lfr-component').delegate(
+				Liferay.Dockbar.getPanelNode().delegate(
 					'mouseenter',
-					A.bind(instance._showTooltip, instance),
-					'.has-preview'
+					instance._showTooltip,
+					'.has-preview',
+					instance
 				);
 			},
 
@@ -116,6 +102,38 @@ AUI.add(
 				return ioPreview;
 			},
 
+			_getTooltip: function() {
+				var instance = this;
+
+				var tooltip = instance._tooltip;
+
+				if (!tooltip) {
+					tooltip = new A.Popover(
+						{
+							align: {
+								points: [A.WidgetPositionAlign.LC, A.WidgetPositionAlign.RC]
+							},
+							constrain: true,
+							position: 'right',
+							visible: false,
+							zIndex: 500
+						}
+					);
+
+					tooltip.get(STR_BOUNDING_BOX).addClass('lfr-add-content-preview');
+
+					tooltip.render();
+
+					instance._eventHandles.push(
+						tooltip.get(STR_BOUNDING_BOX).on('clickoutside', tooltip.hide, tooltip)
+					);
+
+					instance._tooltip = tooltip;
+				}
+
+				return tooltip;
+			},
+
 			_loadPreviewFn: function(className, classPK) {
 				var instance = this;
 
@@ -134,10 +152,12 @@ AUI.add(
 
 				var currentNode = event.currentTarget;
 
-				instance._tooltip.set(BODY_CONTENT, TPL_LOADING);
-				instance._tooltip.set(STR_ALIGN_NODE, currentNode);
+				var tooltip = instance._getTooltip();
 
-				instance._tooltip.show();
+				tooltip.set(BODY_CONTENT, TPL_LOADING);
+				tooltip.set(STR_ALIGN_NODE, currentNode);
+
+				tooltip.show();
 
 				instance._loadPreviewTask(currentNode.attr('data-class-name'), currentNode.attr('data-class-pk'));
 			}
