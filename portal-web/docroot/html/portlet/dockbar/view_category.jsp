@@ -145,7 +145,7 @@ if (!categories.isEmpty() || !portlets.isEmpty()) {
 								iconClass='<%= portletInstanceable ? "icon-th-large" : "icon-stop" %>'
 								label="<%= PortalUtil.getPortletTitle(portlet, application, locale) %>" >
 
-								<span <%= AUIUtil.buildData(data) %> class='pull-right add-content-item <%= portletLocked ? "lfr-portlet-used" : StringPool.BLANK %>'>
+								<span <%= AUIUtil.buildData(data) %> class='add-content-item <%= portletLocked ? "lfr-portlet-used" : StringPool.BLANK %>'>
 									<liferay-ui:message key="add" />
 								</span>
 							</aui:nav-item>
@@ -169,6 +169,7 @@ if (!categories.isEmpty() || !portlets.isEmpty()) {
 
 								Map<String, Object> portletItemData = new HashMap<String, Object>();
 
+								portletItemData.put("draggable", true);
 								portletItemData.put("id", renderResponse.getNamespace() + "portletItem" + portletItem.getPortletItemId());
 								portletItemData.put("instanceable", portletInstanceable);
 								portletItemData.put("plid", plid);
@@ -184,7 +185,7 @@ if (!categories.isEmpty() || !portlets.isEmpty()) {
 									iconClass='<%= portletInstanceable ? "icon-th-large" : "icon-stop" %>'
 									label="<%= HtmlUtil.escape(portletItem.getName()) %>" >
 
-									<span <%= AUIUtil.buildData(portletItemData) %> class='pull-right add-content-item <%= portletLocked ? "lfr-portlet-used" : StringPool.BLANK %>'>
+									<span <%= AUIUtil.buildData(portletItemData) %> class='add-content-item <%= portletLocked ? "lfr-portlet-used" : StringPool.BLANK %>'>
 										<liferay-ui:message key="add" />
 									</span>
 								</aui:nav-item>

@@ -188,7 +188,7 @@
 														iconClass='<%= portletInstanceable ? "icon-th-large" : "icon-stop" %>'
 														label="<%= PortalUtil.getPortletTitle(portlet, application, locale) %>" >
 
-														<span <%= AUIUtil.buildData(data) %> class='pull-right add-content-item <%= portletLocked ? "lfr-portlet-used" : StringPool.BLANK %>'>
+														<span <%= AUIUtil.buildData(data) %> class='add-content-item <%= portletLocked ? "lfr-portlet-used" : StringPool.BLANK %>'>
 															<liferay-ui:message key="add" />
 														</span>
 													</aui:nav-item>

@@ -137,7 +137,7 @@ boolean viewPreview = ParamUtil.getBoolean(request, "viewPreview");
 									</c:choose>
 								</c:when>
 								<c:otherwise >
-									<div <%= AUIUtil.buildData(data) %> class="pull-right add-content-item">
+									<div <%= AUIUtil.buildData(data) %> class="add-content-item">
 										<liferay-ui:message key="add" />
 									</div>
 								</c:otherwise>
