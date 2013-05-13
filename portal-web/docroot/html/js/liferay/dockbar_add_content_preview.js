@@ -8,11 +8,23 @@ AUI.add(
 
 		var CSS_OVER = 'over';
 
+		var STR_ACTION = 'action';
+
 		var STR_ALIGN_NODE = 'align.node';
 
 		var STR_BOUNDING_BOX = 'boundingBox';
 
+		var STR_CLICK = 'click';
+
+		var STR_CLICKOUTSIDE = 'clickoutside';
+
 		var STR_CURRENT_NODE = 'currentNode';
+
+		var STR_MOUSEENTER = 'mouseenter';
+
+		var STR_RESPONSE_DATA = 'responseData';
+
+		var STR_RIGHT = 'right';
 
 		var TPL_MESSAGE_ERROR = '<div class="portlet-msg-error">{0}</div>';
 
@@ -35,7 +47,7 @@ AUI.add(
 			destructor: function() {
 				var instance = this;
 
-				new A.EventHandle(instance._eventHandles).detach();
+				(new A.EventHandle(instance._eventHandles)).detach();
 			},
 
 			_afterPreviewFailure: function(event) {
@@ -56,11 +68,11 @@ AUI.add(
 
 				var tooltip = instance._tooltip;
 
-				tooltip.set(BODY_CONTENT, event.currentTarget.get('responseData'));
+				tooltip.set(BODY_CONTENT, event.currentTarget.get(STR_RESPONSE_DATA));
 				tooltip.align();
 
 				instance._eventHandles.push(
-					tooltip.get(STR_BOUNDING_BOX).one('.add-button-preview').on('click', instance._addApplication, instance)
+					tooltip.get(STR_BOUNDING_BOX).one('.add-button-preview').on(STR_CLICK, instance._addApplication, instance)
 				);
 			},
 
@@ -68,7 +80,7 @@ AUI.add(
 				var instance = this;
 
 				Liferay.Dockbar.getPanelNode().delegate(
-					'mouseenter',
+					STR_MOUSEENTER,
 					instance._showTooltip,
 					'.has-preview',
 					instance
@@ -82,7 +94,7 @@ AUI.add(
 
 				if (!ioPreview) {
 					ioPreview = A.io.request(
-						instance._addContentForm.getAttribute('action'),
+						instance._addContentForm.getAttribute(STR_ACTION),
 						{
 							after: {
 								failure: A.bind('_afterPreviewFailure', instance),
@@ -114,7 +126,7 @@ AUI.add(
 								points: [A.WidgetPositionAlign.LC, A.WidgetPositionAlign.RC]
 							},
 							constrain: true,
-							position: 'right',
+							position: STR_RIGHT,
 							visible: false,
 							zIndex: 500
 						}
@@ -125,7 +137,7 @@ AUI.add(
 					tooltip.render();
 
 					instance._eventHandles.push(
-						tooltip.get(STR_BOUNDING_BOX).on('clickoutside', tooltip.hide, tooltip)
+						tooltip.get(STR_BOUNDING_BOX).on(STR_CLICKOUTSIDE, tooltip.hide, tooltip)
 					);
 
 					instance._tooltip = tooltip;
@@ -167,6 +179,6 @@ AUI.add(
 	},
 	'',
 	{
-		requires: ['aui-io-request', 'aui-popover', 'event-mouseenter']
+		requires: ['aui-debounce', 'aui-io-request', 'aui-popover', 'event-mouseenter']
 	}
 );
