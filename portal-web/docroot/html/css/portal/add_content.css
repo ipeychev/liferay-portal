@@ -34,7 +34,7 @@
 		position: relative;
 
 		&:hover {
-			background-color: #eeeeee;
+			background-color: #EEE;
 			color: #006076;
 
 			.add-content-item {
@@ -52,7 +52,7 @@
 		}
 
 		&.lfr-portlet-used {
-			color: #bbbbbb;
+			color: #BBB;
 			cursor: default;
 
 			.add-content-item {
