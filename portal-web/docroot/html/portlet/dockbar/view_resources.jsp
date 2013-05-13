@@ -124,12 +124,17 @@ boolean viewPreview = ParamUtil.getBoolean(request, "viewPreview");
 								<c:when test='<%= !displayStyle.equals("list") %>' >
 									<img class='<%= displayStyle.equals("descriptive") ? "span4" : StringPool.BLANK %>' src='<%= assetRenderer.getThumbnailPath(liferayPortletRequest) %>' />
 
-									<c:if test='<%= displayStyle.equals("descriptive") %>' >
-										<div class="span8">
-											<div><%= title %></div>
-											<div><%= StringUtil.shorten(assetRenderer.getSummary(themeDisplay.getLocale()), 120) %></div>
-										</div>
-									</c:if>
+									<c:choose>
+										<c:when test='<%= displayStyle.equals("descriptive") %>' >
+											<div class="span8">
+												<div><%= title %></div>
+												<div><%= StringUtil.shorten(assetRenderer.getSummary(themeDisplay.getLocale()), 120) %></div>
+											</div>
+										</c:when>
+										<c:when test='<%= displayStyle.equals("icon") %>' >
+											<p class="text-center"><%= title %></p>
+										</c:when>
+									</c:choose>
 								</c:when>
 								<c:otherwise >
 									<div <%= AUIUtil.buildData(data) %> class="pull-right add-content-item">

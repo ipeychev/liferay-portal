@@ -5,11 +5,7 @@
 		.control-group-inline {
 			display: inline;
 
-			input {
-				margin-bottom: 0;
-			}
-
-			select {
+			.search-query, .aui-field-select {
 				margin-bottom: 0;
 			}
 		}
@@ -77,5 +73,49 @@
 			background: url(@theme_image_path@/common/install_more.png) no-repeat 0 50%;
 			font-weight: bold;
 		}
+	}
+}
+
+.lfr-add-content-preview {
+	.add-button-preview {
+		float: right;
+		margin-bottom: 10px;
+	}
+
+	.asset-information {
+		font-size: 10px;
+		margin-bottom: 20px;
+
+		.user-name {
+			color: #369;
+		}
+	}
+
+	.asset-image-preview {
+		margin-bottom: 5px;
+		text-align: center;
+
+		img {
+			max-width: 230px;
+		}
+	}
+
+	.asset-metadata {
+		margin-bottom: 20px;
+
+		.categories {
+			margin-bottom: 5px;
+		}
+	}
+
+	.asset-summary {
+		font-size: 12px;
+		margin-bottom: 20px;
+	}
+
+	.asset-title {
+		color: #369;
+		font-size: 14px;
+		margin-bottom: 5px;
 	}
 }
