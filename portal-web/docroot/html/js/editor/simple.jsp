@@ -31,34 +31,34 @@ boolean resizable = GetterUtil.getBoolean((String)request.getAttribute("liferay-
 %>
 
 <aui:script use='<%= resizable ? "resize" : "aui-base" %>'>
-	window['<%= name %>'] = {
+	window['<%= HtmlUtil.escapeJS(name) %>'] = {
 		destroy: function() {
-			var editorEl = document.getElementById('<%= name %>');
+			var editorEl = document.getElementById('<%= HtmlUtil.escapeJS(name) %>');
 
 			if (editorEl) {
 				editorEl.parentNode.removeChild(editorEl);
 			}
 
-			window['<%= name %>'] = null;
+			window['<%= HtmlUtil.escapeJS(name) %>'] = null;
 		},
 
 		focus: function() {
-			return document.getElementById('<%= name %>').focus();
+			return document.getElementById('<%= HtmlUtil.escapeJS(name) %>').focus();
 		},
 
 		getHTML: function() {
-			return document.getElementById('<%= name %>').value;
+			return document.getElementById('<%= HtmlUtil.escapeJS(name) %>').value;
 		},
 
 		initEditor: function() {
 			<c:if test="<%= Validator.isNotNull(initMethod) %>">
-				<%= name %>.setHTML(<%= namespace + initMethod %>());
+				<%= HtmlUtil.escapeJS(name) %>.setHTML(<%= HtmlUtil.escapeJS(namespace + initMethod) %>());
 
 				<c:if test="<%= resizable %>">
 					new A.Resize(
 						{
 							handles: 'br',
-							node: '#<%= name %>_container',
+							node: '#<%= HtmlUtil.escapeJS(name) %>_container',
 							wrap: true
 						}
 					);
@@ -67,18 +67,18 @@ boolean resizable = GetterUtil.getBoolean((String)request.getAttribute("liferay-
 		},
 
 		setHTML: function(value) {
-			document.getElementById('<%= name %>').value = value || '';
+			document.getElementById('<%= HtmlUtil.escapeJS(name) %>').value = value || '';
 		}
 	};
 
-	window['<%= name %>'].initEditor();
+	window['<%= HtmlUtil.escapeJS(name) %>'].initEditor();
 </aui:script>
 
-<div class="<%= cssClass %>" id="<%= name %>_container">
+<div class="<%= HtmlUtil.escapeAttribute(cssClass) %>" id="<%= HtmlUtil.escapeAttribute(name) %>_container">
 	<table bgcolor="#FFFFFF" cellpadding="0" cellspacing="0" height="100%" width="100%">
 	<tr>
 		<td bgcolor="#FFFFFF" height="100%">
-			<textarea id="<%= name %>" name="<%= name %>"
+			<textarea id="<%= HtmlUtil.escapeAttribute(name) %>" name="<%= HtmlUtil.escapeAttribute(name) %>"
 
 			<%
 			if (Validator.isNotNull(onChangeMethod)) {
