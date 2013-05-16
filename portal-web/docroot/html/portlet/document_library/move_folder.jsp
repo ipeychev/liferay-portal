@@ -120,10 +120,9 @@ long parentFolderId = BeanParamUtil.getLong(folder, request, "parentFolderId", D
 			Liferay.Util.selectEntity(
 				{
 					dialog: {
-						align: Liferay.Util.Window.ALIGN_CENTER,
 						constrain: true,
 						modal: true,
-						stack: true,
+						zIndex: Liferay.zIndex.DIALOG,
 						width: 680
 					},
 					id: '<portlet:namespace />selectFolder',

@@ -119,10 +119,9 @@ if (organizationId > 0) {
 			Liferay.Util.selectEntity(
 				{
 					dialog: {
-						align: Liferay.Util.Window.ALIGN_CENTER,
 						constrain: true,
 						modal: true,
-						stack: true,
+						zIndex: Liferay.zIndex.DIALOG,
 						width: 600
 					},
 					id: '<portlet:namespace />selectOrganization',
