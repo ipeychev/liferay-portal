@@ -30,7 +30,7 @@ Group scopeGroup = themeDisplay.getScopeGroup();
 
 <aui:nav-bar>
 	<aui:nav>
-		<aui:nav-item class="helper-hidden" dropdown="<%= true %>" id="actionsButtonContainer" label="actions">
+		<aui:nav-item cssClass="hide" dropdown="<%= true %>" id="actionsButtonContainer" label="actions">
 			<c:if test="<%= !scopeGroup.isStaged() || scopeGroup.isStagingGroup() || !scopeGroup.isStagedPortlet(PortletKeys.DOCUMENT_LIBRARY) %>">
 
 				<%
@@ -68,7 +68,7 @@ Group scopeGroup = themeDisplay.getScopeGroup();
 			taglibURL = "Liferay.fire('" + renderResponse.getNamespace() + "editEntry', {action: '" + Constants.DELETE + "'});";
 			%>
 
-			<aui:nav-item href="<%= taglibURL %>" iconClass="icon-trash" id="deleteAction" label="delete" />
+			<aui:nav-item href="<%= taglibURL %>" iconClass="icon-remove" id="deleteAction" label="delete" />
 		</aui:nav-item>
 
 		<liferay-util:include page="/html/portlet/document_library/add_button.jsp" />
@@ -141,15 +141,12 @@ Group scopeGroup = themeDisplay.getScopeGroup();
 	function <portlet:namespace />openDDMStructureView() {
 		Liferay.Util.openDDMPortlet(
 			{
-				ddmResource: '<%= ddmResource %>',
 				dialog: {
 					destroyOnHide: true
 				},
+				refererPortletName: '<%= PortletKeys.DOCUMENT_LIBRARY %>',
 				showGlobalScope: 'true',
 				showManageTemplates: 'false',
-				storageType: 'xml',
-				structureName: 'metadata-set',
-				structureType: 'com.liferay.portlet.documentlibrary.model.DLFileEntryMetadata',
 				title: '<%= UnicodeLanguageUtil.get(pageContext, "metadata-sets") %>'
 			}
 		);

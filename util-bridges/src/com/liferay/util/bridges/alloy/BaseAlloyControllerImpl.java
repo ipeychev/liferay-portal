@@ -110,6 +110,7 @@ public abstract class BaseAlloyControllerImpl implements AlloyController {
 	public static final String TOUCH =
 		BaseAlloyControllerImpl.class.getName() + "#TOUCH#";
 
+	@Override
 	public void afterPropertiesSet() {
 		initClass();
 		initServletVariables();
@@ -121,6 +122,7 @@ public abstract class BaseAlloyControllerImpl implements AlloyController {
 		initScheduler();
 	}
 
+	@Override
 	public void execute() throws Exception {
 		Method method = getMethod(actionPath);
 
@@ -148,26 +150,32 @@ public abstract class BaseAlloyControllerImpl implements AlloyController {
 		}
 	}
 
+	@Override
 	public Portlet getPortlet() {
 		return portlet;
 	}
 
+	@Override
 	public HttpServletRequest getRequest() {
 		return request;
 	}
 
+	@Override
 	public ThemeDisplay getThemeDisplay() {
 		return themeDisplay;
 	}
 
+	@Override
 	public long increment() throws Exception {
 		return CounterLocalServiceUtil.increment();
 	}
 
+	@Override
 	public void setPageContext(PageContext pageContext) {
 		this.pageContext = pageContext;
 	}
 
+	@Override
 	public void updateModel(BaseModel<?> baseModel) throws Exception {
 		BeanPropertiesUtil.setProperties(baseModel, request);
 
@@ -285,27 +293,28 @@ public abstract class BaseAlloyControllerImpl implements AlloyController {
 		Boolean touch = (Boolean)portletContext.getAttribute(
 			TOUCH + portlet.getRootPortletId());
 
-		if (touch == null) {
-			String touchPath =
-				"/WEB-INF/jsp/" + portlet.getFriendlyURLMapping() +
-					"/views/touch.jsp";
+		if (touch != null) {
+			return;
+		}
 
-			if (log.isDebugEnabled()) {
-				log.debug(
-					"Touch " + portlet.getRootPortletId() + " by including " +
-						touchPath);
-			}
+		String touchPath =
+			"/WEB-INF/jsp/" + portlet.getFriendlyURLMapping() +
+				"/views/touch.jsp";
 
-			portletContext.setAttribute(
-				TOUCH + portlet.getRootPortletId(), Boolean.FALSE);
+		if (log.isDebugEnabled()) {
+			log.debug(
+				"Touch " + portlet.getRootPortletId() + " by including " +
+					touchPath);
+		}
 
-			portletRequestDispatcher = portletContext.getRequestDispatcher(
-				touchPath);
+		portletContext.setAttribute(
+			TOUCH + portlet.getRootPortletId(), Boolean.FALSE);
 
-			if (portletRequestDispatcher != null) {
-				portletRequestDispatcher.include(
-					portletRequest, portletResponse);
-			}
+		portletRequestDispatcher = portletContext.getRequestDispatcher(
+			touchPath);
+
+		if (portletRequestDispatcher != null) {
+			portletRequestDispatcher.include(portletRequest, portletResponse);
 		}
 	}
 

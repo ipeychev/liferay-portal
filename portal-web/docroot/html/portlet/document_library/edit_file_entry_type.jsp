@@ -74,7 +74,7 @@ String scopeAvailableFields = ParamUtil.getString(request, "scopeAvailableFields
 	<liferay-ui:header
 		backURL="<%= redirect %>"
 		localizeTitle="<%= (fileEntryType == null) %>"
-		title='<%= (fileEntryType == null) ? "new-document-type" : fileEntryType.getName() %>'
+		title='<%= (fileEntryType == null) ? "new-document-type" : fileEntryType.getName(locale) %>'
 	/>
 
 	<liferay-ui:error exception="<%= DuplicateFileEntryTypeException.class %>" message="please-enter-a-unique-document-type-name" />
@@ -88,7 +88,9 @@ String scopeAvailableFields = ParamUtil.getString(request, "scopeAvailableFields
 	<aui:fieldset cssClass="edit-file-entry-type">
 		<aui:input name="name" />
 
-		<aui:input name="description" />
+		<liferay-ui:panel collapsible="<%= true %>" extended="<%= false %>" id="detailsMetadataFields" persistState="<%= true %>" title="details">
+			<aui:input name="description" />
+		</liferay-ui:panel>
 
 		<liferay-ui:panel collapsible="<%= true %>" extended="<%= false %>" id="mainMetadataFields" persistState="<%= true %>" title="main-metadata-fields">
 			<%@ include file="/html/portlet/dynamic_data_mapping/form_builder.jspf" %>
@@ -130,6 +132,14 @@ String scopeAvailableFields = ParamUtil.getString(request, "scopeAvailableFields
 				url='<%= "javascript:" + renderResponse.getNamespace() + "openDDMStructureSelector();" %>'
 			/>
 		</liferay-ui:panel>
+
+		<c:if test="<%= (fileEntryType == null) %>">
+			<aui:field-wrapper label="permissions">
+				<liferay-ui:input-permissions
+					modelName="<%= DLFileEntryType.class.getName() %>"
+				/>
+			</aui:field-wrapper>
+		</c:if>
 	</aui:fieldset>
 </aui:form>
 
@@ -144,17 +154,14 @@ String scopeAvailableFields = ParamUtil.getString(request, "scopeAvailableFields
 		Liferay.Util.openDDMPortlet(
 			{
 				classPK: '<%= ddmStructureId %>',
-				ddmResource: '<%= ddmResource %>',
 				dialog: {
 					destroyOnHide: true
 				},
 				eventName: '<portlet:namespace />selectDDMStructure',
+				refererPortletName: '<%= PortletKeys.DOCUMENT_LIBRARY %>',
 				showGlobalScope: true,
 				showManageTemplates: false,
 				showToolbar: true,
-				storageType: 'xml',
-				structureName: '<%= UnicodeLanguageUtil.get(pageContext, "metadata-sets") %>',
-				structureType: 'com.liferay.portlet.documentlibrary.model.DLFileEntryMetadata',
 				struts_action: '/dynamic_data_mapping/select_structure',
 				title: '<%= UnicodeLanguageUtil.get(pageContext, "metadata-sets") %>'
 			},

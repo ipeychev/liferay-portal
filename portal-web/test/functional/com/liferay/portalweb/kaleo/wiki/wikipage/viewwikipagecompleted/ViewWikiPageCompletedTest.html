@@ -14,11 +14,6 @@
 	<td></td>
 </tr>
 <tr>
-	<td>waitForVisible</td>
-	<td>link=Wiki Test Page</td>
-	<td>Wiki Test Page</td>
-</tr>
-<tr>
 	<td>clickAtAndWait</td>
 	<td>link=Wiki Test Page</td>
 	<td>Wiki Test Page</td>
@@ -29,18 +24,23 @@
 	<td>All Pages</td>
 </tr>
 <tr>
+	<td>waitForVisible</td>
+	<td>//tr[contains(.,'Wiki Page Title')]/td[1]/a</td>
+	<td>Wiki Page Title</td>
+</tr>
+<tr>
 	<td>assertText</td>
-	<td>//tr[4]/td[1]/a</td>
+	<td>//tr[contains(.,'Wiki Page Title')]/td[1]/a</td>
 	<td>Wiki Page Title</td>
 </tr>
 <tr>
 	<td>clickAtAndWait</td>
-	<td>//tr[4]/td[1]/a</td>
+	<td>//tr[contains(.,'Wiki Page Title')]/td[1]/a</td>
 	<td>Wiki Page Title</td>
 </tr>
 <tr>
 	<td>assertText</td>
-	<td>//h1[@class='header-title']</td>
+	<td>//h3[@class='header-title']</td>
 	<td>Wiki Page Title</td>
 </tr>
 <tr>
@@ -65,7 +65,7 @@
 </tr>
 <tr>
 	<td>assertText</td>
-	<td>xPath=(//div[@class='portlet-msg-info'])[2]</td>
+	<td>xPath=(//div[@class='alert alert-info'])[3]</td>
 	<td>There are no pages submitted by you pending approval.</td>
 </tr>
 <tr>
@@ -77,6 +77,16 @@
 	<td>open</td>
 	<td>/web/guest/home/</td>
 	<td></td>
+</tr>
+<tr>
+	<td>clickAt</td>
+	<td>//div[@id='dockbar']</td>
+	<td>Dockbar</td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//script[contains(@src,'/aui/aui-editable/aui-editable-min.js')]</td>
+	<td>AUI Editable Min</td>
 </tr>
 <tr>
 	<td>assertText</td>
@@ -110,12 +120,12 @@
 </tr>
 <tr>
 	<td>assertText</td>
-	<td>xPath=(//div[@class='portlet-msg-info'])[1]</td>
+	<td>xPath=(//div[@class='alert alert-info'])[1]</td>
 	<td>There are no pending tasks assigned to you.</td>
 </tr>
 <tr>
 	<td>assertText</td>
-	<td>xPath=(//div[@class='portlet-msg-info'])[2]</td>
+	<td>xPath=(//div[@class='alert alert-info'])[3]</td>
 	<td>There are no pending tasks assigned to your roles.</td>
 </tr>
 <tr>
@@ -125,27 +135,27 @@
 </tr>
 <tr>
 	<td>assertText</td>
-	<td>//td[1]/a</td>
+	<td>//tr[contains(.,'Wiki Page Title')]/td[1]/a</td>
 	<td>Review</td>
 </tr>
 <tr>
 	<td>assertText</td>
-	<td>//td[2]/a</td>
+	<td>//tr[contains(.,'Wiki Page Title')]/td[2]/a</td>
 	<td>Wiki Page Title</td>
 </tr>
 <tr>
 	<td>assertText</td>
-	<td>//td[3]/a</td>
+	<td>//tr[contains(.,'Wiki Page Title')]/td[3]/a</td>
 	<td>Wiki Page</td>
 </tr>
 <tr>
 	<td>assertVisible</td>
-	<td>//td[4]/a</td>
+	<td>//tr[contains(.,'Wiki Page Title')]/td[4]/a</td>
 	<td>Last Activity Date</td>
 </tr>
 <tr>
 	<td>assertText</td>
-	<td>//td[5]/a</td>
+	<td>//tr[contains(.,'Wiki Page Title')]/td[5]/a</td>
 	<td>Never</td>
 </tr>
 </tbody></table>

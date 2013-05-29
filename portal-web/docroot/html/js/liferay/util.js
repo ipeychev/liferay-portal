@@ -965,10 +965,8 @@
 
 			inputs.each(
 				function(item, index, collection) {
-					if (!item.compareTo(allBox)) {
-						if (arrayIndexOf(name, item.getAttribute('name')) > -1) {
-							totalBoxes++;
-						}
+					if (!item.compareTo(allBox) && (arrayIndexOf(name, item.attr('name')) > -1)) {
+						totalBoxes++;
 
 						if (item.get('checked')) {
 							totalOn++;
@@ -1271,9 +1269,7 @@
 			var instance = this;
 
 			var defaultValues = {
-				availableFields: 'Liferay.FormBuilder.AVAILABLE_FIELDS.DDM_STRUCTURE',
-				eventName: 'selectStructure',
-				structureName: 'structures'
+				eventName: 'selectStructure'
 			};
 
 			config = A.merge(defaultValues,	config);
@@ -1286,8 +1282,6 @@
 
 			ddmURL.setParameter('classNameId', config.classNameId);
 			ddmURL.setParameter('classPK', config.classPK);
-			ddmURL.setParameter('ddmResource', config.ddmResource);
-			ddmURL.setParameter('ddmResourceActionId', config.ddmResourceActionId);
 			ddmURL.setParameter('eventName', config.eventName);
 			ddmURL.setParameter('groupId', config.groupId);
 
@@ -1299,12 +1293,6 @@
 				ddmURL.setParameter('refererWebDAVToken', config.refererWebDAVToken);
 			}
 
-			ddmURL.setParameter('scopeAvailableFields', config.availableFields);
-			ddmURL.setParameter('scopeStorageType', config.storageType);
-			ddmURL.setParameter('scopeStructureName', config.structureName);
-			ddmURL.setParameter('scopeStructureType', config.structureType);
-			ddmURL.setParameter('scopeTemplateMode', config.templateMode);
-			ddmURL.setParameter('scopeTemplateType', config.templateType);
 			ddmURL.setParameter('scopeTitle', config.title);
 
 			if ('showGlobalScope' in config) {
@@ -1383,7 +1371,7 @@
 				var title = obj.one('.portlet-title-text');
 
 				if (title && !title.hasClass('not-editable')) {
-					title.setData('portletTitleEditOptions', options);
+					title.addClass('portlet-title-editable');
 
 					title.on(
 						EVENT_CLICK,
@@ -1405,6 +1393,8 @@
 							editable._startEditing(event);
 						}
 					);
+
+					title.setData('portletTitleEditOptions', options);
 				}
 			}
 		},
@@ -2026,7 +2016,7 @@
 		DROP_AREA: 440,
 		DROP_POSITION: 450,
 		DRAG_ITEM: 460,
-		TOOLTIP: 470,
+		TOOLTIP: 10000,
 		WINDOW: 1000,
 		MENU: 5000
 	};

@@ -17,6 +17,8 @@ package com.liferay.portalweb.socialofficehome.sites.site;
 import com.liferay.portalweb.portal.BaseTestSuite;
 import com.liferay.portalweb.socialofficehome.sites.site.addsitesdefaultpagenone.AddSitesDefaultPageNoneTests;
 import com.liferay.portalweb.socialofficehome.sites.site.addsitessite.AddSitesSiteTests;
+import com.liferay.portalweb.socialofficehome.sites.site.addsitessites.AddSitesSitesTests;
+import com.liferay.portalweb.socialofficehome.sites.site.addsiteviewccuser.AddSiteViewCCUserTests;
 import com.liferay.portalweb.socialofficehome.sites.site.deletesite.DeleteSiteTests;
 import com.liferay.portalweb.socialofficehome.sites.site.searchdeletesite.SearchDeleteSiteTests;
 import com.liferay.portalweb.socialofficehome.sites.site.searchdmfolderdocumentdeletesite.SearchDMFolderDocumentDeleteSiteTests;
@@ -28,6 +30,7 @@ import com.liferay.portalweb.socialofficehome.sites.site.sousjoinsitessite.SOUs_
 import com.liferay.portalweb.socialofficehome.sites.site.sousleavesite.SOUs_LeaveSiteTests;
 import com.liferay.portalweb.socialofficehome.sites.site.soussearchsitessite.SOUs_SearchSitesSiteTests;
 import com.liferay.portalweb.socialofficehome.sites.site.sousviewsiteslinksauserprofile.SOUs_ViewSitesLinkSAUserProfileTests;
+import com.liferay.portalweb.socialofficehome.sites.site.viewpaginationsitesdirectory.ViewPaginationSitesDirectoryTests;
 import com.liferay.portalweb.socialofficehome.sites.site.viewsitesdirectory.ViewSitesDirectoryTests;
 import com.liferay.portalweb.socialofficehome.sites.site.viewsitesdirectorymysites.ViewSitesDirectoryMySitesTests;
 import com.liferay.portalweb.socialofficehome.sites.site.viewsitessite.ViewSitesSiteTests;
@@ -45,6 +48,8 @@ public class SiteTestPlan extends BaseTestSuite {
 
 		testSuite.addTest(AddSitesDefaultPageNoneTests.suite());
 		testSuite.addTest(AddSitesSiteTests.suite());
+		testSuite.addTest(AddSitesSitesTests.suite());
+		testSuite.addTest(AddSiteViewCCUserTests.suite());
 		testSuite.addTest(DeleteSiteTests.suite());
 		testSuite.addTest(SearchDeleteSiteTests.suite());
 		testSuite.addTest(SearchDMFolderDocumentDeleteSiteTests.suite());
@@ -56,6 +61,7 @@ public class SiteTestPlan extends BaseTestSuite {
 		testSuite.addTest(SOUs_LeaveSiteTests.suite());
 		testSuite.addTest(SOUs_SearchSitesSiteTests.suite());
 		testSuite.addTest(SOUs_ViewSitesLinkSAUserProfileTests.suite());
+		testSuite.addTest(ViewPaginationSitesDirectoryTests.suite());
 		testSuite.addTest(ViewSitesDirectoryTests.suite());
 		testSuite.addTest(ViewSitesDirectoryMySitesTests.suite());
 		testSuite.addTest(ViewSitesSiteTests.suite());

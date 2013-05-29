@@ -15,7 +15,7 @@
 package com.liferay.portalweb.socialofficesite.home.homelar;
 
 import com.liferay.portalweb.portal.BaseTestSuite;
-import com.liferay.portalweb.socialofficesite.home.homelar.importbookmarkssitelar.ImportBookmarksSiteLARTests;
+import com.liferay.portalweb.socialofficesite.home.homelar.importrsssitelar.ImportRSSSiteLARTests;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
@@ -28,7 +28,8 @@ public class HomeLARTestPlan extends BaseTestSuite {
 	public static Test suite() {
 		TestSuite testSuite = new TestSuite();
 
-		testSuite.addTest(ImportBookmarksSiteLARTests.suite());
+		//testSuite.addTest(ImportBookmarksSiteLARTests.suite());
+		testSuite.addTest(ImportRSSSiteLARTests.suite());
 
 		return testSuite;
 	}

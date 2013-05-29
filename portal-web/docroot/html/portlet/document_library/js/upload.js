@@ -250,10 +250,6 @@ AUI.add(
 								}
 							);
 
-							instance._getNavigationOverlays();
-
-							instance._getNavigationOverlays();
-
 							var uploader = instance._getUploader();
 
 							uploader.fire('fileselect', event);
@@ -544,12 +540,8 @@ AUI.add(
 				if (!tooltip) {
 					tooltip = new A.Tooltip(
 						{
-							align: {
-								points: ['bc', 'tc']
-							},
 							constrain: true,
 							cssClass: 'portlet-document-library-entry-error',
-							showArrow: false,
 							trigger: errorNode
 						}
 					).render();
@@ -739,8 +731,6 @@ AUI.add(
 			},
 
 			_getNavigationOverlays: function() {
-				return null;
-
 				var instance = this;
 
 				var navigationOverlays = instance._navigationOverlays;
@@ -756,7 +746,7 @@ AUI.add(
 						}
 					};
 
-					var entriesContainer = A.one('#_20_documentLibraryContainer');
+					var entriesContainer = instance.one('#documentLibraryContainer');
 
 					createNavigationOverlay(entriesContainer.one(SELECTOR_DOCUMENT_ENTRIES_PAGINATION));
 					createNavigationOverlay(entriesContainer.one('.app-view-taglib.lfr-header-row'));
@@ -950,11 +940,11 @@ AUI.add(
 
 				var target = event.details[0].target;
 
-				var files = instance._validateFiles(event.fileList);
+				var filesPartition = instance._validateFiles(event.fileList);
 
-				instance._updateStatusUI(target, files);
+				instance._updateStatusUI(target, filesPartition);
 
-				instance._queueSelectedFiles(target, files);
+				instance._queueSelectedFiles(target, filesPartition);
 			},
 
 			_positionProgressBar: function(overlay, progressBar) {
@@ -967,14 +957,14 @@ AUI.add(
 				progressBarBoundingBox.center(overlay.get(STR_CONTENT_BOX));
 			},
 
-			_queueSelectedFiles: function(target, files) {
+			_queueSelectedFiles: function(target, filesPartition) {
 				var instance = this;
-
-				var validFiles = files.valid;
 
 				var key = instance._getFolderId(target);
 
 				var keyData = instance._getUploadStatus(key);
+
+				var validFiles = filesPartition.matches;
 
 				if (keyData) {
 					instance._updateDataSetEntry(key, keyData, validFiles);
@@ -995,7 +985,7 @@ AUI.add(
 							target: folderNode,
 							folder: (key != instance._folderId),
 							folderId: key,
-							invalidFiles: files.invalid
+							invalidFiles: filesPartition.rejects
 						}
 					);
 				}
@@ -1027,9 +1017,7 @@ AUI.add(
 							instance._updateThumbnail(fileNode, file.name);
 						}
 
-						var fileEntryId = instance.ns('fileEntryId=') + response.message;
-
-						instance._updateFileLink(fileNode, fileEntryId, displayStyleList);
+						instance._updateFileLink(fileNode, response.message, displayStyleList);
 					}
 
 					instance._displayResult(fileNode, displayStyle, hasErrors);
@@ -1116,7 +1104,7 @@ AUI.add(
 				}
 			},
 
-			_startUpload: function(data) {
+			_startUpload: function() {
 				var instance = this;
 
 				var uploadData = instance._getCurrentUploadData();
@@ -1186,7 +1174,7 @@ AUI.add(
 				imageNode.attr('src', thumbnailPath);
 			},
 
-			_updateStatusUI: function(target, files) {
+			_updateStatusUI: function(target, filesPartition) {
 				var instance = this;
 
 				var folderId = instance._getFolderId(target);
@@ -1213,7 +1201,7 @@ AUI.add(
 					var displayStyle = instance._getDisplayStyle();
 
 					AArray.map(
-						files.valid,
+						filesPartition.matches,
 						function(file) {
 							var entryNode = instance._createEntryNode(file.name, file.size, displayStyle);
 
@@ -1222,9 +1210,11 @@ AUI.add(
 					);
 
 					AArray.map(
-						files.invalid,
+						filesPartition.rejects,
 						function(file) {
-							instance._createEntryNode(file.name, file.size, displayStyle);
+							var entryNode = instance._createEntryNode(file.name, file.size, displayStyle);
+
+							instance._displayEntryError(entryNode, file.errorMessage, instance._getDisplayStyle());
 						}
 					);
 				}
@@ -1233,46 +1223,32 @@ AUI.add(
 			_validateFiles: function(data) {
 				var instance = this;
 
-				var invalidFiles = [];
-
 				var maxFileSize = instance._maxFileSize;
 
-				var validFiles = AArray.filter(
+				var invalidSizeText = sub(instance._invalidFileSizeText, [maxFileSize / 1024]);
+
+				return AArray.partition(
 					data,
 					function(item, index, collection) {
-						var error;
-						var file;
+						var errorMessage;
 
-						var name = item.get('name');
 						var size = item.get('size') || 0;
 
-						if (maxFileSize !== 0 && size > maxFileSize) {
-							error = instance._invalidFileSizeText;
+						if ((maxFileSize !== 0) && (size > maxFileSize)) {
+							errorMessage = invalidSizeText;
 						}
 						else if (size === 0) {
-							error = instance._zeroByteFileText;
+							errorMessage = instance._zeroByteFileText;
 						}
 
-						if (error) {
-							item.errorMessage = error;
-
-							invalidFiles.push(item);
-						}
-						else {
-							file = item;
-						}
-
-						item.name = name;
+						item.errorMessage = errorMessage;
 						item.size = size;
 
-						return file;
+						item.name = item.get('name');
+
+						return !errorMessage;
 					}
 				);
-
-				return {
-					invalid: invalidFiles,
-					valid: validFiles
-				};
 			}
 		};
 
@@ -1280,6 +1256,6 @@ AUI.add(
 	},
 	'',
 	{
-		requires: ['aui-data-set-deprecated', 'aui-overlay-manager-deprecated', 'aui-overlay-mask-deprecated', 'aui-progressbar', 'aui-template-deprecated', 'aui-tooltip-deprecated', 'liferay-app-view-folders', 'liferay-app-view-move', 'liferay-app-view-paginator', 'liferay-app-view-select', 'liferay-search-container', 'uploader']
+		requires: ['aui-data-set-deprecated', 'aui-overlay-manager-deprecated', 'aui-overlay-mask-deprecated', 'aui-progressbar', 'aui-template-deprecated', 'aui-tooltip', 'liferay-app-view-folders', 'liferay-app-view-move', 'liferay-app-view-paginator', 'liferay-app-view-select', 'liferay-search-container', 'uploader']
 	}
 );

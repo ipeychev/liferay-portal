@@ -99,8 +99,6 @@ public interface Group extends GroupModel, PersistedModel {
 
 	public java.lang.String getTypeLabel();
 
-	public java.lang.String getTypeSettings();
-
 	public com.liferay.portal.kernel.util.UnicodeProperties getTypeSettingsProperties();
 
 	public java.lang.String getTypeSettingsProperty(java.lang.String key);
@@ -114,7 +112,7 @@ public interface Group extends GroupModel, PersistedModel {
 	public boolean hasStagingGroup();
 
 	/**
-	* @deprecated As of 6.1, renamed to {@link #isRegularSite}
+	* @deprecated As of 6.1.0, renamed to {@link #isRegularSite}
 	*/
 	public boolean isCommunity();
 
@@ -159,8 +157,6 @@ public interface Group extends GroupModel, PersistedModel {
 	public boolean isUserGroup();
 
 	public boolean isUserPersonalSite();
-
-	public void setTypeSettings(java.lang.String typeSettings);
 
 	public void setTypeSettingsProperties(
 		com.liferay.portal.kernel.util.UnicodeProperties typeSettingsProperties);

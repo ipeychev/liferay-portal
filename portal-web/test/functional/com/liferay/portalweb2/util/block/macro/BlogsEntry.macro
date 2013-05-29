@@ -1,6 +1,6 @@
 <definition>
 	<command name="cpAdd">
-		<execute macro="Page#cpGoto">
+		<execute macro="Page#cpGotoContent">
 			<var name="portletName" value="Blogs" />
 		</execute>
 
@@ -10,7 +10,7 @@
 		<execute action="CPBlogsAdd#type" locator-key1="CONTENT_FIELD" value1="${entryContent}" />
 		<execute action="CPBlogsAdd#click" locator-key1="PUBLISH_BUTTON" />
 
-		<execute action="CPBlogs#assertTextEquals" locator-key1="SUCCESS_MESSAGE" value1="Your request completed successfully." />
+		<execute action="CPBlogs#assertTextEquals" locator-key1="SUCCESS_MESSAGE" />
 		<execute action="CPBlogs#assertTextEquals" locator-key1="ENTRY_TABLE_TITLE_1" value1="${entryTitle}" />
 		<execute action="CPBlogs#click" locator-key1="ENTRY_TABLE_TITLE_1" value1="${entryTitle}" />
 
@@ -19,7 +19,7 @@
 	</command>
 
 	<command name="cpTearDown">
-		<execute macro="Page#cpGoto">
+		<execute macro="Page#cpGotoContent">
 			<var name="portletName" value="Blogs" />
 		</execute>
 
@@ -27,7 +27,7 @@
 			<condition action="CPBlogs#isElementPresent" locator-key1="ENTRY_TABLE_ALL_CHECKBOX" />
 			<then>
 				<execute action="CPBlogs#click" locator-key1="ENTRY_TABLE_ALL_CHECKBOX" />
-				<execute action="CPBlogs#click" locator-key1="RECYCLE_BIN_BUTTON" value1="Move to the Recycle Bin" />
+				<execute action="CPBlogs#click" locator-key1="RECYCLE_BIN_BUTTON" />
 			</then>
 		</if>
 

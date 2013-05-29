@@ -48,10 +48,10 @@ public class BookmarksPortletDataHandler extends BasePortletDataHandler {
 	public static final String NAMESPACE = "bookmarks";
 
 	public BookmarksPortletDataHandler() {
-		setAlwaysExportable(true);
 		setExportControls(
-			new PortletDataHandlerBoolean(NAMESPACE, "folders", true, true),
-			new PortletDataHandlerBoolean(NAMESPACE, "entries", true, true));
+			new PortletDataHandlerBoolean(
+				NAMESPACE, "entries", true, false, null,
+				BookmarksEntry.class.getName()));
 		setExportMetadataControls(
 			new PortletDataHandlerBoolean(
 				NAMESPACE, "bookmarks", true,
@@ -60,6 +60,7 @@ public class BookmarksPortletDataHandler extends BasePortletDataHandler {
 					new PortletDataHandlerBoolean(NAMESPACE, "ratings"),
 					new PortletDataHandlerBoolean(NAMESPACE, "tags")
 				}));
+		setImportControls(getExportControls());
 		setPublishToLiveByDefault(true);
 	}
 
@@ -91,11 +92,15 @@ public class BookmarksPortletDataHandler extends BasePortletDataHandler {
 			PortletPreferences portletPreferences)
 		throws Exception {
 
+		Element rootElement = addExportDataRootElement(portletDataContext);
+
+		if (!portletDataContext.getBooleanParameter(NAMESPACE, "entries")) {
+			return getExportDataRootElementString(rootElement);
+		}
+
 		portletDataContext.addPermissions(
 			BookmarksPermission.RESOURCE_NAME,
 			portletDataContext.getScopeGroupId());
-
-		Element rootElement = addExportDataRootElement(portletDataContext);
 
 		rootElement.addAttribute(
 			"group-id", String.valueOf(portletDataContext.getScopeGroupId()));
@@ -118,6 +123,10 @@ public class BookmarksPortletDataHandler extends BasePortletDataHandler {
 			PortletDataContext portletDataContext, String portletId,
 			PortletPreferences portletPreferences, String data)
 		throws Exception {
+
+		if (!portletDataContext.getBooleanParameter(NAMESPACE, "entries")) {
+			return null;
+		}
 
 		portletDataContext.importPermissions(
 			BookmarksPermission.RESOURCE_NAME,

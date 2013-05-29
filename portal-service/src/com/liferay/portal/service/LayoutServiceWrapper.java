@@ -32,6 +32,7 @@ public class LayoutServiceWrapper implements LayoutService,
 	*
 	* @return the Spring bean ID for this bean
 	*/
+	@Override
 	public java.lang.String getBeanIdentifier() {
 		return _layoutService.getBeanIdentifier();
 	}
@@ -41,10 +42,12 @@ public class LayoutServiceWrapper implements LayoutService,
 	*
 	* @param beanIdentifier the Spring bean ID for this bean
 	*/
+	@Override
 	public void setBeanIdentifier(java.lang.String beanIdentifier) {
 		_layoutService.setBeanIdentifier(beanIdentifier);
 	}
 
+	@Override
 	public com.liferay.portal.model.Layout addLayout(long groupId,
 		boolean privateLayout, long parentLayoutId,
 		java.util.Map<java.util.Locale, java.lang.String> localeNamesMap,
@@ -115,6 +118,7 @@ public class LayoutServiceWrapper implements LayoutService,
 	long, Map, Map, Map, Map, Map, String, boolean, String,
 	ServiceContext)}
 	*/
+	@Override
 	public com.liferay.portal.model.Layout addLayout(long groupId,
 		boolean privateLayout, long parentLayoutId,
 		java.util.Map<java.util.Locale, java.lang.String> localeNamesMap,
@@ -178,6 +182,7 @@ public class LayoutServiceWrapper implements LayoutService,
 	involved, or if layout values were invalid
 	* @throws SystemException if a system exception occurred
 	*/
+	@Override
 	public com.liferay.portal.model.Layout addLayout(long groupId,
 		boolean privateLayout, long parentLayoutId, java.lang.String name,
 		java.lang.String title, java.lang.String description,
@@ -189,6 +194,7 @@ public class LayoutServiceWrapper implements LayoutService,
 			name, title, description, type, hidden, friendlyURL, serviceContext);
 	}
 
+	@Override
 	public com.liferay.portal.kernel.repository.model.FileEntry addTempFileEntry(
 		long groupId, java.lang.String fileName,
 		java.lang.String tempFolderName, java.io.InputStream inputStream,
@@ -212,6 +218,7 @@ public class LayoutServiceWrapper implements LayoutService,
 	other portal exception occurred
 	* @throws SystemException if a system exception occurred
 	*/
+	@Override
 	public void deleteLayout(long groupId, boolean privateLayout,
 		long layoutId, com.liferay.portal.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException,
@@ -231,6 +238,7 @@ public class LayoutServiceWrapper implements LayoutService,
 	if some other portal exception occurred
 	* @throws SystemException if a system exception occurred
 	*/
+	@Override
 	public void deleteLayout(long plid,
 		com.liferay.portal.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException,
@@ -238,6 +246,7 @@ public class LayoutServiceWrapper implements LayoutService,
 		_layoutService.deleteLayout(plid, serviceContext);
 	}
 
+	@Override
 	public void deleteTempFileEntry(long groupId, java.lang.String fileName,
 		java.lang.String tempFolderName)
 		throws com.liferay.portal.kernel.exception.PortalException,
@@ -264,6 +273,7 @@ public class LayoutServiceWrapper implements LayoutService,
 	manage the layouts, or if some other portal exception occurred
 	* @throws SystemException if a system exception occurred
 	*/
+	@Override
 	public byte[] exportLayouts(long groupId, boolean privateLayout,
 		long[] layoutIds,
 		java.util.Map<java.lang.String, java.lang.String[]> parameterMap,
@@ -291,6 +301,7 @@ public class LayoutServiceWrapper implements LayoutService,
 	layouts, or if some other portal exception occurred
 	* @throws SystemException if a system exception occurred
 	*/
+	@Override
 	public byte[] exportLayouts(long groupId, boolean privateLayout,
 		java.util.Map<java.lang.String, java.lang.String[]> parameterMap,
 		java.util.Date startDate, java.util.Date endDate)
@@ -319,6 +330,7 @@ public class LayoutServiceWrapper implements LayoutService,
 	manage the layouts, or if some other portal exception occurred
 	* @throws SystemException if a system exception occurred
 	*/
+	@Override
 	public java.io.File exportLayoutsAsFile(long groupId,
 		boolean privateLayout, long[] layoutIds,
 		java.util.Map<java.lang.String, java.lang.String[]> parameterMap,
@@ -327,6 +339,17 @@ public class LayoutServiceWrapper implements LayoutService,
 			com.liferay.portal.kernel.exception.SystemException {
 		return _layoutService.exportLayoutsAsFile(groupId, privateLayout,
 			layoutIds, parameterMap, startDate, endDate);
+	}
+
+	@Override
+	public long exportLayoutsAsFileInBackground(java.lang.String taskName,
+		long groupId, boolean privateLayout, long[] layoutIds,
+		java.util.Map<java.lang.String, java.lang.String[]> parameterMap,
+		java.util.Date startDate, java.util.Date endDate)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return _layoutService.exportLayoutsAsFileInBackground(taskName,
+			groupId, privateLayout, layoutIds, parameterMap, startDate, endDate);
 	}
 
 	/**
@@ -349,6 +372,7 @@ public class LayoutServiceWrapper implements LayoutService,
 	occurred
 	* @throws SystemException if a system exception occurred
 	*/
+	@Override
 	public byte[] exportPortletInfo(long plid, long groupId,
 		java.lang.String portletId,
 		java.util.Map<java.lang.String, java.lang.String[]> parameterMap,
@@ -379,6 +403,7 @@ public class LayoutServiceWrapper implements LayoutService,
 	occurred
 	* @throws SystemException if a system exception occurred
 	*/
+	@Override
 	public java.io.File exportPortletInfoAsFile(long plid, long groupId,
 		java.lang.String portletId,
 		java.util.Map<java.lang.String, java.lang.String[]> parameterMap,
@@ -387,6 +412,17 @@ public class LayoutServiceWrapper implements LayoutService,
 			com.liferay.portal.kernel.exception.SystemException {
 		return _layoutService.exportPortletInfoAsFile(plid, groupId, portletId,
 			parameterMap, startDate, endDate);
+	}
+
+	@Override
+	public long exportPortletInfoAsFileInBackground(java.lang.String taskName,
+		long plid, long groupId, java.lang.String portletId,
+		java.util.Map<java.lang.String, java.lang.String[]> parameterMap,
+		java.util.Date startDate, java.util.Date endDate)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return _layoutService.exportPortletInfoAsFileInBackground(taskName,
+			plid, groupId, portletId, parameterMap, startDate, endDate);
 	}
 
 	/**
@@ -398,6 +434,7 @@ public class LayoutServiceWrapper implements LayoutService,
 	portal exception occurred
 	* @throws SystemException if a system exception occurred
 	*/
+	@Override
 	public java.util.List<com.liferay.portal.model.Layout> getAncestorLayouts(
 		long plid)
 		throws com.liferay.portal.kernel.exception.PortalException,
@@ -419,6 +456,7 @@ public class LayoutServiceWrapper implements LayoutService,
 	key could not be found
 	* @throws SystemException if a system exception occurred
 	*/
+	@Override
 	public long getDefaultPlid(long groupId, long scopeGroupId,
 		boolean privateLayout, java.lang.String portletId)
 		throws com.liferay.portal.kernel.exception.PortalException,
@@ -427,6 +465,7 @@ public class LayoutServiceWrapper implements LayoutService,
 			privateLayout, portletId);
 	}
 
+	@Override
 	public long getDefaultPlid(long groupId, long scopeGroupId,
 		java.lang.String portletId)
 		throws com.liferay.portal.kernel.exception.PortalException,
@@ -446,6 +485,7 @@ public class LayoutServiceWrapper implements LayoutService,
 	portal exception occurred
 	* @throws SystemException if a system exception occurred
 	*/
+	@Override
 	public com.liferay.portal.model.Layout getLayoutByUuidAndGroupId(
 		java.lang.String uuid, long groupId, boolean privateLayout)
 		throws com.liferay.portal.kernel.exception.PortalException,
@@ -466,6 +506,7 @@ public class LayoutServiceWrapper implements LayoutService,
 	* @throws PortalException if a matching layout could not be found
 	* @throws SystemException if a system exception occurred
 	*/
+	@Override
 	public java.lang.String getLayoutName(long groupId, boolean privateLayout,
 		long layoutId, java.lang.String languageId)
 		throws com.liferay.portal.kernel.exception.PortalException,
@@ -485,6 +526,7 @@ public class LayoutServiceWrapper implements LayoutService,
 	* @return the layout references of the matching layouts
 	* @throws SystemException if a system exception occurred
 	*/
+	@Override
 	public com.liferay.portal.model.LayoutReference[] getLayoutReferences(
 		long companyId, java.lang.String portletId,
 		java.lang.String preferencesKey, java.lang.String preferencesValue)
@@ -493,18 +535,21 @@ public class LayoutServiceWrapper implements LayoutService,
 			preferencesKey, preferencesValue);
 	}
 
+	@Override
 	public java.util.List<com.liferay.portal.model.Layout> getLayouts(
 		long groupId, boolean privateLayout)
 		throws com.liferay.portal.kernel.exception.SystemException {
 		return _layoutService.getLayouts(groupId, privateLayout);
 	}
 
+	@Override
 	public java.util.List<com.liferay.portal.model.Layout> getLayouts(
 		long groupId, boolean privateLayout, long parentLayoutId)
 		throws com.liferay.portal.kernel.exception.SystemException {
 		return _layoutService.getLayouts(groupId, privateLayout, parentLayoutId);
 	}
 
+	@Override
 	public java.util.List<com.liferay.portal.model.Layout> getLayouts(
 		long groupId, boolean privateLayout, long parentLayoutId,
 		boolean incomplete, int start, int end)
@@ -514,6 +559,7 @@ public class LayoutServiceWrapper implements LayoutService,
 			parentLayoutId, incomplete, start, end);
 	}
 
+	@Override
 	public java.lang.String[] getTempFileEntryNames(long groupId,
 		java.lang.String tempFolderName)
 		throws com.liferay.portal.kernel.exception.PortalException,
@@ -537,6 +583,7 @@ public class LayoutServiceWrapper implements LayoutService,
 	* @throws SystemException if a system exception occurred
 	* @see com.liferay.portal.lar.LayoutImporter
 	*/
+	@Override
 	public void importLayouts(long groupId, boolean privateLayout,
 		java.util.Map<java.lang.String, java.lang.String[]> parameterMap,
 		byte[] bytes)
@@ -561,6 +608,7 @@ public class LayoutServiceWrapper implements LayoutService,
 	* @throws SystemException if a system exception occurred
 	* @see com.liferay.portal.lar.LayoutImporter
 	*/
+	@Override
 	public void importLayouts(long groupId, boolean privateLayout,
 		java.util.Map<java.lang.String, java.lang.String[]> parameterMap,
 		java.io.File file)
@@ -585,12 +633,24 @@ public class LayoutServiceWrapper implements LayoutService,
 	* @throws SystemException if a system exception occurred
 	* @see com.liferay.portal.lar.LayoutImporter
 	*/
+	@Override
 	public void importLayouts(long groupId, boolean privateLayout,
 		java.util.Map<java.lang.String, java.lang.String[]> parameterMap,
 		java.io.InputStream is)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		_layoutService.importLayouts(groupId, privateLayout, parameterMap, is);
+	}
+
+	@Override
+	public long importLayoutsInBackground(java.lang.String taskName,
+		long groupId, boolean privateLayout,
+		java.util.Map<java.lang.String, java.lang.String[]> parameterMap,
+		java.io.File file)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return _layoutService.importLayoutsInBackground(taskName, groupId,
+			privateLayout, parameterMap, file);
 	}
 
 	/**
@@ -610,6 +670,7 @@ public class LayoutServiceWrapper implements LayoutService,
 	to manage the layouts
 	* @throws SystemException if a system exception occurred
 	*/
+	@Override
 	public void importPortletInfo(long plid, long groupId,
 		java.lang.String portletId,
 		java.util.Map<java.lang.String, java.lang.String[]> parameterMap,
@@ -637,6 +698,7 @@ public class LayoutServiceWrapper implements LayoutService,
 	manage the layouts
 	* @throws SystemException if a system exception occurred
 	*/
+	@Override
 	public void importPortletInfo(long plid, long groupId,
 		java.lang.String portletId,
 		java.util.Map<java.lang.String, java.lang.String[]> parameterMap,
@@ -645,6 +707,28 @@ public class LayoutServiceWrapper implements LayoutService,
 			com.liferay.portal.kernel.exception.SystemException {
 		_layoutService.importPortletInfo(plid, groupId, portletId,
 			parameterMap, is);
+	}
+
+	@Override
+	public long importPortletInfoInBackground(java.lang.String taskName,
+		long plid, long groupId, java.lang.String portletId,
+		java.util.Map<java.lang.String, java.lang.String[]> parameterMap,
+		java.io.File file)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return _layoutService.importPortletInfoInBackground(taskName, plid,
+			groupId, portletId, parameterMap, file);
+	}
+
+	@Override
+	public long importPortletInfoInBackground(java.lang.String taskName,
+		long plid, long groupId, java.lang.String portletId,
+		java.util.Map<java.lang.String, java.lang.String[]> parameterMap,
+		java.io.InputStream is)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return _layoutService.importPortletInfoInBackground(taskName, plid,
+			groupId, portletId, parameterMap, is);
 	}
 
 	/**
@@ -674,6 +758,7 @@ public class LayoutServiceWrapper implements LayoutService,
 	and publish
 	* @throws SystemException if a system exception occurred
 	*/
+	@Override
 	public void schedulePublishToLive(long sourceGroupId, long targetGroupId,
 		boolean privateLayout,
 		java.util.Map<java.lang.Long, java.lang.Boolean> layoutIdMap,
@@ -720,6 +805,7 @@ public class LayoutServiceWrapper implements LayoutService,
 	not found or if the group did not have permission to publish
 	* @throws SystemException if a system exception occurred
 	*/
+	@Override
 	public void schedulePublishToRemote(long sourceGroupId,
 		boolean privateLayout,
 		java.util.Map<java.lang.Long, java.lang.Boolean> layoutIdMap,
@@ -756,6 +842,7 @@ public class LayoutServiceWrapper implements LayoutService,
 	portal exception occurred
 	* @throws SystemException if a system exception occurred
 	*/
+	@Override
 	public void setLayouts(long groupId, boolean privateLayout,
 		long parentLayoutId, long[] layoutIds,
 		com.liferay.portal.service.ServiceContext serviceContext)
@@ -777,6 +864,7 @@ public class LayoutServiceWrapper implements LayoutService,
 	and publish
 	* @throws SystemException if a system exception occurred
 	*/
+	@Override
 	public void unschedulePublishToLive(long groupId, java.lang.String jobName,
 		java.lang.String groupName)
 		throws com.liferay.portal.kernel.exception.PortalException,
@@ -796,6 +884,7 @@ public class LayoutServiceWrapper implements LayoutService,
 	found or if the group did not have permission to publish
 	* @throws SystemException if a system exception occurred
 	*/
+	@Override
 	public void unschedulePublishToRemote(long groupId,
 		java.lang.String jobName, java.lang.String groupName)
 		throws com.liferay.portal.kernel.exception.PortalException,
@@ -803,6 +892,7 @@ public class LayoutServiceWrapper implements LayoutService,
 		_layoutService.unschedulePublishToRemote(groupId, jobName, groupName);
 	}
 
+	@Override
 	public com.liferay.portal.model.Layout updateLayout(long groupId,
 		boolean privateLayout, long layoutId, long parentLayoutId,
 		java.util.Map<java.util.Locale, java.lang.String> localeNamesMap,
@@ -868,6 +958,7 @@ public class LayoutServiceWrapper implements LayoutService,
 	long, long, Map, Map, Map, Map, Map, String, boolean, Map,
 	Boolean, byte[], ServiceContext)}
 	*/
+	@Override
 	public com.liferay.portal.model.Layout updateLayout(long groupId,
 		boolean privateLayout, long layoutId, long parentLayoutId,
 		java.util.Map<java.util.Locale, java.lang.String> localeNamesMap,
@@ -900,6 +991,7 @@ public class LayoutServiceWrapper implements LayoutService,
 	user did not have permission to update the layout
 	* @throws SystemException if a system exception occurred
 	*/
+	@Override
 	public com.liferay.portal.model.Layout updateLayout(long groupId,
 		boolean privateLayout, long layoutId, java.lang.String typeSettings)
 		throws com.liferay.portal.kernel.exception.PortalException,
@@ -924,6 +1016,7 @@ public class LayoutServiceWrapper implements LayoutService,
 	permission to apply the theme
 	* @throws SystemException if a system exception occurred
 	*/
+	@Override
 	public com.liferay.portal.model.Layout updateLookAndFeel(long groupId,
 		boolean privateLayout, long layoutId, java.lang.String themeId,
 		java.lang.String colorSchemeId, java.lang.String css, boolean wapTheme)
@@ -949,6 +1042,7 @@ public class LayoutServiceWrapper implements LayoutService,
 	name was <code>null</code>
 	* @throws SystemException if a system exception occurred
 	*/
+	@Override
 	public com.liferay.portal.model.Layout updateName(long groupId,
 		boolean privateLayout, long layoutId, java.lang.String name,
 		java.lang.String languageId)
@@ -971,6 +1065,7 @@ public class LayoutServiceWrapper implements LayoutService,
 	layout, or if the name was <code>null</code>
 	* @throws SystemException if a system exception occurred
 	*/
+	@Override
 	public com.liferay.portal.model.Layout updateName(long plid,
 		java.lang.String name, java.lang.String languageId)
 		throws com.liferay.portal.kernel.exception.PortalException,
@@ -993,6 +1088,7 @@ public class LayoutServiceWrapper implements LayoutService,
 	did not have permission to update the layout
 	* @throws SystemException if a system exception occurred
 	*/
+	@Override
 	public com.liferay.portal.model.Layout updateParentLayoutId(long groupId,
 		boolean privateLayout, long layoutId, long parentLayoutId)
 		throws com.liferay.portal.kernel.exception.PortalException,
@@ -1016,6 +1112,7 @@ public class LayoutServiceWrapper implements LayoutService,
 	or if a valid parent layout ID to use could not be found
 	* @throws SystemException if a system exception occurred
 	*/
+	@Override
 	public com.liferay.portal.model.Layout updateParentLayoutId(long plid,
 		long parentPlid)
 		throws com.liferay.portal.kernel.exception.PortalException,
@@ -1036,6 +1133,7 @@ public class LayoutServiceWrapper implements LayoutService,
 	user did not have permission to update the layout
 	* @throws SystemException if a system exception occurred
 	*/
+	@Override
 	public com.liferay.portal.model.Layout updatePriority(long groupId,
 		boolean privateLayout, long layoutId, int priority)
 		throws com.liferay.portal.kernel.exception.PortalException,
@@ -1054,6 +1152,7 @@ public class LayoutServiceWrapper implements LayoutService,
 	found
 	* @throws SystemException if a system exception occurred
 	*/
+	@Override
 	public com.liferay.portal.model.Layout updatePriority(long plid,
 		int priority)
 		throws com.liferay.portal.kernel.exception.PortalException,
@@ -1061,6 +1160,7 @@ public class LayoutServiceWrapper implements LayoutService,
 		return _layoutService.updatePriority(plid, priority);
 	}
 
+	@Override
 	public void validateImportLayoutsFile(long groupId, boolean privateLayout,
 		java.util.Map<java.lang.String, java.lang.String[]> parameterMap,
 		java.io.File file)
@@ -1084,10 +1184,12 @@ public class LayoutServiceWrapper implements LayoutService,
 		_layoutService = layoutService;
 	}
 
+	@Override
 	public LayoutService getWrappedService() {
 		return _layoutService;
 	}
 
+	@Override
 	public void setWrappedService(LayoutService layoutService) {
 		_layoutService = layoutService;
 	}

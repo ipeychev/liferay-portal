@@ -37,8 +37,6 @@ portletURL.setParameter("tabs1", tabs1);
 portletURL.setParameter("classNameId", String.valueOf(classNameId));
 portletURL.setParameter("classPK", String.valueOf(classPK));
 
-DDMDisplay ddmDisplay = DDMDisplayRegistryUtil.getDDMDisplay(refererPortletName);
-
 boolean controlPanel = false;
 
 if (layout != null) {
@@ -171,7 +169,7 @@ String title = ddmDisplay.getViewTemplatesTitle(structure, controlPanel, locale)
 				/>
 			</c:if>
 
-			<c:if test='<%= !excludedColumnNames.contains("type") && Validator.isNull(templateTypeValue) && (classNameId == 0) %>'>
+			<c:if test='<%= !excludedColumnNames.contains("type") && (classNameId == 0) %>'>
 				<liferay-ui:search-container-column-text
 					href="<%= rowHREF %>"
 					name="type"

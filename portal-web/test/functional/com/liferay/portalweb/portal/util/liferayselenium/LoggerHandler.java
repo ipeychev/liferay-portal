@@ -29,13 +29,23 @@ public class LoggerHandler implements InvocationHandler {
 		_logger = new Logger(liferaySelenium);
 	}
 
+	@Override
 	public Object invoke(Object proxy, Method method, Object[] arguments)
 		throws Throwable {
 
 		String methodName = method.getName();
 
 		try {
-			if (methodName.equals("stopLogger")) {
+			if (methodName.equals("getPrimaryTestSuiteName") ||
+				methodName.equals("setPrimaryTestSuiteName")) {
+			}
+			else if (methodName.equals("sendLogger")) {
+				_logger.send(arguments);
+			}
+			else if (methodName.equals("startLogger")) {
+				_logger.start();
+			}
+			else if (methodName.equals("stopLogger")) {
 				_logger.stop();
 			}
 			else {

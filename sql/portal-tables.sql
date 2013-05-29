@@ -108,9 +108,9 @@ create table AssetCategoryProperty (
 );
 
 create table AssetEntries_AssetCategories (
-	entryId LONG not null,
 	categoryId LONG not null,
-	primary key (entryId, categoryId)
+	entryId LONG not null,
+	primary key (categoryId, entryId)
 );
 
 create table AssetEntries_AssetTags (
@@ -607,7 +607,8 @@ create table DLFileEntryType (
 	userName VARCHAR(75) null,
 	createDate DATE null,
 	modifiedDate DATE null,
-	name VARCHAR(75) null,
+	fileEntryTypeKey VARCHAR(75) null,
+	name STRING null,
 	description STRING null
 );
 
@@ -1968,6 +1969,8 @@ create table SocialActivity (
 	mirrorActivityId LONG,
 	classNameId LONG,
 	classPK LONG,
+	parentClassNameId LONG,
+	parentClassPK LONG,
 	type_ INTEGER,
 	extraData STRING null,
 	receiverUserId LONG
@@ -2189,9 +2192,9 @@ create table UserGroupRole (
 );
 
 create table UserGroups_Teams (
-	userGroupId LONG not null,
 	teamId LONG not null,
-	primary key (userGroupId, teamId)
+	userGroupId LONG not null,
+	primary key (teamId, userGroupId)
 );
 
 create table UserIdMapper (
@@ -2215,33 +2218,33 @@ create table UserNotificationEvent (
 );
 
 create table Users_Groups (
-	userId LONG not null,
 	groupId LONG not null,
-	primary key (userId, groupId)
+	userId LONG not null,
+	primary key (groupId, userId)
 );
 
 create table Users_Orgs (
-	userId LONG not null,
 	organizationId LONG not null,
-	primary key (userId, organizationId)
+	userId LONG not null,
+	primary key (organizationId, userId)
 );
 
 create table Users_Roles (
-	userId LONG not null,
 	roleId LONG not null,
-	primary key (userId, roleId)
+	userId LONG not null,
+	primary key (roleId, userId)
 );
 
 create table Users_Teams (
-	userId LONG not null,
 	teamId LONG not null,
-	primary key (userId, teamId)
+	userId LONG not null,
+	primary key (teamId, userId)
 );
 
 create table Users_UserGroups (
-	userGroupId LONG not null,
 	userId LONG not null,
-	primary key (userGroupId, userId)
+	userGroupId LONG not null,
+	primary key (userId, userGroupId)
 );
 
 create table UserTracker (

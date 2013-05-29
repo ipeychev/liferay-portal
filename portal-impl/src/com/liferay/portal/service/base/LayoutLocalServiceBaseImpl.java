@@ -212,6 +212,8 @@ import com.liferay.portal.service.persistence.WebsitePersistence;
 import com.liferay.portal.service.persistence.WorkflowDefinitionLinkPersistence;
 import com.liferay.portal.service.persistence.WorkflowInstanceLinkPersistence;
 
+import com.liferay.portlet.backgroundtask.service.BTEntryLocalService;
+import com.liferay.portlet.backgroundtask.service.persistence.BTEntryPersistence;
 import com.liferay.portlet.expando.service.ExpandoValueLocalService;
 import com.liferay.portlet.expando.service.ExpandoValueService;
 import com.liferay.portlet.expando.service.persistence.ExpandoValuePersistence;
@@ -266,6 +268,7 @@ public abstract class LayoutLocalServiceBaseImpl extends BaseLocalServiceImpl
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Indexable(type = IndexableType.REINDEX)
+	@Override
 	public Layout addLayout(Layout layout) throws SystemException {
 		layout.setNew(true);
 
@@ -278,6 +281,7 @@ public abstract class LayoutLocalServiceBaseImpl extends BaseLocalServiceImpl
 	 * @param plid the primary key for the new layout
 	 * @return the new layout
 	 */
+	@Override
 	public Layout createLayout(long plid) {
 		return layoutPersistence.create(plid);
 	}
@@ -291,6 +295,7 @@ public abstract class LayoutLocalServiceBaseImpl extends BaseLocalServiceImpl
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Indexable(type = IndexableType.DELETE)
+	@Override
 	public Layout deleteLayout(long plid)
 		throws PortalException, SystemException {
 		return layoutPersistence.remove(plid);
@@ -304,10 +309,12 @@ public abstract class LayoutLocalServiceBaseImpl extends BaseLocalServiceImpl
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Indexable(type = IndexableType.DELETE)
+	@Override
 	public Layout deleteLayout(Layout layout) throws SystemException {
 		return layoutPersistence.remove(layout);
 	}
 
+	@Override
 	public DynamicQuery dynamicQuery() {
 		Class<?> clazz = getClass();
 
@@ -322,6 +329,7 @@ public abstract class LayoutLocalServiceBaseImpl extends BaseLocalServiceImpl
 	 * @return the matching rows
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Override
 	@SuppressWarnings("rawtypes")
 	public List dynamicQuery(DynamicQuery dynamicQuery)
 		throws SystemException {
@@ -341,6 +349,7 @@ public abstract class LayoutLocalServiceBaseImpl extends BaseLocalServiceImpl
 	 * @return the range of matching rows
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Override
 	@SuppressWarnings("rawtypes")
 	public List dynamicQuery(DynamicQuery dynamicQuery, int start, int end)
 		throws SystemException {
@@ -361,6 +370,7 @@ public abstract class LayoutLocalServiceBaseImpl extends BaseLocalServiceImpl
 	 * @return the ordered range of matching rows
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Override
 	@SuppressWarnings("rawtypes")
 	public List dynamicQuery(DynamicQuery dynamicQuery, int start, int end,
 		OrderByComparator orderByComparator) throws SystemException {
@@ -375,11 +385,13 @@ public abstract class LayoutLocalServiceBaseImpl extends BaseLocalServiceImpl
 	 * @return the number of rows that match the dynamic query
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Override
 	public long dynamicQueryCount(DynamicQuery dynamicQuery)
 		throws SystemException {
 		return layoutPersistence.countWithDynamicQuery(dynamicQuery);
 	}
 
+	@Override
 	public Layout fetchLayout(long plid) throws SystemException {
 		return layoutPersistence.fetchByPrimaryKey(plid);
 	}
@@ -392,10 +404,12 @@ public abstract class LayoutLocalServiceBaseImpl extends BaseLocalServiceImpl
 	 * @throws PortalException if a layout with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Override
 	public Layout getLayout(long plid) throws PortalException, SystemException {
 		return layoutPersistence.findByPrimaryKey(plid);
 	}
 
+	@Override
 	public PersistedModel getPersistedModel(Serializable primaryKeyObj)
 		throws PortalException, SystemException {
 		return layoutPersistence.findByPrimaryKey(primaryKeyObj);
@@ -411,6 +425,7 @@ public abstract class LayoutLocalServiceBaseImpl extends BaseLocalServiceImpl
 	 * @throws PortalException if a matching layout could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Override
 	public Layout getLayoutByUuidAndGroupId(String uuid, long groupId,
 		boolean privateLayout) throws PortalException, SystemException {
 		return layoutPersistence.findByUUID_G_P(uuid, groupId, privateLayout);
@@ -428,6 +443,7 @@ public abstract class LayoutLocalServiceBaseImpl extends BaseLocalServiceImpl
 	 * @return the range of layouts
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Override
 	public List<Layout> getLayouts(int start, int end)
 		throws SystemException {
 		return layoutPersistence.findAll(start, end);
@@ -439,6 +455,7 @@ public abstract class LayoutLocalServiceBaseImpl extends BaseLocalServiceImpl
 	 * @return the number of layouts
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Override
 	public int getLayoutsCount() throws SystemException {
 		return layoutPersistence.countAll();
 	}
@@ -451,6 +468,7 @@ public abstract class LayoutLocalServiceBaseImpl extends BaseLocalServiceImpl
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Indexable(type = IndexableType.REINDEX)
+	@Override
 	public Layout updateLayout(Layout layout) throws SystemException {
 		return layoutPersistence.update(layout);
 	}
@@ -3816,6 +3834,42 @@ public abstract class LayoutLocalServiceBaseImpl extends BaseLocalServiceImpl
 	}
 
 	/**
+	 * Returns the b t entry local service.
+	 *
+	 * @return the b t entry local service
+	 */
+	public BTEntryLocalService getBTEntryLocalService() {
+		return btEntryLocalService;
+	}
+
+	/**
+	 * Sets the b t entry local service.
+	 *
+	 * @param btEntryLocalService the b t entry local service
+	 */
+	public void setBTEntryLocalService(BTEntryLocalService btEntryLocalService) {
+		this.btEntryLocalService = btEntryLocalService;
+	}
+
+	/**
+	 * Returns the b t entry persistence.
+	 *
+	 * @return the b t entry persistence
+	 */
+	public BTEntryPersistence getBTEntryPersistence() {
+		return btEntryPersistence;
+	}
+
+	/**
+	 * Sets the b t entry persistence.
+	 *
+	 * @param btEntryPersistence the b t entry persistence
+	 */
+	public void setBTEntryPersistence(BTEntryPersistence btEntryPersistence) {
+		this.btEntryPersistence = btEntryPersistence;
+	}
+
+	/**
 	 * Returns the expando value local service.
 	 *
 	 * @return the expando value local service
@@ -4187,6 +4241,7 @@ public abstract class LayoutLocalServiceBaseImpl extends BaseLocalServiceImpl
 	 *
 	 * @return the Spring bean ID for this bean
 	 */
+	@Override
 	public String getBeanIdentifier() {
 		return _beanIdentifier;
 	}
@@ -4196,6 +4251,7 @@ public abstract class LayoutLocalServiceBaseImpl extends BaseLocalServiceImpl
 	 *
 	 * @param beanIdentifier the Spring bean ID for this bean
 	 */
+	@Override
 	public void setBeanIdentifier(String beanIdentifier) {
 		_beanIdentifier = beanIdentifier;
 	}
@@ -4589,6 +4645,10 @@ public abstract class LayoutLocalServiceBaseImpl extends BaseLocalServiceImpl
 	protected WorkflowInstanceLinkPersistence workflowInstanceLinkPersistence;
 	@BeanReference(type = CounterLocalService.class)
 	protected CounterLocalService counterLocalService;
+	@BeanReference(type = BTEntryLocalService.class)
+	protected BTEntryLocalService btEntryLocalService;
+	@BeanReference(type = BTEntryPersistence.class)
+	protected BTEntryPersistence btEntryPersistence;
 	@BeanReference(type = ExpandoValueLocalService.class)
 	protected ExpandoValueLocalService expandoValueLocalService;
 	@BeanReference(type = ExpandoValueService.class)

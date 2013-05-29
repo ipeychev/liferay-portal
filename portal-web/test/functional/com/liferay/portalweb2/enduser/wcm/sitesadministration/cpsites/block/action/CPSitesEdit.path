@@ -25,7 +25,7 @@
 </tr>
 <tr>
 	<td>HEADER</td>
-	<td>//h3[@class='header-title']/span</td>
+	<td>//div[@class='row-fluid ']/h1</td>
 	<td></td>
 </tr>
 <tr>

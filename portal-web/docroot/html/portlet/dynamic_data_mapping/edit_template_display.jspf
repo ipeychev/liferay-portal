@@ -21,21 +21,9 @@ if (Validator.isNotNull(scriptContent)) {
 	script = scriptContent;
 }
 
-Map<String, TemplateVariableGroup> templateVariableGroups = Collections.emptyMap();
+long templateHandlerClassNameId = ddmDisplay.getTemplateHandlerClassNameId(template, classNameId);
 
-if (classPK > 0) {
-	DDMStructure ddmStructure = DDMStructureServiceUtil.getStructure(classPK);
-
-	classNameId = ddmStructure.getClassNameId();
-}
-else if ((classPK == -1) && refererPortletName.equals(PortletKeys.JOURNAL)) {
-	classNameId = PortalUtil.getClassNameId(JournalArticle.class);
-}
-else if (template != null) {
-	classNameId = template.getClassNameId();
-}
-
-templateVariableGroups = TemplateContextHelper.getTemplateVariableGroups(classNameId, classPK, language, locale);
+Map<String, TemplateVariableGroup> templateVariableGroups = TemplateContextHelper.getTemplateVariableGroups(templateHandlerClassNameId, classPK, language, locale);
 %>
 
 <aui:input name="scriptContent" type="hidden" value="<%= script %>" />
@@ -79,7 +67,7 @@ templateVariableGroups = TemplateContextHelper.getTemplateVariableGroups(classNa
 										%>
 
 											<li class="palette-item-container">
-												<span class="palette-item" data-content1="<%= HtmlUtil.escapeAttribute(dataContentArray[0]) %>" <c:if test="<%= Validator.isNotNull(dataContentArray[1]) %>">data-content2="<%= HtmlUtil.escapeAttribute(dataContentArray[1]) %>"</c:if> <c:if test="<%= Validator.isNotNull(dataContentArray[2]) %>">data-content3="<%= HtmlUtil.escapeAttribute(dataContentArray[2]) %>"</c:if> title="<%= HtmlUtil.escapeAttribute(_getPaletteItemTitle(pageContext, templateVariableDefinition)) %>">
+												<span class="palette-item" data-content1="<%= HtmlUtil.escapeAttribute(dataContentArray[0]) %>" <c:if test="<%= Validator.isNotNull(dataContentArray[1]) %>">data-content2="<%= HtmlUtil.escapeAttribute(dataContentArray[1]) %>"</c:if> <c:if test="<%= Validator.isNotNull(dataContentArray[2]) %>">data-content3="<%= HtmlUtil.escapeAttribute(dataContentArray[2]) %>"</c:if> data-title="<%= HtmlUtil.escapeAttribute(_getPaletteItemTitle(pageContext, templateVariableDefinition)) %>">
 													<liferay-ui:message key="<%= templateVariableDefinition.getLabel() %>" /><c:if test="<%= templateVariableDefinition.isCollection() || templateVariableDefinition.isRepeatable() %>">*</c:if>
 												</span>
 											</li>
@@ -117,12 +105,14 @@ templateVariableGroups = TemplateContextHelper.getTemplateVariableGroups(classNa
 	</liferay-ui:panel>
 </liferay-ui:panel-container>
 
-<aui:script use="aui-ace-autocomplete-freemarker,aui-ace-autocomplete-plugin,aui-ace-autocomplete-velocity,aui-toggler,aui-tooltip-deprecated,event-mouseenter,transition">
+<aui:script use="aui-ace-autocomplete-freemarker,aui-ace-autocomplete-plugin,aui-ace-autocomplete-velocity,aui-toggler,aui-popover,event-mouseenter,event-outside,resize,transition">
 	var ACPlugin = A.Plugin.AceAutoComplete;
 	var AObject = A.Object;
 	var Util = Liferay.Util;
 
 	var STR_EMPTY = '';
+
+	var STR_HEIGHT = 'height';
 
 	var selectLanguageNode = A.one('#<portlet:namespace />language');
 
@@ -217,7 +207,7 @@ templateVariableGroups = TemplateContextHelper.getTemplateVariableGroups(classNa
 			var cursorPos;
 			var processed;
 
-			var aceAutocomplete = richEditor['aui-ace-autocomplete-plugin'];
+			var aceAutocomplete = richEditor['ace-autocomplete-plugin'];
 
 			aceAutocomplete._lockEditor = true;
 
@@ -289,6 +279,15 @@ templateVariableGroups = TemplateContextHelper.getTemplateVariableGroups(classNa
 		return selectLanguageNode.val();
 	}
 
+	function resizeEditor(event) {
+		var info = event.info;
+
+		richEditor.set(STR_HEIGHT, info.offsetHeight);
+		richEditor.set('width', info.offsetWidth);
+
+		paletteDataContainer.setStyle(STR_HEIGHT, info.offsetHeight);
+	}
+
 	function setEditorContent(content) {
 		richEditor.getSession().setValue(content);
 
@@ -341,17 +340,29 @@ templateVariableGroups = TemplateContextHelper.getTemplateVariableGroups(classNa
 
 	var editorContentElement = A.one('#<portlet:namespace />scriptContent');
 
+	var editorNode = A.one('#<portlet:namespace />richEditor');
+
 	A.on(
 		'domready',
 		function(event) {
 			richEditor = new A.AceEditor(
 				{
-					boundingBox: '#<portlet:namespace />richEditor',
+					boundingBox: editorNode,
 					height: 400,
 					mode: '<%= EditorUtil.getEditorMode(langType) %>',
 					width: '100%'
 				}
 			).render();
+
+			var resize = new A.Resize(
+				{
+					handles: ['br'],
+					node: editorNode,
+					on: {
+						resize: resizeEditor
+					}
+				}
+			);
 
 			if (editorContentElement) {
 				setEditorContent(editorContentElement.val());
@@ -389,15 +400,33 @@ templateVariableGroups = TemplateContextHelper.getTemplateVariableGroups(classNa
 					}
 				);
 
-				var t1 = new A.Tooltip(
+				var tooltip = new A.Popover(
 					{
 						align: {
-							points: ['bl', 'tr']
+							points: [A.WidgetPositionAlign.LC, A.WidgetPositionAlign.RC]
 						},
-						title: true,
-						trigger: '.palette-item'
+						constrain: true,
+						position: 'right',
+						visible: false,
+						zIndex: 6
 					}
 				).render(paletteContainer);
+
+				tooltip.get('boundingBox').on('clickoutside', tooltip.hide, tooltip);
+
+				paletteContainer.delegate(
+					'mouseenter',
+					function(event) {
+						var node = event.currentTarget;
+
+						tooltip.set('align.node', node);
+
+						tooltip.setStdModContent(A.WidgetStdMod.BODY, node.attr('data-title'));
+
+						tooltip.show();
+					},
+					'.palette-item'
+				);
 			</c:if>
 		},
 		'#<portlet:namespace />richEditor'

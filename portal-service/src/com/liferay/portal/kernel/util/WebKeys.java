@@ -14,6 +14,9 @@
 
 package com.liferay.portal.kernel.util;
 
+import com.liferay.portal.kernel.resiliency.spi.agent.annotation.Direction;
+import com.liferay.portal.kernel.resiliency.spi.agent.annotation.Distributed;
+
 /**
  * @author Brian Wing Shun Chan
  */
@@ -138,6 +141,33 @@ public interface WebKeys {
 	public static final String SERVLET_CONTEXT_INCLUDE_FILTER_THEME = "SERVLET_CONTEXT_INCLUDE_FILTER_THEME";
 
 	public static final String SERVLET_PATH = "SERVLET_PATH";
+
+	@Distributed(direction = Direction.RESPONSE)
+	public static final String SPI_AGENT_ACTION_RESULT = "SPI_AGENT_ACTION_RESULT";
+
+	@Distributed(direction = Direction.REQUEST)
+	public static final String SPI_AGENT_EVENT = "SPI_AGENT_EVENT";
+
+	@Distributed(direction = Direction.RESPONSE)
+	public static final String SPI_AGENT_EVENT_RESULT = "SPI_AGENT_EVENT_RESULT";
+
+	@Distributed(direction = Direction.REQUEST)
+	public static final String SPI_AGENT_LAYOUT = "SPI_AGENT_LAYOUT";
+
+	@Distributed(direction = Direction.RESPONSE)
+	public static final String SPI_AGENT_LAYOUT_TYPE_SETTINGS = "SPI_AGENT_LAYOUT_TYPE_SETTINGS";
+
+	@Distributed(direction = Direction.REQUEST)
+	public static final String SPI_AGENT_LIFECYCLE = "SPI_AGENT_LIFECYCLE";
+
+	public static final String SPI_AGENT_ORIGINAL_RESPONSE = "SPI_AGENT_ORIGINAL_RESPONSE";
+
+	@Distributed(direction = Direction.REQUEST)
+	public static final String SPI_AGENT_PORTLET = "SPI_AGENT_PORTLET";
+
+	public static final String SPI_AGENT_REQUEST = "SPI_AGENT_REQUEST";
+
+	public static final String SPI_AGENT_RESPONSE = "SPI_AGENT_RESPONSE";
 
 	public static final String THEME = "THEME";
 

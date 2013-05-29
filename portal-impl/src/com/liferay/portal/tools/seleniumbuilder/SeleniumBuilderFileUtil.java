@@ -20,6 +20,7 @@ import com.liferay.portal.kernel.io.unsync.UnsyncStringReader;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.CharPool;
 import com.liferay.portal.kernel.util.FileUtil;
+import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
@@ -224,9 +225,16 @@ public class SeleniumBuilderFileUtil {
 			Matcher matcher = pattern.matcher(line);
 
 			if (matcher.find()) {
-				line = StringUtil.replace(
-					line, matcher.group(),
-					matcher.group() + " line-number=\"" + lineNumber + "\"");
+				for (String reservedTag : _reservedTags) {
+					if (line.contains("<" + reservedTag)) {
+						line = StringUtil.replace(
+							line, matcher.group(),
+							matcher.group() + " line-number=\"" + lineNumber +
+								"\"");
+
+						break;
+					}
+				}
 			}
 
 			sb.append(line);
@@ -1187,8 +1195,16 @@ public class SeleniumBuilderFileUtil {
 
 		for (String neededAttribute : neededAttributes) {
 			if (!hasNeededAttributes.get(neededAttribute)) {
-				throwValidationException(
-					1004, fileName, element, neededAttributes);
+				if (!neededAttribute.equals("value")) {
+					throwValidationException(
+						1004, fileName, element, neededAttributes);
+				}
+				else {
+					if (Validator.isNull(element.getText())) {
+						throwValidationException(
+							1004, fileName, element, neededAttributes);
+					}
+				}
 			}
 		}
 
@@ -1337,6 +1353,13 @@ public class SeleniumBuilderFileUtil {
 
 	private static final String _TPL_ROOT =
 		"com/liferay/portal/tools/seleniumbuilder/dependencies/";
+
+	private static List<String> _reservedTags = ListUtil.fromArray(
+		new String[] {
+			"case", "command", "condition", "contains", "default", "definition",
+			"echo", "else", "elseif", "equals", "execute", "fail", "if",
+			"isset", "set-up", "td", "tear-down", "then", "tr", "while", "var"
+		});
 
 	private String _baseDir;
 

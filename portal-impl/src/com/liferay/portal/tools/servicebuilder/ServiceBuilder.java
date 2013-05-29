@@ -44,7 +44,7 @@ import com.liferay.portal.model.CacheField;
 import com.liferay.portal.model.ModelHintsUtil;
 import com.liferay.portal.security.permission.ResourceActionsUtil;
 import com.liferay.portal.tools.ArgumentsUtil;
-import com.liferay.portal.tools.SourceFormatter;
+import com.liferay.portal.tools.sourceformatter.SourceFormatter;
 import com.liferay.portal.util.InitUtil;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.util.xml.XMLFormatter;
@@ -84,6 +84,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -862,43 +863,43 @@ public class ServiceBuilder {
 		int dimensions = type.getDimensions();
 		String name = type.getValue();
 
-		if (dimensions > 0) {
-			StringBundler sb = new StringBundler();
-
-			for (int i = 0; i < dimensions; i++) {
-				sb.append("[");
-			}
-
-			if (name.equals("boolean")) {
-				return sb.append("Z").toString();
-			}
-			else if (name.equals("byte")) {
-				return sb.append("B").toString();
-			}
-			else if (name.equals("char")) {
-				return sb.append("C").toString();
-			}
-			else if (name.equals("double")) {
-				return sb.append("D").toString();
-			}
-			else if (name.equals("float")) {
-				return sb.append("F").toString();
-			}
-			else if (name.equals("int")) {
-				return sb.append("I").toString();
-			}
-			else if (name.equals("long")) {
-				return sb.append("J").toString();
-			}
-			else if (name.equals("short")) {
-				return sb.append("S").toString();
-			}
-			else {
-				return sb.append("L").append(name).append(";").toString();
-			}
+		if (dimensions == 0) {
+			return name;
 		}
 
-		return name;
+		StringBundler sb = new StringBundler();
+
+		for (int i = 0; i < dimensions; i++) {
+			sb.append("[");
+		}
+
+		if (name.equals("boolean")) {
+			return sb.append("Z").toString();
+		}
+		else if (name.equals("byte")) {
+			return sb.append("B").toString();
+		}
+		else if (name.equals("char")) {
+			return sb.append("C").toString();
+		}
+		else if (name.equals("double")) {
+			return sb.append("D").toString();
+		}
+		else if (name.equals("float")) {
+			return sb.append("F").toString();
+		}
+		else if (name.equals("int")) {
+			return sb.append("I").toString();
+		}
+		else if (name.equals("long")) {
+			return sb.append("J").toString();
+		}
+		else if (name.equals("short")) {
+			return sb.append("S").toString();
+		}
+		else {
+			return sb.append("L").append(name).append(";").toString();
+		}
 	}
 
 	public String getCreateMappingTableSQL(EntityMapping entityMapping)
@@ -1888,13 +1889,23 @@ public class ServiceBuilder {
 	}
 
 	private void _createExtendedModel(Entity entity) throws Exception {
-		JavaClass javaClass = _getJavaClass(
+		JavaClass modelImplJavaClass = _getJavaClass(
 			_outputPath + "/model/impl/" + entity.getName() + "Impl.java");
+
+		List<JavaMethod> methods = ListUtil.fromArray(
+			_getMethods(modelImplJavaClass));
+
+		JavaClass modelJavaClass = _getJavaClass(
+			_serviceOutputPath + "/model/" + entity.getName() + "Model.java");
+
+		for (JavaMethod method : _getMethods(modelJavaClass)) {
+			methods.remove(method);
+		}
 
 		Map<String, Object> context = _getContext();
 
 		context.put("entity", entity);
-		context.put("methods", _getMethods(javaClass));
+		context.put("methods", methods.toArray(new Object[methods.size()]));
 
 		// Content
 
@@ -4027,6 +4038,20 @@ public class ServiceBuilder {
 				return null;
 			}
 		}
+
+		Arrays.sort(
+			entities,
+			new Comparator<Entity>() {
+
+				@Override
+				public int compare(Entity entity1, Entity entity2) {
+					String name1 = entity1.getName();
+					String name2 = entity2.getName();
+
+					return name1.compareTo(name2);
+				}
+
+			});
 
 		StringBundler sb = new StringBundler();
 

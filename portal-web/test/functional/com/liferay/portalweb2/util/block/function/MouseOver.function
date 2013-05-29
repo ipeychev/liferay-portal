@@ -25,14 +25,6 @@
 		<execute selenium="mouseOver" />
 	</command>
 
-	<command name="textMouseOverClickDockbar">
-		<execute selenium="clickAt" argument1="//div[@id='_145_dockbar']" argument2="" />
-
-		<execute selenium="waitForElementPresent" argument1="//script[contains(@src,'/aui/aui-editable-deprecated/aui-editable-deprecated-min.js')]" />
-
-		<execute function="MouseOver#textMouseOver" />
-	</command>
-
 	<command name="textMouseOverClickNavigation">
 		<execute selenium="clickAt" argument1="//nav[@id='navigation']" argument2="" />
 

@@ -267,6 +267,7 @@
 		<atom-collection-adapter>com.liferay.portlet.documentlibrary.atom.FolderAtomCollectionAdapter</atom-collection-adapter>
 		<custom-attributes-display>com.liferay.portlet.documentlibrary.DLFileEntryCustomAttributesDisplay</custom-attributes-display>
 		<custom-attributes-display>com.liferay.portlet.documentlibrary.DLFolderCustomAttributesDisplay</custom-attributes-display>
+		<ddm-display>com.liferay.portlet.documentlibrary.ddm.DLDDMDisplay</ddm-display>
 		<trash-handler>com.liferay.portlet.documentlibrary.trash.DLFileEntryTrashHandler</trash-handler>
 		<trash-handler>com.liferay.portlet.documentlibrary.trash.DLFileShortcutTrashHandler</trash-handler>
 		<trash-handler>com.liferay.portlet.documentlibrary.trash.DLFolderTrashHandler</trash-handler>
@@ -1011,8 +1012,8 @@
 		<portlet-name>104</portlet-name>
 		<icon>/html/icons/update_manager.png</icon>
 		<struts-path>update_manager</struts-path>
-		<control-panel-entry-category>server</control-panel-entry-category>
-		<control-panel-entry-weight>4.0</control-panel-entry-weight>
+		<control-panel-entry-category>apps</control-panel-entry-category>
+		<control-panel-entry-weight>3.0</control-panel-entry-weight>
 		<control-panel-entry-class>com.liferay.portlet.OmniadminControlPanelEntry</control-panel-entry-class>
 		<preferences-owned-by-group>true</preferences-owned-by-group>
 		<use-default-template>false</use-default-template>
@@ -1265,8 +1266,8 @@
 		<portlet-url-class>com.liferay.portal.struts.StrutsActionPortletURL</portlet-url-class>
 		<portlet-data-handler-class>com.liferay.portlet.passwordpoliciesadmin.lar.PasswordPolicyPortletDataHandler</portlet-data-handler-class>
 		<staged-model-data-handler-class>com.liferay.portlet.passwordpoliciesadmin.lar.PasswordPolicyStagedModelDataHandler</staged-model-data-handler-class>
-		<control-panel-entry-category>configuration</control-panel-entry-category>
-		<control-panel-entry-weight>2.0</control-panel-entry-weight>
+		<control-panel-entry-category>users</control-panel-entry-category>
+		<control-panel-entry-weight>4.0</control-panel-entry-weight>
 		<preferences-owned-by-group>true</preferences-owned-by-group>
 		<use-default-template>false</use-default-template>
 		<private-request-attributes>false</private-request-attributes>
@@ -1297,8 +1298,8 @@
 		<icon>/html/icons/monitoring.png</icon>
 		<struts-path>monitoring</struts-path>
 		<portlet-url-class>com.liferay.portal.struts.StrutsActionPortletURL</portlet-url-class>
-		<control-panel-entry-category>configuration</control-panel-entry-category>
-		<control-panel-entry-weight>7.0</control-panel-entry-weight>
+		<control-panel-entry-category>users</control-panel-entry-category>
+		<control-panel-entry-weight>5.0</control-panel-entry-weight>
 		<preferences-owned-by-group>true</preferences-owned-by-group>
 		<use-default-template>false</use-default-template>
 		<private-request-attributes>false</private-request-attributes>
@@ -1312,8 +1313,8 @@
 		<icon>/html/icons/plugins_admin.png</icon>
 		<struts-path>plugins_admin</struts-path>
 		<portlet-url-class>com.liferay.portal.struts.StrutsActionPortletURL</portlet-url-class>
-		<control-panel-entry-category>configuration</control-panel-entry-category>
-		<control-panel-entry-weight>6.0</control-panel-entry-weight>
+		<control-panel-entry-category>apps</control-panel-entry-category>
+		<control-panel-entry-weight>5.0</control-panel-entry-weight>
 		<preferences-owned-by-group>true</preferences-owned-by-group>
 		<use-default-template>false</use-default-template>
 		<private-request-attributes>false</private-request-attributes>
@@ -1357,8 +1358,8 @@
 		<icon>/html/icons/admin_instances.png</icon>
 		<struts-path>admin_instances</struts-path>
 		<portlet-url-class>com.liferay.portal.struts.StrutsActionPortletURL</portlet-url-class>
-		<control-panel-entry-category>server</control-panel-entry-category>
-		<control-panel-entry-weight>2.0</control-panel-entry-weight>
+		<control-panel-entry-category>configuration</control-panel-entry-category>
+		<control-panel-entry-weight>4.0</control-panel-entry-weight>
 		<control-panel-entry-class>com.liferay.portlet.OmniadminControlPanelEntry</control-panel-entry-class>
 		<preferences-owned-by-group>true</preferences-owned-by-group>
 		<use-default-template>false</use-default-template>
@@ -1372,8 +1373,8 @@
 		<icon>/html/icons/admin_plugins.png</icon>
 		<struts-path>admin_plugins</struts-path>
 		<portlet-url-class>com.liferay.portal.struts.StrutsActionPortletURL</portlet-url-class>
-		<control-panel-entry-category>server</control-panel-entry-category>
-		<control-panel-entry-weight>3.0</control-panel-entry-weight>
+		<control-panel-entry-category>apps</control-panel-entry-category>
+		<control-panel-entry-weight>4.0</control-panel-entry-weight>
 		<control-panel-entry-class>com.liferay.portlet.OmniadminControlPanelEntry</control-panel-entry-class>
 		<preferences-owned-by-group>true</preferences-owned-by-group>
 		<use-default-template>false</use-default-template>
@@ -1390,8 +1391,8 @@
 		<friendly-url-mapper-class>com.liferay.portal.kernel.portlet.DefaultFriendlyURLMapper</friendly-url-mapper-class>
 		<friendly-url-mapping>server</friendly-url-mapping>
 		<friendly-url-routes>com/liferay/portlet/admin/admin-server-friendly-url-routes.xml</friendly-url-routes>
-		<control-panel-entry-category>server</control-panel-entry-category>
-		<control-panel-entry-weight>1.0</control-panel-entry-weight>
+		<control-panel-entry-category>configuration</control-panel-entry-category>
+		<control-panel-entry-weight>3.0</control-panel-entry-weight>
 		<control-panel-entry-class>com.liferay.portlet.OmniadminControlPanelEntry</control-panel-entry-class>
 		<preferences-owned-by-group>true</preferences-owned-by-group>
 		<use-default-template>false</use-default-template>
@@ -1406,7 +1407,7 @@
 		<icon>/html/icons/expando.png</icon>
 		<struts-path>expando</struts-path>
 		<control-panel-entry-category>configuration</control-panel-entry-category>
-		<control-panel-entry-weight>5.0</control-panel-entry-weight>
+		<control-panel-entry-weight>2.0</control-panel-entry-weight>
 		<preferences-owned-by-group>true</preferences-owned-by-group>
 		<use-default-template>false</use-default-template>
 		<private-request-attributes>false</private-request-attributes>
@@ -1793,15 +1794,13 @@
 		<portlet-name>166</portlet-name>
 		<struts-path>dynamic_data_mapping</struts-path>
 		<portlet-url-class>com.liferay.portal.struts.StrutsActionPortletURL</portlet-url-class>
-		<portlet-data-handler-class>com.liferay.portlet.dynamicdatamapping.lar.DDMPortletDataHandler</portlet-data-handler-class>
 		<staged-model-data-handler-class>com.liferay.portlet.dynamicdatamapping.lar.DDMStructureStagedModelDataHandler</staged-model-data-handler-class>
 		<staged-model-data-handler-class>com.liferay.portlet.dynamicdatamapping.lar.DDMTemplateStagedModelDataHandler</staged-model-data-handler-class>
-		<ddm-display>com.liferay.portlet.dynamicdatamapping.util.BaseDDMDisplay</ddm-display>
 		<preferences-owned-by-group>true</preferences-owned-by-group>
 		<use-default-template>false</use-default-template>
 		<private-request-attributes>false</private-request-attributes>
 		<private-session-attributes>false</private-session-attributes>
-		<autopropagated-parameters>ddmResource,ddmResourceActionId,refererPortletName,refererWebDAVToken,scopeAvailableFields,scopeStorageType,scopeStructureName,scopeStructureType,scopeTemplateMode,scopeTemplateType,scopeTitle,showGlobalScope,showManageTemplates,showToolbar</autopropagated-parameters>
+		<autopropagated-parameters>refererPortletName,refererWebDAVToken,scopeTitle,showGlobalScope,showManageTemplates,showToolbar</autopropagated-parameters>
 		<render-weight>50</render-weight>
 		<header-portlet-css>/html/portlet/dynamic_data_mapping/css/main.css</header-portlet-css>
 		<header-portlet-javascript>/html/portlet/dynamic_data_lists/js/main.js</header-portlet-javascript>
@@ -1823,6 +1822,7 @@
 		<control-panel-entry-category>site_administration.content</control-panel-entry-category>
 		<control-panel-entry-weight>8.0</control-panel-entry-weight>
 		<asset-renderer-factory>com.liferay.portlet.dynamicdatalists.asset.DDLRecordAssetRendererFactory</asset-renderer-factory>
+		<ddm-display>com.liferay.portlet.dynamicdatalists.ddm.DDLDDMDisplay</ddm-display>
 		<workflow-handler>com.liferay.portlet.dynamicdatalists.workflow.DDLRecordWorkflowHandler</workflow-handler>
 		<preferences-owned-by-group>true</preferences-owned-by-group>
 		<use-default-template>false</use-default-template>
@@ -1937,8 +1937,8 @@
 		<portlet-name>176</portlet-name>
 		<icon>/html/icons/default.png</icon>
 		<struts-path>license_manager</struts-path>
-		<control-panel-entry-category>server</control-panel-entry-category>
-		<control-panel-entry-weight>4.0</control-panel-entry-weight>
+		<control-panel-entry-category>apps</control-panel-entry-category>
+		<control-panel-entry-weight>5.0</control-panel-entry-weight>
 		<control-panel-entry-class>com.liferay.portlet.OmniadminControlPanelEntry</control-panel-entry-class>
 		<use-default-template>false</use-default-template>
 		<private-request-attributes>false</private-request-attributes>
@@ -2042,7 +2042,7 @@
 		<use-default-template>false</use-default-template>
 		<private-request-attributes>false</private-request-attributes>
 		<private-session-attributes>false</private-session-attributes>
-		<autopropagated-parameters>ddmResource,ddmResourceActionId,scopeAvailableFields,scopeStorageType,scopeStructureName,scopeStructureType,scopeTemplateMode,scopeTitle,scopeTemplateType,showGlobalScope,showManageTemplates,showToolbar</autopropagated-parameters>
+		<autopropagated-parameters>scopeTitle,showGlobalScope,showManageTemplates,showToolbar</autopropagated-parameters>
 		<render-weight>50</render-weight>
 		<header-portlet-css>/html/portlet/dynamic_data_mapping/css/main.css</header-portlet-css>
 		<css-class-wrapper>portlet-dynamic-data-mapping</css-class-wrapper>

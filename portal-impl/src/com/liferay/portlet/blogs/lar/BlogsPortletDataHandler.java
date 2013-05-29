@@ -44,9 +44,11 @@ public class BlogsPortletDataHandler extends BasePortletDataHandler {
 	public static final String NAMESPACE = "blogs";
 
 	public BlogsPortletDataHandler() {
-		setAlwaysExportable(true);
 		setExportControls(
-			new PortletDataHandlerBoolean(NAMESPACE, "entries", true, true));
+			new PortletDataHandlerBoolean(
+				NAMESPACE, "entries", true, false, null,
+				BlogsEntry.class.getName()),
+			new PortletDataHandlerBoolean(NAMESPACE, "embedded-assets"));
 		setExportMetadataControls(
 			new PortletDataHandlerBoolean(
 				NAMESPACE, "blog-entries", true,
@@ -56,7 +58,7 @@ public class BlogsPortletDataHandler extends BasePortletDataHandler {
 					new PortletDataHandlerBoolean(NAMESPACE, "ratings"),
 					new PortletDataHandlerBoolean(NAMESPACE, "tags")
 				}));
-		setImportMetadataControls(getExportMetadataControls()[0]);
+		setImportMetadataControls(getExportMetadataControls());
 		setPublishToLiveByDefault(PropsValues.BLOGS_PUBLISH_TO_LIVE_BY_DEFAULT);
 	}
 
@@ -87,11 +89,15 @@ public class BlogsPortletDataHandler extends BasePortletDataHandler {
 			PortletPreferences portletPreferences)
 		throws Exception {
 
+		Element rootElement = addExportDataRootElement(portletDataContext);
+
+		if (!portletDataContext.getBooleanParameter(NAMESPACE, "entries")) {
+			return getExportDataRootElementString(rootElement);
+		}
+
 		portletDataContext.addPermissions(
 			BlogsPermission.RESOURCE_NAME,
 			portletDataContext.getScopeGroupId());
-
-		Element rootElement = addExportDataRootElement(portletDataContext);
 
 		rootElement.addAttribute(
 			"group-id", String.valueOf(portletDataContext.getScopeGroupId()));
@@ -109,6 +115,10 @@ public class BlogsPortletDataHandler extends BasePortletDataHandler {
 			PortletDataContext portletDataContext, String portletId,
 			PortletPreferences portletPreferences, String data)
 		throws Exception {
+
+		if (!portletDataContext.getBooleanParameter(NAMESPACE, "entries")) {
+			return null;
+		}
 
 		portletDataContext.importPermissions(
 			BlogsPermission.RESOURCE_NAME,

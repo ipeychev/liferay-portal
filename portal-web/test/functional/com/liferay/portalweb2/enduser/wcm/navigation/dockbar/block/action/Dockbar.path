@@ -71,30 +71,46 @@
 	<td></td>
 	<td></td>
 </tr>
-<!--MANAGE-->
+<!--EDIT-->
 <tr>
-	<td>MANAGE</td>
+	<td>EDIT</td>
 	<td>//li[@id='_145_manageContent']/a</td>
 	<td></td>
 </tr>
 <tr>
-	<td>MANAGE_PAGE</td>
-	<td>//li[contains(@class,'manage-page')]/a[@title='Manage Page']</td>
+	<td>EDIT_PAGE</td>
+	<td>//a[@title='Manage Page']</td>
 	<td></td>
 </tr>
 <tr>
-	<td>MANAGE_PAGE_LAYOUT</td>
+	<td>EDIT_PAGE_LAYOUT</td>
 	<td>//li[contains(@class,'page-layout')]/a[@title='Manage Page']</td>
 	<td></td>
 </tr>
 <tr>
-	<td>MANAGE_PAGE_CUSTOMIZATIONS</td>
+	<td>EDIT_PAGE_CUSTOMIZATIONS</td>
 	<td>//a[@id='_145_manageCustomization']</td>
 	<td></td>
 </tr>
 <tr>
-	<td>MANAGE_SITE</td>
-	<td>//li[contains(@class,'settings')]/a[@title='Manage Site']</td>
+	<td></td>
+	<td></td>
+	<td></td>
+</tr>
+<!--ADMIN-->
+<tr>
+	<td>ADMIN</td>
+	<td>//li[@id='_145_adminLinks']/a</td>
+	<td></td>
+</tr>
+<tr>
+	<td>ADMIN_SITE_ADMINISTRATION</td>
+	<td>//li[@id='_145_adminLinks']/ul/li/a[contains(.,'Site Administration')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>ADMIN_CONTROL_PANEL</td>
+	<td>//li[@id='_145_adminLinks']/ul/li/a[contains(.,'Control Panel')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -102,24 +118,19 @@
 	<td></td>
 	<td></td>
 </tr>
-<!--GO_TO-->
+<!--MY_SITES-->
 <tr>
-	<td>GO_TO</td>
-	<td>//li[@id='mySites']/a</td>
+	<td>MY_SITES</td>
+	<td>//li[@id='_145_mySites']/a</td>
 	<td></td>
 </tr>
 <tr>
-	<td>GO_TO_CONTROL_PANEL</td>
-	<td>link=Control Panel</td>
-	<td></td>
-</tr>
-<tr>
-	<td>GO_TO_MY_PUBLIC_PAGES</td>
+	<td>MY_SITES_MY_PUBLIC_PAGES</td>
 	<td>//span[@class='site-name' and contains(.,'My Public Pages')]</td>
 	<td></td>
 </tr>
 <tr>
-	<td>GO_TO_MY_PRIVATE_PAGES</td>
+	<td>MY_SITES_MY_PRIVATE_PAGES</td>
 	<td>//span[@class='site-name' and contains(.,'My Private Pages')]</td>
 	<td></td>
 </tr>

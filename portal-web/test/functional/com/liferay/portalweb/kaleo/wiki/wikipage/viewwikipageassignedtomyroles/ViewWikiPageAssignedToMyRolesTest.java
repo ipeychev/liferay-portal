@@ -25,10 +25,11 @@ public class ViewWikiPageAssignedToMyRolesTest extends BaseTestCase {
 		selenium.selectWindow("null");
 		selenium.selectFrame("relative=top");
 		selenium.open("/web/guest/home/");
-		selenium.waitForVisible("link=Wiki Test Page");
+		Thread.sleep(1000);
 		selenium.clickAt("link=Wiki Test Page",
 			RuntimeVariables.replace("Wiki Test Page"));
 		selenium.waitForPageToLoad("30000");
+		selenium.waitForVisible("link=All Pages");
 		selenium.clickAt("link=All Pages", RuntimeVariables.replace("All Pages"));
 		selenium.waitForPageToLoad("30000");
 		assertFalse(selenium.isTextPresent("Wiki Page Title"));
@@ -38,15 +39,19 @@ public class ViewWikiPageAssignedToMyRolesTest extends BaseTestCase {
 		assertEquals(RuntimeVariables.replace("Pending Approval"),
 			selenium.getText("//div/div/h2"));
 		assertEquals(RuntimeVariables.replace("Wiki Page Title"),
-			selenium.getText("//td[1]/a"));
-		selenium.clickAt("//td[1]/a",
+			selenium.getText("//tr[contains(.,'Wiki Page Title')]/td[1]/a"));
+		selenium.clickAt("//tr[contains(.,'Wiki Page Title')]/td[1]/a",
 			RuntimeVariables.replace("Wiki Page Title"));
 		selenium.waitForPageToLoad("30000");
 		assertEquals(RuntimeVariables.replace("Wiki Page Title"),
-			selenium.getText("//h1[@class='header-title']"));
+			selenium.getText("//h3[@class='header-title']"));
 		assertEquals(RuntimeVariables.replace("Pending (Review)"),
-			selenium.getText("//span[@class='workflow-status']/strong"));
+			selenium.getText("//strong[@class='workflow-status-pending']"));
 		selenium.open("/web/guest/home/");
+		selenium.clickAt("//div[@id='dockbar']",
+			RuntimeVariables.replace("Dockbar"));
+		selenium.waitForElementPresent(
+			"//script[contains(@src,'/aui/aui-editable/aui-editable-min.js')]");
 		assertEquals(RuntimeVariables.replace("Go to"),
 			selenium.getText("//li[@id='_145_mySites']/a/span"));
 		selenium.mouseOver("//li[@id='_145_mySites']/a/span");
@@ -61,19 +66,20 @@ public class ViewWikiPageAssignedToMyRolesTest extends BaseTestCase {
 		selenium.waitForPageToLoad("30000");
 		assertEquals(RuntimeVariables.replace(
 				"There are no pending tasks assigned to you."),
-			selenium.getText("//div[@class='portlet-msg-info']"));
+			selenium.getText("//div[@class='alert alert-info']"));
 		assertEquals(RuntimeVariables.replace("Review"),
-			selenium.getText("//td[1]/a"));
+			selenium.getText("//tr[contains(.,'Wiki Page Title')]/td[1]/a"));
 		assertEquals(RuntimeVariables.replace("Wiki Page Title"),
-			selenium.getText("//td[2]/a"));
+			selenium.getText("//tr[contains(.,'Wiki Page Title')]/td[2]/a"));
 		assertEquals(RuntimeVariables.replace("Wiki Page"),
-			selenium.getText("//td[3]/a"));
-		assertTrue(selenium.isVisible("//td[4]/a"));
+			selenium.getText("//tr[contains(.,'Wiki Page Title')]/td[3]/a"));
+		assertTrue(selenium.isVisible(
+				"//tr[contains(.,'Wiki Page Title')]/td[4]/a"));
 		assertEquals(RuntimeVariables.replace("Never"),
-			selenium.getText("//td[5]/a"));
+			selenium.getText("//tr[contains(.,'Wiki Page Title')]/td[5]/a"));
 		selenium.clickAt("link=Completed", RuntimeVariables.replace("Completed"));
 		selenium.waitForPageToLoad("30000");
 		assertEquals(RuntimeVariables.replace("There are no completed tasks."),
-			selenium.getText("//div[@class='portlet-msg-info']"));
+			selenium.getText("//div[@class='alert alert-info']"));
 	}
 }

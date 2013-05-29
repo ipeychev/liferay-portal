@@ -9,6 +9,21 @@
 		<execute macro="UserGroup#cpAdd" />
 	</command>
 
+	<command name="DeleteUserGroup">
+		<var name="userGroupName" value="UG UserGroup Name" />
+
+		<execute macro="UserGroup#cpAdd" />
+		<execute macro="UserGroup#cpDelete" />
+	</command>
+
+	<command name="EditUserGroup">
+		<var name="userGroupName" value="UG UserGroup Name" />
+		<var name="userGroupNameEdit" value="UG UserGroup Name Edit" />
+
+		<execute macro="UserGroup#cpAdd" />
+		<execute macro="UserGroup#cpEdit" />
+	</command>
+
 	<tear-down>
 		<execute macro="UserGroup#cpTearDown" />
 	</tear-down>

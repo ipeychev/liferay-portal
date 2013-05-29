@@ -2046,9 +2046,14 @@
 			<basic name="modifiedDate">
 				<temporal>TIMESTAMP</temporal>
 			</basic>
+			<basic name="fileEntryTypeKey" />
 			<basic name="name" />
 			<basic name="description" />
+			<transient name="descriptionCurrentLanguageId" />
+			<transient name="descriptionMap" />
 			<transient name="modelAttributes" />
+			<transient name="nameCurrentLanguageId" />
+			<transient name="nameMap" />
 			<transient name="primaryKey" />
 			<transient name="primaryKeyObj" />
 			<transient name="userUuid" />
@@ -3514,6 +3519,8 @@
 			<basic name="mirrorActivityId" />
 			<basic name="classNameId" />
 			<basic name="classPK" />
+			<basic name="parentClassNameId" />
+			<basic name="parentClassPK" />
 			<basic name="type">
 				<column name="TYPE_" />
 			</basic>

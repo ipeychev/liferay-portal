@@ -241,21 +241,21 @@ public class ThemeDisplay
 	}
 
 	/**
-	 * @deprecated As of 6.2 renamed to {@link #getSiteGroup}
+	 * @deprecated As of 6.2.0 renamed to {@link #getSiteGroup}
 	 */
 	public Group getParentGroup() {
 		return getSiteGroup();
 	}
 
 	/**
-	 * @deprecated As of 6.2 renamed to {@link #getSiteGroupId}
+	 * @deprecated As of 6.2.0 renamed to {@link #getSiteGroupId}
 	 */
 	public long getParentGroupId() {
 		return getSiteGroupId();
 	}
 
 	/**
-	 * @deprecated As of 6.2 renamed to {@link #getSiteGroupName}
+	 * @deprecated As of 6.2.0 renamed to {@link #getSiteGroupName}
 	 */
 	public String getParentGroupName() throws PortalException, SystemException {
 		return getSiteGroupName();
@@ -404,7 +404,7 @@ public class ThemeDisplay
 	}
 
 	/**
-	 * @deprecated As of 6.2 renamed to {@link #getSiteGroupIdOrLiveGroupId}
+	 * @deprecated As of 6.2.0 renamed to {@link #getSiteGroupIdOrLiveGroupId}
 	 */
 	public long getScopeGroupIdOrLiveGroupId()
 		throws PortalException, SystemException {
@@ -596,7 +596,8 @@ public class ThemeDisplay
 	}
 
 	/**
-	 * @deprecated As of 6.2.0, replaced by {@link #isShowSiteAdministrationIcon()}
+	 * @deprecated As of 6.2.0, replaced by {@link
+	 *             #isShowSiteAdministrationIcon()}
 	 */
 	public PortletURL getURLSiteMapSettings() {
 		return _urlSiteMapSettings;
@@ -712,7 +713,8 @@ public class ThemeDisplay
 	}
 
 	/**
-	 * @deprecated As of 6.2.0, replaced by {@link #isShowSiteAdministrationIcon()}
+	 * @deprecated As of 6.2.0, replaced by {@link
+	 *             #isShowSiteAdministrationIcon()}
 	 */
 	public boolean isShowManageSiteMembershipsIcon() {
 		return _showManageSiteMembershipsIcon;
@@ -747,21 +749,24 @@ public class ThemeDisplay
 	}
 
 	/**
-	 * @deprecated As of 6.2.0, replaced by {@link #isShowSiteAdministrationIcon()}
+	 * @deprecated As of 6.2.0, replaced by {@link
+	 *             #isShowSiteAdministrationIcon()}
 	 */
 	public boolean isShowSiteContentIcon() {
 		return isShowSiteAdministrationIcon();
 	}
 
 	/**
-	 * @deprecated As of 6.2.0, replaced by {@link #isShowSiteAdministrationIcon()}
+	 * @deprecated As of 6.2.0, replaced by {@link
+	 *             #isShowSiteAdministrationIcon()}
 	 */
 	public boolean isShowSiteMapSettingsIcon() {
 		return _showSiteMapSettingsIcon;
 	}
 
 	/**
-	 * @deprecated As of 6.2.0, replaced by {@link #isShowSiteAdministrationIcon()}
+	 * @deprecated As of 6.2.0, replaced by {@link
+	 *             #isShowSiteAdministrationIcon()}
 	 */
 	public boolean isShowSiteSettingsIcon() {
 		return _showSiteSettingsIcon;
@@ -815,6 +820,7 @@ public class ThemeDisplay
 		return _widget;
 	}
 
+	@Override
 	public ThemeDisplay merge(ThemeDisplay themeDisplay) {
 		if ((themeDisplay == null) || (themeDisplay == this)) {
 			return this;
@@ -1049,7 +1055,7 @@ public class ThemeDisplay
 	}
 
 	/**
-	 * @deprecated As of 6.2 renamed to {@link #setSiteGroupId(long)}
+	 * @deprecated As of 6.2.0 renamed to {@link #setSiteGroupId(long)}
 	 */
 	public void setParentGroupId(long parentGroupId) {
 		setSiteGroupId(parentGroupId);
@@ -1409,7 +1415,8 @@ public class ThemeDisplay
 	}
 
 	/**
-	 * @deprecated As of 6.2.0, replaced by {@link #setURLSiteAdministration(String)}
+	 * @deprecated As of 6.2.0, replaced by {@link
+	 *             #setURLSiteAdministration(String)}
 	 */
 	public void setURLSiteContent(String urlSiteContent) {
 		setURLSiteAdministration(urlSiteContent);

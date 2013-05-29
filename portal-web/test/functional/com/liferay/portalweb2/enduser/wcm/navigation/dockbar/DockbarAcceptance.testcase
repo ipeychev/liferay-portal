@@ -13,10 +13,10 @@
 		</execute>
 
 		<execute macro="Page#cpGotoConfiguration">
-			<var name="portletName" value="Mobile Device Rules" />
+			<var name="portletName" value="Server Administration" />
 		</execute>
 
-		<execute macro="Page#cpGotoServer">
+		<execute macro="Page#cpGotoApps">
 			<var name="portletName" value="Update Manager" />
 		</execute>
 	</command>

@@ -188,6 +188,152 @@ public class TearDownWikiNodeTest extends BaseTestCase {
 			case 4:
 			case 5:
 			case 6:
+				assertEquals(RuntimeVariables.replace("Main"),
+					selenium.getText("//tr/td/a[contains(.,'Main')]"));
+				selenium.clickAt("//tr/td/a[contains(.,'Main')]",
+					RuntimeVariables.replace("Main"));
+				selenium.waitForPageToLoad("30000");
+
+				boolean wikiPage1Present = selenium.isElementPresent(
+						"xPath=(//span[@title='Actions']/ul/li/strong/a/span)[2]");
+
+				if (!wikiPage1Present) {
+					label = 7;
+
+					continue;
+				}
+
+				assertEquals(RuntimeVariables.replace("Actions"),
+					selenium.getText(
+						"xPath=(//span[@title='Actions']/ul/li/strong/a/span)[2]"));
+				selenium.clickAt("xPath=(//span[@title='Actions']/ul/li/strong/a/span)[2]",
+					RuntimeVariables.replace("Actions"));
+				selenium.waitForVisible(
+					"//div[@class='lfr-component lfr-menu-list']/ul/li/a[contains(.,'Move to the Recycle Bin')]");
+				assertEquals(RuntimeVariables.replace("Move to the Recycle Bin"),
+					selenium.getText(
+						"//div[@class='lfr-component lfr-menu-list']/ul/li/a[contains(.,'Move to the Recycle Bin')]"));
+				selenium.clickAt("//div[@class='lfr-component lfr-menu-list']/ul/li/a[contains(.,'Move to the Recycle Bin')]",
+					RuntimeVariables.replace("Move to the Recycle Bin"));
+				selenium.waitForPageToLoad("30000");
+				assertEquals(RuntimeVariables.replace(
+						"The selected item was moved to the Recycle Bin. Undo"),
+					selenium.getText(
+						"//div[@class='portlet-msg-success taglib-trash-undo']"));
+
+				boolean wikiPage2Present = selenium.isElementPresent(
+						"xPath=(//span[@title='Actions']/ul/li/strong/a/span)[2]");
+
+				if (!wikiPage2Present) {
+					label = 8;
+
+					continue;
+				}
+
+				assertEquals(RuntimeVariables.replace("Actions"),
+					selenium.getText(
+						"xPath=(//span[@title='Actions']/ul/li/strong/a/span)[2]"));
+				selenium.clickAt("xPath=(//span[@title='Actions']/ul/li/strong/a/span)[2]",
+					RuntimeVariables.replace("Actions"));
+				selenium.waitForVisible(
+					"//div[@class='lfr-component lfr-menu-list']/ul/li/a[contains(.,'Move to the Recycle Bin')]");
+				assertEquals(RuntimeVariables.replace("Move to the Recycle Bin"),
+					selenium.getText(
+						"//div[@class='lfr-component lfr-menu-list']/ul/li/a[contains(.,'Move to the Recycle Bin')]"));
+				selenium.clickAt("//div[@class='lfr-component lfr-menu-list']/ul/li/a[contains(.,'Move to the Recycle Bin')]",
+					RuntimeVariables.replace("Move to the Recycle Bin"));
+				selenium.waitForPageToLoad("30000");
+				assertEquals(RuntimeVariables.replace(
+						"The selected item was moved to the Recycle Bin. Undo"),
+					selenium.getText(
+						"//div[@class='portlet-msg-success taglib-trash-undo']"));
+
+				boolean wikiPage3Present = selenium.isElementPresent(
+						"xPath=(//span[@title='Actions']/ul/li/strong/a/span)[2]");
+
+				if (!wikiPage3Present) {
+					label = 9;
+
+					continue;
+				}
+
+				assertEquals(RuntimeVariables.replace("Actions"),
+					selenium.getText(
+						"xPath=(//span[@title='Actions']/ul/li/strong/a/span)[2]"));
+				selenium.clickAt("xPath=(//span[@title='Actions']/ul/li/strong/a/span)[2]",
+					RuntimeVariables.replace("Actions"));
+				selenium.waitForVisible(
+					"//div[@class='lfr-component lfr-menu-list']/ul/li/a[contains(.,'Move to the Recycle Bin')]");
+				assertEquals(RuntimeVariables.replace("Move to the Recycle Bin"),
+					selenium.getText(
+						"//div[@class='lfr-component lfr-menu-list']/ul/li/a[contains(.,'Move to the Recycle Bin')]"));
+				selenium.clickAt("//div[@class='lfr-component lfr-menu-list']/ul/li/a[contains(.,'Move to the Recycle Bin')]",
+					RuntimeVariables.replace("Move to the Recycle Bin"));
+				selenium.waitForPageToLoad("30000");
+				assertEquals(RuntimeVariables.replace(
+						"The selected item was moved to the Recycle Bin. Undo"),
+					selenium.getText(
+						"//div[@class='portlet-msg-success taglib-trash-undo']"));
+
+				boolean wikiPage4Present = selenium.isElementPresent(
+						"xPath=(//span[@title='Actions']/ul/li/strong/a/span)[2]");
+
+				if (!wikiPage4Present) {
+					label = 10;
+
+					continue;
+				}
+
+				assertEquals(RuntimeVariables.replace("Actions"),
+					selenium.getText(
+						"xPath=(//span[@title='Actions']/ul/li/strong/a/span)[2]"));
+				selenium.clickAt("xPath=(//span[@title='Actions']/ul/li/strong/a/span)[2]",
+					RuntimeVariables.replace("Actions"));
+				selenium.waitForVisible(
+					"//div[@class='lfr-component lfr-menu-list']/ul/li/a[contains(.,'Move to the Recycle Bin')]");
+				assertEquals(RuntimeVariables.replace("Move to the Recycle Bin"),
+					selenium.getText(
+						"//div[@class='lfr-component lfr-menu-list']/ul/li/a[contains(.,'Move to the Recycle Bin')]"));
+				selenium.clickAt("//div[@class='lfr-component lfr-menu-list']/ul/li/a[contains(.,'Move to the Recycle Bin')]",
+					RuntimeVariables.replace("Move to the Recycle Bin"));
+				selenium.waitForPageToLoad("30000");
+				assertEquals(RuntimeVariables.replace(
+						"The selected item was moved to the Recycle Bin. Undo"),
+					selenium.getText(
+						"//div[@class='portlet-msg-success taglib-trash-undo']"));
+
+				boolean wikiPage5Present = selenium.isElementPresent(
+						"xPath=(//span[@title='Actions']/ul/li/strong/a/span)[2]");
+
+				if (!wikiPage5Present) {
+					label = 11;
+
+					continue;
+				}
+
+				assertEquals(RuntimeVariables.replace("Actions"),
+					selenium.getText(
+						"xPath=(//span[@title='Actions']/ul/li/strong/a/span)[2]"));
+				selenium.clickAt("xPath=(//span[@title='Actions']/ul/li/strong/a/span)[2]",
+					RuntimeVariables.replace("Actions"));
+				selenium.waitForVisible(
+					"//div[@class='lfr-component lfr-menu-list']/ul/li/a[contains(.,'Move to the Recycle Bin')]");
+				assertEquals(RuntimeVariables.replace("Move to the Recycle Bin"),
+					selenium.getText(
+						"//div[@class='lfr-component lfr-menu-list']/ul/li/a[contains(.,'Move to the Recycle Bin')]"));
+				selenium.clickAt("//div[@class='lfr-component lfr-menu-list']/ul/li/a[contains(.,'Move to the Recycle Bin')]",
+					RuntimeVariables.replace("Move to the Recycle Bin"));
+				selenium.waitForPageToLoad("30000");
+				assertEquals(RuntimeVariables.replace(
+						"The selected item was moved to the Recycle Bin. Undo"),
+					selenium.getText(
+						"//div[@class='portlet-msg-success taglib-trash-undo']"));
+
+			case 7:
+			case 8:
+			case 9:
+			case 10:
+			case 11:
 				assertEquals(RuntimeVariables.replace("Actions"),
 					selenium.getText(
 						"//span[@title='Actions']/ul/li/strong/a/span"));
@@ -201,6 +347,12 @@ public class TearDownWikiNodeTest extends BaseTestCase {
 				selenium.clickAt("//div[@class='lfr-menu-list unstyled']/ul/li/a[contains(.,'Move to the Recycle Bin')]",
 					RuntimeVariables.replace("Move to the Recycle Bin"));
 				selenium.waitForPageToLoad("30000");
+				assertEquals(RuntimeVariables.replace(
+						"The selected item was moved to the Recycle Bin. Undo"),
+					selenium.getText(
+						"//div[@class='portlet-msg-success taglib-trash-undo']"));
+				assertEquals(RuntimeVariables.replace("There are no pages."),
+					selenium.getText("//div[@class='portlet-msg-info']"));
 				selenium.open("/web/guest/home/");
 				selenium.clickAt("//div[@id='dockbar']",
 					RuntimeVariables.replace("Dockbar"));
@@ -221,7 +373,7 @@ public class TearDownWikiNodeTest extends BaseTestCase {
 						"//span[@title='Actions']/ul/li/strong/a/span");
 
 				if (!wikiNodePresent) {
-					label = 7;
+					label = 12;
 
 					continue;
 				}
@@ -237,7 +389,7 @@ public class TearDownWikiNodeTest extends BaseTestCase {
 						"Your request completed successfully."),
 					selenium.getText("//div[@class='portlet-msg-success']"));
 
-			case 7:
+			case 12:
 				assertEquals(RuntimeVariables.replace(
 						"The Recycle Bin is empty."),
 					selenium.getText("//div[@class='portlet-msg-info']"));

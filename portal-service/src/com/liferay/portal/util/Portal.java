@@ -798,7 +798,7 @@ public interface Portal {
 		HttpServletRequest request);
 
 	/**
-	 * @deprecated As of 6.2 renamed to {@link #getSiteGroupId(long)}
+	 * @deprecated As of 6.2.0 renamed to {@link #getSiteGroupId(long)}
 	 */
 	public long getParentGroupId(long scopeGroupId)
 		throws PortalException, SystemException;
@@ -859,8 +859,16 @@ public interface Portal {
 
 	public String getPortalWebDir();
 
+	/**
+	 * @deprecated As of 6.2.0, replaced by {@link
+	 * com.liferay.portal.kernel.portlet.PortletContainerSecurityUtil#getWhitelist()}
+	 */
 	public Set<String> getPortletAddDefaultResourceCheckWhitelist();
 
+	/**
+	 * @deprecated As of 6.2.0, replaced by {@link
+	 * com.liferay.portal.kernel.portlet.PortletContainerSecurityUtil#getWhitelistActions()}
+	 */
 	public Set<String> getPortletAddDefaultResourceCheckWhitelistActions();
 
 	/**
@@ -974,6 +982,10 @@ public interface Portal {
 	public PortletURL getSiteAdministrationURL(
 			PortletResponse portletResponse, ThemeDisplay themeDisplay)
 		throws SystemException;
+
+	public PortletURL getSiteAdministrationURL(
+		PortletResponse portletResponse, ThemeDisplay themeDisplay,
+		String portletName);
 
 	public long[] getSiteAndCompanyGroupIds(long groupId)
 		throws PortalException, SystemException;
@@ -1091,6 +1103,9 @@ public interface Portal {
 			ActionResponse actionResponse)
 		throws Exception;
 
+	/**
+	 * @deprecated As of 6.2.0 with no direct replacement
+	 */
 	public boolean isAllowAddPortletDefaultResource(
 			HttpServletRequest request, Portlet portlet)
 		throws PortalException, SystemException;
@@ -1101,12 +1116,12 @@ public interface Portal {
 	public boolean isCDNDynamicResourcesEnabled(long companyId);
 
 	/**
-	 * @deprecated As of 6.1, renamed to {@link #isGroupAdmin(User, long)}
+	 * @deprecated As of 6.1.0, renamed to {@link #isGroupAdmin(User, long)}
 	 */
 	public boolean isCommunityAdmin(User user, long groupId) throws Exception;
 
 	/**
-	 * @deprecated As of 6.1, renamed to {@link #isGroupOwner(User, long)}
+	 * @deprecated As of 6.1.0, renamed to {@link #isGroupOwner(User, long)}
 	 */
 	public boolean isCommunityOwner(User user, long groupId) throws Exception;
 
@@ -1182,8 +1197,16 @@ public interface Portal {
 
 	public void resetCDNHosts();
 
+	/**
+	 * @deprecated As of 6.2.0, replaced by {@link
+	 * com.liferay.portal.kernel.portlet.PortletContainerSecurityUtil#resetWhitelist()}
+	 */
 	public Set<String> resetPortletAddDefaultResourceCheckWhitelist();
 
+	/**
+	 * @deprecated As of 6.2.0, replaced by {@link
+	 * com.liferay.portal.kernel.portlet.PortletContainerSecurityUtil#resetWhitelistActions()}
+	 */
 	public Set<String> resetPortletAddDefaultResourceCheckWhitelistActions();
 
 	public void sendError(

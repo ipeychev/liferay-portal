@@ -16,6 +16,7 @@ package com.liferay.portlet.usergroupsadmin.lar;
 
 import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
 import com.liferay.portal.kernel.lar.BasePortletDataHandler;
+import com.liferay.portal.kernel.lar.DataLevel;
 import com.liferay.portal.kernel.lar.ManifestSummary;
 import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
@@ -23,6 +24,7 @@ import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.model.UserGroup;
 import com.liferay.portal.service.UserGroupLocalServiceUtil;
 import com.liferay.portal.service.persistence.UserGroupExportActionableDynamicQuery;
+import com.liferay.portal.util.PortletKeys;
 
 import java.util.List;
 
@@ -39,7 +41,7 @@ public class UserGroupsAdminPortletDataHandler extends BasePortletDataHandler {
 	public UserGroupsAdminPortletDataHandler() {
 		super();
 
-		setDataPortalLevel(true);
+		setDataLevel(DataLevel.PORTAL);
 	}
 
 	@Override
@@ -67,7 +69,7 @@ public class UserGroupsAdminPortletDataHandler extends BasePortletDataHandler {
 		throws Exception {
 
 		portletDataContext.addPermissions(
-			RESOURCE_NAME, portletDataContext.getScopeGroupId());
+			PortletKeys.PORTAL, portletDataContext.getCompanyId());
 
 		Element rootElement = addExportDataRootElement(portletDataContext);
 
@@ -89,8 +91,8 @@ public class UserGroupsAdminPortletDataHandler extends BasePortletDataHandler {
 		throws Exception {
 
 		portletDataContext.importPermissions(
-			RESOURCE_NAME, portletDataContext.getSourceGroupId(),
-			portletDataContext.getScopeGroupId());
+			PortletKeys.PORTAL, portletDataContext.getSourceCompanyId(),
+			portletDataContext.getCompanyId());
 
 		Element userGroupsElement =
 			portletDataContext.getImportDataGroupElement(UserGroup.class);
@@ -119,8 +121,5 @@ public class UserGroupsAdminPortletDataHandler extends BasePortletDataHandler {
 		manifestSummary.addModelCount(
 			UserGroup.class, actionableDynamicQuery.performCount());
 	}
-
-	protected static final String RESOURCE_NAME =
-		"com.liferay.portlet.usergroupsadmin";
 
 }

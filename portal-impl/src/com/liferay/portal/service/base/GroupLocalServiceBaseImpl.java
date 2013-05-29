@@ -290,8 +290,11 @@ import com.liferay.portlet.shopping.service.persistence.ShoppingCouponFinder;
 import com.liferay.portlet.shopping.service.persistence.ShoppingCouponPersistence;
 import com.liferay.portlet.shopping.service.persistence.ShoppingOrderFinder;
 import com.liferay.portlet.shopping.service.persistence.ShoppingOrderPersistence;
+import com.liferay.portlet.social.service.SocialActivityLocalService;
 import com.liferay.portlet.social.service.SocialActivitySettingLocalService;
 import com.liferay.portlet.social.service.SocialActivitySettingService;
+import com.liferay.portlet.social.service.persistence.SocialActivityFinder;
+import com.liferay.portlet.social.service.persistence.SocialActivityPersistence;
 import com.liferay.portlet.social.service.persistence.SocialActivitySettingPersistence;
 import com.liferay.portlet.softwarecatalog.service.SCFrameworkVersionLocalService;
 import com.liferay.portlet.softwarecatalog.service.SCFrameworkVersionService;
@@ -337,6 +340,7 @@ public abstract class GroupLocalServiceBaseImpl extends BaseLocalServiceImpl
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Indexable(type = IndexableType.REINDEX)
+	@Override
 	public Group addGroup(Group group) throws SystemException {
 		group.setNew(true);
 
@@ -349,6 +353,7 @@ public abstract class GroupLocalServiceBaseImpl extends BaseLocalServiceImpl
 	 * @param groupId the primary key for the new group
 	 * @return the new group
 	 */
+	@Override
 	public Group createGroup(long groupId) {
 		return groupPersistence.create(groupId);
 	}
@@ -362,6 +367,7 @@ public abstract class GroupLocalServiceBaseImpl extends BaseLocalServiceImpl
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Indexable(type = IndexableType.DELETE)
+	@Override
 	public Group deleteGroup(long groupId)
 		throws PortalException, SystemException {
 		return groupPersistence.remove(groupId);
@@ -376,11 +382,13 @@ public abstract class GroupLocalServiceBaseImpl extends BaseLocalServiceImpl
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Indexable(type = IndexableType.DELETE)
+	@Override
 	public Group deleteGroup(Group group)
 		throws PortalException, SystemException {
 		return groupPersistence.remove(group);
 	}
 
+	@Override
 	public DynamicQuery dynamicQuery() {
 		Class<?> clazz = getClass();
 
@@ -395,6 +403,7 @@ public abstract class GroupLocalServiceBaseImpl extends BaseLocalServiceImpl
 	 * @return the matching rows
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Override
 	@SuppressWarnings("rawtypes")
 	public List dynamicQuery(DynamicQuery dynamicQuery)
 		throws SystemException {
@@ -414,6 +423,7 @@ public abstract class GroupLocalServiceBaseImpl extends BaseLocalServiceImpl
 	 * @return the range of matching rows
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Override
 	@SuppressWarnings("rawtypes")
 	public List dynamicQuery(DynamicQuery dynamicQuery, int start, int end)
 		throws SystemException {
@@ -434,6 +444,7 @@ public abstract class GroupLocalServiceBaseImpl extends BaseLocalServiceImpl
 	 * @return the ordered range of matching rows
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Override
 	@SuppressWarnings("rawtypes")
 	public List dynamicQuery(DynamicQuery dynamicQuery, int start, int end,
 		OrderByComparator orderByComparator) throws SystemException {
@@ -448,11 +459,13 @@ public abstract class GroupLocalServiceBaseImpl extends BaseLocalServiceImpl
 	 * @return the number of rows that match the dynamic query
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Override
 	public long dynamicQueryCount(DynamicQuery dynamicQuery)
 		throws SystemException {
 		return groupPersistence.countWithDynamicQuery(dynamicQuery);
 	}
 
+	@Override
 	public Group fetchGroup(long groupId) throws SystemException {
 		return groupPersistence.fetchByPrimaryKey(groupId);
 	}
@@ -465,10 +478,12 @@ public abstract class GroupLocalServiceBaseImpl extends BaseLocalServiceImpl
 	 * @throws PortalException if a group with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Override
 	public Group getGroup(long groupId) throws PortalException, SystemException {
 		return groupPersistence.findByPrimaryKey(groupId);
 	}
 
+	@Override
 	public PersistedModel getPersistedModel(Serializable primaryKeyObj)
 		throws PortalException, SystemException {
 		return groupPersistence.findByPrimaryKey(primaryKeyObj);
@@ -483,6 +498,7 @@ public abstract class GroupLocalServiceBaseImpl extends BaseLocalServiceImpl
 	 * @throws PortalException if a matching group could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Override
 	public Group getGroupByUuidAndGroupId(String uuid, long groupId)
 		throws PortalException, SystemException {
 		return groupPersistence.findByUUID_G(uuid, groupId);
@@ -500,6 +516,7 @@ public abstract class GroupLocalServiceBaseImpl extends BaseLocalServiceImpl
 	 * @return the range of groups
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Override
 	public List<Group> getGroups(int start, int end) throws SystemException {
 		return groupPersistence.findAll(start, end);
 	}
@@ -510,6 +527,7 @@ public abstract class GroupLocalServiceBaseImpl extends BaseLocalServiceImpl
 	 * @return the number of groups
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Override
 	public int getGroupsCount() throws SystemException {
 		return groupPersistence.countAll();
 	}
@@ -522,6 +540,7 @@ public abstract class GroupLocalServiceBaseImpl extends BaseLocalServiceImpl
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Indexable(type = IndexableType.REINDEX)
+	@Override
 	public Group updateGroup(Group group) throws SystemException {
 		return groupPersistence.update(group);
 	}
@@ -529,6 +548,7 @@ public abstract class GroupLocalServiceBaseImpl extends BaseLocalServiceImpl
 	/**
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Override
 	public void addOrganizationGroup(long organizationId, long groupId)
 		throws SystemException {
 		organizationPersistence.addGroup(organizationId, groupId);
@@ -537,6 +557,7 @@ public abstract class GroupLocalServiceBaseImpl extends BaseLocalServiceImpl
 	/**
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Override
 	public void addOrganizationGroup(long organizationId, Group group)
 		throws SystemException {
 		organizationPersistence.addGroup(organizationId, group);
@@ -545,6 +566,7 @@ public abstract class GroupLocalServiceBaseImpl extends BaseLocalServiceImpl
 	/**
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Override
 	public void addOrganizationGroups(long organizationId, long[] groupIds)
 		throws SystemException {
 		organizationPersistence.addGroups(organizationId, groupIds);
@@ -553,6 +575,7 @@ public abstract class GroupLocalServiceBaseImpl extends BaseLocalServiceImpl
 	/**
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Override
 	public void addOrganizationGroups(long organizationId, List<Group> Groups)
 		throws SystemException {
 		organizationPersistence.addGroups(organizationId, Groups);
@@ -561,6 +584,7 @@ public abstract class GroupLocalServiceBaseImpl extends BaseLocalServiceImpl
 	/**
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Override
 	public void clearOrganizationGroups(long organizationId)
 		throws SystemException {
 		organizationPersistence.clearGroups(organizationId);
@@ -569,6 +593,7 @@ public abstract class GroupLocalServiceBaseImpl extends BaseLocalServiceImpl
 	/**
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Override
 	public void deleteOrganizationGroup(long organizationId, long groupId)
 		throws SystemException {
 		organizationPersistence.removeGroup(organizationId, groupId);
@@ -577,6 +602,7 @@ public abstract class GroupLocalServiceBaseImpl extends BaseLocalServiceImpl
 	/**
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Override
 	public void deleteOrganizationGroup(long organizationId, Group group)
 		throws SystemException {
 		organizationPersistence.removeGroup(organizationId, group);
@@ -585,6 +611,7 @@ public abstract class GroupLocalServiceBaseImpl extends BaseLocalServiceImpl
 	/**
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Override
 	public void deleteOrganizationGroups(long organizationId, long[] groupIds)
 		throws SystemException {
 		organizationPersistence.removeGroups(organizationId, groupIds);
@@ -593,6 +620,7 @@ public abstract class GroupLocalServiceBaseImpl extends BaseLocalServiceImpl
 	/**
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Override
 	public void deleteOrganizationGroups(long organizationId, List<Group> Groups)
 		throws SystemException {
 		organizationPersistence.removeGroups(organizationId, Groups);
@@ -601,6 +629,7 @@ public abstract class GroupLocalServiceBaseImpl extends BaseLocalServiceImpl
 	/**
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Override
 	public List<Group> getOrganizationGroups(long organizationId)
 		throws SystemException {
 		return organizationPersistence.getGroups(organizationId);
@@ -609,6 +638,7 @@ public abstract class GroupLocalServiceBaseImpl extends BaseLocalServiceImpl
 	/**
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Override
 	public List<Group> getOrganizationGroups(long organizationId, int start,
 		int end) throws SystemException {
 		return organizationPersistence.getGroups(organizationId, start, end);
@@ -617,6 +647,7 @@ public abstract class GroupLocalServiceBaseImpl extends BaseLocalServiceImpl
 	/**
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Override
 	public List<Group> getOrganizationGroups(long organizationId, int start,
 		int end, OrderByComparator orderByComparator) throws SystemException {
 		return organizationPersistence.getGroups(organizationId, start, end,
@@ -626,6 +657,7 @@ public abstract class GroupLocalServiceBaseImpl extends BaseLocalServiceImpl
 	/**
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Override
 	public int getOrganizationGroupsCount(long organizationId)
 		throws SystemException {
 		return organizationPersistence.getGroupsSize(organizationId);
@@ -634,6 +666,7 @@ public abstract class GroupLocalServiceBaseImpl extends BaseLocalServiceImpl
 	/**
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Override
 	public boolean hasOrganizationGroup(long organizationId, long groupId)
 		throws SystemException {
 		return organizationPersistence.containsGroup(organizationId, groupId);
@@ -642,6 +675,7 @@ public abstract class GroupLocalServiceBaseImpl extends BaseLocalServiceImpl
 	/**
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Override
 	public boolean hasOrganizationGroups(long organizationId)
 		throws SystemException {
 		return organizationPersistence.containsGroups(organizationId);
@@ -650,6 +684,7 @@ public abstract class GroupLocalServiceBaseImpl extends BaseLocalServiceImpl
 	/**
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Override
 	public void setOrganizationGroups(long organizationId, long[] groupIds)
 		throws SystemException {
 		organizationPersistence.setGroups(organizationId, groupIds);
@@ -658,6 +693,7 @@ public abstract class GroupLocalServiceBaseImpl extends BaseLocalServiceImpl
 	/**
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Override
 	public void addRoleGroup(long roleId, long groupId)
 		throws SystemException {
 		rolePersistence.addGroup(roleId, groupId);
@@ -666,6 +702,7 @@ public abstract class GroupLocalServiceBaseImpl extends BaseLocalServiceImpl
 	/**
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Override
 	public void addRoleGroup(long roleId, Group group)
 		throws SystemException {
 		rolePersistence.addGroup(roleId, group);
@@ -674,6 +711,7 @@ public abstract class GroupLocalServiceBaseImpl extends BaseLocalServiceImpl
 	/**
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Override
 	public void addRoleGroups(long roleId, long[] groupIds)
 		throws SystemException {
 		rolePersistence.addGroups(roleId, groupIds);
@@ -682,6 +720,7 @@ public abstract class GroupLocalServiceBaseImpl extends BaseLocalServiceImpl
 	/**
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Override
 	public void addRoleGroups(long roleId, List<Group> Groups)
 		throws SystemException {
 		rolePersistence.addGroups(roleId, Groups);
@@ -690,6 +729,7 @@ public abstract class GroupLocalServiceBaseImpl extends BaseLocalServiceImpl
 	/**
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Override
 	public void clearRoleGroups(long roleId) throws SystemException {
 		rolePersistence.clearGroups(roleId);
 	}
@@ -697,6 +737,7 @@ public abstract class GroupLocalServiceBaseImpl extends BaseLocalServiceImpl
 	/**
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Override
 	public void deleteRoleGroup(long roleId, long groupId)
 		throws SystemException {
 		rolePersistence.removeGroup(roleId, groupId);
@@ -705,6 +746,7 @@ public abstract class GroupLocalServiceBaseImpl extends BaseLocalServiceImpl
 	/**
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Override
 	public void deleteRoleGroup(long roleId, Group group)
 		throws SystemException {
 		rolePersistence.removeGroup(roleId, group);
@@ -713,6 +755,7 @@ public abstract class GroupLocalServiceBaseImpl extends BaseLocalServiceImpl
 	/**
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Override
 	public void deleteRoleGroups(long roleId, long[] groupIds)
 		throws SystemException {
 		rolePersistence.removeGroups(roleId, groupIds);
@@ -721,6 +764,7 @@ public abstract class GroupLocalServiceBaseImpl extends BaseLocalServiceImpl
 	/**
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Override
 	public void deleteRoleGroups(long roleId, List<Group> Groups)
 		throws SystemException {
 		rolePersistence.removeGroups(roleId, Groups);
@@ -729,6 +773,7 @@ public abstract class GroupLocalServiceBaseImpl extends BaseLocalServiceImpl
 	/**
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Override
 	public List<Group> getRoleGroups(long roleId) throws SystemException {
 		return rolePersistence.getGroups(roleId);
 	}
@@ -736,6 +781,7 @@ public abstract class GroupLocalServiceBaseImpl extends BaseLocalServiceImpl
 	/**
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Override
 	public List<Group> getRoleGroups(long roleId, int start, int end)
 		throws SystemException {
 		return rolePersistence.getGroups(roleId, start, end);
@@ -744,6 +790,7 @@ public abstract class GroupLocalServiceBaseImpl extends BaseLocalServiceImpl
 	/**
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Override
 	public List<Group> getRoleGroups(long roleId, int start, int end,
 		OrderByComparator orderByComparator) throws SystemException {
 		return rolePersistence.getGroups(roleId, start, end, orderByComparator);
@@ -752,6 +799,7 @@ public abstract class GroupLocalServiceBaseImpl extends BaseLocalServiceImpl
 	/**
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Override
 	public int getRoleGroupsCount(long roleId) throws SystemException {
 		return rolePersistence.getGroupsSize(roleId);
 	}
@@ -759,6 +807,7 @@ public abstract class GroupLocalServiceBaseImpl extends BaseLocalServiceImpl
 	/**
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Override
 	public boolean hasRoleGroup(long roleId, long groupId)
 		throws SystemException {
 		return rolePersistence.containsGroup(roleId, groupId);
@@ -767,6 +816,7 @@ public abstract class GroupLocalServiceBaseImpl extends BaseLocalServiceImpl
 	/**
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Override
 	public boolean hasRoleGroups(long roleId) throws SystemException {
 		return rolePersistence.containsGroups(roleId);
 	}
@@ -774,6 +824,7 @@ public abstract class GroupLocalServiceBaseImpl extends BaseLocalServiceImpl
 	/**
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Override
 	public void setRoleGroups(long roleId, long[] groupIds)
 		throws SystemException {
 		rolePersistence.setGroups(roleId, groupIds);
@@ -782,6 +833,7 @@ public abstract class GroupLocalServiceBaseImpl extends BaseLocalServiceImpl
 	/**
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Override
 	public void addUserGroupGroup(long userGroupId, long groupId)
 		throws SystemException {
 		userGroupPersistence.addGroup(userGroupId, groupId);
@@ -790,6 +842,7 @@ public abstract class GroupLocalServiceBaseImpl extends BaseLocalServiceImpl
 	/**
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Override
 	public void addUserGroupGroup(long userGroupId, Group group)
 		throws SystemException {
 		userGroupPersistence.addGroup(userGroupId, group);
@@ -798,6 +851,7 @@ public abstract class GroupLocalServiceBaseImpl extends BaseLocalServiceImpl
 	/**
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Override
 	public void addUserGroupGroups(long userGroupId, long[] groupIds)
 		throws SystemException {
 		userGroupPersistence.addGroups(userGroupId, groupIds);
@@ -806,6 +860,7 @@ public abstract class GroupLocalServiceBaseImpl extends BaseLocalServiceImpl
 	/**
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Override
 	public void addUserGroupGroups(long userGroupId, List<Group> Groups)
 		throws SystemException {
 		userGroupPersistence.addGroups(userGroupId, Groups);
@@ -814,6 +869,7 @@ public abstract class GroupLocalServiceBaseImpl extends BaseLocalServiceImpl
 	/**
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Override
 	public void clearUserGroupGroups(long userGroupId)
 		throws SystemException {
 		userGroupPersistence.clearGroups(userGroupId);
@@ -822,6 +878,7 @@ public abstract class GroupLocalServiceBaseImpl extends BaseLocalServiceImpl
 	/**
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Override
 	public void deleteUserGroupGroup(long userGroupId, long groupId)
 		throws SystemException {
 		userGroupPersistence.removeGroup(userGroupId, groupId);
@@ -830,6 +887,7 @@ public abstract class GroupLocalServiceBaseImpl extends BaseLocalServiceImpl
 	/**
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Override
 	public void deleteUserGroupGroup(long userGroupId, Group group)
 		throws SystemException {
 		userGroupPersistence.removeGroup(userGroupId, group);
@@ -838,6 +896,7 @@ public abstract class GroupLocalServiceBaseImpl extends BaseLocalServiceImpl
 	/**
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Override
 	public void deleteUserGroupGroups(long userGroupId, long[] groupIds)
 		throws SystemException {
 		userGroupPersistence.removeGroups(userGroupId, groupIds);
@@ -846,6 +905,7 @@ public abstract class GroupLocalServiceBaseImpl extends BaseLocalServiceImpl
 	/**
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Override
 	public void deleteUserGroupGroups(long userGroupId, List<Group> Groups)
 		throws SystemException {
 		userGroupPersistence.removeGroups(userGroupId, Groups);
@@ -854,6 +914,7 @@ public abstract class GroupLocalServiceBaseImpl extends BaseLocalServiceImpl
 	/**
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Override
 	public List<Group> getUserGroupGroups(long userGroupId)
 		throws SystemException {
 		return userGroupPersistence.getGroups(userGroupId);
@@ -862,6 +923,7 @@ public abstract class GroupLocalServiceBaseImpl extends BaseLocalServiceImpl
 	/**
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Override
 	public List<Group> getUserGroupGroups(long userGroupId, int start, int end)
 		throws SystemException {
 		return userGroupPersistence.getGroups(userGroupId, start, end);
@@ -870,6 +932,7 @@ public abstract class GroupLocalServiceBaseImpl extends BaseLocalServiceImpl
 	/**
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Override
 	public List<Group> getUserGroupGroups(long userGroupId, int start, int end,
 		OrderByComparator orderByComparator) throws SystemException {
 		return userGroupPersistence.getGroups(userGroupId, start, end,
@@ -879,6 +942,7 @@ public abstract class GroupLocalServiceBaseImpl extends BaseLocalServiceImpl
 	/**
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Override
 	public int getUserGroupGroupsCount(long userGroupId)
 		throws SystemException {
 		return userGroupPersistence.getGroupsSize(userGroupId);
@@ -887,6 +951,7 @@ public abstract class GroupLocalServiceBaseImpl extends BaseLocalServiceImpl
 	/**
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Override
 	public boolean hasUserGroupGroup(long userGroupId, long groupId)
 		throws SystemException {
 		return userGroupPersistence.containsGroup(userGroupId, groupId);
@@ -895,6 +960,7 @@ public abstract class GroupLocalServiceBaseImpl extends BaseLocalServiceImpl
 	/**
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Override
 	public boolean hasUserGroupGroups(long userGroupId)
 		throws SystemException {
 		return userGroupPersistence.containsGroups(userGroupId);
@@ -903,6 +969,7 @@ public abstract class GroupLocalServiceBaseImpl extends BaseLocalServiceImpl
 	/**
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Override
 	public void setUserGroupGroups(long userGroupId, long[] groupIds)
 		throws SystemException {
 		userGroupPersistence.setGroups(userGroupId, groupIds);
@@ -911,6 +978,7 @@ public abstract class GroupLocalServiceBaseImpl extends BaseLocalServiceImpl
 	/**
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Override
 	public void addUserGroup(long userId, long groupId)
 		throws SystemException {
 		userPersistence.addGroup(userId, groupId);
@@ -919,6 +987,7 @@ public abstract class GroupLocalServiceBaseImpl extends BaseLocalServiceImpl
 	/**
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Override
 	public void addUserGroup(long userId, Group group)
 		throws SystemException {
 		userPersistence.addGroup(userId, group);
@@ -927,6 +996,7 @@ public abstract class GroupLocalServiceBaseImpl extends BaseLocalServiceImpl
 	/**
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Override
 	public void addUserGroups(long userId, long[] groupIds)
 		throws SystemException {
 		userPersistence.addGroups(userId, groupIds);
@@ -935,6 +1005,7 @@ public abstract class GroupLocalServiceBaseImpl extends BaseLocalServiceImpl
 	/**
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Override
 	public void addUserGroups(long userId, List<Group> Groups)
 		throws SystemException {
 		userPersistence.addGroups(userId, Groups);
@@ -943,6 +1014,7 @@ public abstract class GroupLocalServiceBaseImpl extends BaseLocalServiceImpl
 	/**
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Override
 	public void clearUserGroups(long userId) throws SystemException {
 		userPersistence.clearGroups(userId);
 	}
@@ -950,6 +1022,7 @@ public abstract class GroupLocalServiceBaseImpl extends BaseLocalServiceImpl
 	/**
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Override
 	public void deleteUserGroup(long userId, long groupId)
 		throws SystemException {
 		userPersistence.removeGroup(userId, groupId);
@@ -958,6 +1031,7 @@ public abstract class GroupLocalServiceBaseImpl extends BaseLocalServiceImpl
 	/**
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Override
 	public void deleteUserGroup(long userId, Group group)
 		throws SystemException {
 		userPersistence.removeGroup(userId, group);
@@ -966,6 +1040,7 @@ public abstract class GroupLocalServiceBaseImpl extends BaseLocalServiceImpl
 	/**
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Override
 	public void deleteUserGroups(long userId, long[] groupIds)
 		throws SystemException {
 		userPersistence.removeGroups(userId, groupIds);
@@ -974,6 +1049,7 @@ public abstract class GroupLocalServiceBaseImpl extends BaseLocalServiceImpl
 	/**
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Override
 	public void deleteUserGroups(long userId, List<Group> Groups)
 		throws SystemException {
 		userPersistence.removeGroups(userId, Groups);
@@ -982,6 +1058,7 @@ public abstract class GroupLocalServiceBaseImpl extends BaseLocalServiceImpl
 	/**
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Override
 	public List<Group> getUserGroups(long userId) throws SystemException {
 		return userPersistence.getGroups(userId);
 	}
@@ -989,6 +1066,7 @@ public abstract class GroupLocalServiceBaseImpl extends BaseLocalServiceImpl
 	/**
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Override
 	public List<Group> getUserGroups(long userId, int start, int end)
 		throws SystemException {
 		return userPersistence.getGroups(userId, start, end);
@@ -998,6 +1076,7 @@ public abstract class GroupLocalServiceBaseImpl extends BaseLocalServiceImpl
 	 * @throws PortalException
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Override
 	public List<Group> getUserGroups(long userId, int start, int end,
 		OrderByComparator orderByComparator)
 		throws PortalException, SystemException {
@@ -1007,6 +1086,7 @@ public abstract class GroupLocalServiceBaseImpl extends BaseLocalServiceImpl
 	/**
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Override
 	public int getUserGroupsCount(long userId) throws SystemException {
 		return userPersistence.getGroupsSize(userId);
 	}
@@ -1014,6 +1094,7 @@ public abstract class GroupLocalServiceBaseImpl extends BaseLocalServiceImpl
 	/**
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Override
 	public boolean hasUserGroup(long userId, long groupId)
 		throws SystemException {
 		return userPersistence.containsGroup(userId, groupId);
@@ -1022,6 +1103,7 @@ public abstract class GroupLocalServiceBaseImpl extends BaseLocalServiceImpl
 	/**
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Override
 	public boolean hasUserGroups(long userId) throws SystemException {
 		return userPersistence.containsGroups(userId);
 	}
@@ -1029,6 +1111,7 @@ public abstract class GroupLocalServiceBaseImpl extends BaseLocalServiceImpl
 	/**
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Override
 	public void setUserGroups(long userId, long[] groupIds)
 		throws SystemException {
 		userPersistence.setGroups(userId, groupIds);
@@ -5855,6 +5938,63 @@ public abstract class GroupLocalServiceBaseImpl extends BaseLocalServiceImpl
 	}
 
 	/**
+	 * Returns the social activity local service.
+	 *
+	 * @return the social activity local service
+	 */
+	public SocialActivityLocalService getSocialActivityLocalService() {
+		return socialActivityLocalService;
+	}
+
+	/**
+	 * Sets the social activity local service.
+	 *
+	 * @param socialActivityLocalService the social activity local service
+	 */
+	public void setSocialActivityLocalService(
+		SocialActivityLocalService socialActivityLocalService) {
+		this.socialActivityLocalService = socialActivityLocalService;
+	}
+
+	/**
+	 * Returns the social activity persistence.
+	 *
+	 * @return the social activity persistence
+	 */
+	public SocialActivityPersistence getSocialActivityPersistence() {
+		return socialActivityPersistence;
+	}
+
+	/**
+	 * Sets the social activity persistence.
+	 *
+	 * @param socialActivityPersistence the social activity persistence
+	 */
+	public void setSocialActivityPersistence(
+		SocialActivityPersistence socialActivityPersistence) {
+		this.socialActivityPersistence = socialActivityPersistence;
+	}
+
+	/**
+	 * Returns the social activity finder.
+	 *
+	 * @return the social activity finder
+	 */
+	public SocialActivityFinder getSocialActivityFinder() {
+		return socialActivityFinder;
+	}
+
+	/**
+	 * Sets the social activity finder.
+	 *
+	 * @param socialActivityFinder the social activity finder
+	 */
+	public void setSocialActivityFinder(
+		SocialActivityFinder socialActivityFinder) {
+		this.socialActivityFinder = socialActivityFinder;
+	}
+
+	/**
 	 * Returns the social activity setting local service.
 	 *
 	 * @return the social activity setting local service
@@ -6095,6 +6235,7 @@ public abstract class GroupLocalServiceBaseImpl extends BaseLocalServiceImpl
 	 *
 	 * @return the Spring bean ID for this bean
 	 */
+	@Override
 	public String getBeanIdentifier() {
 		return _beanIdentifier;
 	}
@@ -6104,6 +6245,7 @@ public abstract class GroupLocalServiceBaseImpl extends BaseLocalServiceImpl
 	 *
 	 * @param beanIdentifier the Spring bean ID for this bean
 	 */
+	@Override
 	public void setBeanIdentifier(String beanIdentifier) {
 		_beanIdentifier = beanIdentifier;
 	}
@@ -6653,6 +6795,12 @@ public abstract class GroupLocalServiceBaseImpl extends BaseLocalServiceImpl
 	protected ShoppingOrderPersistence shoppingOrderPersistence;
 	@BeanReference(type = ShoppingOrderFinder.class)
 	protected ShoppingOrderFinder shoppingOrderFinder;
+	@BeanReference(type = SocialActivityLocalService.class)
+	protected SocialActivityLocalService socialActivityLocalService;
+	@BeanReference(type = SocialActivityPersistence.class)
+	protected SocialActivityPersistence socialActivityPersistence;
+	@BeanReference(type = SocialActivityFinder.class)
+	protected SocialActivityFinder socialActivityFinder;
 	@BeanReference(type = SocialActivitySettingLocalService.class)
 	protected SocialActivitySettingLocalService socialActivitySettingLocalService;
 	@BeanReference(type = SocialActivitySettingService.class)

@@ -27,6 +27,12 @@ Folder folder = (Folder)request.getAttribute(WebKeys.DOCUMENT_LIBRARY_FOLDER);
 
 long folderId = BeanParamUtil.getLong(folder, request, "folderId", DLFolderConstants.DEFAULT_PARENT_FOLDER_ID);
 
+if ((folder != null) && (folder.getGroupId() != groupId)) {
+	folder = null;
+
+	folderId = 0;
+}
+
 long searchFolderIds = ParamUtil.getLong(request, "searchFolderIds");
 
 long[] folderIdsArray = null;
@@ -137,7 +143,7 @@ portletURL.setParameter("folderId", String.valueOf(folderId));
 							<portlet:param name="fileEntryTypeId" value="<%= String.valueOf(fileEntryType.getFileEntryTypeId()) %>" />
 						</liferay-portlet:renderURL>
 
-						<liferay-ui:icon image="copy" message="<%= HtmlUtil.escape(fileEntryType.getName()) %>" url="<%= addFileEntryTypeURL %>" />
+						<liferay-ui:icon image="copy" message="<%= HtmlUtil.escape(fileEntryType.getName(locale)) %>" url="<%= addFileEntryTypeURL %>" />
 
 					<%
 					}

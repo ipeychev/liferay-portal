@@ -141,6 +141,7 @@
 				<entry key="assetCategoryTitles(_.+)?" value-ref="com.liferay.portal.search.lucene.LikeKeywordAnalyzer" />
 				<entry key="assetTagNames" value-ref="com.liferay.portal.search.lucene.LikeKeywordAnalyzer" />
 				<entry key="ddm/.*" value-ref="org.apache.lucene.analysis.KeywordAnalyzer" />
+				<entry key="emailAddress" value-ref="com.liferay.portal.search.lucene.LikeKeywordAnalyzer" />
 				<entry key="entryClassName" value-ref="org.apache.lucene.analysis.KeywordAnalyzer" />
 				<entry key="entryClassPK" value-ref="org.apache.lucene.analysis.KeywordAnalyzer" />
 				<entry key="extension" value-ref="org.apache.lucene.analysis.KeywordAnalyzer" />
@@ -242,5 +243,8 @@
 				<entry key="SYSTEM_ENGINE" value-ref="com.liferay.portal.search.lucene.LuceneSearchEngineImpl" />
 			</util:map>
 		</property>
+	</bean>
+	<bean id="com.liferay.portal.resiliency.spi.search.SPISearchEngineConfigurator" class="com.liferay.portal.resiliency.spi.search.SPISearchEngineConfigurator">
+		<property name="messageBus" ref="com.liferay.portal.kernel.messaging.MessageBus" />
 	</bean>
 </beans>

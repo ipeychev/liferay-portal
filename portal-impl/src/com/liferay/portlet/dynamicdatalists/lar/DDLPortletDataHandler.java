@@ -18,6 +18,7 @@ import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
 import com.liferay.portal.kernel.lar.BasePortletDataHandler;
 import com.liferay.portal.kernel.lar.ManifestSummary;
 import com.liferay.portal.kernel.lar.PortletDataContext;
+import com.liferay.portal.kernel.lar.PortletDataHandlerBoolean;
 import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portlet.dynamicdatalists.model.DDLRecordSet;
@@ -37,8 +38,12 @@ public class DDLPortletDataHandler extends BasePortletDataHandler {
 	public static final String NAMESPACE = "dynamic_data_lists";
 
 	public DDLPortletDataHandler() {
-		setAlwaysExportable(true);
 		setDataLocalized(true);
+		setExportControls(
+			new PortletDataHandlerBoolean(
+				NAMESPACE, "record-sets", true, false, null,
+				DDLRecordSet.class.getName()));
+		setImportControls(getExportControls());
 	}
 
 	@Override
@@ -65,10 +70,14 @@ public class DDLPortletDataHandler extends BasePortletDataHandler {
 			PortletPreferences portletPreferences)
 		throws Exception {
 
+		Element rootElement = addExportDataRootElement(portletDataContext);
+
+		if (!portletDataContext.getBooleanParameter(NAMESPACE, "record-sets")) {
+			return getExportDataRootElementString(rootElement);
+		}
+
 		portletDataContext.addPermissions(
 			DDLPermission.RESOURCE_NAME, portletDataContext.getScopeGroupId());
-
-		Element rootElement = addExportDataRootElement(portletDataContext);
 
 		ActionableDynamicQuery actionableDynamicQuery =
 			new DDLRecordSetExportActionableDynamicQuery(portletDataContext);
@@ -83,6 +92,10 @@ public class DDLPortletDataHandler extends BasePortletDataHandler {
 			PortletDataContext portletDataContext, String portletId,
 			PortletPreferences portletPreferences, String data)
 		throws Exception {
+
+		if (!portletDataContext.getBooleanParameter(NAMESPACE, "record-sets")) {
+			return null;
+		}
 
 		portletDataContext.importPermissions(
 			DDLPermission.RESOURCE_NAME, portletDataContext.getSourceGroupId(),

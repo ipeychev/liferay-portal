@@ -237,14 +237,15 @@ String[][] categorySections = {mainSections};
 					var clickHandler = function(event) {
 						var dataValue = event.target.ancestor().attr('data-value');
 
-						if (dataValue == 'add-child-page') {
+						if (dataValue === 'add-child-page') {
 							content = A.one('#<portlet:namespace />addLayout');
 
 							if (!popup) {
 								popup = Liferay.Util.Window.getWindow(
 									{
 										dialog: {
-											bodyContent: content.show()
+											bodyContent: content.show(),
+											zIndex: Liferay.zIndex.WINDOW + 2
 										},
 										title: '<%= UnicodeLanguageUtil.get(pageContext, "add-child-page") %>'
 									}
@@ -255,7 +256,7 @@ String[][] categorySections = {mainSections};
 
 							Liferay.Util.focusFormField(content.one('input:text'));
 						}
-						else if (dataValue == 'permissions') {
+						else if (dataValue === 'permissions') {
 							<liferay-security:permissionsURL
 								modelResource="<%= Layout.class.getName() %>"
 								modelResourceDescription="<%= selLayout.getName(locale) %>"
@@ -267,13 +268,16 @@ String[][] categorySections = {mainSections};
 							Liferay.Util.openWindow(
 								{
 									cache: false,
+									dialog: {
+										zIndex: Liferay.zIndex.WINDOW + 2
+									},
 									id: '<portlet:namespace /><%= selLayout.getFriendlyURL().substring(1) %>_permissions',
 									title: '<%= UnicodeLanguageUtil.get(pageContext, "permissions") %>',
 									uri: '<%= permissionURL %>'
 								}
 							);
 						}
-						else if (dataValue == 'delete') {
+						else if (dataValue === 'delete') {
 							<portlet:namespace />saveLayout('<%= Constants.DELETE %>');
 						}
 						else if (dataValue == 'copy-portlets-from-page') {
@@ -284,6 +288,7 @@ String[][] categorySections = {mainSections};
 									dialog: {
 										bodyContent: content.show(),
 										destroyOnHide: true,
+										zIndex: Liferay.zIndex.WINDOW + 2
 									},
 									title: '<%= UnicodeLanguageUtil.get(pageContext, "copy-portlets-from-page") %>'
 								}

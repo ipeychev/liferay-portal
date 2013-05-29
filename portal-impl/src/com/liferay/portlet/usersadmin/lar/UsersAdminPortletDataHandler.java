@@ -16,6 +16,7 @@ package com.liferay.portlet.usersadmin.lar;
 
 import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
 import com.liferay.portal.kernel.lar.BasePortletDataHandler;
+import com.liferay.portal.kernel.lar.DataLevel;
 import com.liferay.portal.kernel.lar.ManifestSummary;
 import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.lar.PortletDataHandlerBoolean;
@@ -25,6 +26,7 @@ import com.liferay.portal.model.Organization;
 import com.liferay.portal.model.OrganizationConstants;
 import com.liferay.portal.service.OrganizationLocalServiceUtil;
 import com.liferay.portal.service.persistence.OrganizationExportActionableDynamicQuery;
+import com.liferay.portal.util.PortletKeys;
 
 import java.util.List;
 
@@ -41,7 +43,7 @@ public class UsersAdminPortletDataHandler extends BasePortletDataHandler {
 	public UsersAdminPortletDataHandler() {
 		super();
 
-		setDataPortalLevel(true);
+		setDataLevel(DataLevel.PORTAL);
 
 		setExportControls(
 			new PortletDataHandlerBoolean(
@@ -73,7 +75,7 @@ public class UsersAdminPortletDataHandler extends BasePortletDataHandler {
 		throws Exception {
 
 		portletDataContext.addPermissions(
-			RESOURCE_NAME, portletDataContext.getScopeGroupId());
+			PortletKeys.PORTAL, portletDataContext.getCompanyId());
 
 		Element rootElement = addExportDataRootElement(portletDataContext);
 
@@ -95,8 +97,8 @@ public class UsersAdminPortletDataHandler extends BasePortletDataHandler {
 		throws Exception {
 
 		portletDataContext.importPermissions(
-			RESOURCE_NAME, portletDataContext.getSourceGroupId(),
-			portletDataContext.getScopeGroupId());
+			PortletKeys.PORTAL, portletDataContext.getSourceCompanyId(),
+			portletDataContext.getCompanyId());
 
 		Element organizationsElement =
 			portletDataContext.getImportDataGroupElement(Organization.class);
@@ -125,8 +127,5 @@ public class UsersAdminPortletDataHandler extends BasePortletDataHandler {
 		manifestSummary.addModelCount(
 			Organization.class, actionableDynamicQuery.performCount());
 	}
-
-	protected static final String RESOURCE_NAME =
-		"com.liferay.portlet.usersadmin";
 
 }

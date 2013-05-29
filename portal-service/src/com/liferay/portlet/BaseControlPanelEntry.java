@@ -34,6 +34,7 @@ import java.util.List;
  */
 public abstract class BaseControlPanelEntry implements ControlPanelEntry {
 
+	@Override
 	public boolean hasAccessPermission(
 			PermissionChecker permissionChecker, Group group, Portlet portlet)
 		throws Exception {
@@ -53,7 +54,7 @@ public abstract class BaseControlPanelEntry implements ControlPanelEntry {
 	}
 
 	/**
-	 * @deprecated As of 6.2, with no direct replacement.<p>This method was
+	 * @deprecated As of 6.2.0, with no direct replacement.<p>This method was
 	 *             originally defined to determine if a portlet should be
 	 *             displayed in the Control Panel. In this version, this method
 	 *             should always return <code>false</code> and remains only to
@@ -63,6 +64,7 @@ public abstract class BaseControlPanelEntry implements ControlPanelEntry {
 	 *             #hasAccessPermission} to determine if a portlet should be
 	 *             displayed in the Control Panel.</p>
 	 */
+	@Override
 	public boolean isVisible(
 			PermissionChecker permissionChecker, Portlet portlet)
 		throws Exception {
@@ -71,7 +73,7 @@ public abstract class BaseControlPanelEntry implements ControlPanelEntry {
 	}
 
 	/**
-	 * @deprecated As of 6.2, with no direct replacement.<p>This method was
+	 * @deprecated As of 6.2.0, with no direct replacement.<p>This method was
 	 *             originally defined to determine if a portlet should be
 	 *             displayed in the Control Panel. In this version, this method
 	 *             should always return <code>false</code> and remains only to
@@ -81,6 +83,7 @@ public abstract class BaseControlPanelEntry implements ControlPanelEntry {
 	 *             #hasAccessPermission} to determine if a portlet should be
 	 *             displayed in the Control Panel.</p>
 	 */
+	@Override
 	public boolean isVisible(
 			Portlet portlet, String category, ThemeDisplay themeDisplay)
 		throws Exception {
@@ -137,9 +140,8 @@ public abstract class BaseControlPanelEntry implements ControlPanelEntry {
 
 		long groupId = group.getGroupId();
 
-		if (category.equals(PortletCategoryKeys.CONFIGURATION) ||
-			category.equals(PortletCategoryKeys.MARKETPLACE) ||
-			category.equals(PortletCategoryKeys.SERVER) ||
+		if (category.equals(PortletCategoryKeys.APPS) ||
+			category.equals(PortletCategoryKeys.CONFIGURATION) ||
 			category.equals(PortletCategoryKeys.SITES) ||
 			category.equals(PortletCategoryKeys.USERS)) {
 

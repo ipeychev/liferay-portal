@@ -145,6 +145,8 @@ public interface LiferaySelenium extends Selenium {
 
 	public void sendKeys(String locator, String value);
 
+	public void sendLogger(String id, String status);
+
 	public void setDefaultTimeout();
 
 	public void setDefaultTimeoutImplicit();
@@ -152,6 +154,8 @@ public interface LiferaySelenium extends Selenium {
 	public void setPrimaryTestSuiteName(String primaryTestSuiteName);
 
 	public void setTimeoutImplicit(String timeout);
+
+	public void startLogger();
 
 	public void stopLogger();
 

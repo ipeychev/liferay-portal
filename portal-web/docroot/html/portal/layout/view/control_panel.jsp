@@ -23,7 +23,7 @@ String controlPanelCategory = themeDisplay.getControlPanelCategory();
 
 boolean showControlPanelMenu = true;
 
-if (controlPanelCategory.equals(PortletCategoryKeys.CURRENT_SITE) || controlPanelCategory.equals(PortletCategoryKeys.MY)) {
+if (controlPanelCategory.equals(PortletCategoryKeys.CURRENT_SITE)) {
 	showControlPanelMenu = false;
 }
 
@@ -34,11 +34,18 @@ if (controlPanelCategory.equals(PortletCategoryKeys.CURRENT_SITE)) {
 List<Portlet> portlets = PortalUtil.getControlPanelPortlets(controlPanelCategory, themeDisplay);
 
 if (Validator.isNull(ppid)) {
-	for (Portlet portlet : portlets) {
-		if (PortletPermissionUtil.hasControlPanelAccessPermission(permissionChecker, scopeGroupId, portlet)) {
-			ppid = portlet.getPortletId();
+	if (controlPanelCategory.equals(PortletCategoryKeys.SITE_ADMINISTRATION)) {
+		Portlet firstPortlet = PortalUtil.getFirstSiteAdministrationPortlet(themeDisplay);
 
-			break;
+		ppid = firstPortlet.getPortletId();
+	}
+	else {
+		for (Portlet portlet : portlets) {
+			if (PortletPermissionUtil.hasControlPanelAccessPermission(permissionChecker, scopeGroupId, portlet)) {
+				ppid = portlet.getPortletId();
+
+				break;
+			}
 		}
 	}
 }
@@ -67,22 +74,7 @@ String category = PortalUtil.getControlPanelCategory(ppid, themeDisplay);
 
 List<Layout> scopeLayouts = new ArrayList<Layout>();
 
-Portlet portlet = null;
-
-boolean denyAccess = true;
-
-if (Validator.isNull(ppid)) {
-	denyAccess = false;
-}
-else {
-	portlet = PortletLocalServiceUtil.getPortletById(company.getCompanyId(), ppid);
-
-	if ((portlet != null) &&
-		(portlet.isSystem() || PortletPermissionUtil.hasControlPanelAccessPermission(permissionChecker, scopeGroupId, portlet) || PortalUtil.isAllowAddPortletDefaultResource(request, portlet))) {
-
-		denyAccess = false;
-	}
-}
+Portlet portlet = PortletLocalServiceUtil.getPortletById(company.getCompanyId(), ppid);
 
 request.setAttribute("control_panel.jsp-ppid", ppid);
 %>
@@ -102,15 +94,15 @@ request.setAttribute("control_panel.jsp-ppid", ppid);
 			panelBodyCssClass += " panel-page-application";
 		}
 
-		if (category.equals(PortletCategoryKeys.CONFIGURATION)) {
+		if (category.equals(PortletCategoryKeys.APPS)) {
+			panelCategory += " panel-manage-apps";
+		}
+		else if (category.equals(PortletCategoryKeys.CONFIGURATION)) {
 			panelCategory += " panel-manage-configuration";
 		}
 		else if (category.equals(PortletCategoryKeys.MY)) {
 			panelCategory += " panel-manage-my";
 			categoryTitle = user.getFullName();
-		}
-		else if (category.equals(PortletCategoryKeys.SERVER)) {
-			panelCategory += " panel-manage-server";
 		}
 		else if (category.equals(PortletCategoryKeys.SITES)) {
 			panelCategory += " panel-manage-sites";

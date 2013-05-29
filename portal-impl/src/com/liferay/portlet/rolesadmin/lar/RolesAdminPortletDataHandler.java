@@ -21,6 +21,7 @@ import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.lar.BasePortletDataHandler;
+import com.liferay.portal.kernel.lar.DataLevel;
 import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.lar.PortletDataHandlerBoolean;
 import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
@@ -31,6 +32,7 @@ import com.liferay.portal.service.RoleLocalServiceUtil;
 import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.service.persistence.RoleExportActionableDynamicQuery;
 import com.liferay.portal.util.PortalUtil;
+import com.liferay.portal.util.PortletKeys;
 
 import java.util.List;
 
@@ -47,7 +49,7 @@ public class RolesAdminPortletDataHandler extends BasePortletDataHandler {
 	public RolesAdminPortletDataHandler() {
 		super();
 
-		setDataPortalLevel(true);
+		setDataLevel(DataLevel.PORTAL);
 		setExportControls(
 			new PortletDataHandlerBoolean(
 				NAMESPACE, "system-roles", true, false));
@@ -84,7 +86,7 @@ public class RolesAdminPortletDataHandler extends BasePortletDataHandler {
 		throws Exception {
 
 		portletDataContext.addPermissions(
-			_RESOURCE_NAME, portletDataContext.getScopeGroupId());
+			PortletKeys.PORTAL, portletDataContext.getCompanyId());
 
 		Element rootElement = addExportDataRootElement(portletDataContext);
 
@@ -142,8 +144,8 @@ public class RolesAdminPortletDataHandler extends BasePortletDataHandler {
 		throws Exception {
 
 		portletDataContext.importPermissions(
-			_RESOURCE_NAME, portletDataContext.getSourceGroupId(),
-			portletDataContext.getScopeGroupId());
+			PortletKeys.PORTAL, portletDataContext.getSourceCompanyId(),
+			portletDataContext.getCompanyId());
 
 		Element rolesElement = portletDataContext.getImportDataGroupElement(
 			Role.class);
@@ -157,8 +159,5 @@ public class RolesAdminPortletDataHandler extends BasePortletDataHandler {
 
 		return null;
 	}
-
-	private static final String _RESOURCE_NAME =
-		"com.liferay.portlet.rolesadmin";
 
 }

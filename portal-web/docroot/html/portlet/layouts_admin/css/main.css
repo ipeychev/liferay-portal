@@ -299,10 +299,6 @@
 }
 
 .tree-pages {
-	.tree-label {
-		display: inline-block;
-	}
-
 	.tree-node-selected {
 		.tree-label a {
 			cursor: move;
@@ -389,8 +385,14 @@
 		margin-bottom: 1em;
 	}
 
-	.error-message li {
+	.upload-list li {
 		list-style: disc inside;
+	}
+
+	.upload-list .error-info {
+		font-size: 0.8em;
+		font-style: italic;
+		margin-left: 0.5em;
 	}
 }
 

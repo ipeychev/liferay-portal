@@ -86,14 +86,14 @@ public class JournalPortletDataHandler extends BasePortletDataHandler {
 	public static final String NAMESPACE = "journal";
 
 	public JournalPortletDataHandler() {
-		setAlwaysExportable(true);
 		setDataLocalized(true);
 		setExportControls(
 			new PortletDataHandlerBoolean(
 				NAMESPACE, "web-content", true, false, null,
 				JournalArticle.class.getName()),
 			new PortletDataHandlerBoolean(
-				NAMESPACE, "structures-and-templates", true, true),
+				NAMESPACE, "structures", true, false, null,
+				DDMStructure.class.getName()),
 			new PortletDataHandlerBoolean(
 				NAMESPACE, "feeds", true, false, null,
 				JournalFeed.class.getName()),
@@ -161,9 +161,7 @@ public class JournalPortletDataHandler extends BasePortletDataHandler {
 			feedActionableDynamicQuery.performActions();
 		}
 
-		if (portletDataContext.getBooleanParameter(
-				NAMESPACE, "structures-and-templates")) {
-
+		if (portletDataContext.getBooleanParameter(NAMESPACE, "structures")) {
 			List<DDMTemplate> ddmTemplates = new ArrayList<DDMTemplate>();
 
 			ActionableDynamicQuery ddmStructureActionableDynamicQuery =
@@ -225,9 +223,7 @@ public class JournalPortletDataHandler extends BasePortletDataHandler {
 			}
 		}
 
-		if (portletDataContext.getBooleanParameter(
-				NAMESPACE, "structures-and-templates")) {
-
+		if (portletDataContext.getBooleanParameter(NAMESPACE, "structures")) {
 			Element ddmStructuresElement =
 				portletDataContext.getImportDataGroupElement(
 					DDMStructure.class);
@@ -251,28 +247,28 @@ public class JournalPortletDataHandler extends BasePortletDataHandler {
 			}
 		}
 
-		if (portletDataContext.getBooleanParameter(NAMESPACE, "web-content")) {
-			Element foldersElement =
-				portletDataContext.getImportDataGroupElement(
-					JournalFolder.class);
+		if (!portletDataContext.getBooleanParameter(NAMESPACE, "web-content")) {
+			return portletPreferences;
+		}
 
-			List<Element> folderElements = foldersElement.elements();
+		Element foldersElement = portletDataContext.getImportDataGroupElement(
+			JournalFolder.class);
 
-			for (Element folderElement : folderElements) {
-				StagedModelDataHandlerUtil.importStagedModel(
-					portletDataContext, folderElement);
-			}
+		List<Element> folderElements = foldersElement.elements();
 
-			Element articlesElement =
-				portletDataContext.getImportDataGroupElement(
-					JournalArticle.class);
+		for (Element folderElement : folderElements) {
+			StagedModelDataHandlerUtil.importStagedModel(
+				portletDataContext, folderElement);
+		}
 
-			List<Element> articleElements = articlesElement.elements();
+		Element articlesElement = portletDataContext.getImportDataGroupElement(
+			JournalArticle.class);
 
-			for (Element articleElement : articleElements) {
-				StagedModelDataHandlerUtil.importStagedModel(
-					portletDataContext, articleElement);
-			}
+		List<Element> articleElements = articlesElement.elements();
+
+		for (Element articleElement : articleElements) {
+			StagedModelDataHandlerUtil.importStagedModel(
+				portletDataContext, articleElement);
 		}
 
 		return portletPreferences;

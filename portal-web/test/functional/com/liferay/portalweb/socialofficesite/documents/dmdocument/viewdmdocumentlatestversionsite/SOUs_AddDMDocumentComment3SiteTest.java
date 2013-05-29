@@ -59,7 +59,7 @@ public class SOUs_AddDMDocumentComment3SiteTest extends BaseTestCase {
 			RuntimeVariables.replace("Reply"));
 		selenium.waitForText("xPath=(//div[@class='lfr-discussion-message'])[1]",
 			"DM Document Comment3");
-		assertEquals(RuntimeVariables.replace("DM Document Comment2"),
+		assertEquals(RuntimeVariables.replace("DM Document Comment2 Edit"),
 			selenium.getText(
 				"xPath=(//div[@class='lfr-discussion-message'])[2]"));
 		assertEquals(RuntimeVariables.replace("DM Document Comment3"),

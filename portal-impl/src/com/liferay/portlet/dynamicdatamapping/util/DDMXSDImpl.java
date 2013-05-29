@@ -20,6 +20,7 @@ import com.liferay.portal.kernel.io.unsync.UnsyncStringWriter;
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
+import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.security.pacl.DoPrivileged;
 import com.liferay.portal.kernel.template.Template;
 import com.liferay.portal.kernel.template.TemplateConstants;
@@ -105,6 +106,7 @@ public class DDMXSDImpl implements DDMXSD {
 			defaultReadOnlyTemplateId, defaultReadOnlyTemplateURL);
 	}
 
+	@Override
 	public String getFieldHTML(
 			PageContext pageContext, Element element, Fields fields,
 			String portletNamespace, String namespace, String mode,
@@ -174,6 +176,7 @@ public class DDMXSDImpl implements DDMXSD {
 		return sb.toString();
 	}
 
+	@Override
 	public String getFieldHTMLByName(
 			PageContext pageContext, long classNameId, long classPK,
 			String fieldName, Fields fields, String portletNamespace,
@@ -199,6 +202,7 @@ public class DDMXSDImpl implements DDMXSD {
 			readOnly, locale);
 	}
 
+	@Override
 	public String getHTML(
 			PageContext pageContext, DDMStructure ddmStructure, Fields fields,
 			String portletNamespace, String namespace, boolean readOnly,
@@ -210,6 +214,7 @@ public class DDMXSDImpl implements DDMXSD {
 			namespace, readOnly, locale);
 	}
 
+	@Override
 	public String getHTML(
 			PageContext pageContext, DDMTemplate ddmTemplate, Fields fields,
 			String portletNamespace, String namespace, boolean readOnly,
@@ -260,6 +265,7 @@ public class DDMXSDImpl implements DDMXSD {
 		return getHTML(pageContext, element, null, portletNamespace, locale);
 	}
 
+	@Override
 	public String getHTML(
 			PageContext pageContext, String xml, Fields fields,
 			String portletNamespace, Locale locale)
@@ -270,6 +276,7 @@ public class DDMXSDImpl implements DDMXSD {
 			locale);
 	}
 
+	@Override
 	public String getHTML(
 			PageContext pageContext, String xml, Fields fields,
 			String portletNamespace, String namespace, boolean readOnly,
@@ -281,6 +288,7 @@ public class DDMXSDImpl implements DDMXSD {
 			readOnly, locale);
 	}
 
+	@Override
 	public String getHTML(
 			PageContext pageContext, String xml, Fields fields,
 			String portletNamespace, String namespace, Locale locale)
@@ -304,6 +312,7 @@ public class DDMXSDImpl implements DDMXSD {
 			namespace, mode, readOnly, locale);
 	}
 
+	@Override
 	public String getHTML(
 			PageContext pageContext, String xml, String portletNamespace,
 			Locale locale)
@@ -312,6 +321,7 @@ public class DDMXSDImpl implements DDMXSD {
 		return getHTML(pageContext, xml, null, locale);
 	}
 
+	@Override
 	public JSONArray getJSONArray(DDMStructure structure, String xsd)
 		throws PortalException, SystemException {
 
@@ -329,10 +339,12 @@ public class DDMXSDImpl implements DDMXSD {
 		return jsonArray;
 	}
 
+	@Override
 	public JSONArray getJSONArray(Document document) throws PortalException {
 		return getJSONArray(document.getRootElement());
 	}
 
+	@Override
 	public JSONArray getJSONArray(Element element) throws PortalException {
 		JSONArray jsonArray = JSONFactoryUtil.createJSONArray();
 
@@ -422,6 +434,7 @@ public class DDMXSDImpl implements DDMXSD {
 		return jsonArray;
 	}
 
+	@Override
 	public JSONArray getJSONArray(String xml)
 		throws PortalException, SystemException {
 
@@ -433,6 +446,7 @@ public class DDMXSDImpl implements DDMXSD {
 		}
 	}
 
+	@Override
 	public String getSimpleFieldHTML(
 			PageContext pageContext, Element element, Field field,
 			String portletNamespace, String namespace, String mode,
@@ -488,6 +502,7 @@ public class DDMXSDImpl implements DDMXSD {
 			pageContext, element, mode, readOnly, freeMarkerContext);
 	}
 
+	@Override
 	public String getSimpleFieldHTMLByName(
 			PageContext pageContext, long classNameId, long classPK,
 			Field field, String portletNamespace, String namespace, String mode,
@@ -513,6 +528,7 @@ public class DDMXSDImpl implements DDMXSD {
 			readOnly, locale);
 	}
 
+	@Override
 	public String getXSD(long classNameId, long classPK)
 		throws PortalException, SystemException {
 
@@ -694,6 +710,8 @@ public class DDMXSDImpl implements DDMXSD {
 		freeMarkerContext.put("namespace", namespace);
 		freeMarkerContext.put("parentFieldStructure", parentFieldContext);
 		freeMarkerContext.put("portletNamespace", portletNamespace);
+		freeMarkerContext.put(
+			"requestedLanguageDir", LanguageUtil.get(locale, "lang.dir"));
 		freeMarkerContext.put("requestedLocale", locale);
 
 		return freeMarkerContext;

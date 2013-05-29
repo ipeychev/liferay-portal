@@ -18,7 +18,7 @@ AUI.add(
 
 		var EVENT_CLICK = 'click';
 
-		var TPL_ADD_CONTENT = '<div class="span4" />';
+		var TPL_ADD_CONTENT = '<div class="lfr-add-panel" id="{0}" />';
 
 		var TPL_LOADING = '<div class="loading-animation" />';
 
@@ -48,104 +48,38 @@ AUI.add(
 				}
 			},
 
-			addItem: function(options) {
-				var instance = this;
-
-				if (options.url) {
-					options.text = '<a href="' + options.url + '">' + options.text + '</a>';
-				}
-
-				var item = A.Node.create('<li class="' + (options.className || '') + '">' + options.text + '</li>');
-
-				instance.dockBar.one('> ul').appendChild(item);
-
-				instance._toolbarItems[options.name] = item;
-
-				return item;
-			},
-
-			addMessage: function(message, messageId) {
-				var instance = this;
-
-				var messages = instance.messages;
-
-				if (!instance.messageList) {
-					instance.messageList = [];
-					instance.messageIdList = [];
-				}
-
-				messages.show();
-
-				if (!messageId) {
-					messageId = A.guid();
-				}
-
-				instance.messageList.push(message);
-				instance.messageIdList.push(messageId);
-
-				var currentBody = messages.get(BODY_CONTENT);
-
-				message = instance._createMessage(message, messageId);
-
-				messages.setStdModContent('body', message, 'after');
-
-				var messagesContainer = messages.get(BOUNDING_BOX);
-
-				var action = 'removeClass';
-
-				if (instance.messageList.length > 1) {
-					action = 'addClass';
-				}
-
-				messagesContainer[action]('multiple-messages');
-
-				return messageId;
-			},
-
-			clearMessages: function(event) {
-				var instance = this;
-
-				instance.messages.set(BODY_CONTENT, ' ');
-
-				instance.messageList = [];
-				instance.messageIdList = [];
-			},
-
 			getPanelNode: function() {
 				var instance = this;
 
-				return instance._getPanelNode();
+				var addPanelNode = instance._addPanelNode;
+
+				if (!addPanelNode) {
+					var namespace = instance._namespace;
+
+					var addPanelSidebarId = namespace + 'addPanelSidebar';
+
+					addPanelNode = A.one('#' + addPanelSidebarId);
+
+					if (!addPanelNode) {
+						addPanelNode = A.Node.create(Lang.sub(TPL_ADD_CONTENT, [namespace]));
+
+						addPanelNode.plug(A.Plugin.ParseContent);
+
+						BODY.prepend(addPanelNode);
+
+						addPanelNode.set('id', addPanelSidebarId);
+
+						instance._addPanelNode = addPanelNode;
+					}
+				}
+
+				return addPanelNode;
 			},
 
 			loadPanel: function() {
 				var instance = this;
 
 				Dockbar._loadAddPanel();
-			},
-
-			setMessage: function(message, messageId) {
-				var instance = this;
-
-				var messages = instance.messages;
-
-				if (!messageId) {
-					messageId = A.guid();
-				}
-
-				instance.messageList = [message];
-				instance.messageIdList = [messageId];
-
-				messages.show();
-
-				message = instance._createMessage(message, messageId);
-
-				messages.set(BODY_CONTENT, message);
-
-				var messagesContainer = messages.get(BOUNDING_BOX);
-
-				messagesContainer.removeClass('multiple-messages');
-
-				return messageId;
 			},
 
 			_createCustomizationMask: function(column) {
@@ -198,62 +132,20 @@ AUI.add(
 				return overlayMask;
 			},
 
-			_createMessage: function(message, messageId) {
-				var instance = this;
-
-				var cssClass = '';
-
-				if (instance.messageList.length === 1) {
-					cssClass = 'first';
-				}
-
-				return '<div class="dockbar-message ' + cssClass + '" id="' + messageId + '">' + message + '</div>';
-			},
-
-			_getPanelNode: function() {
-				var instance = this;
-
-				var addPanelNode = instance._addPanelNode;
-
-				if (!addPanelNode) {
-					addPanelNode = A.one('#' + instance._namespace + 'addPanelSidebar');
-
-					if (!addPanelNode) {
-						addPanelNode = A.Node.create(TPL_ADD_CONTENT);
-
-						addPanelNode.plug(A.Plugin.ParseContent);
-
-						A.one('#wrapper .row-fluid').prepend(addPanelNode);
-
-						addPanelNode.set('id', instance._namespace + 'addPanelSidebar');
-
-						instance._addPanelNode = addPanelNode;
-					}
-				}
-
-				return addPanelNode;
-			},
-
 			_loadAddPanel: function() {
 				var instance = this;
 
 				BODY.toggleClass(CSS_ADD_CONTENT);
 
-				var addPanelNode = instance._getPanelNode();
-
-				var contentWrapper = A.one('#content-wrapper');
+				var addPanelNode = instance.getPanelNode();
 
 				if (BODY.hasClass(CSS_ADD_CONTENT)) {
 					instance._addPanel();
 
 					addPanelNode.show();
-
-					contentWrapper.replaceClass('span12', 'span8');
 				}
 				else {
 					addPanelNode.hide();
-
-					contentWrapper.replaceClass('span8', 'span12');
 				}
 			},
 
@@ -275,7 +167,7 @@ AUI.add(
 			_setLoadingAnimation: function() {
 				var instance = this;
 
-				instance._getPanelNode().html(TPL_LOADING);
+				instance.getPanelNode().html(TPL_LOADING);
 			},
 
 			_toggleAppShortcut: function(item, force) {
@@ -289,17 +181,6 @@ AUI.add(
 
 		Liferay.provide(
 			Dockbar,
-			'addUnderlay',
-			function(options) {
-				var instance = this;
-
-				instance._addUnderlay(options);
-			},
-			['liferay-dockbar-underlay']
-		);
-
-		Liferay.provide(
-			Dockbar,
 			'_init',
 			function() {
 				var instance = this;
@@ -309,43 +190,7 @@ AUI.add(
 
 				Liferay.Util.toggleControls(dockBar);
 
-				var UnderlayManager = new A.OverlayManager(
-					{
-						zIndexBase: 300
-					}
-				);
-
-				Dockbar.UnderlayManager = UnderlayManager;
-
 				instance._toolbarItems = {};
-
-				var messages = instance._addUnderlay(
-					{
-						align: {
-							node: instance.dockBar,
-							points: ['tc', 'bc']
-						},
-						bodyContent: '',
-						boundingBox: '#' + namespace + 'dockbarMessages',
-						header: 'My messages',
-						name: 'messages',
-						visible: false
-					}
-				);
-
-				messages.on(
-					'visibleChange',
-					function(event) {
-						if (event.newVal) {
-							BODY.addClass('showing-messages');
-						}
-						else {
-							BODY.removeClass('showing-messages');
-						}
-					}
-				);
-
-				messages.closeTool.on(EVENT_CLICK, instance.clearMessages, instance);
 
 				Liferay.fire('initLayout');
 				Liferay.fire('initNavigation');
@@ -353,6 +198,13 @@ AUI.add(
 				var addContent = A.one('#' + namespace + 'addContent');
 
 				var addPanel = A.one('#' + namespace + 'addPanel');
+
+				Liferay.on(
+					'dockbar:closeAddContentMenu',
+					function(event) {
+						addContent.removeClass('open');
+					}
+				);
 
 				if (addPanel) {
 					addPanel.on(
@@ -362,7 +214,7 @@ AUI.add(
 
 							instance._loadAddPanel();
 
-							addContent.removeClass('open');
+							Liferay.fire('dockbar:closeAddContentMenu');
 						}
 					);
 				}
@@ -466,7 +318,7 @@ AUI.add(
 
 				Liferay.fire('dockbarLoaded');
 			},
-			['aui-io-request', 'aui-overlay-context-deprecated', 'liferay-dockbar-underlay', 'liferay-store', 'node-focusmanager']
+			['aui-io-request', 'aui-overlay-context-deprecated', 'liferay-store', 'node-focusmanager']
 		);
 
 		Liferay.provide(
@@ -489,7 +341,7 @@ AUI.add(
 								success: function(event, id, obj) {
 									var response = this.get('responseData');
 
-									var panelNode = instance._getPanelNode();
+									var panelNode = instance.getPanelNode();
 
 									panelNode.plug(A.Plugin.ParseContent);
 
@@ -500,7 +352,7 @@ AUI.add(
 					);
 				}
 			},
-			['aui-io-request']
+			['aui-io-request', 'aui-parse-content', 'event-outside']
 		);
 
 		Liferay.provide(

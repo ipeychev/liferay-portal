@@ -25,19 +25,20 @@ public class Guest_ViewWikiPageCompletedTest extends BaseTestCase {
 		selenium.selectWindow("null");
 		selenium.selectFrame("relative=top");
 		selenium.open("/web/guest/home/");
-		selenium.waitForVisible("link=Wiki Test Page");
 		selenium.clickAt("link=Wiki Test Page",
 			RuntimeVariables.replace("Wiki Test Page"));
 		selenium.waitForPageToLoad("30000");
 		selenium.clickAt("link=All Pages", RuntimeVariables.replace("All Pages"));
 		selenium.waitForPageToLoad("30000");
+		Thread.sleep(1000);
+		selenium.waitForVisible("//tr[contains(.,'Wiki Page Title')]/td[1]/a");
 		assertEquals(RuntimeVariables.replace("Wiki Page Title"),
-			selenium.getText("//tr[4]/td[1]/a"));
-		selenium.clickAt("//tr[4]/td[1]/a",
+			selenium.getText("//tr[contains(.,'Wiki Page Title')]/td[1]/a"));
+		selenium.clickAt("//tr[contains(.,'Wiki Page Title')]/td[1]/a",
 			RuntimeVariables.replace("Wiki Page Title"));
 		selenium.waitForPageToLoad("30000");
 		assertEquals(RuntimeVariables.replace("Wiki Page Title"),
-			selenium.getText("//h1[@class='header-title']"));
+			selenium.getText("//h3[@class='header-title']"));
 		assertEquals(RuntimeVariables.replace("Wiki Page Content"),
 			selenium.getText("//div[@class='wiki-body']/p"));
 		assertFalse(selenium.isTextPresent("Pending (Review)"));
@@ -48,7 +49,7 @@ public class Guest_ViewWikiPageCompletedTest extends BaseTestCase {
 			selenium.getText("//div/div/h2"));
 		assertEquals(RuntimeVariables.replace(
 				"There are no pages submitted by you pending approval."),
-			selenium.getText("xPath=(//div[@class='portlet-msg-info'])[2]"));
+			selenium.getText("xPath=(//div[@class='alert alert-info'])[3]"));
 		assertFalse(selenium.isTextPresent("Wiki Page Title"));
 	}
 }
