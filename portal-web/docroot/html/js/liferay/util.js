@@ -450,7 +450,15 @@
 				id = Util.getWindowName();
 			}
 
-			return Util.getTop().Liferay.Util.Window.getById(id);
+			var windonInstance;
+
+			var topWindow = Util.getTop();
+
+			if (Lang.isFunction(topWindow.Liferay.Util.Window.getById)) {
+				windonInstance = topWindow.Liferay.Util.Window.getById(id);
+			}
+
+			return windonInstance;
 		},
 
 		getWindowName: function() {
