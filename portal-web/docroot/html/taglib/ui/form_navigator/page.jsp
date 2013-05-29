@@ -172,17 +172,44 @@ if (Validator.isNotNull(historyKey)) {
 </div>
 
 <aui:script use="aui-event-input,aui-tabview,aui-url,history,io-form">
-	var formNode = A.one('#<portlet:namespace /><%= formName %>');
+	function inDialog() {
+		return Liferay.Util.getWindow();
+	}
 
-	var tabview = new A.TabView(
-		{
-			boundingBox: '#<portlet:namespace />boundingBox',
-			srcNode: '#<portlet:namespace />tabs',
-			type: 'list'
+	function onDialogVisibleChange(event) {
+		if (event.newVal) {
+			revealSection();
 		}
-	).render();
+	}
 
-	var history = new A.HistoryHash();
+	function revealSection() {
+		var currentLocationHash;
+
+		if (inDialog()) {
+			currentLocationHash = window.location.hash;
+
+			if (currentLocationHash) {
+				currentLocationHash = currentLocationHash.substring(1);
+			}
+		}
+		else {
+			currentLocationHash = A.HistoryHash.getHash();
+		}
+
+		if (currentLocationHash) {
+			var sectionId = currentLocationHash;
+
+			if (currentLocationHash.indexOf('<portlet:namespace />') === -1) {
+				sectionId = '<portlet:namespace />' + currentLocationHash;
+			}
+
+			if (sectionId.indexOf('=') !== -1) {
+				sectionId = sectionId.substring(sectionId.indexOf('=') + 1);
+			}
+
+			selectSection(sectionId);
+		}
+	}
 
 	function selectTabBySectionId(sectionId) {
 		var instance = this;
@@ -195,6 +222,16 @@ if (Validator.isNotNull(historyKey)) {
 			tabview.selectChild(tabIndex);
 		}
 	};
+
+	function selectSection(sectionId) {
+		Liferay.fire('formNavigator:reveal' + sectionId);
+
+		var history = new A.HistoryHash();
+
+		history.addValue('<portlet:namespace />tab', sectionId);
+
+		updateRedirectForSectionId(sectionId);
+	}
 
 	function updateSectionStatus() {
 		var tabNode = tabview.get('selection').get('boundingBox');
@@ -230,20 +267,33 @@ if (Validator.isNotNull(historyKey)) {
 		}
 	}
 
+	var tabview = new A.TabView(
+		{
+			srcNode: '#<portlet:namespace />tabs',
+			type: 'list'
+		}
+	).render();
+
+	revealSection();
+
+	if (inDialog()) {
+		var dialog = Liferay.Util.getWindow();
+
+		var dialogVisibleChangeHandle = dialog.after('visibleChange', onDialogVisibleChange);
+
+		dialog.once('destroy', dialogVisibleChangeHandle.detach, dialog);
+	}
+
 	tabview.after(
 		'selectionChange',
 		function(event) {
-			var tab = event.newVal
+			var tab = event.newVal;
 
 			var boundingBox = tab.get('boundingBox');
 
 			var sectionId = boundingBox.getData('sectionId');
 
-			Liferay.fire('formNavigator:reveal' + sectionId);
-
-			history.addValue('<portlet:namespace />tab', sectionId);
-
-			updateRedirectForSectionId(sectionId);
+			selectSection(sectionId);
 		}
 	);
 
@@ -262,6 +312,8 @@ if (Validator.isNotNull(historyKey)) {
 			}
 		}
 	);
+
+	var formNode = A.one('#<portlet:namespace /><%= formName %>');
 
 	if (formNode) {
 		formNode.all('.modify-link').on('click', updateSectionStatus);
