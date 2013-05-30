@@ -12,9 +12,8 @@
  * details.
  */
 
-package com.liferay.portal.deploy.auto;
+package com.liferay.portal.kernel.deploy.auto;
 
-import com.liferay.portal.kernel.deploy.auto.AutoDeployException;
 import com.liferay.portal.kernel.deploy.auto.context.AutoDeploymentContext;
 
 /**
@@ -24,6 +23,8 @@ import com.liferay.portal.kernel.deploy.auto.context.AutoDeploymentContext;
 public interface AutoDeployer {
 
 	public static final int CODE_DEFAULT = 1;
+
+	public static final int CODE_NOT_APPLICABLE = 0;
 
 	public static final int CODE_SKIP_NEWER_VERSION = 2;
 
