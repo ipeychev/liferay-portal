@@ -140,9 +140,21 @@ if (ratingsEntry != null) {
 										<a class="rating-element rating-<%= (yourScore < 0) ? "on" : "off" %> rating-thumb-down icon-thumbs-down" href="javascript:;"></a>
 
 										<div class="rating-input-container">
-											<input class="rating-input" id="<%= PortalUtil.generateRandomKey(request, "taglib_rating") %>" name="<portlet:namespace />ratingThumb" type="radio" value="up">
+											<%
+											String id = PortalUtil.generateRandomKey(request, "taglib_rating");
+											%>
 
-											<input class="rating-input" id="<%= PortalUtil.generateRandomKey(request, "taglib_rating") %>" name="<portlet:namespace />ratingThumb" type="radio" value="down">
+											<label for="<%= id %>"><liferay-ui:message key='<%= (yourScore > 0) ? "you-have-rated-this-as-good" : "rate-this-as-good"%>' /></label>
+
+											<input class="rating-input" id="<%= id %>" name="<portlet:namespace />ratingThumb" type="radio" value="up">
+
+											<%
+											id = PortalUtil.generateRandomKey(request, "taglib_rating");
+											%>
+
+											<label for="<%= id %>"><liferay-ui:message key='<%= (yourScore > 0) ? "you-have-rated-this-as-bad" : "rate-this-as-bad"%>' /></label>
+
+											<input class="rating-input" id="<%= id %>" name="<portlet:namespace />ratingThumb" type="radio" value="down">
 										</div>
 									</c:otherwise>
 								</c:choose>
