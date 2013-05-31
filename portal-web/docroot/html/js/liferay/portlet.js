@@ -468,7 +468,7 @@
 				}
 			}
 		},
-		['aui-io']
+		['aui-io-plugin-deprecated']
 	);
 
 	Liferay.provide(
