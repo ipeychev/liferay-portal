@@ -25,7 +25,7 @@
 				<span class="portlet-title-text">$portlet_title</span>
 
 				#if ($valid_portlet_description)
-					$taglibLiferay.iconHelp($portlet_description)
+					$theme.iconHelp($portlet_description)
 				#end
 			</h2>
 		#end
@@ -34,7 +34,7 @@
 			#if ($portlet_display.isShowBackIcon())
 				<a class="portlet-icon-back" href="$portlet_back_url">#language ("return-to-full-page")</a>
 			#else
-				$theme.iconOptions()
+				$theme.portletIconOptions()
 			#end
 		</menu>
 	</header>

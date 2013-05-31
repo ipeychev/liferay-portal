@@ -223,68 +223,124 @@ public class DummyVelocityTaglib implements VelocityTaglib {
 		throws Exception {
 	}
 
+	/**
+	 * @deprecated As of 6.2.0, replaced by {@link #iconBack}
+	 */
 	@Override
 	public void iconBack() throws Exception {
+		portletIconBack();
 	}
 
+	/**
+	 * @deprecated As of 6.2.0, replaced by {@link #portletIconClose}
+	 */
 	@Override
 	public void iconClose() throws Exception {
+		portletIconClose();
 	}
 
+	/**
+	 * @deprecated As of 6.2.0, replaced by {@link #portletIconConfiguration}
+	 */
 	@Override
 	public void iconConfiguration() throws Exception {
+		portletIconConfiguration();
 	}
 
+	/**
+	 * @deprecated As of 6.2.0, replaced by {@link #portletIconEdit}
+	 */
 	@Override
 	public void iconEdit() throws Exception {
+		portletIconEdit();
 	}
 
+	/**
+	 * @deprecated As of 6.2.0, replaced by {@link #portletIconEditDefaults}
+	 */
 	@Override
 	public void iconEditDefaults() throws Exception {
+		portletIconEditDefaults();
 	}
 
+	/**
+	 * @deprecated As of 6.2.0, replaced by {@link #portletIconEditGuest}
+	 */
 	@Override
 	public void iconEditGuest() throws Exception {
+		portletIconEditGuest();
 	}
 
+	/**
+	 * @deprecated As of 6.2.0, replaced by {@link #portletIconHelp}
+	 */
 	@Override
 	public void iconHelp() throws Exception {
+		portletIconHelp();
 	}
 
-	@Override
-	public void iconHelp(String message) throws Exception {
-	}
-
+	/**
+	 * @deprecated As of 6.2.0, replaced by {@link #portletIconMaximize}
+	 */
 	@Override
 	public void iconMaximize() throws Exception {
+		portletIconMaximize();
 	}
 
+	/**
+	 * @deprecated As of 6.2.0, replaced by {@link #portletIconMinimize}
+	 */
 	@Override
 	public void iconMinimize() throws Exception {
+		portletIconMinimize();
 	}
 
+	/**
+	 * @deprecated As of 6.2.0, replaced by {@link #portletIconOptions}
+	 */
 	@Override
 	public void iconOptions() throws Exception {
+		portletIconOptions();
 	}
 
+	/**
+	 * @deprecated As of 6.2.0, replaced by {@link #portletIconPortlet}
+	 */
 	@Override
 	public void iconPortlet() throws Exception {
+		portletIconPortlet();
 	}
 
+	/**
+	 * @deprecated As of 6.2.0, replaced by {@link #portletIconPortlet(Portlet)}
+	 */
 	@Override
 	public void iconPortlet(Portlet portlet) throws Exception {
+		portletIconPortlet();
 	}
 
+	/**
+	 * @deprecated As of 6.2.0, replaced by {@link #portletIconPortletCss}
+	 */
 	@Override
 	public void iconPortletCss() throws Exception {
+		portletIconPortletCss();
 	}
 
+	/**
+	 * @deprecated As of 6.2.0, replaced by {@link #portletIconPrint}
+	 */
 	@Override
 	public void iconPrint() throws Exception {
+		portletIconPrint();
 	}
 
+	/**
+	 * @deprecated As of 6.2.0, replaced by {@link #portletIconRefresh}
+	 */
 	@Override
 	public void iconRefresh() throws Exception {
+		portletIconRefresh();
 	}
 
 	@Override
@@ -377,6 +433,66 @@ public class DummyVelocityTaglib implements VelocityTaglib {
 			String modelResourceDescription, String resourcePrimKey,
 			String windowState, int[] roleTypes)
 		throws Exception {
+	}
+
+	@Override
+	public void portletIconBack() throws Exception {
+	}
+
+	@Override
+	public void portletIconClose() throws Exception {
+	}
+
+	@Override
+	public void portletIconConfiguration() throws Exception {
+	}
+
+	@Override
+	public void portletIconEdit() throws Exception {
+	}
+
+	@Override
+	public void portletIconEditDefaults() throws Exception {
+	}
+
+	@Override
+	public void portletIconEditGuest() throws Exception {
+	}
+
+	@Override
+	public void portletIconHelp() throws Exception {
+	}
+
+	@Override
+	public void portletIconMaximize() throws Exception {
+	}
+
+	@Override
+	public void portletIconMinimize() throws Exception {
+	}
+
+	@Override
+	public void portletIconOptions() throws Exception {
+	}
+
+	@Override
+	public void portletIconPortlet() throws Exception {
+	}
+
+	@Override
+	public void portletIconPortlet(Portlet portlet) throws Exception {
+	}
+
+	@Override
+	public void portletIconPortletCss() throws Exception {
+	}
+
+	@Override
+	public void portletIconPrint() throws Exception {
+	}
+
+	@Override
+	public void portletIconRefresh() throws Exception {
 	}
 
 	@Override

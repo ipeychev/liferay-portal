@@ -12,18 +12,16 @@
  * details.
  */
 
-package com.liferay.portal.kernel.util;
+package com.liferay.portal.kernel.template;
 
 /**
- * @author Brian Wing Shun Chan
+ * @author Marcellus Tavares
  */
-public class BreadcrumbsUtil {
+public interface TemplateVariableCodeHandler {
 
-	public static String removeLastClass(String breadcrumbs) {
-		return StringUtil.replace(
-			breadcrumbs,
-			new String[] {"class=\"last\"", "class=\"first last\""},
-			new String[] {StringPool.BLANK, "class=\"first\""});
-	}
+	public String[] generate(
+			TemplateVariableDefinition templateVariableDefinition,
+			String language)
+		throws Exception;
 
 }

@@ -99,7 +99,7 @@ public class GroupServiceImpl extends GroupServiceBaseImpl {
 		throws PortalException, SystemException {
 
 		if (parentGroupId == GroupConstants.DEFAULT_PARENT_GROUP_ID) {
-			PortalPermissionUtil.contains(
+			PortalPermissionUtil.check(
 				getPermissionChecker(), ActionKeys.ADD_COMMUNITY);
 		}
 		else {

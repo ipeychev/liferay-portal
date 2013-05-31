@@ -22,6 +22,8 @@ import com.liferay.portal.kernel.util.CharPool;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.Group;
+import com.liferay.portal.model.Layout;
+import com.liferay.portal.model.LayoutFriendlyURLComposite;
 import com.liferay.portal.model.User;
 import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
@@ -36,6 +38,7 @@ import com.liferay.portal.util.WebKeys;
 import java.io.IOException;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.RequestDispatcher;
@@ -93,9 +96,16 @@ public class FriendlyURLServlet extends HttpServlet {
 		request.setAttribute(
 			WebKeys.FRIENDLY_URL, _friendlyURLPathPrefix.concat(pathInfo));
 
+		Object[] redirectArray = null;
+
+		boolean forceRedirect = false;
+
 		try {
-			redirect = getRedirect(
+			redirectArray = getRedirect(
 				request, pathInfo, mainPath, request.getParameterMap());
+
+			redirect = (String)redirectArray[0];
+			forceRedirect = (Boolean)redirectArray[1];
 
 			if (request.getAttribute(WebKeys.LAST_PATH) == null) {
 				LastPath lastPath = new LastPath(
@@ -127,7 +137,7 @@ public class FriendlyURLServlet extends HttpServlet {
 			_log.debug("Redirect " + redirect);
 		}
 
-		if (redirect.charAt(0) == CharPool.SLASH) {
+		if ((redirect.charAt(0) == CharPool.SLASH) && !forceRedirect) {
 			ServletContext servletContext = getServletContext();
 
 			RequestDispatcher requestDispatcher =
@@ -142,13 +152,13 @@ public class FriendlyURLServlet extends HttpServlet {
 		}
 	}
 
-	protected String getRedirect(
+	protected Object[] getRedirect(
 			HttpServletRequest request, String path, String mainPath,
 			Map<String, String[]> params)
 		throws Exception {
 
 		if (Validator.isNull(path) || (path.charAt(0) != CharPool.SLASH)) {
-			return mainPath;
+			return new Object[] {mainPath, false};
 		}
 
 		// Group friendly URL
@@ -165,7 +175,7 @@ public class FriendlyURLServlet extends HttpServlet {
 		}
 
 		if (Validator.isNull(friendlyURL)) {
-			return mainPath;
+			return new Object[] {mainPath, Boolean.FALSE};
 		}
 
 		long companyId = PortalInstances.getCompanyId(request);
@@ -215,7 +225,7 @@ public class FriendlyURLServlet extends HttpServlet {
 		}
 
 		if (group == null) {
-			return mainPath;
+			return new Object[] {mainPath, Boolean.FALSE};
 		}
 
 		// Layout friendly URL
@@ -244,9 +254,31 @@ public class FriendlyURLServlet extends HttpServlet {
 			ServiceContextThreadLocal.pushServiceContext(serviceContext);
 		}
 
-		return PortalUtil.getActualURL(
+		String actualURL = PortalUtil.getActualURL(
 			group.getGroupId(), _private, mainPath, friendlyURL, params,
 			requestContext);
+
+		if (Validator.isNotNull(friendlyURL)) {
+			Locale locale = PortalUtil.getLocale(request);
+
+			LayoutFriendlyURLComposite layoutFriendlyURLComposite =
+				PortalUtil.getLayoutFriendlyURLComposite(
+					group.getGroupId(), _private, friendlyURL, params,
+					requestContext);
+
+			Layout layout = layoutFriendlyURLComposite.getLayout();
+
+			friendlyURL = layoutFriendlyURLComposite.getFriendlyURL();
+
+			if (!friendlyURL.startsWith(layout.getFriendlyURL(locale))) {
+				String redirect = PortalUtil.getLocalizedFriendlyURL(
+					request, layout, locale);
+
+				return new Object[] {redirect, Boolean.TRUE};
+			}
+		}
+
+		return new Object[] {actualURL, Boolean.FALSE};
 	}
 
 	private static Log _log = LogFactoryUtil.getLog(FriendlyURLServlet.class);
