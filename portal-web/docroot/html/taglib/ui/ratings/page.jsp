@@ -76,10 +76,11 @@ if (ratingsEntry != null) {
 									<a class="rating-element <%= (i <= yourScore) ? "icon-star" : "icon-star-empty" %>" href="javascript:;"></a>
 
 									<div class="rating-input-container">
-										<label for="<%= id %>"><%= (yourScore == i) ? LanguageUtil.format(pageContext, "you-have-rated-this-x-stars-out-of-x", new Object[] {i, numberOfStars}) : LanguageUtil.format(pageContext, "rate-this-x-stars-out-of-x", new Object[] {i, numberOfStars}) %></label>
+										<label for="<%= id %>"><liferay-ui:message arguments="<%= new Object[] {i, numberOfStars} %>" key='<%= (yourScore == i) ? "you-have-rated-this-x-stars-out-of-x" : "rate-this-x-stars-out-of-x" %>' /></label>
 
 										<input checked="<%= i == yourScore %>" class="rating-input" id="<%= id %>" name="<portlet:namespace />rating" type="radio" value="<%= i %>">
 									</div>
+
 								<%
 								}
 								%>
@@ -94,7 +95,7 @@ if (ratingsEntry != null) {
 						<div class="rating-label">
 							<liferay-ui:message key="average" />
 
-							(<%= ratingsStats.getTotalEntries() %> <%= LanguageUtil.get(pageContext, (ratingsStats.getTotalEntries() == 1) ? "vote" : "votes") %>)
+							(<%= ratingsStats.getTotalEntries() %> <liferay-ui:message key='<%= (ratingsStats.getTotalEntries() == 1) ? "vote" : "votes" %>' />)
 						</div>
 
 						<%
@@ -125,7 +126,7 @@ if (ratingsEntry != null) {
 										</c:otherwise>
 									</c:choose>
 
-									(<%= ratingsStats.getTotalEntries() %> <%= LanguageUtil.get(pageContext, (ratingsStats.getTotalEntries() == 1) ? "vote" : "votes") %>)
+									(<%= ratingsStats.getTotalEntries() %> <liferay-ui:message key='<%= (ratingsStats.getTotalEntries() == 1) ? "vote" : "votes" %>' />)
 								</div>
 
 								<c:choose>
@@ -140,11 +141,12 @@ if (ratingsEntry != null) {
 										<a class="rating-element rating-<%= (yourScore < 0) ? "on" : "off" %> rating-thumb-down icon-thumbs-down" href="javascript:;"></a>
 
 										<div class="rating-input-container">
+
 											<%
 											String id = PortalUtil.generateRandomKey(request, "taglib_rating");
 											%>
 
-											<label for="<%= id %>"><liferay-ui:message key='<%= (yourScore > 0) ? "you-have-rated-this-as-good" : "rate-this-as-good"%>' /></label>
+											<label for="<%= id %>"><liferay-ui:message key='<%= (yourScore > 0) ? "you-have-rated-this-as-good" : "rate-this-as-good" %>' /></label>
 
 											<input class="rating-input" id="<%= id %>" name="<portlet:namespace />ratingThumb" type="radio" value="up">
 
@@ -152,7 +154,7 @@ if (ratingsEntry != null) {
 											id = PortalUtil.generateRandomKey(request, "taglib_rating");
 											%>
 
-											<label for="<%= id %>"><liferay-ui:message key='<%= (yourScore > 0) ? "you-have-rated-this-as-bad" : "rate-this-as-bad"%>' /></label>
+											<label for="<%= id %>"><liferay-ui:message key='<%= (yourScore > 0) ? "you-have-rated-this-as-bad" : "rate-this-as-bad" %>' /></label>
 
 											<input class="rating-input" id="<%= id %>" name="<portlet:namespace />ratingThumb" type="radio" value="down">
 										</div>
