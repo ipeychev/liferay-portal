@@ -136,7 +136,8 @@ Group ddmTemplateGroup = GroupLocalServiceUtil.getGroup(ddmTemplateGroupId);
 					{
 						classNameId: '<%= classNameId %>',
 						dialog: {
-							width: 820
+							width: 820,
+							zIndex: (++Liferay.zIndex.WINDOW)
 						},
 						groupId: <%= ddmTemplateGroupId %>,
 						refererPortletName: '<%= PortletKeys.PORTLET_DISPLAY_TEMPLATES %>',
