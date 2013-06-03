@@ -190,21 +190,22 @@
 
 				<c:if test="<%= resizable %>">
 					<aui:script use="resize-base,liferay-store">
-						var textarea = A.one('#<%= namespace + id %>');
+						var textareaNode = A.one('#<%= namespace + id %>');
 
-						var instance = new A.Resize(
+						var resizeInstance = new A.Resize(
 							{
-								autoHide: true,
-								node: textarea,
-								wrap: true,
-								handles: 'r, br, b',
 								after: {
-									'resize:end': function(event) {
-										Liferay.Store('<%= _TEXTAREA_WIDTH_HEIGHT_PREFIX %><%= namespace + id %>', textarea.getStyle('height') + ',' + textarea.getStyle('width'))
+									'end': function(event) {
+										Liferay.Store('<%= _TEXTAREA_WIDTH_HEIGHT_PREFIX %><%= namespace + id %>', textareaNode.getStyle('height') + ',' + textareaNode.getStyle('width'))
 									}
-								}
+								},
+								autoHide: true,
+								handles: 'r, br, b',
+								node: textareaNode
 							}
 						);
+
+						textareaNode.setData('resizeInstance', resizeInstance);
 					</aui:script>
 				</c:if>
 
