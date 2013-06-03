@@ -49,7 +49,8 @@ if ((alternativeLayoutFriendlyURLs != null) && !alternativeLayoutFriendlyURLs.is
 			{
 				content: alternativeLayoutFriendlyURLNode.html(),
 				noticeClass: 'hide',
-				toggleText: false
+				toggleText: false,
+				useAnimation: true
 			}
 		);
 
