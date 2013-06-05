@@ -364,8 +364,7 @@ public class CalEventLocalServiceWrapper implements CalEventLocalService,
 
 	@Override
 	public void checkEvents()
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
+		throws com.liferay.portal.kernel.exception.SystemException {
 		_calEventLocalService.checkEvents();
 	}
 

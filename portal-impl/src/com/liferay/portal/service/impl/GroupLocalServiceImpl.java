@@ -671,7 +671,7 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 	public Group deleteGroup(Group group)
 		throws PortalException, SystemException {
 
-		if (PortalUtil.isSystemGroup(group.getName())) {
+		if (group.isCompany() || PortalUtil.isSystemGroup(group.getName())) {
 			throw new RequiredGroupException(
 				String.valueOf(group.getGroupId()),
 				RequiredGroupException.SYSTEM_GROUP);
@@ -3610,10 +3610,6 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 
 		Role role = roleLocalService.getRole(
 			group.getCompanyId(), RoleConstants.USER);
-
-		setCompanyPermissions(
-			role, PortletKeys.PORTAL,
-			new String[] {ActionKeys.VIEW_CONTROL_PANEL});
 
 		List<Portlet> portlets = portletLocalService.getPortlets(
 			group.getCompanyId(), false, false);

@@ -96,7 +96,7 @@
 			%>
 
 			<aui:field-wrapper inlineField="<%= true %>" inlineLabel="left" label="<%= conversion.toUpperCase() %>">
-				<input <%= ArrayUtil.contains(extensions, conversion) ? "checked": "" %> <%= !openOfficeServerEnabled ? "disabled" : "" %> name="<portlet:namespace />extensions" type="checkbox" value="<%= conversion %>" />
+				<input <%= ArrayUtil.contains(extensions, conversion) ? "checked": "" %><aui:spacer /><%= !openOfficeServerEnabled ? "disabled" : "" %> name="<portlet:namespace />extensions" type="checkbox" value="<%= conversion %>" />
 			</aui:field-wrapper>
 
 			<%
@@ -207,7 +207,7 @@
 		var selectDisplayStyle = A.one('#<portlet:namespace />displayStyle');
 
 		if (hiddenFields) {
-			hiddenFields.hide();
+			hiddenFields.get('parentNode').hide();
 		}
 
 		if (selectDisplayStyle) {
@@ -218,11 +218,11 @@
 				var showContextLink = A.one('.show-context-link');
 
 				if (showAssetTitle) {
-					showAssetTitle.show();
+					showAssetTitle.get('parentNode').show();
 				}
 
 				if (showContextLink) {
-					showContextLink.show();
+					showContextLink.get('parentNode').show();
 				}
 			}
 			else {
@@ -230,12 +230,12 @@
 					var abstractLength = A.one('.abstract-length');
 
 					if (abstractLength) {
-						abstractLength.show();
+						abstractLength.get('parentNode').show();
 					}
 				}
 
 				if (assetLinkBehavior) {
-					assetLinkBehavior.show();
+					assetLinkBehavior.get('parentNode').show();
 				}
 			}
 		}

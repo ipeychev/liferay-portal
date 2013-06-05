@@ -67,6 +67,8 @@
 			<forward name="/portal/render_portlet" path="/portal/render_portlet.jsp" />
 		</action>
 
+		<action path="/portal/resiliency" type="com.liferay.portal.resiliency.spi.action.PortalResiliencyAction" />
+
 		<action path="/portal/rest_proxy" type="com.liferay.portal.action.RESTProxyAction" />
 
 		<action path="/portal/session_click" type="com.liferay.portal.action.SessionClickAction" />
@@ -436,6 +438,10 @@
 			<forward name="portlet.calendar.error" path="portlet.calendar.error" />
 		</action>
 
+		<!-- Control Panel Home -->
+
+		<action path="/control_panel_home/view" forward="portlet.control_panel_home.view" />
+
 		<!-- Control Panel Menu -->
 
 		<action path="/control_panel_menu/view" forward="portlet.control_panel_menu.view" />
@@ -590,8 +596,6 @@
 			<forward name="portlet.dynamic_data_lists.edit_record" path="portlet.dynamic_data_lists.edit_record" />
 			<forward name="portlet.dynamic_data_lists.error" path="portlet.dynamic_data_lists.error" />
 		</action>
-
-		<action path="/dynamic_data_list_display/edit_record_file" type="com.liferay.portlet.dynamicdatalists.action.EditRecordFileAction" />
 
 		<action path="/dynamic_data_list_display/view" forward="portlet.dynamic_data_list_display.view" />
 

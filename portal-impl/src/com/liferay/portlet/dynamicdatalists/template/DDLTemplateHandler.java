@@ -15,6 +15,7 @@
 package com.liferay.portlet.dynamicdatalists.template;
 
 import com.liferay.portal.kernel.language.LanguageUtil;
+import com.liferay.portal.kernel.template.TemplateVariableCodeHandler;
 import com.liferay.portal.kernel.template.TemplateVariableGroup;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.util.PortalUtil;
@@ -32,6 +33,7 @@ import com.liferay.portlet.dynamicdatamapping.service.DDMTemplateLocalService;
 import com.liferay.portlet.dynamicdatamapping.service.DDMTemplateService;
 import com.liferay.portlet.dynamicdatamapping.storage.Field;
 import com.liferay.portlet.dynamicdatamapping.template.BaseDDMTemplateHandler;
+import com.liferay.portlet.dynamicdatamapping.template.DDMTemplateVariableCodeHandler;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -122,7 +124,7 @@ public class DDLTemplateHandler extends BaseDDMTemplateHandler {
 			DDLConstants.RESERVED_RECORD_SET_NAME);
 		templateVariableGroup.addCollectionVariable(
 			"data-list-records", List.class, "records", "record",
-			DDLRecord.class, "curRecord");
+			DDLRecord.class, "cur_record");
 		templateVariableGroup.addVariable(
 			"template-id", null, DDLConstants.RESERVED_DDM_TEMPLATE_ID);
 
@@ -133,5 +135,14 @@ public class DDLTemplateHandler extends BaseDDMTemplateHandler {
 	protected Class<?> getFieldVariableClass() {
 		return Field.class;
 	}
+
+	@Override
+	protected TemplateVariableCodeHandler getTemplateVariableCodeHandler() {
+		return _templateVariableCodeHandler;
+	}
+
+	private TemplateVariableCodeHandler _templateVariableCodeHandler =
+		new DDMTemplateVariableCodeHandler(
+			"com/liferay/portlet/dynamicdatalists/dependencies/template/");
 
 }

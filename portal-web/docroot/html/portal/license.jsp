@@ -33,6 +33,10 @@
 		vertical-align: top;
 	}
 
+	.license-form {
+		padding-bottom: 30px;
+	}
+
 	.alert-error, .alert-success {
 		margin: 15px auto 5px;
 	}
@@ -79,7 +83,7 @@ dateFormatDateTime.setTimeZone(timeZone);
 	<%= buildInfo %>
 </h3>
 
-<form method="post" name="license_fm" <%= (clusterNodes.size() > 1) ? "onsubmit=\"return validateForm();\"" : "" %>>
+<form class="license-form" method="post" name="license_fm" <%= (clusterNodes.size() > 1) ? "onsubmit=\"return validateForm();\"" : "" %>>
 
 <c:if test="<%= Validator.isNotNull(errorMessage) %>">
 	<div class="alert alert-error">
@@ -584,7 +588,7 @@ dateFormatDateTime.setTimeZone(timeZone);
 
 <br />
 
-<strong>Register Your Application</strong>
+<h3>Register Your Application</h3>
 
 <table class="lfr-table">
 <tr>
@@ -623,14 +627,14 @@ dateFormatDateTime.setTimeZone(timeZone);
 
 					<c:choose>
 						<c:when test='<%= key.equals("basic") %>'>
-							<option value="basic">Single Production Server (<%= licensesLeft %> <%= licensesLeft.equals("1") ? "License" : "Licenses" %> Left)</option>
-							<option value="basic-cluster">Create New Cluster Production Servers (<%= licensesLeft %> <%= licensesLeft.equals("1") ? "License" : "Licenses" %> Left)</option>
+							<option value="basic">Single Production Server (<%= licensesLeft %><aui:spacer /><%= licensesLeft.equals("1") ? "License" : "Licenses" %> Left)</option>
+							<option value="basic-cluster">Create New Cluster Production Servers (<%= licensesLeft %><aui:spacer /><%= licensesLeft.equals("1") ? "License" : "Licenses" %> Left)</option>
 						</c:when>
 						<c:when test='<%= key.startsWith("basic-") %>'>
-							<option value="<%= key %>">Join Existing Cluster (<%= licensesLeft %> <%= licensesLeft.equals("1") ? "Server" : "Servers" %> Left)</option>
+							<option value="<%= key %>">Join Existing Cluster (<%= licensesLeft %><aui:spacer /><%= licensesLeft.equals("1") ? "Server" : "Servers" %> Left)</option>
 						</c:when>
 						<c:otherwise>
-							<option value="<%= key %>"><%= LanguageUtil.get(pageContext, key) %> (<%= licensesLeft %> <%= licensesLeft.equals("1") ? "License" : "Licenses" %> Left)</option>
+							<option value="<%= key %>"><%= LanguageUtil.get(pageContext, key) %> (<%= licensesLeft %><aui:spacer /><%= licensesLeft.equals("1") ? "License" : "Licenses" %> Left)</option>
 						</c:otherwise>
 					</c:choose>
 
@@ -674,12 +678,12 @@ dateFormatDateTime.setTimeZone(timeZone);
 
 <c:choose>
 	<c:when test="<%= orderProducts != null %>">
-		<input type="submit" value="<liferay-ui:message key="register" />" />
+		<input class="btn" type="submit" value="<liferay-ui:message key="register" />" />
 
 		<input onClick="location.href='<%= themeDisplay.getURLCurrent() %>';" type="button" value="<liferay-ui:message key="cancel" />" />
 	</c:when>
 	<c:otherwise>
-		<input type="submit" value="Query" />
+		<input class="btn" type="submit" value="Query" />
 	</c:otherwise>
 </c:choose>
 

@@ -155,11 +155,11 @@ String toggleControlsState = GetterUtil.getString(SessionClicks.get(request, "li
 				%>
 
 				<c:if test="<%= themeDisplay.isShowPageSettingsIcon() %>">
-					<aui:nav-item cssClass='<%= "first manage-page" + useDialogFullDialog %>' href='<%= themeDisplay.getURLPageSettings().toString() + "#details" %>' label="page" title="manage-page" />
+					<aui:nav-item cssClass='<%= "first manage-page" + useDialogFullDialog %>' href='<%= themeDisplay.getURLPageSettings().toString() + "#tab=details" %>' label="page" title="manage-page" />
 				</c:if>
 
 				<c:if test="<%= themeDisplay.isShowLayoutTemplatesIcon() %>">
-					<aui:nav-item cssClass='<%= "page-layout" + useDialogFullDialog %>' href='<%= themeDisplay.getURLPageSettings().toString() + "#layout" %>' label="page-layout" title="manage-page" />
+					<aui:nav-item cssClass='<%= "page-layout" + useDialogFullDialog %>' href='<%= themeDisplay.getURLPageSettings().toString() + "#tab=layout" %>' label="page-layout" title="manage-page" />
 				</c:if>
 
 				<c:if test="<%= themeDisplay.isShowPageCustomizationIcon() && !themeDisplay.isStateMaximized() %>">
@@ -218,10 +218,6 @@ String toggleControlsState = GetterUtil.getString(SessionClicks.get(request, "li
 		if (PropsValues.DOCKBAR_ADMINISTRATIVE_LINKS_SHOW_IN_POP_UP) {
 			useDialog = StringPool.SPACE + "use-dialog";
 		}
-
-		String myAccountURL = themeDisplay.getURLMyAccount().toString();
-
-		myAccountURL = HttpUtil.setParameter(myAccountURL, "controlPanelCategory", PortletCategoryKeys.MY);
 		%>
 
 		<liferay-util:buffer var="userName">
@@ -283,7 +279,14 @@ String toggleControlsState = GetterUtil.getString(SessionClicks.get(request, "li
 							</c:if>
 						</c:when>
 						<c:otherwise>
-							<c:if test="<%= PortalPermissionUtil.contains(permissionChecker, ActionKeys.VIEW_CONTROL_PANEL) %>">
+							<c:if test="<%= Validator.isNotNull(themeDisplay.getURLMyAccount()) %>">
+
+								<%
+								String myAccountURL = themeDisplay.getURLMyAccount().toString();
+
+								myAccountURL = HttpUtil.setParameter(myAccountURL, "controlPanelCategory", PortletCategoryKeys.MY);
+								%>
+
 								<aui:nav-item anchorCssClass='<%= themeDisplay.isImpersonated() ? "" : useDialog %>' href="<%= myAccountURL %>" label="my-account" title="manage-my-account" />
 							</c:if>
 
@@ -324,7 +327,7 @@ List<LayoutPrototype> layoutPrototypes = LayoutPrototypeServiceUtil.search(compa
 				<li>
 					<a href="javascript:;">
 						<label>
-							<input name="template" type="radio" value="<%= layoutPrototype.getLayoutPrototypeId() %>" /> <%= HtmlUtil.escape(layoutPrototype.getName(user.getLanguageId())) %>
+							<input name="template" type="radio" value="<%= layoutPrototype.getLayoutPrototypeId() %>" /><aui:spacer /><%= HtmlUtil.escape(layoutPrototype.getName(user.getLanguageId())) %>
 						</label>
 					</a>
 				</li>

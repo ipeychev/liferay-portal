@@ -26,7 +26,6 @@ import com.liferay.portal.kernel.portlet.PortletContainer;
 import com.liferay.portal.kernel.portlet.PortletContainerException;
 import com.liferay.portal.kernel.portlet.PortletModeFactory;
 import com.liferay.portal.kernel.portlet.WindowStateFactory;
-import com.liferay.portal.kernel.security.pacl.DoPrivileged;
 import com.liferay.portal.kernel.servlet.BufferCacheServletResponse;
 import com.liferay.portal.kernel.servlet.DirectRequestDispatcherFactoryUtil;
 import com.liferay.portal.kernel.servlet.HttpHeaders;
@@ -55,7 +54,6 @@ import com.liferay.portal.service.permission.PortletPermissionUtil;
 import com.liferay.portal.theme.PortletDisplay;
 import com.liferay.portal.theme.PortletDisplayFactory;
 import com.liferay.portal.theme.ThemeDisplay;
-import com.liferay.portal.upload.UploadServletRequestImpl;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.util.SerializableUtil;
 
@@ -88,7 +86,6 @@ import javax.servlet.http.HttpSession;
  * @author Shuyang Zhou
  * @author Raymond Augé
  */
-@DoPrivileged
 public class PortletContainerImpl implements PortletContainer {
 
 	@Override
@@ -377,7 +374,7 @@ public class PortletContainerImpl implements PortletContainer {
 					liferayPortletConfig.isCopyRequestParameters() ||
 					!liferayPortletConfig.isWARFile()) {
 
-					uploadServletRequest = new UploadServletRequestImpl(
+					uploadServletRequest = PortalUtil.getUploadServletRequest(
 						request);
 
 					request = uploadServletRequest;
