@@ -1276,6 +1276,10 @@
 
 			var ddmURL = Liferay.PortletURL.createRenderURL();
 
+			if ('baseURL' in config) {
+				ddmURL = Liferay.PortletURL.createURL(config.baseURL);
+			}
+
 			ddmURL.setEscapeXML(false);
 
 			ddmURL.setDoAsGroupId(config.doAsGroupId || themeDisplay.getScopeGroupId());
