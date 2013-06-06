@@ -1955,6 +1955,8 @@ public interface PropsKeys {
 
 	public static final String PORTLET_URL_REFRESH_URL_RESERVED_PARAMETERS = "portlet.url.refresh.url.reserved.parameters";
 
+	public static final String PORTLET_URL_STRUTS_ACTION_ENABLED = "portlet.url.struts.action.enabled";
+
 	public static final String PORTLET_VIRTUAL_PATH = "portlet.virtual.path";
 
 	public static final String PORTLET_XML_VALIDATE = "portlet.xml.validate";
