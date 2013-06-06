@@ -8,8 +8,6 @@ AUI.add(
 
 			instance.params = {};
 
-			// Please see PortalImpl and PortletURLImpl
-
 			instance.reservedParams = {
 				controlPanelCategory: null,
 				doAsUserId: null,
@@ -54,8 +52,6 @@ AUI.add(
 			if (!baseURL) {
 				instance.options.baseURL = themeDisplay.getPathContext() + themeDisplay.getPathMain() + '/portal/layout?p_l_id=' + themeDisplay.getPlid();
 			}
-
-			// Overwite params and reservedParams from provided variable
 
 			A.each(
 				params,
@@ -153,7 +149,7 @@ AUI.add(
 				var instance = this;
 
 				if (instance._isReservedParam(key)) {
-					instance.reservedParams[key] = value
+					instance.reservedParams[key] = value;
 				}
 				else {
 					instance.params[key] = value;
