@@ -100,6 +100,8 @@ public class FriendlyURLServlet extends HttpServlet {
 
 		boolean forcePermanentRedirect = false;
 
+		PortalUtil.addPortalMessage(request, "Iliyan es un cachondo", "mi-clase", false, -1);
+
 		try {
 			redirectArray = getRedirect(
 				request, pathInfo, mainPath, request.getParameterMap());
