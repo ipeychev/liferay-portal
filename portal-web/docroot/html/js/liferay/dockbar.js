@@ -10,6 +10,8 @@ AUI.add(
 
 		var CSS_ADD_CONTENT = 'lfr-has-add-content';
 
+		var CSS_PREVIEW_CONTENT = 'lfr-has-device-preview';
+
 		var BODY_CONTENT = 'bodyContent';
 
 		var BOUNDING_BOX = 'boundingBox';
@@ -19,6 +21,8 @@ AUI.add(
 		var EVENT_CLICK = 'click';
 
 		var TPL_ADD_CONTENT = '<div class="lfr-add-panel" id="{0}" />';
+
+		var TPL_PREVIEW_PANEL = '<div class="lfr-device-preview-panel" id="{0}" />';
 
 		var TPL_LOADING = '<div class="loading-animation" />';
 
@@ -74,6 +78,40 @@ AUI.add(
 				}
 
 				return addPanelNode;
+			},
+
+			getPreviewPanelNode: function() {
+				var instance = this;
+
+				var previewPanelNode = instance._previewPanelNode;
+
+				if (!previewPanelNode) {
+					var namespace = instance._namespace;
+
+					var previewPanelSidebarId = namespace + 'previewPanelSidebar';
+
+					previewPanelNode = A.one('#' + previewPanelSidebarId);
+
+					if (!previewPanelNode) {
+						previewPanelNode = A.Node.create(Lang.sub(TPL_PREVIEW_PANEL, [namespace]));
+
+						previewPanelNode.plug(A.Plugin.ParseContent);
+
+						BODY.prepend(previewPanelNode);
+
+						previewPanelNode.set('id', previewPanelSidebarId);
+
+						instance._previewPanelNode = previewPanelNode;
+					}
+				}
+
+				return previewPanelNode;
+			},
+
+			loadDevicePreviewPanel: function() {
+				var instance = this;
+
+				Dockbar._loadPreviewPanel();
 			},
 
 			loadPanel: function() {
@@ -139,6 +177,11 @@ AUI.add(
 
 				var addPanelNode = instance.getPanelNode();
 
+				if (BODY.hasClass(CSS_PREVIEW_CONTENT)) {
+					BODY.toggleClass(CSS_PREVIEW_CONTENT);
+					instance.getPreviewPanelNode().hide();
+				}
+
 				if (BODY.hasClass(CSS_ADD_CONTENT)) {
 					instance._addPanel();
 
@@ -146,6 +189,28 @@ AUI.add(
 				}
 				else {
 					addPanelNode.hide();
+				}
+			},
+
+			_loadPreviewPanel: function() {
+				var instance = this;
+
+				BODY.toggleClass(CSS_PREVIEW_CONTENT);
+
+				var previewPanelNode = instance.getPreviewPanelNode();
+
+				if (BODY.hasClass(CSS_ADD_CONTENT)) {
+					BODY.toggleClass(CSS_ADD_CONTENT);
+					instance.getPanelNode().hide();
+				}
+
+				if (BODY.hasClass(CSS_PREVIEW_CONTENT)) {
+					instance._previewPanel();
+
+					previewPanelNode.show();
+				}
+				else {
+					previewPanelNode.hide();
 				}
 			},
 
@@ -215,6 +280,21 @@ AUI.add(
 							instance._loadAddPanel();
 
 							Liferay.fire('dockbar:closeAddContentMenu');
+						}
+					);
+				}
+
+				var previewContent = A.one('#' + namespace + 'previewContent');
+
+				var previewPanel = A.one('#' + namespace + 'previewPanel');
+
+				if (previewPanel) {
+					previewPanel.on(
+						EVENT_CLICK,
+						function(event) {
+							event.halt();
+
+							instance._loadPreviewPanel();
 						}
 					);
 				}
@@ -342,6 +422,40 @@ AUI.add(
 									var response = this.get('responseData');
 
 									var panelNode = instance.getPanelNode();
+
+									panelNode.plug(A.Plugin.ParseContent);
+
+									panelNode.setContent(response);
+								}
+							}
+						}
+					);
+				}
+			},
+			['aui-io-request', 'aui-parse-content', 'event-outside']
+		);
+
+		Liferay.provide(
+			Dockbar,
+			'_previewPanel',
+			function() {
+				var instance = this;
+
+				//instance._setLoadingAnimation();
+
+				var previewPanel = A.one('#' + instance._namespace + 'previewPanel');
+
+				if (previewPanel) {
+					var uri = previewPanel.attr('href');
+
+					A.io.request(
+						uri,
+						{
+							after: {
+								success: function(event, id, obj) {
+									var response = this.get('responseData');
+
+									var panelNode = instance.getPreviewPanelNode();
 
 									panelNode.plug(A.Plugin.ParseContent);
 
