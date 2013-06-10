@@ -229,7 +229,14 @@ AUI.add(
 
 				var namespacePrefix = Util.getPortletNamespace(portletId);
 
-				resultURL.setParameters(reservedParams);
+				A.each(
+					reservedParams,
+					function (item, index, collection) {
+						if (item) {
+							resultURL.setParameter(index, value);
+						}
+					}
+				);
 
 				A.each(
 					instance.params,

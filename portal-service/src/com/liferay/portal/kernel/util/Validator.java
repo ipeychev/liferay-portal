@@ -1235,7 +1235,7 @@ public class Validator {
 	 *         <code>false</code> otherwise
 	 */
 	public static boolean isUrl(String url) {
-		if (isNotNull(url)) {
+		if (isUri(url)) {
 			if (url.indexOf(CharPool.COLON) == -1) {
 				return false;
 			}
