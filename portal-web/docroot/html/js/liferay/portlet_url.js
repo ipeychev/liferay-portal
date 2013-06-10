@@ -233,7 +233,7 @@ AUI.add(
 					reservedParams,
 					function (item, index, collection) {
 						if (item) {
-							resultURL.setParameter(index, value);
+							resultURL.setParameter(index, item);
 						}
 					}
 				);
