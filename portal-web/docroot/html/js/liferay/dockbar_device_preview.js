@@ -13,8 +13,6 @@ AUI.add(
 
 		var STR_CLICK = 'click';
 
-		var STR_CUSTOM_DEVICE = 'custom-device';
-
 		var TPL_DEVICE_PREVIEW = '<div class="lfr-device-preview" />';
 
 		var DevicePreview = A.Component.create(
@@ -66,7 +64,7 @@ AUI.add(
 							instance._devicePreviewNode.hide();
 						}
 
-						Dockbar.loadDevicePreviewPanel();
+						Dockbar.togglePreviewPanel();
 					},
 
 					_getDeviceDialog: function(width, height) {
@@ -96,7 +94,7 @@ AUI.add(
 
 												var delta = A.Lang.toInt(body.getStyle('paddingLeft')) + A.Lang.toInt(body.getStyle('paddingRight'));
 												dialog.set('width', width + delta);
-												dialog.set('height', height + delta);
+												dialog.set('height', height);
 											});
 
 											dialog.iframe.on('uriChange', function(event) {
@@ -146,17 +144,29 @@ AUI.add(
 						var device = deviceList[deviceId];
 
 						if (device) {
-							var dialog = instance._getDeviceDialog(device.width, device.height);
+							var width = device.width;
+							var height = device.height;
+
+							if (!Lang.isNumber(width)) {
+								var widthNode = A.one(width);
+
+								if (widthNode) {
+									width = widthNode.val();
+								}
+							}
+
+							if (!Lang.isNumber(height)) {
+								var heightNode = A.one(height);
+
+								if (heightNode) {
+									height = heightNode.val();
+								}
+							}
+
+							var dialog = instance._getDeviceDialog(width, height);
 
 							instance._devicePreviewContainer.all('.selected').toggleClass('selected');
 							event.currentTarget.addClass('selected');
-
-							if (event.currentTarget.hasClass(STR_CUSTOM_DEVICE)) {
-								var width = event.currentTarget.one('.device-width').val();
-								var height = event.currentTarget.one('.device-height').val();
-
-								instance._changeDialogSize(width, height);							
-							}
 
 							instance._devicePreviewNode.show();
 							dialog.show();
@@ -166,12 +176,10 @@ AUI.add(
 					_onSizeInput: function(event) {
 						var instance = this;
 
-						var custom = A.one('.' + STR_CUSTOM_DEVICE);
+						var width = A.one('.device-width').val();
+						var height = A.one('.device-height').val();
 
-						width = custom.one('.device-width').val();
-						height = custom.one('.device-height').val();
-
-						instance._changeDialogSize(width, height);
+						var dialog = instance._getDeviceDialog(width, height);
 					}
 				}
 			}

@@ -55,7 +55,7 @@
 				</div>
 			</aui:nav-item>
 
-			<aui:nav-item cssClass="lfr-device-item row-fluid">
+			<aui:nav-item cssClass="lfr-device-item row-fluid" data-device="custom">
 				<div>Custom (px)</div>
 				<input class="input-mini device-width" name="width" value="200"/> x <input class="input-mini device-height" name="height" value="200" />
 			</aui:nav-item>
@@ -84,13 +84,15 @@
 				},
 				'desktop':
 				{
-					id: 'desktop',
 					height: 1050,
 					width: 1300
+				},
+				'custom':
+				{
+					height: '.device-height',
+					width: '.device-width'
 				}
-			},
-			inputHeight: '.device-height',
-			inputWidth: '.device-width'
+			}
 		}
 	);
 </aui:script>

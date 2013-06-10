@@ -1,9 +1,12 @@
 AUI.add(
 	'liferay-dockbar',
 	function(A) {
+		var AObject = A.Object;
+
 		var Lang = A.Lang;
 
 		var Portlet = Liferay.Portlet;
+
 		var Util = Liferay.Util;
 
 		var BODY = A.getBody();
@@ -19,6 +22,10 @@ AUI.add(
 		var CONTENT_BOX = 'contentBox';
 
 		var EVENT_CLICK = 'click';
+
+		var STR_ADD_PANEL = 'addPanel';
+
+		var STR_PREVIEW_PANEL = 'previewPanel';
 
 		var TPL_ADD_CONTENT = '<div class="lfr-add-panel" id="{0}" />';
 
@@ -52,72 +59,46 @@ AUI.add(
 				}
 			},
 
-			getPanelNode: function() {
+			getPanelNode: function(panelId) {
 				var instance = this;
 
-				var addPanelNode = instance._addPanelNode;
+				var panel = DOCKBAR_PANELS[panelId];
 
-				if (!addPanelNode) {
+				var panelNode = panel.node;
+
+				if (!panelNode) {
 					var namespace = instance._namespace;
 
-					var addPanelSidebarId = namespace + 'addPanelSidebar';
+					var panelSidebarId = namespace + panel + 'Sidebar';
 
-					addPanelNode = A.one('#' + addPanelSidebarId);
+					panelNode = A.one('#' + panelSidebarId);
 
-					if (!addPanelNode) {
-						addPanelNode = A.Node.create(Lang.sub(TPL_ADD_CONTENT, [namespace]));
+					if (!panelNode) {
+						panelNode = A.Node.create(Lang.sub(panel.tpl, [namespace]));
 
-						addPanelNode.plug(A.Plugin.ParseContent);
+						panelNode.plug(A.Plugin.ParseContent);
 
-						BODY.prepend(addPanelNode);
+						BODY.prepend(panelNode);
 
-						addPanelNode.set('id', addPanelSidebarId);
+						panelNode.set('id', panelSidebarId);
 
-						instance._addPanelNode = addPanelNode;
+						panel.node = panelNode;
 					}
 				}
 
-				return addPanelNode;
+				return panelNode;
 			},
 
-			getPreviewPanelNode: function() {
+			togglePreviewPanel: function() {
 				var instance = this;
 
-				var previewPanelNode = instance._previewPanelNode;
-
-				if (!previewPanelNode) {
-					var namespace = instance._namespace;
-
-					var previewPanelSidebarId = namespace + 'previewPanelSidebar';
-
-					previewPanelNode = A.one('#' + previewPanelSidebarId);
-
-					if (!previewPanelNode) {
-						previewPanelNode = A.Node.create(Lang.sub(TPL_PREVIEW_PANEL, [namespace]));
-
-						previewPanelNode.plug(A.Plugin.ParseContent);
-
-						BODY.prepend(previewPanelNode);
-
-						previewPanelNode.set('id', previewPanelSidebarId);
-
-						instance._previewPanelNode = previewPanelNode;
-					}
-				}
-
-				return previewPanelNode;
+				Dockbar._togglePanel(STR_PREVIEW_PANEL);
 			},
 
-			loadDevicePreviewPanel: function() {
+			toggleAddPanel: function() {
 				var instance = this;
 
-				Dockbar._loadPreviewPanel();
-			},
-
-			loadPanel: function() {
-				var instance = this;
-
-				Dockbar._loadAddPanel();
+				Dockbar._togglePanel(STR_ADD_PANEL);
 			},
 
 			_createCustomizationMask: function(column) {
@@ -170,50 +151,6 @@ AUI.add(
 				return overlayMask;
 			},
 
-			_loadAddPanel: function() {
-				var instance = this;
-
-				BODY.toggleClass(CSS_ADD_CONTENT);
-
-				var addPanelNode = instance.getPanelNode();
-
-				if (BODY.hasClass(CSS_PREVIEW_CONTENT)) {
-					BODY.toggleClass(CSS_PREVIEW_CONTENT);
-					instance.getPreviewPanelNode().hide();
-				}
-
-				if (BODY.hasClass(CSS_ADD_CONTENT)) {
-					instance._addPanel();
-
-					addPanelNode.show();
-				}
-				else {
-					addPanelNode.hide();
-				}
-			},
-
-			_loadPreviewPanel: function() {
-				var instance = this;
-
-				BODY.toggleClass(CSS_PREVIEW_CONTENT);
-
-				var previewPanelNode = instance.getPreviewPanelNode();
-
-				if (BODY.hasClass(CSS_ADD_CONTENT)) {
-					BODY.toggleClass(CSS_ADD_CONTENT);
-					instance.getPanelNode().hide();
-				}
-
-				if (BODY.hasClass(CSS_PREVIEW_CONTENT)) {
-					instance._previewPanel();
-
-					previewPanelNode.show();
-				}
-				else {
-					previewPanelNode.hide();
-				}
-			},
-
 			_openWindow: function(config, item) {
 				if (item) {
 					A.mix(
@@ -232,7 +169,7 @@ AUI.add(
 			_setLoadingAnimation: function() {
 				var instance = this;
 
-				instance.getPanelNode().html(TPL_LOADING);
+				instance.getPanelNode(STR_ADD_PANEL).html(TPL_LOADING);
 			},
 
 			_toggleAppShortcut: function(item, force) {
@@ -241,7 +178,45 @@ AUI.add(
 				item.toggleClass('lfr-portlet-used', force);
 
 				instance._addContentNode.focusManager.refresh();
-			}
+			},
+
+			_togglePanel: function(panelId) {
+				var instance = this;
+
+				AObject.each(
+					DOCKBAR_PANELS,
+					function(item, index, collection) {
+						if (item.id !== panelId) {
+							BODY.removeClass(item.css);
+
+							if (item.node) {
+								item.node.hide();
+							}
+						}
+					}
+				);
+
+				var panel = DOCKBAR_PANELS[panelId];
+
+				if (panel) {
+					var panelNode = panel.node;
+
+					if (!panelNode) {
+						panelNode = instance.getPanelNode(panel.id);
+					}
+
+					BODY.toggleClass(panel.css);
+
+					if (panelNode && BODY.hasClass(panel.css)) {
+						panel.showFn();
+
+						panelNode.show();
+					}
+					else {
+						panelNode.hide();
+					}
+				}		
+			}			
 		};
 
 		Liferay.provide(
@@ -277,7 +252,7 @@ AUI.add(
 						function(event) {
 							event.halt();
 
-							instance._loadAddPanel();
+							instance._togglePanel(STR_ADD_PANEL);
 
 							Liferay.fire('dockbar:closeAddContentMenu');
 						}
@@ -294,7 +269,7 @@ AUI.add(
 						function(event) {
 							event.halt();
 
-							instance._loadPreviewPanel();
+							instance._togglePanel(STR_PREVIEW_PANEL);
 						}
 					);
 				}
@@ -421,7 +396,7 @@ AUI.add(
 								success: function(event, id, obj) {
 									var response = this.get('responseData');
 
-									var panelNode = instance.getPanelNode();
+									var panelNode = instance.getPanelNode(STR_ADD_PANEL);
 
 									panelNode.plug(A.Plugin.ParseContent);
 
@@ -441,8 +416,6 @@ AUI.add(
 			function() {
 				var instance = this;
 
-				//instance._setLoadingAnimation();
-
 				var previewPanel = A.one('#' + instance._namespace + 'previewPanel');
 
 				if (previewPanel) {
@@ -455,7 +428,7 @@ AUI.add(
 								success: function(event, id, obj) {
 									var response = this.get('responseData');
 
-									var panelNode = instance.getPreviewPanelNode();
+									var panelNode = instance.getPanelNode(STR_PREVIEW_PANEL);
 
 									panelNode.plug(A.Plugin.ParseContent);
 
@@ -508,6 +481,23 @@ AUI.add(
 			},
 			['aui-io-request']
 		);
+
+		var DOCKBAR_PANELS = {
+			'addPanel': {
+				css: CSS_ADD_CONTENT,
+				id: STR_ADD_PANEL,
+				node: null,
+				showFn: Dockbar._addPanel,
+				tpl: TPL_ADD_CONTENT
+			},
+			'previewPanel': {
+				css: CSS_PREVIEW_CONTENT,
+				id: STR_PREVIEW_PANEL,
+				node: null,
+				showFn: Dockbar._previewPanel,
+				tpl: TPL_PREVIEW_PANEL
+			}
+		};
 
 		Liferay.Dockbar = Dockbar;
 	},
