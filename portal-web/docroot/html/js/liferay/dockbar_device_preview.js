@@ -144,7 +144,9 @@ AUI.add(
 							dialog.set('autoWidth', autoWidth);
 							dialog.set('autoHeight', autoHeight);
 
-							dialog.titleNode.html(device.title);
+							if (device.title) {
+								dialog.titleNode.html(device.title);
+							}
 
 							dialog.align(
 								instance._devicePreviewNode,
@@ -183,7 +185,7 @@ AUI.add(
 						var width = A.one('.device-width').val();
 						var height = A.one('.device-height').val();
 
-						var dialog = instance._getDeviceDialog({title: 'custom', width: width, height: height});
+						var dialog = instance._getDeviceDialog({width: width, height: height});
 					}
 				}
 			}
