@@ -69,8 +69,8 @@
 			namespace: '<portlet:namespace />',
 			devices: {
 				'autosize': {
-					height: '100%',
-					width: '100%'
+					height: 1,
+					width: 1
 				},
 				'smartphone':
 				{
@@ -92,7 +92,9 @@
 					height: '.device-height',
 					width: '.device-width'
 				}
-			}
+			},
+			inputHeight: '.device-height',
+			inputWidth: '.device-width'
 		}
 	);
 </aui:script>

@@ -13,7 +13,7 @@ AUI.add(
 
 		var STR_CLICK = 'click';
 
-		var TPL_DEVICE_PREVIEW = '<div class="lfr-device-preview" />';
+		var TPL_DEVICE_PREVIEW = '<div class="lfr-device-preview hide" />';
 
 		var DevicePreview = A.Component.create(
 			{
@@ -27,13 +27,11 @@ AUI.add(
 					devices: {
 						validator: Lang.isObject
 					},
-
 					inputHeight: {
 						setter: A.one
 					},
-
 					inputWidth: {
-						setter: A.one 
+						setter: A.one
 					}
 				},
 
@@ -44,6 +42,9 @@ AUI.add(
 						instance._devicePreviewContainer = instance.byId('devicePreviewContainer');
 						instance._devicePreviewContent = instance._devicePreviewContainer.one(CSS_DEVICE_PREVIEW_CONTENT);
 						instance._closePanelButton = instance._devicePreviewContainer.one('#closePanel');
+
+						instance._devicePreviewNode = A.Node.create(Lang.sub(TPL_DEVICE_PREVIEW));
+						BODY.append(instance._devicePreviewNode);
 
 						instance._bindUI();
 					},
@@ -59,12 +60,10 @@ AUI.add(
 
 					_closePanel: function() {
 						var instance = this;
-
-						if (instance._devicePreviewNode) {
-							instance._devicePreviewNode.hide();
-						}
-
+						
 						Dockbar.togglePreviewPanel();
+
+						instance._devicePreviewNode.hide();
 					},
 
 					_getDeviceDialog: function(width, height) {
@@ -72,14 +71,21 @@ AUI.add(
 
 						var dialog = instance._dialog;
 
-						if (!dialog) {
-							var devicePreviewNode = A.Node.create(Lang.sub(TPL_DEVICE_PREVIEW));
-							BODY.append(devicePreviewNode);
+						if (width >= 0 && width <= 1) {
+							instance._widthRatio = width;
+							width = instance._devicePreviewNode.get('offsetWidth') * instance._widthRatio;
+						}
 
+						if (height >= 0 && height <= 1) {
+							instance._heightRatio = height;
+							height = instance._devicePreviewNode.get('offsetHeight') * instance._heightRatio;							
+						}	
+
+						if (!dialog) {
 							dialog = new A.Modal(
 								{
 									align: {
-										node: devicePreviewNode,
+										node: instance._devicePreviewNode,
 										points: [A.WidgetPositionAlign.CC, A.WidgetPositionAlign.CC]
 									},
 									animate: true,
@@ -94,18 +100,15 @@ AUI.add(
 
 												var delta = A.Lang.toInt(body.getStyle('paddingLeft')) + A.Lang.toInt(body.getStyle('paddingRight'));
 												dialog.set('width', width + delta);
-												dialog.set('height', height);
-											});
-
-											dialog.iframe.on('uriChange', function(event) {
-												//dialog.set('headerContent', event.newVal);
 											});
 										}
 									},
-									constrain: devicePreviewNode,
+									constrain: instance._devicePreviewNode,
 									draggable: false,
 									headerContent: window.location.pathname,
-									resizable: false
+									height: height,
+									resizable: false,
+									width: width
 								}
 							);
 
@@ -116,12 +119,11 @@ AUI.add(
 								}
 							);
 
-							dialog.render(devicePreviewNode);
+							dialog.render(instance._devicePreviewNode);
 
-							instance._devicePreviewNode = devicePreviewNode;
 							instance._dialog = dialog;
 
-						} else {
+						} else {					
 							dialog.set('width', width);
 							dialog.set('height', height);
 
@@ -129,6 +131,21 @@ AUI.add(
 								instance._devicePreviewNode,
 								[A.WidgetPositionAlign.CC, A.WidgetPositionAlign.CC]
 							)
+						}
+
+						if (instance._widthRatio || instance._heightRatio) {
+							instance._onresizeHandle = A.on('windowresize', function(event) 
+								{
+									var w = instance._devicePreviewNode.get('offsetWidth') * instance._widthRatio;
+									var h = instance._devicePreviewNode.get('offsetHeight') * instance._heightRatio;
+									dialog.set('width', w);
+									dialog.set('height', h);
+								}
+							);
+						} else {
+							if (instance._onresizeHandle) {
+								instance._onresizeHandle.detach();
+							}
 						}
 
 						return instance._dialog;
@@ -141,11 +158,14 @@ AUI.add(
 
 						var deviceId = event.currentTarget.getData('device');
 
-						var device = deviceList[deviceId];
+						var selectedDevice = deviceList[deviceId];
 
-						if (device) {
-							var width = device.width;
-							var height = device.height;
+						instance._heightRatio = null;
+						instance._widthRatio = null;
+
+						if (selectedDevice) {
+							var width = selectedDevice.width;
+							var height = selectedDevice.height;
 
 							if (!Lang.isNumber(width)) {
 								var widthNode = A.one(width);
@@ -160,7 +180,7 @@ AUI.add(
 
 								if (heightNode) {
 									height = heightNode.val();
-								}
+								}								
 							}
 
 							var dialog = instance._getDeviceDialog(width, height);
