@@ -402,9 +402,7 @@ public class AssetPublisherImpl implements AssetPublisher {
 			if (Validator.equals(queryName, "assetCategories")) {
 				long[] assetCategoryIds = GetterUtil.getLongValues(queryValues);
 
-				if (queryContains &&
-					(queryAndOperator || (assetCategoryIds.length == 1))) {
-
+				if (queryContains && queryAndOperator) {
 					allAssetCategoryIds = assetCategoryIds;
 				}
 				else if (queryContains && !queryAndOperator) {
@@ -493,8 +491,7 @@ public class AssetPublisherImpl implements AssetPublisher {
 				"queryName" + i, StringPool.BLANK);
 
 			if (!Validator.equals(queryName, "assetCategories") &&
-				queryContains &&
-				(queryAndOperator || (queryValues.length == 1))) {
+				queryContains && queryAndOperator) {
 
 				allAssetTagNames = queryValues;
 			}
@@ -1117,7 +1114,7 @@ public class AssetPublisherImpl implements AssetPublisher {
 		return recentFolderIds;
 	}
 
-	private Log _log = LogFactoryUtil.getLog(AssetPublisherImpl.class);
+	private static Log _log = LogFactoryUtil.getLog(AssetPublisherImpl.class);
 
 	private Accessor<AssetEntry, String> _titleAccessor =
 		new Accessor<AssetEntry, String>() {

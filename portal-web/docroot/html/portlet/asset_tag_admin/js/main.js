@@ -406,11 +406,13 @@ AUI.add(
 
 						var url;
 
+						var config = instance._config;
+
 						if (lifecycle == LIFECYCLE_RENDER) {
-							url = Liferay.PortletURL.createRenderURL();
+							url = Liferay.PortletURL.createURL(config.baseRenderURL);
 						}
 						else if (lifecycle == LIFECYCLE_PROCESS) {
-							url = Liferay.PortletURL.createActionURL();
+							url = Liferay.PortletURL.createURL(config.baseActionURL);
 						}
 						else {
 							throw 'Internal error. Unimplemented lifecycle.';
@@ -862,10 +864,10 @@ AUI.add(
 						Liferay.Service(
 							'/assettag/get-json-group-tags',
 							{
-								end: end,
 								groupId: themeDisplay.getSiteGroupId(),
 								name: query,
-								start: start
+								start: start,
+								end: end
 							},
 							function(result) {
 								var total = result.total;
@@ -1103,8 +1105,8 @@ AUI.add(
 							'/assettag/merge-tags',
 							{
 								fromTagIds: fromIds,
-								overrideProperties: overrideProperties,
-								toTagId: toId
+								toTagId: toId,
+								overrideProperties: overrideProperties
 							},
 							callback
 						);
@@ -1115,8 +1117,8 @@ AUI.add(
 							'/assettag/merge-tags',
 							{
 								fromTagId: fromId,
-								overrideProperties: true,
-								toTagId: toId
+								toTagId: toId,
+								overrideProperties: true
 							},
 							callback
 						);

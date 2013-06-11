@@ -95,6 +95,56 @@
 			<finder-column name="primary" />
 		</finder>
 	</entity>
+	<entity name="BackgroundTask" local-service="true" remote-service="false">
+
+		<!-- PK fields -->
+
+		<column name="backgroundTaskId" type="long" primary="true" />
+
+		<!-- Group instance -->
+
+		<column name="groupId" type="long" />
+
+		<!-- Audit fields -->
+
+		<column name="companyId" type="long" />
+		<column name="userId" type="long" />
+		<column name="userName" type="String" />
+		<column name="createDate" type="Date" />
+		<column name="modifiedDate" type="Date" />
+
+		<!-- Other fields -->
+
+		<column name="name" type="String" />
+		<column name="servletContextNames" type="String" />
+		<column name="taskExecutorClassName" type="String" />
+		<column name="taskContext" type="String" />
+		<column name="completed" type="boolean" />
+		<column name="completionDate" type="Date" />
+		<column name="status" type="int" />
+
+		<!-- Order -->
+
+		<order by="asc">
+			<order-column name="createDate" />
+		</order>
+
+		<!-- Finder methods -->
+
+		<finder name="G_T" return-type="Collection">
+			<finder-column name="groupId" />
+			<finder-column name="taskExecutorClassName" />
+		</finder>
+		<finder name="T_S" return-type="Collection">
+			<finder-column name="taskExecutorClassName" />
+			<finder-column name="status" />
+		</finder>
+		<finder name="G_T_S" return-type="Collection">
+			<finder-column name="groupId" />
+			<finder-column name="taskExecutorClassName" />
+			<finder-column name="status" />
+		</finder>
+	</entity>
 	<entity name="BrowserTracker" local-service="true" remote-service="false">
 
 		<!-- PK fields -->
@@ -580,7 +630,6 @@
 
 		<!-- References -->
 
-		<reference package-path="com.liferay.portlet.backgroundtask" entity="BTEntry" />
 		<reference package-path="com.liferay.portlet.expando" entity="ExpandoValue" />
 		<reference package-path="com.liferay.portlet.journal" entity="JournalArticle" />
 		<reference package-path="com.liferay.portlet.journal" entity="JournalContentSearch" />
@@ -667,6 +716,10 @@
 		</finder>
 		<finder name="Plid" return-type="Collection">
 			<finder-column name="plid" />
+		</finder>
+		<finder name="P_F" return-type="Collection">
+			<finder-column name="plid" />
+			<finder-column name="friendlyURL" />
 		</finder>
 		<finder name="P_L" return-type="LayoutFriendlyURL" unique="true">
 			<finder-column name="plid" />
@@ -1977,6 +2030,54 @@
 		<reference package-path="com.liferay.portlet.messageboards" entity="MBThread" />
 		<reference package-path="com.liferay.portlet.social" entity="SocialActivity" />
 	</entity>
+	<entity name="SystemEvent" local-service="true" remote-service="false">
+
+		<!-- PK fields -->
+
+		<column name="systemEventId" type="long" primary="true" accessor="true" />
+
+		<!-- Group instance -->
+
+		<column name="groupId" type="long" />
+
+		<!-- Audit fields -->
+
+		<column name="companyId" type="long" />
+		<column name="userId" type="long" />
+		<column name="userName" type="String" />
+		<column name="createDate" type="Date" />
+
+		<!-- Other fields -->
+
+		<column name="classNameId" type="long" />
+		<column name="classPK" type="long" />
+		<column name="classUuid" type="String" />
+		<column name="type" type="int" />
+		<column name="extraData" type="String" />
+
+		<!-- Order -->
+
+		<order by="desc">
+			<order-column name="createDate" />
+		</order>
+
+		<!-- Finder methods -->
+
+		<finder name="GroupId" return-type="Collection">
+			<finder-column name="groupId" />
+		</finder>
+		<finder name="G_C_C" return-type="Collection">
+			<finder-column name="groupId" />
+			<finder-column name="classNameId" />
+			<finder-column name="classPK" />
+		</finder>
+		<finder name="G_C_C_T" return-type="Collection">
+			<finder-column name="groupId" />
+			<finder-column name="classNameId" />
+			<finder-column name="classPK" />
+			<finder-column name="type" />
+		</finder>
+	</entity>
 	<entity name="Team" local-service="true" remote-service="true">
 
 		<!-- PK fields -->
@@ -2358,6 +2459,7 @@
 			<finder-column name="archived" />
 		</finder>
 	</entity>
+	<entity name="UserNotificationInterpreter" local-service="true" remote-service="false" tx-manager="none" />
 	<entity name="UserTracker" local-service="true" remote-service="false">
 
 		<!-- PK fields -->

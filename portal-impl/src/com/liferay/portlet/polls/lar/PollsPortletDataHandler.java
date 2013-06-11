@@ -43,6 +43,9 @@ public class PollsPortletDataHandler extends BasePortletDataHandler {
 	public static final String NAMESPACE = "polls";
 
 	public PollsPortletDataHandler() {
+		setDeletionSystemEventClassNames(
+			PollsChoice.class.getName(), PollsQuestion.class.getName(),
+			PollsVote.class.getName());
 		setDataLocalized(true);
 		setExportControls(
 			new PortletDataHandlerBoolean(

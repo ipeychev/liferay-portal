@@ -16,22 +16,22 @@
 <!---->
 <tr>
 	<td>SUCCESS_MESSAGE</td>
-	<td>//div[@class='portlet-msg-success']</td>
+	<td>//div[@class='alert alert-success']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>SUCCESS_MESSAGE_RECYCLE_BIN</td>
-	<td>//div[@class='portlet-msg-success taglib-trash-undo']</td>
+	<td>//div[@class='alert alert-success taglib-trash-undo']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>INFO_MESSAGE</td>
-	<td>//div[@class='entries-empty portlet-msg-info']</td>
+	<td>//div[@class='entries-empty alert alert-info']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>OPTIONS_WRENCH_ICON</td>
-	<td>//span[@title='Options']/ul/li/strong/a</td>
+	<td>//a[@title='Options']</td>
 	<td></td>
 </tr>
 <tr>
@@ -88,7 +88,7 @@
 </tr>
 <tr>
 	<td>TOOLBAR_ADVANCED_SEARCH_BUTTON</td>
-	<td>//button[@id='_15_toggleAdvanced']</td>
+	<td>//button[@id='_15_toggleAdvanced']/i</td>
 	<td></td>
 </tr>
 <tr>
@@ -114,7 +114,7 @@
 </tr>
 <tr>
 	<td>ACTION_MENULIST_MOVE</td>
-	<td>//ul[@class='dropdown-menu']/li/a[.=' Move ']</td>
+	<td>//ul[@class='dropdown-menu']/li/a[contains(.,'Move')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -188,17 +188,17 @@
 <!--HOME_MENULIST-->
 <tr>
 	<td>HOME_MENULIST_ADD_FOLDER</td>
-	<td>//ul[@class='dropdown-menu']/li/a[contains(.,'Add Folder')]</td>
+	<td>//ul[contains(@class,'dropdown-menu lfr-menu-list')]/li/a[contains(.,'Add Folder')]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>HOME_MENULIST_SUBSCRIBE</td>
-	<td>//ul[@class='dropdown-menu']/li/a[contains(.,'Subscribe')]</td>
+	<td>//ul[contains(@class,'dropdown-menu lfr-menu-list')]/li/a[contains(.,'Subscribe')]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>HOME_MENULIST_PERMISSIONS</td>
-	<td>//ul[@class='dropdown-menu']/li/a[contains(.,'Permissions')]</td>
+	<td>//ul[contains(@class,'dropdown-menu lfr-menu-list')]/li/a[contains(.,'Permissions')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -208,22 +208,22 @@
 </tr>
 <!--ENTRY_TABLE-->
 <tr>
-	<td>ENTRY_TABLE_ENTRY</td>
+	<td>ENTRY_TABLE_ENTRY_1</td>
 	<td>//div[@class='entry-thumbnail']/img</td>
 	<td></td>
 </tr>
 <tr>
-	<td>ENTRY_TABLE_MENULIST_ARROW</td>
+	<td>ENTRY_TABLE_MENULIST_ARROW_1</td>
 	<td>//div[@id='_15_entriesContainer']/div/span[contains(@class,'entry-action')]/div/a/i[@class='caret']</td>
 	<td></td>
 </tr>
 <tr>
-	<td>ENTRY_TABLE_CHECKBOX</td>
+	<td>ENTRY_TABLE_CHECKBOX_1</td>
 	<td>//input[@id='_15_rowIdsJournalArticleCheckbox']</td>
 	<td></td>
 </tr>
 <tr>
-	<td>ENTRY_TABLE_TITLE</td>
+	<td>ENTRY_TABLE_TITLE_1</td>
 	<td>//div[@id='_15_entriesContainer']/div/a[@class='entry-link']/span/span</td>
 	<td></td>
 </tr>
@@ -235,37 +235,37 @@
 <!--ENTRY_MENULIST-->
 <tr>
 	<td>ENTRY_MENULIST_EDIT</td>
-	<td>//ul[@class='dropdown-menu']/li/a[contains(.,'Edit')]</td>
+	<td>//ul[contains(@class,'dropdown-menu lfr-menu-list')]/li/a[contains(.,'Edit')]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>ENTRY_MENULIST_MOVE</td>
-	<td>//ul[@class='dropdown-menu']/li/a[contains(.,'Move')]</td>
+	<td>//ul[contains(@class,'dropdown-menu lfr-menu-list')]/li/a[contains(.,'Move')]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>ENTRY_MENULIST_PERMISSIONS</td>
-	<td>//ul[@class='dropdown-menu']/li/a[contains(.,'Permissions')]</td>
+	<td>//ul[contains(@class,'dropdown-menu lfr-menu-list')]/li/a[contains(.,'Permissions')]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>ENTRY_MENULIST_VIEW</td>
-	<td>//ul[@class='dropdown-menu']/li/a[contains(.,'View')]</td>
+	<td>//ul[contains(@class,'dropdown-menu lfr-menu-list')]/li/a[contains(.,'View')]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>ENTRY_MENULIST_COPY</td>
-	<td>//ul[@class='dropdown-menu']/li/a[contains(.,'Copy')]</td>
+	<td>//ul[contains(@class,'dropdown-menu lfr-menu-list')]/li/a[contains(.,'Copy')]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>ENTRY_MENULIST_EXPIRE</td>
-	<td>//ul[@class='dropdown-menu']/li/a[contains(.,'Expire')]</td>
+	<td>//ul[contains(@class,'dropdown-menu lfr-menu-list')]/li/a[contains(.,'Expire')]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>ENTRY_MENULIST_MOVE_TO_THE_RECYCLE_BIN</td>
-	<td>//ul[@class='dropdown-menu']/li/a[contains(.,'Move to the Recycle Bin')]</td>
+	<td>//ul[contains(@class,'dropdown-menu lfr-menu-list')]/li/a[contains(.,'Move to the Recycle Bin')]</td>
 	<td></td>
 </tr>
 <tr>

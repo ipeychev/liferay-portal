@@ -7,6 +7,8 @@
 	<bean id="com.liferay.portal.service.AddressLocalService" class="com.liferay.portal.service.impl.AddressLocalServiceImpl" />
 	<bean id="com.liferay.portal.service.AddressService" class="com.liferay.portal.service.impl.AddressServiceImpl" />
 	<bean id="com.liferay.portal.service.persistence.AddressPersistence" class="com.liferay.portal.service.persistence.AddressPersistenceImpl2" parent="basePersistence" />
+	<bean id="com.liferay.portal.service.BackgroundTaskLocalService" class="com.liferay.portal.service.impl.BackgroundTaskLocalServiceImpl" />
+	<bean id="com.liferay.portal.service.persistence.BackgroundTaskPersistence" class="com.liferay.portal.service.persistence.BackgroundTaskPersistenceImpl" parent="basePersistence" />
 	<bean id="com.liferay.portal.service.BrowserTrackerLocalService" class="com.liferay.portal.service.impl.BrowserTrackerLocalServiceImpl" />
 	<bean id="com.liferay.portal.service.persistence.BrowserTrackerPersistence" class="com.liferay.portal.service.persistence.BrowserTrackerPersistenceImpl" parent="basePersistence" />
 	<bean id="com.liferay.portal.service.ClassNameLocalService" class="com.liferay.portal.service.impl.ClassNameLocalServiceImpl" />
@@ -138,6 +140,8 @@
 	<bean id="com.liferay.portal.service.persistence.ShardPersistence" class="com.liferay.portal.service.persistence.ShardPersistenceImpl" parent="basePersistence" />
 	<bean id="com.liferay.portal.service.SubscriptionLocalService" class="com.liferay.portal.service.impl.SubscriptionLocalServiceImpl" />
 	<bean id="com.liferay.portal.service.persistence.SubscriptionPersistence" class="com.liferay.portal.service.persistence.SubscriptionPersistenceImpl" parent="basePersistence" />
+	<bean id="com.liferay.portal.service.SystemEventLocalService" class="com.liferay.portal.service.impl.SystemEventLocalServiceImpl" />
+	<bean id="com.liferay.portal.service.persistence.SystemEventPersistence" class="com.liferay.portal.service.persistence.SystemEventPersistenceImpl" parent="basePersistence" />
 	<bean id="com.liferay.portal.service.TeamLocalService" class="com.liferay.portal.service.impl.TeamLocalServiceImpl" />
 	<bean id="com.liferay.portal.service.TeamService" class="com.liferay.portal.service.impl.TeamServiceImpl" />
 	<bean id="com.liferay.portal.service.persistence.TeamPersistence" class="com.liferay.portal.service.persistence.TeamPersistenceImpl" parent="basePersistence" />
@@ -165,6 +169,7 @@
 	<bean id="com.liferay.portal.service.persistence.UserIdMapperPersistence" class="com.liferay.portal.service.persistence.UserIdMapperPersistenceImpl" parent="basePersistence" />
 	<bean id="com.liferay.portal.service.UserNotificationEventLocalService" class="com.liferay.portal.service.impl.UserNotificationEventLocalServiceImpl" />
 	<bean id="com.liferay.portal.service.persistence.UserNotificationEventPersistence" class="com.liferay.portal.service.persistence.UserNotificationEventPersistenceImpl" parent="basePersistence" />
+	<bean id="com.liferay.portal.service.UserNotificationInterpreterLocalService" class="com.liferay.portal.service.impl.UserNotificationInterpreterLocalServiceImpl" />
 	<bean id="com.liferay.portal.service.UserTrackerLocalService" class="com.liferay.portal.service.impl.UserTrackerLocalServiceImpl" />
 	<bean id="com.liferay.portal.service.persistence.UserTrackerPersistence" class="com.liferay.portal.service.persistence.UserTrackerPersistenceImpl" parent="basePersistence" />
 	<bean id="com.liferay.portal.service.UserTrackerPathLocalService" class="com.liferay.portal.service.impl.UserTrackerPathLocalServiceImpl" />
@@ -220,8 +225,6 @@
 	<bean id="com.liferay.portlet.asset.service.AssetVocabularyService" class="com.liferay.portlet.asset.service.impl.AssetVocabularyServiceImpl" />
 	<bean id="com.liferay.portlet.asset.service.persistence.AssetVocabularyPersistence" class="com.liferay.portlet.asset.service.persistence.AssetVocabularyPersistenceImpl" parent="basePersistence" />
 	<bean id="com.liferay.portlet.asset.service.persistence.AssetVocabularyFinder" class="com.liferay.portlet.asset.service.persistence.AssetVocabularyFinderImpl" parent="basePersistence" />
-	<bean id="com.liferay.portlet.backgroundtask.service.BTEntryLocalService" class="com.liferay.portlet.backgroundtask.service.impl.BTEntryLocalServiceImpl" />
-	<bean id="com.liferay.portlet.backgroundtask.service.persistence.BTEntryPersistence" class="com.liferay.portlet.backgroundtask.service.persistence.BTEntryPersistenceImpl" parent="basePersistence" />
 	<bean id="com.liferay.portlet.blogs.service.BlogsEntryLocalService" class="com.liferay.portlet.blogs.service.impl.BlogsEntryLocalServiceImpl" />
 	<bean id="com.liferay.portlet.blogs.service.BlogsEntryService" class="com.liferay.portlet.blogs.service.impl.BlogsEntryServiceImpl" />
 	<bean id="com.liferay.portlet.blogs.service.persistence.BlogsEntryPersistence" class="com.liferay.portlet.blogs.service.persistence.BlogsEntryPersistenceImpl" parent="basePersistence" />
@@ -323,8 +326,6 @@
 	<bean id="com.liferay.portlet.journal.service.persistence.JournalFolderFinder" class="com.liferay.portlet.journal.service.persistence.JournalFolderFinderImpl" parent="basePersistence" />
 	<bean id="com.liferay.portlet.journal.service.JournalStructureLocalService" class="com.liferay.portlet.journal.service.impl.JournalStructureLocalServiceImpl" />
 	<bean id="com.liferay.portlet.journal.service.JournalStructureService" class="com.liferay.portlet.journal.service.impl.JournalStructureServiceImpl" />
-	<bean id="com.liferay.portlet.journal.service.persistence.JournalStructurePersistence" class="com.liferay.portlet.journal.service.persistence.JournalStructurePersistenceImpl" parent="basePersistence" />
-	<bean id="com.liferay.portlet.journal.service.persistence.JournalStructureFinder" class="com.liferay.portlet.journal.service.persistence.JournalStructureFinderImpl" parent="basePersistence" />
 	<bean id="com.liferay.portlet.journal.service.JournalTemplateLocalService" class="com.liferay.portlet.journal.service.impl.JournalTemplateLocalServiceImpl" />
 	<bean id="com.liferay.portlet.journal.service.JournalTemplateService" class="com.liferay.portlet.journal.service.impl.JournalTemplateServiceImpl" />
 	<bean id="com.liferay.portlet.journal.service.persistence.JournalTemplatePersistence" class="com.liferay.portlet.journal.service.persistence.JournalTemplatePersistenceImpl" parent="basePersistence" />

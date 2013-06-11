@@ -59,10 +59,10 @@ import java.util.Map;
  * The SOAP utility is only generated for remote services.
  * </p>
  *
- * @author    Brian Wing Shun Chan
- * @see       AssetVocabularyServiceHttp
- * @see       com.liferay.portlet.asset.model.AssetVocabularySoap
- * @see       com.liferay.portlet.asset.service.AssetVocabularyServiceUtil
+ * @author Brian Wing Shun Chan
+ * @see AssetVocabularyServiceHttp
+ * @see com.liferay.portlet.asset.model.AssetVocabularySoap
+ * @see com.liferay.portlet.asset.service.AssetVocabularyServiceUtil
  * @generated
  */
 public class AssetVocabularyServiceSoap {
@@ -129,6 +129,22 @@ public class AssetVocabularyServiceSoap {
 					serviceContext);
 
 			return com.liferay.portlet.asset.model.AssetVocabularySoap.toSoapModel(returnValue);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	/**
+	* @deprecated As of 6.2.0, Replaced by {@link #deleteVocabularies(long[],
+	ServiceContext)}
+	*/
+	public static void deleteVocabularies(long[] vocabularyIds)
+		throws RemoteException {
+		try {
+			AssetVocabularyServiceUtil.deleteVocabularies(vocabularyIds);
 		}
 		catch (Exception e) {
 			_log.error(e, e);

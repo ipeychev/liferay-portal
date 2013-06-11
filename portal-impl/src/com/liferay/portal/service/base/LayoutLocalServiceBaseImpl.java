@@ -33,6 +33,7 @@ import com.liferay.portal.service.AccountLocalService;
 import com.liferay.portal.service.AccountService;
 import com.liferay.portal.service.AddressLocalService;
 import com.liferay.portal.service.AddressService;
+import com.liferay.portal.service.BackgroundTaskLocalService;
 import com.liferay.portal.service.BaseLocalServiceImpl;
 import com.liferay.portal.service.BrowserTrackerLocalService;
 import com.liferay.portal.service.CMISRepositoryLocalService;
@@ -111,6 +112,7 @@ import com.liferay.portal.service.RoleService;
 import com.liferay.portal.service.ServiceComponentLocalService;
 import com.liferay.portal.service.ShardLocalService;
 import com.liferay.portal.service.SubscriptionLocalService;
+import com.liferay.portal.service.SystemEventLocalService;
 import com.liferay.portal.service.TeamLocalService;
 import com.liferay.portal.service.TeamService;
 import com.liferay.portal.service.ThemeLocalService;
@@ -125,6 +127,7 @@ import com.liferay.portal.service.UserGroupService;
 import com.liferay.portal.service.UserIdMapperLocalService;
 import com.liferay.portal.service.UserLocalService;
 import com.liferay.portal.service.UserNotificationEventLocalService;
+import com.liferay.portal.service.UserNotificationInterpreterLocalService;
 import com.liferay.portal.service.UserService;
 import com.liferay.portal.service.UserTrackerLocalService;
 import com.liferay.portal.service.UserTrackerPathLocalService;
@@ -136,6 +139,7 @@ import com.liferay.portal.service.WorkflowDefinitionLinkLocalService;
 import com.liferay.portal.service.WorkflowInstanceLinkLocalService;
 import com.liferay.portal.service.persistence.AccountPersistence;
 import com.liferay.portal.service.persistence.AddressPersistence;
+import com.liferay.portal.service.persistence.BackgroundTaskPersistence;
 import com.liferay.portal.service.persistence.BrowserTrackerPersistence;
 import com.liferay.portal.service.persistence.ClassNamePersistence;
 import com.liferay.portal.service.persistence.ClusterGroupPersistence;
@@ -191,6 +195,7 @@ import com.liferay.portal.service.persistence.RolePersistence;
 import com.liferay.portal.service.persistence.ServiceComponentPersistence;
 import com.liferay.portal.service.persistence.ShardPersistence;
 import com.liferay.portal.service.persistence.SubscriptionPersistence;
+import com.liferay.portal.service.persistence.SystemEventPersistence;
 import com.liferay.portal.service.persistence.TeamFinder;
 import com.liferay.portal.service.persistence.TeamPersistence;
 import com.liferay.portal.service.persistence.TicketPersistence;
@@ -211,8 +216,6 @@ import com.liferay.portal.service.persistence.WebsitePersistence;
 import com.liferay.portal.service.persistence.WorkflowDefinitionLinkPersistence;
 import com.liferay.portal.service.persistence.WorkflowInstanceLinkPersistence;
 
-import com.liferay.portlet.backgroundtask.service.BTEntryLocalService;
-import com.liferay.portlet.backgroundtask.service.persistence.BTEntryPersistence;
 import com.liferay.portlet.expando.service.ExpandoValueLocalService;
 import com.liferay.portlet.expando.service.ExpandoValueService;
 import com.liferay.portlet.expando.service.persistence.ExpandoValuePersistence;
@@ -578,6 +581,44 @@ public abstract class LayoutLocalServiceBaseImpl extends BaseLocalServiceImpl
 	 */
 	public void setAddressPersistence(AddressPersistence addressPersistence) {
 		this.addressPersistence = addressPersistence;
+	}
+
+	/**
+	 * Returns the background task local service.
+	 *
+	 * @return the background task local service
+	 */
+	public BackgroundTaskLocalService getBackgroundTaskLocalService() {
+		return backgroundTaskLocalService;
+	}
+
+	/**
+	 * Sets the background task local service.
+	 *
+	 * @param backgroundTaskLocalService the background task local service
+	 */
+	public void setBackgroundTaskLocalService(
+		BackgroundTaskLocalService backgroundTaskLocalService) {
+		this.backgroundTaskLocalService = backgroundTaskLocalService;
+	}
+
+	/**
+	 * Returns the background task persistence.
+	 *
+	 * @return the background task persistence
+	 */
+	public BackgroundTaskPersistence getBackgroundTaskPersistence() {
+		return backgroundTaskPersistence;
+	}
+
+	/**
+	 * Sets the background task persistence.
+	 *
+	 * @param backgroundTaskPersistence the background task persistence
+	 */
+	public void setBackgroundTaskPersistence(
+		BackgroundTaskPersistence backgroundTaskPersistence) {
+		this.backgroundTaskPersistence = backgroundTaskPersistence;
 	}
 
 	/**
@@ -3016,6 +3057,44 @@ public abstract class LayoutLocalServiceBaseImpl extends BaseLocalServiceImpl
 	}
 
 	/**
+	 * Returns the system event local service.
+	 *
+	 * @return the system event local service
+	 */
+	public SystemEventLocalService getSystemEventLocalService() {
+		return systemEventLocalService;
+	}
+
+	/**
+	 * Sets the system event local service.
+	 *
+	 * @param systemEventLocalService the system event local service
+	 */
+	public void setSystemEventLocalService(
+		SystemEventLocalService systemEventLocalService) {
+		this.systemEventLocalService = systemEventLocalService;
+	}
+
+	/**
+	 * Returns the system event persistence.
+	 *
+	 * @return the system event persistence
+	 */
+	public SystemEventPersistence getSystemEventPersistence() {
+		return systemEventPersistence;
+	}
+
+	/**
+	 * Sets the system event persistence.
+	 *
+	 * @param systemEventPersistence the system event persistence
+	 */
+	public void setSystemEventPersistence(
+		SystemEventPersistence systemEventPersistence) {
+		this.systemEventPersistence = systemEventPersistence;
+	}
+
+	/**
 	 * Returns the team local service.
 	 *
 	 * @return the team local service
@@ -3514,6 +3593,25 @@ public abstract class LayoutLocalServiceBaseImpl extends BaseLocalServiceImpl
 	}
 
 	/**
+	 * Returns the user notification interpreter local service.
+	 *
+	 * @return the user notification interpreter local service
+	 */
+	public UserNotificationInterpreterLocalService getUserNotificationInterpreterLocalService() {
+		return userNotificationInterpreterLocalService;
+	}
+
+	/**
+	 * Sets the user notification interpreter local service.
+	 *
+	 * @param userNotificationInterpreterLocalService the user notification interpreter local service
+	 */
+	public void setUserNotificationInterpreterLocalService(
+		UserNotificationInterpreterLocalService userNotificationInterpreterLocalService) {
+		this.userNotificationInterpreterLocalService = userNotificationInterpreterLocalService;
+	}
+
+	/**
 	 * Returns the user tracker local service.
 	 *
 	 * @return the user tracker local service
@@ -3811,42 +3909,6 @@ public abstract class LayoutLocalServiceBaseImpl extends BaseLocalServiceImpl
 	 */
 	public void setCounterLocalService(CounterLocalService counterLocalService) {
 		this.counterLocalService = counterLocalService;
-	}
-
-	/**
-	 * Returns the b t entry local service.
-	 *
-	 * @return the b t entry local service
-	 */
-	public BTEntryLocalService getBTEntryLocalService() {
-		return btEntryLocalService;
-	}
-
-	/**
-	 * Sets the b t entry local service.
-	 *
-	 * @param btEntryLocalService the b t entry local service
-	 */
-	public void setBTEntryLocalService(BTEntryLocalService btEntryLocalService) {
-		this.btEntryLocalService = btEntryLocalService;
-	}
-
-	/**
-	 * Returns the b t entry persistence.
-	 *
-	 * @return the b t entry persistence
-	 */
-	public BTEntryPersistence getBTEntryPersistence() {
-		return btEntryPersistence;
-	}
-
-	/**
-	 * Sets the b t entry persistence.
-	 *
-	 * @param btEntryPersistence the b t entry persistence
-	 */
-	public void setBTEntryPersistence(BTEntryPersistence btEntryPersistence) {
-		this.btEntryPersistence = btEntryPersistence;
 	}
 
 	/**
@@ -4275,6 +4337,10 @@ public abstract class LayoutLocalServiceBaseImpl extends BaseLocalServiceImpl
 	protected AddressService addressService;
 	@BeanReference(type = AddressPersistence.class)
 	protected AddressPersistence addressPersistence;
+	@BeanReference(type = BackgroundTaskLocalService.class)
+	protected BackgroundTaskLocalService backgroundTaskLocalService;
+	@BeanReference(type = BackgroundTaskPersistence.class)
+	protected BackgroundTaskPersistence backgroundTaskPersistence;
 	@BeanReference(type = BrowserTrackerLocalService.class)
 	protected BrowserTrackerLocalService browserTrackerLocalService;
 	@BeanReference(type = BrowserTrackerPersistence.class)
@@ -4537,6 +4603,10 @@ public abstract class LayoutLocalServiceBaseImpl extends BaseLocalServiceImpl
 	protected SubscriptionLocalService subscriptionLocalService;
 	@BeanReference(type = SubscriptionPersistence.class)
 	protected SubscriptionPersistence subscriptionPersistence;
+	@BeanReference(type = SystemEventLocalService.class)
+	protected SystemEventLocalService systemEventLocalService;
+	@BeanReference(type = SystemEventPersistence.class)
+	protected SystemEventPersistence systemEventPersistence;
 	@BeanReference(type = TeamLocalService.class)
 	protected TeamLocalService teamLocalService;
 	@BeanReference(type = TeamService.class)
@@ -4591,6 +4661,8 @@ public abstract class LayoutLocalServiceBaseImpl extends BaseLocalServiceImpl
 	protected UserNotificationEventLocalService userNotificationEventLocalService;
 	@BeanReference(type = UserNotificationEventPersistence.class)
 	protected UserNotificationEventPersistence userNotificationEventPersistence;
+	@BeanReference(type = UserNotificationInterpreterLocalService.class)
+	protected UserNotificationInterpreterLocalService userNotificationInterpreterLocalService;
 	@BeanReference(type = UserTrackerLocalService.class)
 	protected UserTrackerLocalService userTrackerLocalService;
 	@BeanReference(type = UserTrackerPersistence.class)
@@ -4623,10 +4695,6 @@ public abstract class LayoutLocalServiceBaseImpl extends BaseLocalServiceImpl
 	protected WorkflowInstanceLinkPersistence workflowInstanceLinkPersistence;
 	@BeanReference(type = CounterLocalService.class)
 	protected CounterLocalService counterLocalService;
-	@BeanReference(type = BTEntryLocalService.class)
-	protected BTEntryLocalService btEntryLocalService;
-	@BeanReference(type = BTEntryPersistence.class)
-	protected BTEntryPersistence btEntryPersistence;
 	@BeanReference(type = ExpandoValueLocalService.class)
 	protected ExpandoValueLocalService expandoValueLocalService;
 	@BeanReference(type = ExpandoValueService.class)

@@ -1484,6 +1484,7 @@ public class SourceFormatter {
 
 		Collection<String> fileNames = null;
 
+		Properties staticLogVariableExclusions = null;
 		Properties upgradeServiceUtilExclusions = null;
 
 		if (_portalSource) {
@@ -1493,6 +1494,8 @@ public class SourceFormatter {
 				"source_formatter_javaterm_sort_exclusions.properties");
 			_lineLengthExclusions = _getPortalExclusionsProperties(
 				"source_formatter_line_length_exclusions.properties");
+			staticLogVariableExclusions = _getPortalExclusionsProperties(
+				"source_formatter_static_log_exclusions.properties");
 			upgradeServiceUtilExclusions = _getPortalExclusionsProperties(
 				"source_formatter_upgrade_service_util_exclusions.properties");
 		}
@@ -1527,9 +1530,8 @@ public class SourceFormatter {
 
 			String packagePath = fileName;
 
-			int packagePathX = packagePath.indexOf(
-				File.separator + "src" + File.separator);
-			int packagePathY = packagePath.lastIndexOf(File.separator);
+			int packagePathX = packagePath.indexOf("/src/");
+			int packagePathY = packagePath.lastIndexOf(StringPool.SLASH);
 
 			if ((packagePathX + 5) >= packagePathY) {
 				packagePath = StringPool.BLANK;
@@ -1540,7 +1542,7 @@ public class SourceFormatter {
 			}
 
 			packagePath = StringUtil.replace(
-				packagePath, File.separator, StringPool.PERIOD);
+				packagePath, StringPool.SLASH, StringPool.PERIOD);
 
 			if (packagePath.endsWith(".model")) {
 				if (content.contains("extends " + className + "Model")) {
@@ -1640,6 +1642,17 @@ public class SourceFormatter {
 				}
 			}
 
+			String excluded = null;
+
+			if (staticLogVariableExclusions != null) {
+				excluded = staticLogVariableExclusions.getProperty(fileName);
+			}
+
+			if (excluded == null) {
+				newContent = StringUtil.replace(
+					newContent, "private Log _log", "private static Log _log");
+			}
+
 			if (newContent.contains("*/\npackage ")) {
 				_processErrorMessage(fileName, "package: " + fileName);
 			}
@@ -1657,7 +1670,7 @@ public class SourceFormatter {
 
 			// LPS-34911
 
-			String excluded = null;
+			excluded = null;
 
 			if (upgradeServiceUtilExclusions != null) {
 				excluded = upgradeServiceUtilExclusions.getProperty(fileName);
@@ -1883,7 +1896,7 @@ public class SourceFormatter {
 				line.startsWith(StringPool.TAB + "protected ") ||
 				line.startsWith(StringPool.TAB + "public ")) {
 
-				Tuple tuple = _getJavaTermTuple(line);
+				Tuple tuple = _getJavaTermTuple(line, content, index, 1, 3);
 
 				if (tuple != null) {
 					int javaTermEndPosition = 0;
@@ -2601,23 +2614,6 @@ public class SourceFormatter {
 							newContent.substring(0, x) + imports +
 								newContent.substring(y);
 					}
-				}
-			}
-
-			for (int x = 0;;) {
-				x = newContent.indexOf("> <", x + 1);
-
-				if (x == -1) {
-					break;
-				}
-
-				int y = newContent.lastIndexOf("<%", x);
-				int z = newContent.lastIndexOf("%>", x);
-
-				if ((y != -1) && (z != -1) && (y < z)) {
-					newContent =
-						newContent.substring(0, x + 1) + "<aui:spacer />" +
-							newContent.substring(x + 2);
 				}
 			}
 
@@ -3944,7 +3940,9 @@ public class SourceFormatter {
 		return null;
 	}
 
-	private static Tuple _getJavaTermTuple(String line) {
+	private static Tuple _getJavaTermTuple(
+		String line, String content, int index, int numLines, int maxLines) {
+
 		int pos = line.indexOf(StringPool.OPEN_PARENTHESIS);
 
 		if (line.startsWith(StringPool.TAB + "public static final ") &&
@@ -4122,7 +4120,29 @@ public class SourceFormatter {
 			}
 		}
 
-		return null;
+		if (numLines < maxLines) {
+			int posStartNextLine =
+				content.indexOf(StringPool.NEW_LINE, index) + 1;
+
+			int posEndNextline = content.indexOf(
+				StringPool.NEW_LINE, posStartNextLine);
+
+			String nextLine = content.substring(
+				posStartNextLine, posEndNextline);
+
+			if (Validator.isNull(nextLine)) {
+				return null;
+			}
+
+			nextLine = StringUtil.trimLeading(nextLine);
+
+			return _getJavaTermTuple(
+				line + StringPool.SPACE + nextLine, content, posStartNextLine,
+				numLines + 1, maxLines);
+		}
+		else {
+			return null;
+		}
 	}
 
 	private static List<String> _getJSPDuplicateImports(

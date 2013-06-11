@@ -179,20 +179,6 @@ if (endDateTime > 0) {
 						<li class="tree-item">
 							<aui:input checked="<%= true %>" helpMessage="all-content-export-help" id="allContent" label="all-content" name="<%= PortletDataHandlerKeys.PORTLET_DATA_ALL %>" type="radio" value="<%= true %>" />
 
-							<div class="hide" id="<portlet:namespace />globalContent">
-								<aui:fieldset cssClass="portlet-data-section" label="all-content">
-									<aui:input helpMessage="export-import-categories-help" label="categories" name="<%= PortletDataHandlerKeys.CATEGORIES %>" type="checkbox" value="<%= false %>" />
-								</aui:fieldset>
-							</div>
-
-							<ul class="hide" id="<portlet:namespace />showChangeGlobalContent">
-								<li>
-									<div class="selected-labels" id="<portlet:namespace />selectedGlobalContent"></div>
-
-									<aui:a cssClass="modify-link" href="javascript:;" id="globalContentLink" label="change" method="get" />
-								</li>
-							</ul>
-
 							<aui:input helpMessage="choose-content-export-help" id="chooseContent" label="choose-content" name="<%= PortletDataHandlerKeys.PORTLET_DATA_ALL %>" type="radio" value="<%= false %>" />
 
 							<ul class="hide" id="<portlet:namespace />selectContents">
@@ -204,7 +190,7 @@ if (endDateTime > 0) {
 									<div class="hide" id="<portlet:namespace />range">
 										<ul class="lfr-tree unstyled">
 											<li class="tree-item">
-												<aui:fieldset cssClass="portlet-data-section" label="filter-to-export-by-date">
+												<aui:fieldset cssClass="portlet-data-section" label="date-range">
 													<aui:input checked="<%= true %>" id="rangeAll" label="all" name="range" type="radio" value="all" />
 
 													<aui:input id="rangeLastPublish" label="from-last-publish-date" name="range" type="radio" value="fromLastPublishDate" />
@@ -219,9 +205,9 @@ if (endDateTime > 0) {
 													yesterday.add(Calendar.DATE, -1);
 													%>
 
-													<ul class="hide unstyled" id="<portlet:namespace />startEndDate">
+													<ul class="date-range-options hide unstyled" id="<portlet:namespace />startEndDate">
 														<li>
-															<aui:field-wrapper label="start-date">
+															<aui:fieldset label="start-date">
 																<liferay-ui:input-date
 																	dayParam="startDateDay"
 																	dayValue="<%= yesterday.get(Calendar.DATE) %>"
@@ -247,11 +233,11 @@ if (endDateTime > 0) {
 																	minuteParam='<%= "startDateMinute" %>'
 																	minuteValue="<%= yesterday.get(Calendar.MINUTE) %>"
 																/>
-															</aui:field-wrapper>
+															</aui:fieldset>
 														</li>
 
 														<li>
-															<aui:field-wrapper label="end-date">
+															<aui:fieldset label="end-date">
 																<liferay-ui:input-date
 																	dayParam="endDateDay"
 																	dayValue="<%= today.get(Calendar.DATE) %>"
@@ -277,7 +263,7 @@ if (endDateTime > 0) {
 																	minuteParam='<%= "endDateMinute" %>'
 																	minuteValue="<%= today.get(Calendar.MINUTE) %>"
 																/>
-															</aui:field-wrapper>
+															</aui:fieldset>
 														</li>
 													</ul>
 
@@ -295,10 +281,9 @@ if (endDateTime > 0) {
 									</div>
 
 									<liferay-ui:icon
-										cssClass="modify-link"
 										image="calendar"
 										label="<%= true %>"
-										message="filter-to-export-by-date"
+										message="date-range"
 									/>
 
 									<ul>
@@ -308,6 +293,10 @@ if (endDateTime > 0) {
 											<aui:a cssClass="modify-link" href="javascript:;" id="rangeLink" label="change" method="get" />
 										</li>
 									</ul>
+								</li>
+
+								<li>
+									<aui:input helpMessage="export-import-categories-help" label="categories" name="<%= PortletDataHandlerKeys.CATEGORIES %>" type="checkbox" value="<%= true %>" />
 								</li>
 
 								<%
@@ -363,7 +352,7 @@ if (endDateTime > 0) {
 																	request.setAttribute("render_controls.jsp-portletDisabled", !portletDataHandler.isPublishToLiveByDefault());
 																%>
 
-																	<aui:field-wrapper label="content">
+																	<aui:field-wrapper label='<%= Validator.isNotNull(metadataControls) ? "content" : StringPool.BLANK %>'>
 																		<ul class="lfr-tree unstyled">
 																			<liferay-util:include page="/html/portlet/layouts_admin/render_controls.jsp" />
 																		</ul>
@@ -414,9 +403,10 @@ if (endDateTime > 0) {
 														Map<String,Object> data = new HashMap<String,Object>();
 
 														data.put("portletid", portlet.getPortletId());
+														data.put("portlettitle", portletTitle);
 														%>
 
-														<aui:a cssClass="content-link modify-link" data="<%= data %>" href="javascript:;" label="change" method="get" />
+														<aui:a cssClass="content-link modify-link" data="<%= data %>" href="javascript:;" id='<%= "contentLink_" + portlet.getPortletId() %>' label="change" method="get" />
 													</li>
 												</ul>
 
@@ -435,6 +425,23 @@ if (endDateTime > 0) {
 								}
 								%>
 
+								<li>
+									<aui:fieldset cssClass="comments-and-ratings" label="for-each-of-the-selected-content-types,-export-their">
+										<div class="selected-labels" id="<portlet:namespace />selectedCommentsAndRatings"></div>
+
+										<aui:a cssClass="modify-link" href="javascript:;" id="commentsAndRatingsLink" label="change" method="get" />
+
+										<div class="hide" id="<portlet:namespace />commentsAndRatings">
+											<ul class="lfr-tree unstyled">
+												<li class="tree-item">
+													<aui:input label="comments" name="<%= PortletDataHandlerKeys.COMMENTS %>" type="checkbox" value="<%= true %>" />
+
+													<aui:input label="ratings" name="<%= PortletDataHandlerKeys.RATINGS %>" type="checkbox" value="<%= true %>" />
+												</li>
+											</ul>
+										</div>
+									</aui:fieldset>
+								</li>
 							</ul>
 						</li>
 					</ul>
@@ -470,8 +477,7 @@ if (endDateTime > 0) {
 	new Liferay.ExportImport(
 		{
 			archivedSetupsNode: '#<%= PortletDataHandlerKeys.PORTLET_ARCHIVED_SETUPS %>Checkbox',
-			categoriesNode: '#<%= PortletDataHandlerKeys.CATEGORIES %>Checkbox',
-			dialogTitle: '<%= UnicodeLanguageUtil.get(pageContext, "content-to-export") %>',
+			commentsNode: '#<%= PortletDataHandlerKeys.COMMENTS %>Checkbox',
 			form: document.<portlet:namespace />fm1,
 			layoutSetSettingsNode: '#<%= PortletDataHandlerKeys.LAYOUT_SET_SETTINGS %>Checkbox',
 			logoNode: '#<%= PortletDataHandlerKeys.LOGO %>Checkbox',
@@ -480,6 +486,7 @@ if (endDateTime > 0) {
 			rangeDateRangeNode: '#rangeDateRange',
 			rangeLastNode: '#rangeLast',
 			rangeLastPublishNode: '#rangeLastPublish',
+			ratingsNode: '#<%= PortletDataHandlerKeys.RATINGS %>Checkbox',
 			themeNode: '#<%= PortletDataHandlerKeys.THEME %>Checkbox',
 			themeReferenceNode: '#<%= PortletDataHandlerKeys.THEME_REFERENCE %>Checkbox',
 			userPreferencesNode: '#<%= PortletDataHandlerKeys.PORTLET_USER_PREFERENCES %>Checkbox'

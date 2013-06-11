@@ -85,7 +85,6 @@ import com.liferay.portlet.bookmarks.model.impl.BookmarksEntryImpl;
 import com.liferay.portlet.bookmarks.model.impl.BookmarksFolderImpl;
 import com.liferay.portlet.calendar.model.impl.CalEventImpl;
 import com.liferay.portlet.documentlibrary.model.impl.DLFileEntryImpl;
-import com.liferay.portlet.documentlibrary.model.impl.DLFileRankImpl;
 import com.liferay.portlet.documentlibrary.model.impl.DLFileShortcutImpl;
 import com.liferay.portlet.documentlibrary.model.impl.DLFolderImpl;
 import com.liferay.portlet.expando.model.ExpandoBridge;
@@ -93,7 +92,6 @@ import com.liferay.portlet.expando.model.ExpandoColumn;
 import com.liferay.portlet.expando.service.ExpandoColumnLocalServiceUtil;
 import com.liferay.portlet.journal.model.impl.JournalArticleImpl;
 import com.liferay.portlet.journal.model.impl.JournalFeedImpl;
-import com.liferay.portlet.journal.model.impl.JournalStructureImpl;
 import com.liferay.portlet.journal.model.impl.JournalTemplateImpl;
 import com.liferay.portlet.messageboards.model.MBDiscussion;
 import com.liferay.portlet.messageboards.model.MBMessage;
@@ -281,7 +279,9 @@ public class PortletDataContextImpl implements PortletDataContext {
 		Class<?> clazz = classedModel.getModelClass();
 		long classPK = getClassPK(classedModel);
 
+		addAssetCategories(clazz, classPK);
 		addAssetLinks(clazz, classPK);
+		addAssetTags(clazz, classPK);
 		addExpando(element, path, classedModel);
 		addLocks(clazz, String.valueOf(classPK));
 		addPermissions(clazz, classPK);
@@ -289,20 +289,18 @@ public class PortletDataContextImpl implements PortletDataContext {
 		boolean portletDataAll = MapUtil.getBoolean(
 			getParameterMap(), PortletDataHandlerKeys.PORTLET_DATA_ALL);
 
-		if (portletDataAll || getBooleanParameter(namespace, "categories")) {
-			addAssetCategories(clazz, classPK);
-		}
+		if (portletDataAll ||
+			MapUtil.getBoolean(
+				getParameterMap(), PortletDataHandlerKeys.COMMENTS)) {
 
-		if (portletDataAll || getBooleanParameter(namespace, "comments")) {
 			addComments(clazz, classPK);
 		}
 
-		if (portletDataAll || getBooleanParameter(namespace, "ratings")) {
-			addRatingsEntries(clazz, classPK);
-		}
+		if (portletDataAll ||
+			MapUtil.getBoolean(
+				getParameterMap(), PortletDataHandlerKeys.RATINGS)) {
 
-		if (portletDataAll || getBooleanParameter(namespace, "tags")) {
-			addAssetTags(clazz, classPK);
+			addRatingsEntries(clazz, classPK);
 		}
 
 		addZipEntry(path, classedModel);
@@ -365,7 +363,19 @@ public class PortletDataContextImpl implements PortletDataContext {
 			modifiedDatePropertyName);
 
 		dynamicQuery.add(modifiedDateProperty.ge(_startDate));
-		dynamicQuery.add(modifiedDateProperty.lt(_endDate));
+		dynamicQuery.add(modifiedDateProperty.le(_endDate));
+	}
+
+	@Override
+	public void addDeletionSystemEventClassNames(
+		String... deletionSystemEventClassNames) {
+
+		for (String deletionSystemEventClassName :
+				deletionSystemEventClassNames) {
+
+			_deletionSystemEventClassNameIds.add(
+				PortalUtil.getClassNameId(deletionSystemEventClassName));
+		}
 	}
 
 	@Override
@@ -835,6 +845,11 @@ public class PortletDataContextImpl implements PortletDataContext {
 	@Override
 	public String getDataStrategy() {
 		return _dataStrategy;
+	}
+
+	@Override
+	public Set<Long> getDeletionSystemEventClassNameIds() {
+		return _deletionSystemEventClassNameIds;
 	}
 
 	@Override
@@ -1326,11 +1341,17 @@ public class PortletDataContextImpl implements PortletDataContext {
 		boolean portletDataAll = MapUtil.getBoolean(
 			getParameterMap(), PortletDataHandlerKeys.PORTLET_DATA_ALL);
 
-		if (portletDataAll || getBooleanParameter(namespace, "comments")) {
+		if (portletDataAll ||
+			MapUtil.getBoolean(
+				getParameterMap(), PortletDataHandlerKeys.COMMENTS)) {
+
 			importComments(clazz, classPK, newClassPK, getScopeGroupId());
 		}
 
-		if (portletDataAll || getBooleanParameter(namespace, "ratings")) {
+		if (portletDataAll ||
+			MapUtil.getBoolean(
+				getParameterMap(), PortletDataHandlerKeys.RATINGS)) {
+
 			importRatingsEntries(clazz, classPK, newClassPK);
 		}
 	}
@@ -1852,23 +1873,14 @@ public class PortletDataContextImpl implements PortletDataContext {
 
 		// Asset
 
-		boolean portletDataAll = MapUtil.getBoolean(
-			getParameterMap(), PortletDataHandlerKeys.PORTLET_DATA_ALL);
-
 		if (isResourceMain(classedModel)) {
-			if (portletDataAll ||
-				getBooleanParameter(namespace, "categories")) {
+			long[] assetCategoryIds = getAssetCategoryIds(clazz, classPK);
 
-				long[] assetCategoryIds = getAssetCategoryIds(clazz, classPK);
+			serviceContext.setAssetCategoryIds(assetCategoryIds);
 
-				serviceContext.setAssetCategoryIds(assetCategoryIds);
-			}
+			String[] assetTagNames = getAssetTagNames(clazz, classPK);
 
-			if (portletDataAll || getBooleanParameter(namespace, "tags")) {
-				String[] assetTagNames = getAssetTagNames(clazz, classPK);
-
-				serviceContext.setAssetTagNames(assetTagNames);
-			}
+			serviceContext.setAssetTagNames(assetTagNames);
 		}
 
 		// Expando
@@ -1968,6 +1980,8 @@ public class PortletDataContextImpl implements PortletDataContext {
 			StagedModel stagedModel = (StagedModel)classedModel;
 
 			referenceElement.addAttribute("uuid", stagedModel.getUuid());
+			referenceElement.addAttribute(
+				"company-id", String.valueOf(stagedModel.getCompanyId()));
 		}
 
 		return referenceElement;
@@ -2207,10 +2221,8 @@ public class PortletDataContextImpl implements PortletDataContext {
 		_xStream.alias("DLFolder", DLFolderImpl.class);
 		_xStream.alias("DLFileEntry", DLFileEntryImpl.class);
 		_xStream.alias("DLFileShortcut", DLFileShortcutImpl.class);
-		_xStream.alias("DLFileRank", DLFileRankImpl.class);
 		_xStream.alias("JournalArticle", JournalArticleImpl.class);
 		_xStream.alias("JournalFeed", JournalFeedImpl.class);
-		_xStream.alias("JournalStructure", JournalStructureImpl.class);
 		_xStream.alias("JournalTemplate", JournalTemplateImpl.class);
 		_xStream.alias("Lock", LockImpl.class);
 		_xStream.alias("MBBan", MBBanImpl.class);
@@ -2253,6 +2265,7 @@ public class PortletDataContextImpl implements PortletDataContext {
 	private long _companyGroupId;
 	private long _companyId;
 	private String _dataStrategy;
+	private Set<Long> _deletionSystemEventClassNameIds = new HashSet<Long>();
 	private Date _endDate;
 	private Map<String, List<ExpandoColumn>> _expandoColumnsMap =
 		new HashMap<String, List<ExpandoColumn>>();

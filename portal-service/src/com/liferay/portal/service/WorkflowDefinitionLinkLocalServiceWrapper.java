@@ -17,8 +17,8 @@ package com.liferay.portal.service;
 /**
  * Provides a wrapper for {@link WorkflowDefinitionLinkLocalService}.
  *
- * @author    Brian Wing Shun Chan
- * @see       WorkflowDefinitionLinkLocalService
+ * @author Brian Wing Shun Chan
+ * @see WorkflowDefinitionLinkLocalService
  * @generated
  */
 public class WorkflowDefinitionLinkLocalServiceWrapper
@@ -282,6 +282,34 @@ public class WorkflowDefinitionLinkLocalServiceWrapper
 			com.liferay.portal.kernel.exception.SystemException {
 		_workflowDefinitionLinkLocalService.deleteWorkflowDefinitionLink(companyId,
 			groupId, className, classPK, typePK);
+	}
+
+	@Override
+	public com.liferay.portal.model.WorkflowDefinitionLink fetchDefaultWorkflowDefinitionLink(
+		long companyId, java.lang.String className, long classPK, long typePK)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _workflowDefinitionLinkLocalService.fetchDefaultWorkflowDefinitionLink(companyId,
+			className, classPK, typePK);
+	}
+
+	@Override
+	public com.liferay.portal.model.WorkflowDefinitionLink fetchWorkflowDefinitionLink(
+		long companyId, long groupId, java.lang.String className, long classPK,
+		long typePK)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return _workflowDefinitionLinkLocalService.fetchWorkflowDefinitionLink(companyId,
+			groupId, className, classPK, typePK);
+	}
+
+	@Override
+	public com.liferay.portal.model.WorkflowDefinitionLink fetchWorkflowDefinitionLink(
+		long companyId, long groupId, java.lang.String className, long classPK,
+		long typePK, boolean strict)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return _workflowDefinitionLinkLocalService.fetchWorkflowDefinitionLink(companyId,
+			groupId, className, classPK, typePK, strict);
 	}
 
 	@Override

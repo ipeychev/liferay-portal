@@ -25,6 +25,8 @@ import java.util.Locale;
  */
 public class QueryIndexingHitsProcessor implements HitsProcessor {
 
+	public static final float SCORES_THRESHOLD_DEFAULT = 0.5f;
+
 	@Override
 	public boolean process(SearchContext searchContext, Hits hits)
 		throws SearchException {
@@ -66,9 +68,7 @@ public class QueryIndexingHitsProcessor implements HitsProcessor {
 			SearchEngineUtil.getDefaultSearchEngineId(), companyId, document);
 	}
 
-	private static final float _DEFAULT_SCORES_THRESHOLD = 0.5f;
-
 	private Document _document;
-	private float _scoresThreshold = _DEFAULT_SCORES_THRESHOLD;
+	private float _scoresThreshold = SCORES_THRESHOLD_DEFAULT;
 
 }

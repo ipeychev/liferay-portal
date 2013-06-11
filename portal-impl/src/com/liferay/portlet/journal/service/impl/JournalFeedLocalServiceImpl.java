@@ -27,6 +27,7 @@ import com.liferay.portal.kernel.xml.Node;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.kernel.xml.XPath;
 import com.liferay.portal.model.ResourceConstants;
+import com.liferay.portal.model.SystemEventConstants;
 import com.liferay.portal.model.User;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.util.PortalUtil;
@@ -181,10 +182,9 @@ public class JournalFeedLocalServiceImpl
 	public void deleteFeed(JournalFeed feed)
 		throws PortalException, SystemException {
 
-		// Expando
+		// Feed
 
-		expandoValueLocalService.deleteValues(
-			JournalFeed.class.getName(), feed.getId());
+		journalFeedPersistence.remove(feed);
 
 		// Resources
 
@@ -192,9 +192,16 @@ public class JournalFeedLocalServiceImpl
 			feed.getCompanyId(), JournalFeed.class.getName(),
 			ResourceConstants.SCOPE_INDIVIDUAL, feed.getId());
 
-		// Feed
+		// System event
 
-		journalFeedPersistence.remove(feed);
+		systemEventLocalService.addSystemEvent(
+			feed.getGroupId(), JournalFeed.class.getName(), feed.getId(),
+			feed.getUuid(), SystemEventConstants.TYPE_DELETE);
+
+		// Expando
+
+		expandoValueLocalService.deleteValues(
+			JournalFeed.class.getName(), feed.getId());
 	}
 
 	@Override

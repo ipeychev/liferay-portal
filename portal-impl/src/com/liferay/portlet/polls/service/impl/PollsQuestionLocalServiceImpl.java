@@ -19,6 +19,7 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.ResourceConstants;
+import com.liferay.portal.model.SystemEventConstants;
 import com.liferay.portal.model.User;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.util.PortalUtil;
@@ -188,6 +189,13 @@ public class PollsQuestionLocalServiceImpl
 		resourceLocalService.deleteResource(
 			question.getCompanyId(), PollsQuestion.class.getName(),
 			ResourceConstants.SCOPE_INDIVIDUAL, question.getQuestionId());
+
+		// System event
+
+		systemEventLocalService.addSystemEvent(
+			question.getGroupId(), PollsQuestion.class.getName(),
+			question.getQuestionId(), question.getUuid(),
+			SystemEventConstants.TYPE_DELETE);
 
 		// Choices
 

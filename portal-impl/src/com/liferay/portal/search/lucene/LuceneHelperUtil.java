@@ -390,6 +390,10 @@ public class LuceneHelperUtil {
 		getLuceneHelper().shutdown();
 	}
 
+	public static void shutdown(long companyId) {
+		getLuceneHelper().shutdown(companyId);
+	}
+
 	public static void startup(long companyId) {
 		getLuceneHelper().startup(companyId);
 	}

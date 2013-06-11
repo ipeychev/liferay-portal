@@ -19,8 +19,8 @@ import com.liferay.portal.service.ServiceWrapper;
 /**
  * Provides a wrapper for {@link AssetVocabularyService}.
  *
- * @author    Brian Wing Shun Chan
- * @see       AssetVocabularyService
+ * @author Brian Wing Shun Chan
+ * @see AssetVocabularyService
  * @generated
  */
 public class AssetVocabularyServiceWrapper implements AssetVocabularyService,
@@ -86,6 +86,17 @@ public class AssetVocabularyServiceWrapper implements AssetVocabularyService,
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		return _assetVocabularyService.addVocabulary(title, serviceContext);
+	}
+
+	/**
+	* @deprecated As of 6.2.0, Replaced by {@link #deleteVocabularies(long[],
+	ServiceContext)}
+	*/
+	@Override
+	public void deleteVocabularies(long[] vocabularyIds)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		_assetVocabularyService.deleteVocabularies(vocabularyIds);
 	}
 
 	@Override

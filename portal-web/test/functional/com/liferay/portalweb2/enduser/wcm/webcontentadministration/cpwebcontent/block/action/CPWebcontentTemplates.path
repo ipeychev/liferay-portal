@@ -10,10 +10,15 @@
 <tbody>
 <tr>
 	<td>PAGE_NAME</td>
-	<td>//div[contains(@class,'dialog-iframe-bd')]/iframe</td>
+	<td></td>
 	<td>CPWebcontentTemplates</td>
 </tr>
 <!---->
+<tr>
+	<td>TEMPLATES_IFRAME</td>
+	<td>//div[contains(@class,'dialog-iframe-bd')]/iframe[contains(@src,'scopeTitle=Templates')]</td>
+	<td></td>
+</tr>
 <tr>
 	<td>CLOSE_WINDOW</td>
 	<td>//button[contains(@class, 'close-content')]</td>
@@ -35,13 +40,13 @@
 	<td></td>
 </tr>
 <tr>
-	<td>SEARCH_BUTTON</td>
-	<td>//button[contains(., 'Search')]</td>
+	<td>SEARCH_FIELD</td>
+	<td>//input[@name='_166_keywords']</td>
 	<td></td>
 </tr>
 <tr>
-	<td>SEARCH_FIELD</td>
-	<td>//input[@id='toggle_id_ddm_template_searchkeywords']</td>
+	<td>SEARCH_BUTTON</td>
+	<td>//button[contains(., 'Search')]</td>
 	<td></td>
 </tr>
 <tr>

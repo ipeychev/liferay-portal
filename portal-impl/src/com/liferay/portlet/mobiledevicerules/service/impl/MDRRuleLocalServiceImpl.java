@@ -17,6 +17,7 @@ package com.liferay.portlet.mobiledevicerules.service.impl;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.UnicodeProperties;
+import com.liferay.portal.model.SystemEventConstants;
 import com.liferay.portal.model.User;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portlet.mobiledevicerules.model.MDRRule;
@@ -112,7 +113,9 @@ public class MDRRuleLocalServiceImpl extends MDRRuleLocalServiceBaseImpl {
 	}
 
 	@Override
-	public void deleteRule(long ruleId) throws SystemException {
+	public void deleteRule(long ruleId)
+		throws PortalException, SystemException {
+
 		MDRRule rule = mdrRulePersistence.fetchByPrimaryKey(ruleId);
 
 		if (rule != null) {
@@ -121,8 +124,14 @@ public class MDRRuleLocalServiceImpl extends MDRRuleLocalServiceBaseImpl {
 	}
 
 	@Override
-	public void deleteRule(MDRRule rule) throws SystemException {
+	public void deleteRule(MDRRule rule)
+		throws PortalException, SystemException {
+
 		mdrRulePersistence.remove(rule);
+
+		systemEventLocalService.addSystemEvent(
+			rule.getGroupId(), MDRRule.class.getName(), rule.getRuleId(),
+			rule.getUuid(), SystemEventConstants.TYPE_DELETE);
 
 		MDRRuleGroup ruleGroup = mdrRuleGroupPersistence.fetchByPrimaryKey(
 			rule.getRuleGroupId());
@@ -135,7 +144,9 @@ public class MDRRuleLocalServiceImpl extends MDRRuleLocalServiceBaseImpl {
 	}
 
 	@Override
-	public void deleteRules(long ruleGroupId) throws SystemException {
+	public void deleteRules(long ruleGroupId)
+		throws PortalException, SystemException {
+
 		List<MDRRule> rules = mdrRulePersistence.findByRuleGroupId(ruleGroupId);
 
 		for (MDRRule rule : rules) {

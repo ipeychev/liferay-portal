@@ -14,10 +14,10 @@
 
 package com.liferay.portal.lar.backgroundtask.executor;
 
+import com.liferay.portal.backgroundtask.executor.BaseBackgroundTaskExecutor;
 import com.liferay.portal.kernel.repository.model.FileEntry;
+import com.liferay.portal.model.BackgroundTask;
 import com.liferay.portal.service.LayoutServiceUtil;
-import com.liferay.portlet.backgroundtask.executor.BaseBackgroundTaskExecutor;
-import com.liferay.portlet.backgroundtask.model.BTEntry;
 
 import java.io.Serializable;
 
@@ -30,9 +30,14 @@ import java.util.Map;
 public class PortletImportBackgroundTaskExecutor
 	extends BaseBackgroundTaskExecutor {
 
+	public PortletImportBackgroundTaskExecutor() {
+		setSerial(true);
+	}
+
 	@Override
-	protected void doExecute(BTEntry btEntry) throws Exception {
-		Map<String, Serializable> taskContextMap = btEntry.getTaskContextMap();
+	public void execute(BackgroundTask backgroundTask) throws Exception {
+		Map<String, Serializable> taskContextMap =
+			backgroundTask.getTaskContextMap();
 
 		long plid = (Long)taskContextMap.get("plid");
 		long groupId = (Long)taskContextMap.get("groupId");
@@ -41,7 +46,7 @@ public class PortletImportBackgroundTaskExecutor
 			(Map<String, String[]>)taskContextMap.get("parameterMap");
 
 		List<FileEntry> attachmentsFileEntries =
-			btEntry.getAttachmentsFileEntries();
+			backgroundTask.getAttachmentsFileEntries();
 
 		for (FileEntry attachmentsFileEntry : attachmentsFileEntries) {
 			LayoutServiceUtil.importPortletInfo(

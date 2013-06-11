@@ -10,10 +10,15 @@
 <tbody>
 <tr>
 	<td>PAGE_NAME</td>
-	<td>//div[contains(@class,'dialog-iframe-bd')]/iframe</td>
+	<td></td>
 	<td>CPWebcontentStructures</td>
 </tr>
 <!---->
+<tr>
+	<td>STRUCTURES_IFRAME</td>
+	<td>//div[contains(@class,'dialog-iframe-bd')]/iframe[contains(@src,'scopeTitle=Structures')]</td>
+	<td></td>
+</tr>
 <tr>
 	<td>CLOSE_WINDOW</td>
 	<td>//button[contains(@class, 'close-content')]</td>
@@ -35,18 +40,18 @@
 	<td></td>
 </tr>
 <tr>
+	<td>SEARCH_FIELD</td>
+	<td>//input[@name='_166_keywords']</td>
+	<td></td>
+</tr>
+<tr>
 	<td>SEARCH_BUTTON</td>
 	<td>//button[contains(., 'Search')]</td>
 	<td></td>
 </tr>
 <tr>
-	<td>SEARCH_FIELD</td>
-	<td>//input[@id='toggle_id_ddm_structure_searchkeywords']</td>
-	<td></td>
-</tr>
-<tr>
 	<td>DELETE_BUTTON</td>
-	<td>//button[@class='btn delete-structures-button']</td>
+	<td>//button[contains(.,'Delete')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -62,37 +67,37 @@
 	<td></td>
 </tr>
 <tr>
-	<td>STRUCTURE_TABLE_ENTRY1</td>
+	<td>STRUCTURE_TABLE_1</td>
 	<td>//div[@id='_166_ddmStructuresSearchContainerSearchContainer']/table/tbody/tr[1]</td>
 	<td></td>
 </tr>
 <tr>
-	<td>STRUCTURE_TABLE_ENTRY1_CHECKBOX</td>
+	<td>STRUCTURE_TABLE_CHECKBOX_1</td>
 	<td>//div[@id='_166_ddmStructuresSearchContainerSearchContainer']/table/tbody/tr[1]/td[1]/input</td>
 	<td></td>
 </tr>
 <tr>
-	<td>STRUCTURE_TABLE_ENTRY1_ID</td>
+	<td>STRUCTURE_TABLE_ID_1</td>
 	<td>//div[@id='_166_ddmStructuresSearchContainerSearchContainer']/table/tbody/tr[1]/td[2]/a</td>
 	<td></td>
 </tr>
 <tr>
-	<td>STRUCTURE_TABLE_ENTRY1_NAME</td>
+	<td>STRUCTURE_TABLE_NAME_1</td>
 	<td>//div[@id='_166_ddmStructuresSearchContainerSearchContainer']/table/tbody/tr[1]/td[3]/a</td>
 	<td></td>
 </tr>
 <tr>
-	<td>STRUCTURE_TABLE_ENTRY1_DESCRIPTION</td>
+	<td>STRUCTURE_TABLE_DESCRIPTION_1</td>
 	<td>//div[@id='_166_ddmStructuresSearchContainerSearchContainer']/table/tbody/tr[1]/td[4]/a</td>
 	<td></td>
 </tr>
 <tr>
-	<td>STRUCTURE_TABLE_ENTRY1_MODIFIED_DATE</td>
+	<td>STRUCTURE_TABLE_MODIFIED_DATE_1</td>
 	<td>//div[@id='_166_ddmStructuresSearchContainerSearchContainer']/table/tbody/tr[1]/td[5]/a</td>
 	<td></td>
 </tr>
 <tr>
-	<td>STRUCTURE_TABLE_ENTRY1_ACTIONS</td>
+	<td>STRUCTURE_TABLE_ACTIONS_1</td>
 	<td>//a[@id='_166_ddmStructuresSearchContainer_1_menu']</td>
 	<td></td>
 </tr>

@@ -19,12 +19,12 @@
 	<td></td>
 </tr>
 <tr>
-	<td>PARENT_FOLDER_SELECT</td>
+	<td>PARENT_FOLDER_SELECT_BUTTON</td>
 	<td>//button[@id='_15_selecFolderButton']</td>
 	<td></td>
 </tr>
 <tr>
-	<td>PARENT_FOLDER_REMOVE</td>
+	<td>PARENT_FOLDER_REMOVE_BUTTON</td>
 	<td>//button[@id='_15_removeFolderButton']</td>
 	<td></td>
 </tr>

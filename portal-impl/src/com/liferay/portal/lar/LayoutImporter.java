@@ -367,10 +367,20 @@ public class LayoutImporter {
 			}
 
 			if (existingLayoutPrototype == null) {
+				List<Layout> layouts =
+					LayoutLocalServiceUtil.getLayoutsByLayoutPrototypeUuid(
+						layoutPrototype.getUuid());
+
 				layoutPrototype.setUuid(layoutPrototypeUuid);
 
 				LayoutPrototypeLocalServiceUtil.updateLayoutPrototype(
 					layoutPrototype);
+
+				for (Layout layout : layouts) {
+					layout.setLayoutPrototypeUuid(layoutPrototypeUuid);
+
+					LayoutLocalServiceUtil.updateLayout(layout);
+				}
 			}
 		}
 		else if (group.isLayoutSetPrototype() &&
@@ -508,10 +518,7 @@ public class LayoutImporter {
 			_permissionImporter.readPortletDataPermissions(portletDataContext);
 		}
 
-		if (importCategories || group.isCompany()) {
-			_portletImporter.readAssetCategories(portletDataContext);
-		}
-
+		_portletImporter.readAssetCategories(portletDataContext);
 		_portletImporter.readAssetTags(portletDataContext);
 		_portletImporter.readComments(portletDataContext);
 		_portletImporter.readExpandoTables(portletDataContext);
@@ -574,7 +581,7 @@ public class LayoutImporter {
 
 		Map<Long, Layout> newLayoutsMap =
 			(Map<Long, Layout>)portletDataContext.getNewPrimaryKeysMap(
-				Layout.class);
+				Layout.class + ".layout");
 
 		if (deletePortletData) {
 			if (_log.isDebugEnabled()) {

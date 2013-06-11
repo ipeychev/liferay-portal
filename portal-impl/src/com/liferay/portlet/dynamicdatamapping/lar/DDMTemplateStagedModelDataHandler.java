@@ -146,7 +146,8 @@ public class DDMTemplateStagedModelDataHandler
 			}
 			else if (smallImage != null) {
 				String smallImagePath = ExportImportPathUtil.getModelPath(
-					template, smallImage.getImageId() + StringPool.PERIOD +
+					template,
+					smallImage.getImageId() + StringPool.PERIOD +
 						template.getSmallImageType());
 
 				templateElement.addAttribute(

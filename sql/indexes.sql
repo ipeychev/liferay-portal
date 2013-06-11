@@ -80,8 +80,9 @@ create index IX_55F58818 on AssetVocabulary (uuid_);
 create index IX_C4E6FD10 on AssetVocabulary (uuid_, companyId);
 create unique index IX_1B2B8792 on AssetVocabulary (uuid_, groupId);
 
-create index IX_79874497 on BTEntry (groupId, taskExecutorClassName);
-create index IX_2C9EFC7D on BTEntry (groupId, taskExecutorClassName, status);
+create index IX_A73B688A on BackgroundTask (groupId, taskExecutorClassName);
+create index IX_7E757D70 on BackgroundTask (groupId, taskExecutorClassName, status);
+create index IX_2FCFE748 on BackgroundTask (taskExecutorClassName, status);
 
 create index IX_72EF6041 on BlogsEntry (companyId);
 create index IX_430D791F on BlogsEntry (companyId, displayDate);
@@ -189,6 +190,7 @@ create index IX_C8419FBE on DDMStructure (groupId);
 create index IX_B6ED5E50 on DDMStructure (groupId, classNameId);
 create unique index IX_C8785130 on DDMStructure (groupId, classNameId, structureKey);
 create index IX_43395316 on DDMStructure (groupId, parentStructureId);
+create index IX_657899A8 on DDMStructure (parentStructureId);
 create index IX_20FDE04C on DDMStructure (structureKey);
 create index IX_E61809C8 on DDMStructure (uuid_);
 create index IX_F9FB8D60 on DDMStructure (uuid_, companyId);
@@ -256,9 +258,6 @@ create index IX_A65A1F8B on DLFileRank (fileEntryId);
 create index IX_BAFB116E on DLFileRank (groupId, userId);
 create index IX_4E96195B on DLFileRank (groupId, userId, active_);
 create index IX_EED06670 on DLFileRank (userId);
-create index IX_B8BB7CBE on DLFileRank (uuid_);
-create index IX_B3D1C4AA on DLFileRank (uuid_, companyId);
-create unique index IX_6D776DAC on DLFileRank (uuid_, groupId);
 
 create index IX_B0051937 on DLFileShortcut (groupId, folderId);
 create index IX_348DC3B2 on DLFileShortcut (groupId, folderId, active_);
@@ -412,15 +411,6 @@ create index IX_63BDFA69 on JournalFolder (uuid_);
 create index IX_54F89E1F on JournalFolder (uuid_, companyId);
 create unique index IX_E002061 on JournalFolder (uuid_, groupId);
 
-create index IX_B97F5608 on JournalStructure (groupId);
-create index IX_CA0BD48C on JournalStructure (groupId, parentStructureId);
-create unique index IX_AB6E9996 on JournalStructure (groupId, structureId);
-create index IX_4FA67B72 on JournalStructure (parentStructureId);
-create index IX_8831E4FC on JournalStructure (structureId);
-create index IX_6702CA92 on JournalStructure (uuid_);
-create index IX_F1054A56 on JournalStructure (uuid_, companyId);
-create unique index IX_42E86E58 on JournalStructure (uuid_, groupId);
-
 create index IX_77923653 on JournalTemplate (groupId);
 create index IX_1701CB2B on JournalTemplate (groupId, structureId);
 create unique index IX_E802AA3C on JournalTemplate (groupId, templateId);
@@ -456,6 +446,7 @@ create index IX_742EF04A on LayoutFriendlyURL (groupId);
 create index IX_CA713461 on LayoutFriendlyURL (groupId, privateLayout, friendlyURL);
 create unique index IX_A6FC2B28 on LayoutFriendlyURL (groupId, privateLayout, friendlyURL, languageId);
 create index IX_83AE56AB on LayoutFriendlyURL (plid);
+create index IX_59051329 on LayoutFriendlyURL (plid, friendlyURL);
 create unique index IX_C5762E72 on LayoutFriendlyURL (plid, languageId);
 create index IX_9F80D54 on LayoutFriendlyURL (uuid_);
 create index IX_F4321A54 on LayoutFriendlyURL (uuid_, companyId);
@@ -866,6 +857,10 @@ create index IX_786D171A on Subscription (companyId, classNameId, classPK);
 create unique index IX_2E1A92D4 on Subscription (companyId, userId, classNameId, classPK);
 create index IX_54243AFD on Subscription (userId);
 create index IX_E8F34171 on Subscription (userId, classNameId);
+
+create index IX_72D73D39 on SystemEvent (groupId);
+create index IX_7A2F0ECE on SystemEvent (groupId, classNameId, classPK);
+create index IX_FFCBB747 on SystemEvent (groupId, classNameId, classPK, type_);
 
 create index IX_AE6E9907 on Team (groupId);
 create unique index IX_143DC786 on Team (groupId, name);

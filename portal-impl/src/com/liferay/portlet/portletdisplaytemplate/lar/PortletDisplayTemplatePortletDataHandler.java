@@ -20,14 +20,15 @@ import com.liferay.portal.kernel.dao.orm.Property;
 import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.lar.BasePortletDataHandler;
+import com.liferay.portal.kernel.lar.ManifestSummary;
 import com.liferay.portal.kernel.lar.PortletDataContext;
-import com.liferay.portal.kernel.lar.PortletDataHandlerBoolean;
 import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
 import com.liferay.portal.kernel.template.TemplateHandlerRegistryUtil;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portlet.dynamicdatamapping.model.DDMTemplate;
+import com.liferay.portlet.dynamicdatamapping.model.DDMTemplateConstants;
 import com.liferay.portlet.dynamicdatamapping.service.persistence.DDMTemplateExportActionableDynamicQuery;
 
 import java.util.List;
@@ -43,10 +44,31 @@ public class PortletDisplayTemplatePortletDataHandler
 	public static final String NAMESPACE = "portlet_display_templates";
 
 	public PortletDisplayTemplatePortletDataHandler() {
-		setExportControls(
-			new PortletDataHandlerBoolean(
-				NAMESPACE, "application-display-templates", true, false, null,
-				DDMTemplate.class.getName()));
+		setDeletionSystemEventClassNames(DDMTemplate.class.getName());
+	}
+
+	@Override
+	public long getExportModelCount(ManifestSummary manifestSummary) {
+		long totalModelCount = -1;
+
+		for (long classNameId : TemplateHandlerRegistryUtil.getClassNameIds()) {
+			long modelCount = manifestSummary.getModelCount(
+				DDMTemplate.class.getName(),
+				PortalUtil.getClassName(classNameId));
+
+			if (modelCount == -1) {
+				continue;
+			}
+
+			if (totalModelCount == -1) {
+				totalModelCount = modelCount;
+			}
+			else {
+				totalModelCount += modelCount;
+			}
+		}
+
+		return totalModelCount;
 	}
 
 	@Override
@@ -96,7 +118,9 @@ public class PortletDisplayTemplatePortletDataHandler
 			ActionableDynamicQuery actionableDynamicQuery =
 				getDDMTemplateActionableDynamicQuery(
 					portletDataContext, new Long[] {classNameId},
-					PortalUtil.getClassName(classNameId));
+					ManifestSummary.getManifestSummaryKey(
+						DDMTemplate.class.getName(),
+						PortalUtil.getClassName(classNameId)));
 
 			actionableDynamicQuery.performCount();
 		}
@@ -118,6 +142,17 @@ public class PortletDisplayTemplatePortletDataHandler
 					"classNameId");
 
 				dynamicQuery.add(classNameIdProperty.in(classNameIds));
+
+				Property classPKProperty = PropertyFactoryUtil.forName(
+					"classPK");
+
+				dynamicQuery.add(classPKProperty.eq(0L));
+
+				Property typeProperty = PropertyFactoryUtil.forName("type");
+
+				dynamicQuery.add(
+					typeProperty.eq(
+						DDMTemplateConstants.TEMPLATE_TYPE_DISPLAY));
 			}
 
 			@Override

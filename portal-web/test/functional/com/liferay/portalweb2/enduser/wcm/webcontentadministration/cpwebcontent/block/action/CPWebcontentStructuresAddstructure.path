@@ -10,10 +10,15 @@
 <tbody>
 <tr>
 	<td>PAGE_NAME</td>
-	<td>//div[contains(@class,'dialog-iframe-bd')]/iframe</td>
-	<td>CPWebcontentStructures</td>
+	<td></td>
+	<td>CPWebcontentStructuresAddstructure</td>
 </tr>
 <!---->
+<tr>
+	<td>STRUCTURES_IFRAME</td>
+	<td>//div[contains(@class,'dialog-iframe-bd')]/iframe[contains(@src,'scopeTitle=Structures')]</td>
+	<td></td>
+</tr>
 <tr>
 	<td>CLOSE_WINDOW</td>
 	<td>//button[contains(@class, 'close-content')]</td>
@@ -25,18 +30,23 @@
 	<td></td>
 </tr>
 <tr>
+	<td>DETAILS</td>
+	<td>//div[@class='accordion-toggle']</td>
+	<td></td>
+</tr>
+<tr>
 	<td>DESCRIPTION_FIELD</td>
 	<td>//textarea[@id='_166_description']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>PARENT_STRUCTURE_SELECT_BUTTON</td>
-	<td>//input[@value='Select']</td>
+	<td>//button[contains(.,'Select')]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>PARENT_STRUCTURE_REMOVE_BUTTON</td>
-	<td>//input[@id='_166_removeParentStructureButton']</td>
+	<td>//button[contains(.,'Remove')]</td>
 	<td></td>
 </tr>
 <tr>

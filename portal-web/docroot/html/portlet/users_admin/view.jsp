@@ -35,9 +35,11 @@ if (Validator.isNotNull(viewUsersRedirect)) {
 	portletURL.setParameter("viewUsersRedirect", viewUsersRedirect);
 }
 
-pageContext.setAttribute("portletURL", portletURL);
-
 String portletURLString = portletURL.toString();
+
+request.setAttribute("view.jsp-usersListView", usersListView);
+
+request.setAttribute("view.jsp-portletURL", portletURL);
 %>
 
 <liferay-ui:error exception="<%= CompanyMaxUsersException.class %>" message="unable-to-activate-user-because-that-would-exceed-the-maximum-number-of-users-allowed" />
@@ -71,7 +73,7 @@ String portletURLString = portletURL.toString();
 
 	<c:choose>
 		<c:when test="<%= usersListView.equals(UserConstants.LIST_VIEW_FLAT_ORGANIZATIONS) %>">
-			<%@ include file="/html/portlet/users_admin/view_flat_organizations.jspf" %>
+			<liferay-util:include page="/html/portlet/users_admin/view_flat_organizations.jsp" />
 		</c:when>
 		<c:when test="<%= usersListView.equals(UserConstants.LIST_VIEW_FLAT_USERS) %>">
 

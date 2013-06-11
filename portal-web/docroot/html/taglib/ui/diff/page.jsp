@@ -48,10 +48,10 @@ List<DiffResult> targetResults = diffResults[1];
 
 			<tr>
 				<th class="table-header">
-					<liferay-ui:message key="line" /><aui:spacer /><%= sourceResult.getLineNumber() %>
+					<liferay-ui:message key="line" /> <%= sourceResult.getLineNumber() %>
 				</th>
 				<th class="table-header">
-					<liferay-ui:message key="line" /><aui:spacer /><%= targetResult.getLineNumber() %>
+					<liferay-ui:message key="line" /> <%= targetResult.getLineNumber() %>
 				</th>
 			</tr>
 

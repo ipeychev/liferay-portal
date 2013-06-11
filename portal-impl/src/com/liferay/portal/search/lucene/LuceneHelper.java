@@ -109,6 +109,8 @@ public interface LuceneHelper {
 
 	public void shutdown();
 
+	public void shutdown(long companyId);
+
 	public void startup(long companyId);
 
 	public void updateDocument(long companyId, Term term, Document document)

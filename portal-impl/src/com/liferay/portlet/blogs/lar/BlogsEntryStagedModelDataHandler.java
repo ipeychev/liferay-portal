@@ -80,7 +80,8 @@ public class BlogsEntryStagedModelDataHandler
 			}
 			else if (smallImage != null) {
 				String smallImagePath = ExportImportPathUtil.getModelPath(
-					entry, smallImage.getImageId() + StringPool.PERIOD +
+					entry,
+					smallImage.getImageId() + StringPool.PERIOD +
 						smallImage.getType());
 
 				entryElement.addAttribute("small-image-path", smallImagePath);

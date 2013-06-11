@@ -14,10 +14,10 @@
 
 package com.liferay.portal.lar.backgroundtask.executor;
 
+import com.liferay.portal.backgroundtask.executor.BaseBackgroundTaskExecutor;
+import com.liferay.portal.model.BackgroundTask;
+import com.liferay.portal.service.BackgroundTaskLocalServiceUtil;
 import com.liferay.portal.service.LayoutServiceUtil;
-import com.liferay.portlet.backgroundtask.executor.BaseBackgroundTaskExecutor;
-import com.liferay.portlet.backgroundtask.model.BTEntry;
-import com.liferay.portlet.backgroundtask.service.BTEntryLocalServiceUtil;
 
 import java.io.File;
 import java.io.Serializable;
@@ -32,9 +32,14 @@ import java.util.Map;
 public class PortletExportBackgroundTaskExecutor
 	extends BaseBackgroundTaskExecutor {
 
+	public PortletExportBackgroundTaskExecutor() {
+		setSerial(true);
+	}
+
 	@Override
-	protected void doExecute(BTEntry btEntry) throws Exception {
-		Map<String, Serializable> taskContextMap = btEntry.getTaskContextMap();
+	public void execute(BackgroundTask backgroundTask) throws Exception {
+		Map<String, Serializable> taskContextMap =
+			backgroundTask.getTaskContextMap();
 
 		long plid = (Long)taskContextMap.get("plid");
 		long groupId = (Long)taskContextMap.get("groupId");
@@ -49,8 +54,9 @@ public class PortletExportBackgroundTaskExecutor
 
 		long userId = (Long)taskContextMap.get("userId");
 
-		BTEntryLocalServiceUtil.addEntryAttachment(
-			userId, btEntry.getBtEntryId(), larFile.getName(), larFile);
+		BackgroundTaskLocalServiceUtil.addBackgroundTaskAttachment(
+			userId, backgroundTask.getBackgroundTaskId(), larFile.getName(),
+			larFile);
 	}
 
 }

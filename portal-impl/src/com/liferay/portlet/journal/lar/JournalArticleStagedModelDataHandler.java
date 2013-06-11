@@ -168,7 +168,8 @@ public class JournalArticleStagedModelDataHandler
 			}
 			else if (smallImage != null) {
 				String smallImagePath = ExportImportPathUtil.getModelPath(
-					article, smallImage.getImageId() + StringPool.PERIOD +
+					article,
+					smallImage.getImageId() + StringPool.PERIOD +
 						smallImage.getType());
 
 				articleElement.addAttribute("small-image-path", smallImagePath);
@@ -714,7 +715,9 @@ public class JournalArticleStagedModelDataHandler
 	}
 
 	@Override
-	protected boolean validateMissingReference(String uuid, long groupId) {
+	protected boolean validateMissingReference(
+		String uuid, long companyId, long groupId) {
+
 		try {
 			JournalArticle journalArticle = JournalArticleUtil.fetchByUUID_G(
 				uuid, groupId);

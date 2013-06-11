@@ -11,7 +11,7 @@
 <tr>
 	<td>PAGE_NAME</td>
 	<td></td>
-	<td>WCWebcontentAddwebcontent</td>
+	<td>CPWebcontentAddwebcontent</td>
 </tr>
 <tr>
 	<td></td>
@@ -20,7 +20,7 @@
 </tr>
 <tr>
 	<td>OPTIONS_WRENCH_ICON</td>
-	<td>//span[@title='Options']/ul/li/strong/a</td>
+	<td>//a[@title='Options']</td>
 	<td></td>
 </tr>
 <tr>
@@ -45,17 +45,17 @@
 </tr>
 <tr>
 	<td>SAVE_AS_DRAFT_BUTTON</td>
-	<td>//input[@id='_15_saveButton']</td>
+	<td>//button[@id='_15_saveButton']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>PUBLISH_BUTTON</td>
-	<td>//input[@id='_15_publishButton']</td>
+	<td>//button[@id='_15_publishButton']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>CANCEL_BUTTON</td>
-	<td>//input[@class='aui-button-input aui-button-input-cancel']</td>
+	<td>//button[contains(.,'Cancel')]</td>
 	<td></td>
 </tr>
 <tr>

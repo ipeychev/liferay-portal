@@ -72,6 +72,28 @@
 		<field name="mailing" type="boolean" />
 		<field name="primary" type="boolean" />
 	</model>
+	<model name="com.liferay.portal.model.BackgroundTask">
+		<field name="backgroundTaskId" type="long" />
+		<field name="groupId" type="long" />
+		<field name="companyId" type="long" />
+		<field name="userId" type="long" />
+		<field name="userName" type="String" />
+		<field name="createDate" type="Date" />
+		<field name="modifiedDate" type="Date" />
+		<field name="name" type="String" />
+		<field name="servletContextNames" type="String">
+			<hint name="max-length">255</hint>
+		</field>
+		<field name="taskExecutorClassName" type="String">
+			<hint name="max-length">200</hint>
+		</field>
+		<field name="taskContext" type="String">
+			<hint-collection name="CLOB" />
+		</field>
+		<field name="completed" type="boolean" />
+		<field name="completionDate" type="Date" />
+		<field name="status" type="int" />
+	</model>
 	<model name="com.liferay.portal.model.BrowserTracker">
 		<field name="browserTrackerId" type="long" />
 		<field name="userId" type="long" />
@@ -823,6 +845,21 @@
 		<field name="classPK" type="long" />
 		<field name="frequency" type="String" />
 	</model>
+	<model name="com.liferay.portal.model.SystemEvent">
+		<field name="systemEventId" type="long" />
+		<field name="groupId" type="long" />
+		<field name="companyId" type="long" />
+		<field name="userId" type="long" />
+		<field name="userName" type="String" />
+		<field name="createDate" type="Date" />
+		<field name="classNameId" type="long" />
+		<field name="classPK" type="long" />
+		<field name="classUuid" type="String" />
+		<field name="type" type="int" />
+		<field name="extraData" type="String">
+			<hint-collection name="CLOB" />
+		</field>
+	</model>
 	<model name="com.liferay.portal.model.Team">
 		<field name="teamId" type="long" />
 		<field name="companyId" type="long" />
@@ -1222,28 +1259,6 @@
 			<hint name="max-length">4000</hint>
 		</field>
 	</model>
-	<model name="com.liferay.portlet.backgroundtask.model.BTEntry">
-		<field name="btEntryId" type="long" />
-		<field name="groupId" type="long" />
-		<field name="companyId" type="long" />
-		<field name="userId" type="long" />
-		<field name="userName" type="String" />
-		<field name="createDate" type="Date" />
-		<field name="modifiedDate" type="Date" />
-		<field name="name" type="String" />
-		<field name="servletContextNames" type="String">
-			<hint name="max-length">255</hint>
-		</field>
-		<field name="taskExecutorClassName" type="String">
-			<hint name="max-length">200</hint>
-		</field>
-		<field name="taskContext" type="String">
-			<hint-collection name="CLOB" />
-		</field>
-		<field name="completed" type="boolean" />
-		<field name="completionDate" type="Date" />
-		<field name="status" type="int" />
-	</model>
 	<model name="com.liferay.portlet.blogs.model.BlogsEntry">
 		<field name="uuid" type="String" />
 		<field name="entryId" type="long" />
@@ -1464,14 +1479,11 @@
 		</field>
 	</model>
 	<model name="com.liferay.portlet.documentlibrary.model.DLFileRank">
-		<field name="uuid" type="String" />
 		<field name="fileRankId" type="long" />
 		<field name="groupId" type="long" />
 		<field name="companyId" type="long" />
 		<field name="userId" type="long" />
-		<field name="userName" type="String" />
 		<field name="createDate" type="Date" />
-		<field name="modifiedDate" type="Date" />
 		<field name="fileEntryId" type="long" />
 		<field name="active" type="boolean" />
 	</model>
@@ -1886,30 +1898,6 @@
 		<field name="statusByUserId" type="long" />
 		<field name="statusByUserName" type="String" />
 		<field name="statusDate" type="Date" />
-	</model>
-	<model name="com.liferay.portlet.journal.model.JournalStructure">
-		<field name="uuid" type="String" />
-		<field name="id" type="long" />
-		<field name="groupId" type="long" />
-		<field name="companyId" type="long" />
-		<field name="userId" type="long" />
-		<field name="userName" type="String" />
-		<field name="createDate" type="Date" />
-		<field name="modifiedDate" type="Date" />
-		<field name="structureId" type="String">
-			<hint name="upper-case">true</hint>
-			<hint name="auto-escape">false</hint>
-		</field>
-		<field name="parentStructureId" type="String" />
-		<field name="name" type="String" localized="true">
-			<validator name="required" />
-		</field>
-		<field name="description" type="String" localized="true">
-			<hint-collection name="TEXTAREA" />
-		</field>
-		<field name="xsd" type="String">
-			<hint-collection name="CLOB" />
-		</field>
 	</model>
 	<model name="com.liferay.portlet.journal.model.JournalTemplate">
 		<field name="uuid" type="String" />

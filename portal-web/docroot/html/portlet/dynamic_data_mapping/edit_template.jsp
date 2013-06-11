@@ -96,7 +96,7 @@ if (Validator.isNotNull(structureAvailableFields)) {
 		String[] imageExtensions = PrefsPropsUtil.getStringArray(PropsKeys.DYNAMIC_DATA_MAPPING_IMAGE_EXTENSIONS, ",");
 		%>
 
-		<liferay-ui:message key="image-names-must-end-with-one-of-the-following-extensions" /><aui:spacer /><%= StringUtil.merge(imageExtensions, StringPool.COMMA) %>.
+		<liferay-ui:message key="image-names-must-end-with-one-of-the-following-extensions" /> <%= StringUtil.merge(imageExtensions, StringPool.COMMA) %>.
 	</liferay-ui:error>
 
 	<liferay-ui:error exception="<%= TemplateSmallImageSizeException.class %>">
@@ -380,6 +380,7 @@ if (Validator.isNotNull(structureAvailableFields)) {
 		function <portlet:namespace />openDDMStructureSelector() {
 			Liferay.Util.openDDMPortlet(
 				{
+					basePortletURL: '<%= PortletURLFactoryUtil.create(request, PortletKeys.DYNAMIC_DATA_MAPPING, themeDisplay.getPlid(), PortletRequest.RENDER_PHASE) %>',
 					classNameId: '<%= PortalUtil.getClassNameId(DDMStructure.class) %>',
 					classPK: 0,
 					dialog: {

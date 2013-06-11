@@ -413,31 +413,41 @@
 	</target>
 
 	<target name="build-ckeditor-plugins-scayt">
-		<get
-			dest="${scayt.file}"
-			src="http://download.ckeditor.com/scayt/releases/${scayt.file}"
-		/>
+		<if>
+			<not>
+				<available file="third-party/${scayt.file}" />
+			</not>
+			<then>
+				<get
+					dest="third-party/${scayt.file}"
+					src="http://download.ckeditor.com/scayt/releases/${scayt.file}"
+				/>
+			</then>
+		</if>
 
 		<unzip
 			dest="docroot/html/js/editor/ckeditor/plugins"
-			src="${scayt.file}"
+			src="third-party/${scayt.file}"
 		/>
-
-		<delete file="${scayt.file}" />
 	</target>
 
 	<target name="build-ckeditor-plugins-wsc">
-		<get
-			dest="${wsc.file}"
-			src="http://download.ckeditor.com/wsc/releases/${wsc.file}"
-		/>
+		<if>
+			<not>
+				<available file="third-party/${wsc.file}" />
+			</not>
+			<then>
+				<get
+					dest="third-party/${wsc.file}"
+					src="http://download.ckeditor.com/wsc/releases/${wsc.file}"
+				/>
+			</then>
+		</if>
 
 		<unzip
 			dest="docroot/html/js/editor/ckeditor/plugins"
-			src="${wsc.file}"
+			src="third-party/${wsc.file}"
 		/>
-
-		<delete file="${wsc.file}" />
 	</target>
 
 	<target name="build-css">
