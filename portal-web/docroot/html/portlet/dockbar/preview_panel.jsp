@@ -69,26 +69,31 @@
 			namespace: '<portlet:namespace />',
 			devices: {
 				'autosize': {
-					height: 1,
-					width: 1
+					title: 'autosize',
+					height: 'auto',
+					width: 'auto'
 				},
 				'smartphone':
 				{
+					title: 'smartphone',
 					height: 640,
 					width: 400
 				},
 				'tablet':
 				{
+					title: 'tablet',
 					height: 900,
 					width: 760
 				},
 				'desktop':
 				{
+					title: 'desktop',
 					height: 1050,
 					width: 1300
 				},
 				'custom':
 				{
+					title: 'custom',
 					height: '.device-height',
 					width: '.device-width'
 				}

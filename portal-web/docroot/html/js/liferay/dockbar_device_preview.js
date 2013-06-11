@@ -66,89 +66,93 @@ AUI.add(
 						instance._devicePreviewNode.hide();
 					},
 
-					_getDeviceDialog: function(width, height) {
+					_getDeviceDialog: function(device) {
 						var instance = this;
 
-						var dialog = instance._dialog;
+						var width = device.width;
+						var height = device.height;
 
-						if (width >= 0 && width <= 1) {
-							instance._widthRatio = width;
-							width = instance._devicePreviewNode.get('offsetWidth') * instance._widthRatio;
+						var autoHeight = false;
+						var autoWidth = false;
+
+						if (!Lang.isNumber(width)) {
+							var widthNode = A.one(width);
+
+							if (widthNode) {
+								width = widthNode.val();
+							} else {
+								autoWidth = true;
+							}
 						}
 
-						if (height >= 0 && height <= 1) {
-							instance._heightRatio = height;
-							height = instance._devicePreviewNode.get('offsetHeight') * instance._heightRatio;							
-						}	
+						if (!Lang.isNumber(height)) {
+							var heightNode = A.one(height);
+
+							if (heightNode) {
+								height = heightNode.val();
+							} else {
+								autoHeight = true;
+							}
+						}
+
+						var dialog = Liferay.Util.getWindow("123abcdef456");
 
 						if (!dialog) {
-							dialog = new A.Modal(
+
+							Liferay.Util.openWindow(
 								{
-									align: {
-										node: instance._devicePreviewNode,
-										points: [A.WidgetPositionAlign.CC, A.WidgetPositionAlign.CC]
-									},
-									animate: true,
-									after: {
-										visibleChange: function(event) {
-											instance._devicePreviewNode.hide();
+									dialog: {
+										on: {
+											visibleChange: function(event) {
+												// WON'T WORK
+											}
 										},
-										render: function(event) {
-											dialog.iframe.on('load', function(event) {
-												var boundingBox = dialog.get('boundingBox');
-												var body = boundingBox.one('.dialog-iframe-bd');
-
-												var delta = A.Lang.toInt(body.getStyle('paddingLeft')) + A.Lang.toInt(body.getStyle('paddingRight'));
-												dialog.set('width', width + delta);
-											});
-										}
+										//align: { // Use centered instead
+										//	node: instance._devicePreviewNode,
+										//	points: [A.WidgetPositionAlign.CC, A.WidgetPositionAlign.CC]
+										//},
+										centered: true,
+										constrain: instance._devicePreviewNode,
+										draggable: false,
+										height: height, // Needed to set the proper modal height
+										modal: false,
+										render: instance._devicePreviewNode,
+										resizable: false
+										,width: width // Needed to set the proper modal width
 									},
-									constrain: instance._devicePreviewNode,
-									draggable: false,
-									headerContent: window.location.pathname,
-									height: height,
-									resizable: false,
-									width: width
+									height: height, // Needed to avoid auto-height
+									id: "123abcdef456",
+									title: device.title,
+									uri: window.location.href,
+									width: width // Needed to avoid auto-width
+								},
+								function(dialogWindow) {
+									dialogWindow.on('visibleChange', 
+										function(event) {
+											if (!event.newVal) {
+												instance._devicePreviewNode.hide();
+											}
+										}
+									);
 								}
 							);
-
-							dialog.plug(
-								A.Plugin.DialogIframe, 
-								{
-									uri: window.location.href
-								}
-							);
-
-							dialog.render(instance._devicePreviewNode);
-
-							instance._dialog = dialog;
 
 						} else {					
 							dialog.set('width', width);
 							dialog.set('height', height);
 
+							dialog.set('autoWidth', autoWidth);
+							dialog.set('autoHeight', autoHeight);
+
+							dialog.titleNode.html(device.title);
+
 							dialog.align(
 								instance._devicePreviewNode,
 								[A.WidgetPositionAlign.CC, A.WidgetPositionAlign.CC]
 							)
-						}
 
-						if (instance._widthRatio || instance._heightRatio) {
-							instance._onresizeHandle = A.on('windowresize', function(event) 
-								{
-									var w = instance._devicePreviewNode.get('offsetWidth') * instance._widthRatio;
-									var h = instance._devicePreviewNode.get('offsetHeight') * instance._heightRatio;
-									dialog.set('width', w);
-									dialog.set('height', h);
-								}
-							);
-						} else {
-							if (instance._onresizeHandle) {
-								instance._onresizeHandle.detach();
-							}
+							dialog.show();
 						}
-
-						return instance._dialog;
 					},
 
 					_onDeviceClick: function(event) {
@@ -164,32 +168,12 @@ AUI.add(
 						instance._widthRatio = null;
 
 						if (selectedDevice) {
-							var width = selectedDevice.width;
-							var height = selectedDevice.height;
-
-							if (!Lang.isNumber(width)) {
-								var widthNode = A.one(width);
-
-								if (widthNode) {
-									width = widthNode.val();
-								}
-							}
-
-							if (!Lang.isNumber(height)) {
-								var heightNode = A.one(height);
-
-								if (heightNode) {
-									height = heightNode.val();
-								}								
-							}
-
-							var dialog = instance._getDeviceDialog(width, height);
+							instance._getDeviceDialog(selectedDevice);
 
 							instance._devicePreviewContainer.all('.selected').toggleClass('selected');
 							event.currentTarget.addClass('selected');
 
 							instance._devicePreviewNode.show();
-							dialog.show();
 						}
 					},
 
@@ -199,7 +183,7 @@ AUI.add(
 						var width = A.one('.device-width').val();
 						var height = A.one('.device-height').val();
 
-						var dialog = instance._getDeviceDialog(width, height);
+						var dialog = instance._getDeviceDialog({title: 'custom', width: width, height: height});
 					}
 				}
 			}
@@ -209,6 +193,6 @@ AUI.add(
 	},
 	'',
 	{
-		requires: ['aui-event-input', 'aui-modal', 'aui-dialog-iframe-deprecated', 'liferay-portlet-base']
+		requires: ['aui-event-input', 'aui-modal', 'aui-dialog-iframe-deprecated', 'liferay-portlet-base', 'liferay-util', 'liferay-util-window']
 	}
 );
