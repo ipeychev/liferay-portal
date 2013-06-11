@@ -47,7 +47,6 @@ AUI.add(
 						instance._addPanelContainer = instance.byId('addPanelContainer');
 						instance._closePanel = instance._addPanelContainer.one('#closePanel');
 						instance._entriesContainer = instance.byId('entriesContainer');
-						instance._numItems = instance.byId('numItems');
 
 						instance._bindUI();
 					},
