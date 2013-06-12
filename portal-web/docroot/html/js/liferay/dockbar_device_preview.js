@@ -7,11 +7,38 @@ AUI.add(
 
 		var Dockbar = Liferay.Dockbar;
 
-		var CSS_CONTENT_ITEM = '.lfr-device-item';
+		var CSS_DEVICE_ITEM = '.lfr-device-item';
 
 		var CSS_DEVICE_PREVIEW_CONTENT = '.device-preview-content';
 
+		var DIALOG_ALIGN_POINTS = [A.WidgetPositionAlign.CC, A.WidgetPositionAlign.CC];
+
+		var DIALOG_DEFAULTS = {
+			autoHeightRatio: 1,
+			autoWidthRatio: 1,
+			cssClass: 'lfr-device',
+			modal: false,
+			resizable: false
+		};
+
+		var DIALOG_IFRAME_DEFAULTS = {
+			gutter: {
+				bottom: 0,
+				left: 0,
+				right: 0,
+				top: 0
+			}
+		};
+
 		var STR_CLICK = 'click';
+
+		var STR_INPUT = 'input';
+
+		var STR_INPUT_HEIGHT = 'inputHeight';
+
+		var STR_INPUT_WIDTH = 'inputWidth';
+
+		var STR_SELECTED = 'selected';
 
 		var TPL_DEVICE_PREVIEW = '<div class="lfr-device-preview hide" />';
 
@@ -38,6 +65,7 @@ AUI.add(
 				prototype: {
 					initializer: function(config) {
 						var instance = this;
+						instance._dialogId = A.guid();
 
 						instance._devicePreviewContainer = instance.byId('devicePreviewContainer');
 						instance._devicePreviewContent = instance._devicePreviewContainer.one(CSS_DEVICE_PREVIEW_CONTENT);
@@ -54,8 +82,19 @@ AUI.add(
 
 						instance._closePanelButton.on(STR_CLICK, instance._closePanel, instance);
 
-						instance._devicePreviewContent.delegate('click', instance._onDeviceClick, CSS_CONTENT_ITEM, instance);
-						instance._devicePreviewContent.delegate('input', instance._onSizeInput, 'input', instance);
+						instance._devicePreviewContent.delegate('click', instance._onDeviceClick, CSS_DEVICE_ITEM, instance);
+
+						var inputWidth = instance.get(STR_INPUT_WIDTH);
+
+						if (inputWidth) {
+							inputWidth.on(STR_INPUT, instance._onSizeInput, instance);
+						}
+
+						var inputHeight = instance.get(STR_INPUT_HEIGHT);
+
+						if (inputHeight) {
+							inputHeight.on(STR_INPUT, instance._onSizeInput, instance);
+						}
 					},
 
 					_closePanel: function() {
@@ -66,14 +105,10 @@ AUI.add(
 						instance._devicePreviewNode.hide();
 					},
 
-					_getDeviceDialog: function(device) {
+					_normalizeDialogAttrs: function(width, height, autoWidth, autoHeight) {
 						var instance = this;
 
-						var width = device.width;
-						var height = device.height;
-
-						var autoHeight = false;
-						var autoWidth = false;
+						var dialogAttrs = {}
 
 						if (!Lang.isNumber(width)) {
 							var widthNode = A.one(width);
@@ -81,6 +116,7 @@ AUI.add(
 							if (widthNode) {
 								width = widthNode.val();
 							} else {
+								width = instance._devicePreviewNode.width();
 								autoWidth = true;
 							}
 						}
@@ -91,70 +127,57 @@ AUI.add(
 							if (heightNode) {
 								height = heightNode.val();
 							} else {
+								height = instance._devicePreviewNode.height();
 								autoHeight = true;
 							}
 						}
 
-						var dialog = Liferay.Util.getWindow("123abcdef456");
+						return {
+							autoHeight: autoHeight,
+							autoWidth: autoWidth,
+							height: height,
+							width: width
+						}
+					},
+
+					_openDeviceDialog: function(device) {
+						var instance = this;
+
+						var dialog = Liferay.Util.getWindow(instance._dialogId);
+
+						var dialogAttrs = instance._normalizeDialogAttrs(device.width, device.height, false, false);
 
 						if (!dialog) {
 
+							var dialogConfig = {
+								align: {
+									node: instance._devicePreviewNode,
+									points: DIALOG_ALIGN_POINTS
+								},
+								constrain: instance._devicePreviewNode,
+								height: dialogAttrs.height,
+								render: instance._devicePreviewNode,
+								width: dialogAttrs.width
+							};
+
 							Liferay.Util.openWindow(
 								{
-									dialog: {
-										on: {
-											visibleChange: function(event) {
-												// WON'T WORK
-											}
-										},
-										//align: { // Use centered instead
-										//	node: instance._devicePreviewNode,
-										//	points: [A.WidgetPositionAlign.CC, A.WidgetPositionAlign.CC]
-										//},
-										centered: true,
-										constrain: instance._devicePreviewNode,
-										draggable: false,
-										height: height, // Needed to set the proper modal height
-										modal: false,
-										render: instance._devicePreviewNode,
-										resizable: false
-										,width: width // Needed to set the proper modal width
-									},
-									height: height, // Needed to avoid auto-height
-									id: "123abcdef456",
-									title: device.title,
+									dialog: A.merge(DIALOG_DEFAULTS, dialogConfig),
+									dialogIframe: DIALOG_IFRAME_DEFAULTS,
+									height: dialogAttrs.height,
+									id: instance._dialogId,
 									uri: window.location.href,
-									width: width // Needed to avoid auto-width
-								},
-								function(dialogWindow) {
-									dialogWindow.on('visibleChange', 
-										function(event) {
-											if (!event.newVal) {
-												instance._devicePreviewNode.hide();
-											}
-										}
-									);
+									width: dialogAttrs.width
 								}
 							);
 
-						} else {					
-							dialog.set('width', width);
-							dialog.set('height', height);
-
-							dialog.set('autoWidth', autoWidth);
-							dialog.set('autoHeight', autoHeight);
-
-							if (device.title) {
-								dialog.titleNode.html(device.title);
-							}
-
-							dialog.align(
-								instance._devicePreviewNode,
-								[A.WidgetPositionAlign.CC, A.WidgetPositionAlign.CC]
-							)
-
+						} else {
+							dialog.setAttrs(dialogAttrs);
+							dialog.align(instance._devicePreviewNode, DIALOG_ALIGN_POINTS);
 							dialog.show();
 						}
+
+						instance._devicePreviewNode.show();
 					},
 
 					_onDeviceClick: function(event) {
@@ -166,26 +189,23 @@ AUI.add(
 
 						var selectedDevice = deviceList[deviceId];
 
-						instance._heightRatio = null;
-						instance._widthRatio = null;
-
 						if (selectedDevice) {
-							instance._getDeviceDialog(selectedDevice);
+							instance._devicePreviewContainer.all('.selected').removeClass(instance._dialogId);
+							event.currentTarget.addClass(instance._dialogId);
 
-							instance._devicePreviewContainer.all('.selected').toggleClass('selected');
-							event.currentTarget.addClass('selected');
-
-							instance._devicePreviewNode.show();
+							instance._openDeviceDialog(selectedDevice);
 						}
 					},
 
 					_onSizeInput: function(event) {
 						var instance = this;
 
-						var width = A.one('.device-width').val();
-						var height = A.one('.device-height').val();
-
-						var dialog = instance._getDeviceDialog({width: width, height: height});
+						instance._openDeviceDialog(
+							{
+								height: Lang.toInt(instance.get(STR_INPUT_HEIGHT).val()),
+								width: Lang.toInt(instance.get(STR_INPUT_WIDTH).val())
+							}
+						);
 					}
 				}
 			}

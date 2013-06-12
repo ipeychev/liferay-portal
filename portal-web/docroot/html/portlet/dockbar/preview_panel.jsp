@@ -68,32 +68,24 @@
 		{
 			namespace: '<portlet:namespace />',
 			devices: {
-				'autosize': {
-					title: '<%= LanguageUtil.get(pageContext, "autosize") %>',
-					height: 'auto',
-					width: 'auto'
-				},
+				'autosize': {},
 				'smartphone':
 				{
-					title: '<%= LanguageUtil.get(pageContext, "smartphone") %>',
 					height: 640,
 					width: 400
 				},
 				'tablet':
 				{
-					title: '<%= LanguageUtil.get(pageContext, "tablet") %>',
 					height: 900,
 					width: 760
 				},
 				'desktop':
 				{
-					title: '<%= LanguageUtil.get(pageContext, "desktop") %>',
 					height: 1050,
 					width: 1300
 				},
 				'custom':
 				{
-					title: '<%= LanguageUtil.get(pageContext, "custom") %>',
 					height: '.device-height',
 					width: '.device-width'
 				}
