@@ -27,7 +27,11 @@ AUI.add(
 
 		var STR_L = 'l';
 
+		var STR_LTR = 'ltr';
+
 		var STR_R = 'r';
+
+		var STR_RTL = 'rtl';
 
 		var STR_T = 't';
 
@@ -36,9 +40,19 @@ AUI.add(
 			left: STR_R
 		};
 
+		var MAP_ALIGN_HORIZONTAL_OVERLAY_RTL = {
+			left: STR_L,
+			right: STR_R
+		};
+
 		var MAP_ALIGN_HORIZONTAL_TRIGGER = {
 			right: STR_R,
 			left: STR_L
+		};
+
+		var MAP_ALIGN_HORIZONTAL_TRIGGER_RTL = {
+			left: STR_R,
+			right: STR_L
 		};
 
 		var MAP_ALIGN_VERTICAL_OVERLAY = {
@@ -120,15 +134,29 @@ AUI.add(
 
 					var alignPoints = DEFAULT_ALIGN_POINTS;
 
+					var defaultHorizontalAlign = STR_L;
+
+					var mapAlignHorizontalOverlay = MAP_ALIGN_HORIZONTAL_OVERLAY;
+					
+					var mapAlignHorizontalTrigger = MAP_ALIGN_HORIZONTAL_TRIGGER;
+
+					var langDir = Liferay.Language.direction[themeDisplay.getLanguageId()] || STR_LTR;
+
+					if (langDir === STR_RTL) {
+						defaultHorizontalAlign = STR_R;
+						mapAlignHorizontalOverlay = MAP_ALIGN_HORIZONTAL_OVERLAY_RTL;
+						mapAlignHorizontalTrigger = MAP_ALIGN_HORIZONTAL_TRIGGER_RTL;
+					}
+
 					if (cssClass.indexOf(AUTO) == -1) {
 						var directionMatch = cssClass.match(REGEX_DIRECTION);
 
 						var direction = (directionMatch && directionMatch[1]) || AUTO;
 
-						var overlayHorizontal = MAP_ALIGN_HORIZONTAL_OVERLAY[direction] || STR_L;
+						var overlayHorizontal = mapAlignHorizontalOverlay[direction] || defaultHorizontalAlign;
 						var overlayVertical = MAP_ALIGN_VERTICAL_OVERLAY[direction] || STR_T;
 
-						var triggerHorizontal = MAP_ALIGN_HORIZONTAL_TRIGGER[direction] || STR_L;
+						var triggerHorizontal = mapAlignHorizontalTrigger[direction] || defaultHorizontalAlign;
 						var triggerVertical = MAP_ALIGN_VERTICAL_TRIGGER[direction] || STR_T;
 
 						alignPoints = [overlayVertical + overlayHorizontal, triggerVertical + triggerHorizontal];
@@ -547,6 +575,6 @@ AUI.add(
 	},
 	'',
 	{
-		requires: ['array-invoke', 'aui-debounce', 'aui-node']
+		requires: ['array-invoke', 'aui-debounce', 'aui-node', 'portal-available-languages']
 	}
 );
