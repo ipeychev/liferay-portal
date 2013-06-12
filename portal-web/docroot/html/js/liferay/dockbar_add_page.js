@@ -21,6 +21,12 @@ AUI.add(
 
 		var STR_CANCEL_ADD_OPERATOIN = 'cancelAddOperation';
 
+		var STR_HIDE_CLASS = 'hide';
+
+		var STR_HIDDEN_CHECKBOX = 'hiddenCheckbox';
+
+		var STR_NAME = 'name';
+
 		var STR_NODE_LIST = 'nodeList';
 
 		var STR_NODES = 'nodes';
@@ -30,6 +36,8 @@ AUI.add(
 		var STR_TRANSITION = 'transition';
 
 		var STR_VALUE = 'value';
+
+		var TPL_TAB_LINK = '<li class="hide lfr-nav-item lfr-nav-deletable lfr-nav-sortable lfr-nav-updateable yui3-dd-drop" aria-selected="true"><a class="" href="#" tabindex="-1"><span></span></a></li>';		
 
 		var AddPage = A.Component.create(
 			{
@@ -70,6 +78,17 @@ AUI.add(
 
 						instance._cancelButton = instance.byId(STR_CANCEL_ADD_OPERATOIN);
 
+						instance._hiddenCheckbox = instance.byId(STR_HIDDEN_CHECKBOX);
+
+						instance._nameInput = instance.byId(STR_NAME);
+
+						var navigation = A.one('#banner .nav');
+
+						if (navigation) {
+							instance._navigationProxy = A.Node.create(TPL_TAB_LINK);
+							navigation.append(instance._navigationProxy);
+						}
+
 						instance._bindUI();
 					},
 
@@ -81,6 +100,10 @@ AUI.add(
 						instance._cancelButton.on('click', instance._cancelAction, instance);
 
 						instance._addForm.on('submit', instance._addPage, instance);
+
+						instance._hiddenCheckbox.on('change', instance._updateNavigationProxy, instance);
+
+						instance._nameInput.on('input', instance._updateNavigationProxy, instance);
 					},
 
 					_addPage: function(event) {
@@ -110,6 +133,10 @@ AUI.add(
 								after: {
 									success: function(event, id, obj) {
 										var response = this.get(STR_RESPONSE_DATA);
+
+										if (instance._navigationProxy) {
+											instance._navigationProxy.remove();
+										}
 
 										var panel = instance._addForm.ancestor();
 
@@ -158,7 +185,24 @@ AUI.add(
 								instance.byId('layoutPrototypeId').set(STR_VALUE, selectedPrototypeId);
 							}
 						}
-					}
+					},
+
+					_updateNavigationProxy: function(event) {
+						var instance = this;
+
+						if (instance._navigationProxy) {
+							var pageHidden = instance._hiddenCheckbox.get('checked');
+							var pageName = instance._nameInput.val();
+
+							if (pageHidden || pageName === '') {
+								instance._navigationProxy.addClass(STR_HIDE_CLASS);
+								return;
+							}
+
+							instance._navigationProxy.one('span').text(pageName);
+							instance._navigationProxy.removeClass(STR_HIDE_CLASS);
+						}
+					},					
 				}
 			}
 		);
