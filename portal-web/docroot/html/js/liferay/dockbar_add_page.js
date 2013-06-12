@@ -48,6 +48,10 @@ AUI.add(
 				NAME: 'addpage',
 
 				ATTRS: {
+					creatingPageMessage: {
+						validator: Lang.isString
+					},
+
 					transition: {
 						validator: Lang.isObject,
 						value: {
@@ -88,6 +92,15 @@ AUI.add(
 							instance._navigationProxy = A.Node.create(TPL_TAB_LINK);
 							navigation.append(instance._navigationProxy);
 						}
+
+						instance._loadingMask = new A.LoadingMask(
+							{
+								strings: {
+									loading: instance.get('creatingPageMessage')
+								},
+								target: instance._addForm
+							}
+						);
 
 						instance._bindUI();
 					},
@@ -138,6 +151,8 @@ AUI.add(
 											instance._navigationProxy.remove();
 										}
 
+										instance._loadingMask.hide();
+
 										var panel = instance._addForm.ancestor();
 
 										panel.empty();
@@ -149,6 +164,8 @@ AUI.add(
 								}
 							}
 						);
+
+						instance._loadingMask.show();
 					},
 
 					_cancelAction: function(event) {
@@ -211,6 +228,6 @@ AUI.add(
 	},
 	'',
 	{
-		requires: ['aui-parse-content', 'liferay-dockbar', 'liferay-dockbar-add-base', 'liferay-dockbar-add-page-search']
+		requires: ['aui-loading-mask-deprecated', 'aui-parse-content', 'liferay-dockbar', 'liferay-dockbar-add-base', 'liferay-dockbar-add-page-search']
 	}
 );
