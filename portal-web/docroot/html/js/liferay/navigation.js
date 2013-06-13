@@ -141,10 +141,14 @@ AUI.add(
 							instance._makeSortable();
 							instance._makeEditable();
 
+							instance._tempTab = instance._createTempTab(TPL_TAB_LINK);
+							instance._tempChildTab = instance._createTempTab(TPL_LINK);
+
 							instance.on('savePage', A.bind('_savePage', instance));
 							instance.on('cancelPage', instance._cancelPage);
 
 							Liferay.on('dockbaraddpage:addPage', instance._onAddPage, instance);
+							Liferay.on('dockbaraddpage:updatePage', instance._onUpdatePage, instance);
 
 							navBlock.delegate('keypress', A.bind('_onKeypress', instance), 'input');
 						}
@@ -205,6 +209,24 @@ AUI.add(
 						var instance = this;
 
 						obj.append(instance.TPL_DELETE_BUTTON);
+					},
+
+					_createTempTab: function(tpl) {
+						var instance = this;
+
+						var tempLink = Lang.sub(
+							tpl,
+							{
+								url: '#',
+								pageTitle: ''
+							}
+						);
+
+						var tempTab = A.Node.create('<li>');
+
+						tempTab.append(tempLink);
+
+						return tempTab;
 					},
 
 					_deleteButton: function(obj) {
@@ -409,7 +431,38 @@ AUI.add(
 								type: 'add'
 							}
 						);
-					},					
+					},
+
+					_onUpdatePage: function(event) {
+						var instance = this;
+
+						var data = event.data;
+
+						if (data.name === '' || data.hidden) {
+							instance._tempTab.remove();
+							instance._tempChildTab.remove();
+						}
+						else {
+							var navBlock = instance.get('navBlock');
+
+							if (!data.parentLayoutId) {
+								instance._tempTab.one('span').text(data.name);
+								navBlock.one('ul').append(instance._tempTab);
+							}
+							else {
+								var parentItem = navBlock.one('#layout_' + data.parentLayoutId);
+
+								if (parentItem) {
+									var parentListItem = parentItem.one('ul');
+
+									if (parentListItem) {
+										instance._tempChildTab.one('a').text(data.name);
+										parentListItem.append(instance._tempChildTab);
+									}
+								}								
+							}
+						}
+					},
 
 					_optionsOpen: true,
 					_updateURL: ''

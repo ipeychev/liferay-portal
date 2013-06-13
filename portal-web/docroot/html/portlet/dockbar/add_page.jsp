@@ -177,7 +177,8 @@ Layout addedLayout = (Layout)SessionMessages.get(renderRequest, portletDisplay.g
 			inputNode: A.one('#<portlet:namespace />searchTemplates'),
 			namespace: '<portlet:namespace />',
 			nodeList: A.one('#<portlet:namespace />templateList'),
-			nodeSelector: '.lfr-page-template'
+			nodeSelector: '.lfr-page-template',
+			parentLayoutId: <%= layout.getParentLayoutId() %>
 		}
 	);
 
