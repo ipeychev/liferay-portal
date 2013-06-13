@@ -158,25 +158,20 @@ Layout addedLayout = (Layout)SessionMessages.get(renderRequest, portletDisplay.g
 	%>
 
 	<aui:script use="aui-base">
-		var navigation = A.one('#banner .nav');
-
-		if (navigation) {
-			var TPL_TAB_LINK = '<li class="lfr-nav-item lfr-nav-deletable lfr-nav-sortable lfr-nav-updateable yui3-dd-drop" aria-selected="true"><a class="" href="{url}" tabindex="-1"><span>{pageTitle}</span></a></li>';
-
-			var tabHtml = A.Lang.sub(
-				TPL_TAB_LINK,
-				{
-					pageTitle: A.Lang.String.escapeHTML('<%= navItem.getName() %>'),
+		Liferay.fire('dockbaraddpage:addPage',
+			{
+				data: {
+					layoutId: <%= addedLayout.getLayoutId() %>,
+					parentLayoutId: <%= addedLayout.getParentLayoutId() %>,
+					title: A.Lang.String.escapeHTML('<%= navItem.getName() %>'),
 					url: '<%= navItem.getURL() %>'
 				}
-			);
-
-			navigation.append(tabHtml);
-		}
+			} 
+		);
 	</aui:script>
 </c:if>
 
-<aui:script use="aui-toggler-delegate,liferay-dockbar-add-page">
+<aui:script use="liferay-dockbar-add-page">
 	new Liferay.Dockbar.AddPage(
 		{
 			inputNode: A.one('#<portlet:namespace />searchTemplates'),

@@ -167,6 +167,6 @@ AUI.add(
 	},
 	'',
 	{
-		requires: ['aui-parse-content', 'liferay-dockbar', 'liferay-dockbar-add-base', 'liferay-dockbar-add-page-search']
+		requires: ['aui-parse-content', 'aui-toggler-delegate', 'liferay-dockbar', 'liferay-dockbar-add-base', 'liferay-dockbar-add-page-search']
 	}
 );
