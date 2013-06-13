@@ -74,6 +74,8 @@ public class DeployUtil {
 			destDir = getAutoDeployServerDestDir();
 		}
 
+		FileUtil.mkdirs(destDir);
+
 		return destDir;
 	}
 

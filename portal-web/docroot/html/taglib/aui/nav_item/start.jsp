@@ -72,6 +72,6 @@
 		</aui:script>
 
 		<c:if test="<%= wrapDropDownMenu %>">
-			<ul class="dropdown-menu">
+			<ul class='dropdown-menu <%= LanguageUtil.get(locale, "lang.dir").equals("rtl") ? "pull-right" : StringPool.BLANK %>'>
 		</c:if>
 	</c:if>

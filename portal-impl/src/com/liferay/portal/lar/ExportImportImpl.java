@@ -15,6 +15,7 @@
 package com.liferay.portal.lar;
 
 import com.liferay.portal.LARFileException;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.lar.ExportImport;
 import com.liferay.portal.kernel.lar.ExportImportPathUtil;
@@ -216,6 +217,33 @@ public class ExportImportImpl implements ExportImport {
 	}
 
 	@Override
+	public Layout getExportableLayout(ThemeDisplay themeDisplay)
+		throws PortalException, SystemException {
+
+		Layout layout = themeDisplay.getLayout();
+
+		if (!layout.isTypeControlPanel()) {
+			return layout;
+		}
+
+		Group scopeGroup = themeDisplay.getScopeGroup();
+
+		if (scopeGroup.isLayout()) {
+			layout = LayoutLocalServiceUtil.getLayout(scopeGroup.getClassPK());
+		}
+		else if (!scopeGroup.isCompany()) {
+			long defaultPlid = LayoutLocalServiceUtil.getDefaultPlid(
+				themeDisplay.getSiteGroupId());
+
+			if (defaultPlid > 0) {
+				layout = LayoutLocalServiceUtil.getLayout(defaultPlid);
+			}
+		}
+
+		return layout;
+	}
+
+	@Override
 	public ManifestSummary getManifestSummary(
 			long userId, long groupId, Map<String, String[]> parameterMap,
 			File file)
@@ -279,10 +307,20 @@ public class ExportImportImpl implements ExportImport {
 						}
 					}
 					else if (elementName.equals("staged-model")) {
-						String className = element.attributeValue("class-name");
-						long count = GetterUtil.getLong(element.getText());
+						String manifestSummaryKey = element.attributeValue(
+							"manifest-summary-key");
 
-						manifestSummary.addModelCount(className, count);
+						long modelAdditionCount = GetterUtil.getLong(
+							element.attributeValue("addition-count"));
+
+						manifestSummary.addModelAdditionCount(
+							manifestSummaryKey, modelAdditionCount);
+
+						long modelDeletionCount = GetterUtil.getLong(
+							element.attributeValue("deletion-count"));
+
+						manifestSummary.addModelDeletionCount(
+							manifestSummaryKey, modelDeletionCount);
 					}
 				}
 
@@ -912,18 +950,31 @@ public class ExportImportImpl implements ExportImport {
 
 		Element rootElement = document.getRootElement();
 
-		Element summaryElement = rootElement.addElement("summary");
+		Element manifestSummaryElement = rootElement.addElement(
+			"manifest-summary");
 
-		Map<String, Long> modelCounters = manifestSummary.getModelCounters();
+		for (String manifestSummaryKey :
+				manifestSummary.getManifestSummaryKeys()) {
 
-		for (String modelClassName : modelCounters.keySet()) {
-			Element element = summaryElement.addElement("staged-model");
+			Element element = manifestSummaryElement.addElement("staged-model");
 
-			element.addAttribute("class-name", modelClassName);
+			element.addAttribute("manifest-summary-key", manifestSummaryKey);
 
-			String count = String.valueOf(modelCounters.get(modelClassName));
+			long modelAdditionCount = manifestSummary.getModelAdditionCount(
+				manifestSummaryKey);
 
-			element.addText(count);
+			if (modelAdditionCount > 0) {
+				element.addAttribute(
+					"addition-count", String.valueOf(modelAdditionCount));
+			}
+
+			long modelDeletionCount = manifestSummary.getModelDeletionCount(
+				manifestSummaryKey);
+
+			if (modelDeletionCount > 0) {
+				element.addAttribute(
+					"deletion-count", String.valueOf(modelDeletionCount));
+			}
 		}
 	}
 

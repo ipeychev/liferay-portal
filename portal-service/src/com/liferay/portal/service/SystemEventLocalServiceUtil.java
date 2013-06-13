@@ -253,13 +253,6 @@ public class SystemEventLocalServiceUtil {
 		getService().setBeanIdentifier(beanIdentifier);
 	}
 
-	public static void addSystemEvent(long groupId, java.lang.String className,
-		long classPK, java.lang.String classUuid, int type)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
-		getService().addSystemEvent(groupId, className, classPK, classUuid, type);
-	}
-
 	public static void addSystemEvent(long userId, long groupId,
 		long classNameId, long classPK, java.lang.String classUuid, int type)
 		throws com.liferay.portal.kernel.exception.PortalException,
@@ -277,6 +270,13 @@ public class SystemEventLocalServiceUtil {
 		getService()
 			.addSystemEvent(userId, groupId, classNameId, classPK, classUuid,
 			type, extraData);
+	}
+
+	public static void addSystemEvent(long groupId, java.lang.String className,
+		long classPK, java.lang.String classUuid, int type)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		getService().addSystemEvent(groupId, className, classPK, classUuid, type);
 	}
 
 	public static void deleteSystemEvents(long groupId)

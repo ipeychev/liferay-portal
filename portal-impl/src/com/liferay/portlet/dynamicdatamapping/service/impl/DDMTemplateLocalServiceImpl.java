@@ -180,16 +180,7 @@ public class DDMTemplateLocalServiceImpl
 			templateKey = templateKey.trim().toUpperCase();
 		}
 
-		if (type.equals(DDMTemplateConstants.TEMPLATE_TYPE_FORM) ||
-			language.equals(TemplateConstants.LANG_TYPE_XSL)) {
-
-			try {
-				script = DDMXMLUtil.formatXML(script);
-			}
-			catch (Exception e) {
-				throw new TemplateScriptException();
-			}
-		}
+		script = formatScript(type, language, script);
 
 		byte[] smallImageBytes = null;
 
@@ -665,6 +656,13 @@ public class DDMTemplateLocalServiceImpl
 			companyGroup.getGroupId(), classNameId, templateKey);
 	}
 
+	@Override
+	public DDMTemplate getTemplateBySmallImageId(long smallImageId)
+		throws PortalException, SystemException {
+
+		return ddmTemplatePersistence.findBySmallImageId(smallImageId);
+	}
+
 	/**
 	 * Returns all the templates with the class PK.
 	 *
@@ -760,19 +758,42 @@ public class DDMTemplateLocalServiceImpl
 			groupId, classNameId, classPK, type, mode);
 	}
 
-	/**
-	 * Returns all the templates matching the group and class PK.
-	 *
-	 * @param  groupId the primary key of the group
-	 * @param  classPK the primary key of the template's related entity
-	 * @return the matching templates
-	 * @throws SystemException if a system exception occurred
-	 */
 	@Override
 	public List<DDMTemplate> getTemplatesByClassPK(long groupId, long classPK)
 		throws SystemException {
 
 		return ddmTemplatePersistence.findByG_CPK(groupId, classPK);
+	}
+
+	@Override
+	public List<DDMTemplate> getTemplatesByClassPK(
+			long groupId, long classPK, int start, int end)
+		throws SystemException {
+
+		return ddmTemplatePersistence.findByG_CPK(groupId, classPK, start, end);
+	}
+
+	@Override
+	public List<DDMTemplate> getTemplatesByClassPK(
+			long[] groupIds, long classPK)
+		throws SystemException {
+
+		return ddmTemplatePersistence.findByG_CPK(groupIds, classPK);
+	}
+
+	/**
+	 * Returns the number of templates matching the group and class PK.
+	 *
+	 * @param  groupId the primary key of the group
+	 * @param  classPK the primary key of the template's related entity
+	 * @return the number of templates belonging to the group and class PK
+	 * @throws SystemException if a system exception occurred
+	 */
+	@Override
+	public int getTemplatesByClassPKCount(long groupId, long classPK)
+		throws SystemException {
+
+		return ddmTemplatePersistence.countByG_CPK(groupId, classPK);
 	}
 
 	/**
@@ -960,7 +981,7 @@ public class DDMTemplateLocalServiceImpl
 	 * @param  groupIds the primary keys of the groups
 	 * @param  classNameIds the primary keys of the entity's instances the
 	 *         templates are related to
-	 * @param  classPK the primary key of the template's related entity
+	 * @param  classPKs the primary keys of the template's related entities
 	 * @param  keywords the keywords (space separated), which may occur in the
 	 *         template's name or description (optionally <code>null</code>)
 	 * @param  type the template's type (optionally <code>null</code>). For more
@@ -979,13 +1000,13 @@ public class DDMTemplateLocalServiceImpl
 	 */
 	@Override
 	public List<DDMTemplate> search(
-			long companyId, long[] groupIds, long[] classNameIds, long classPK,
-			String keywords, String type, String mode, int start, int end,
-			OrderByComparator orderByComparator)
+			long companyId, long[] groupIds, long[] classNameIds,
+			long[] classPKs, String keywords, String type, String mode,
+			int start, int end, OrderByComparator orderByComparator)
 		throws SystemException {
 
 		return ddmTemplateFinder.findByKeywords(
-			companyId, groupIds, classNameIds, classPK, keywords, type, mode,
+			companyId, groupIds, classNameIds, classPKs, keywords, type, mode,
 			start, end, orderByComparator);
 	}
 
@@ -1008,7 +1029,7 @@ public class DDMTemplateLocalServiceImpl
 	 * @param  groupIds the primary keys of the groups
 	 * @param  classNameIds the primary keys of the entity's instances the
 	 *         templates are related to
-	 * @param  classPK the primary key of the template's related entity
+	 * @param  classPKs the primary keys of the template's related entities
 	 * @param  name the name keywords (optionally <code>null</code>)
 	 * @param  description the description keywords (optionally
 	 *         <code>null</code>)
@@ -1033,15 +1054,15 @@ public class DDMTemplateLocalServiceImpl
 	 */
 	@Override
 	public List<DDMTemplate> search(
-			long companyId, long[] groupIds, long[] classNameIds, long classPK,
-			String name, String description, String type, String mode,
-			String language, boolean andOperator, int start, int end,
-			OrderByComparator orderByComparator)
+			long companyId, long[] groupIds, long[] classNameIds,
+			long[] classPKs, String name, String description, String type,
+			String mode, String language, boolean andOperator, int start,
+			int end, OrderByComparator orderByComparator)
 		throws SystemException {
 
 		return ddmTemplateFinder.findByC_G_C_C_N_D_T_M_L(
-			companyId, groupIds, classNameIds, classPK, name, description, type,
-			mode, language, andOperator, start, end, orderByComparator);
+			companyId, groupIds, classNameIds, classPKs, name, description,
+			type, mode, language, andOperator, start, end, orderByComparator);
 	}
 
 	/**
@@ -1122,7 +1143,7 @@ public class DDMTemplateLocalServiceImpl
 	 * @param  groupIds the primary keys of the groups
 	 * @param  classNameIds the primary keys of the entity's instance the
 	 *         templates are related to
-	 * @param  classPK the primary key of the template's related entity
+	 * @param  classPKs the primary keys of the template's related entities
 	 * @param  keywords the keywords (space separated), which may occur in the
 	 *         template's name or description (optionally <code>null</code>)
 	 * @param  type the template's type (optionally <code>null</code>). For more
@@ -1136,12 +1157,12 @@ public class DDMTemplateLocalServiceImpl
 	 */
 	@Override
 	public int searchCount(
-			long companyId, long[] groupIds, long[] classNameIds, long classPK,
-			String keywords, String type, String mode)
+			long companyId, long[] groupIds, long[] classNameIds,
+			long[] classPKs, String keywords, String type, String mode)
 		throws SystemException {
 
 		return ddmTemplateFinder.countByKeywords(
-			companyId, groupIds, classNameIds, classPK, keywords, type, mode);
+			companyId, groupIds, classNameIds, classPKs, keywords, type, mode);
 	}
 
 	/**
@@ -1152,7 +1173,7 @@ public class DDMTemplateLocalServiceImpl
 	 * @param  groupIds the primary keys of the groups
 	 * @param  classNameIds the primary keys of the entity's instance the
 	 *         templates are related to
-	 * @param  classPK the primary key of the template's related entity
+	 * @param  classPKs the primary keys of the template's related entities
 	 * @param  name the name keywords (optionally <code>null</code>)
 	 * @param  description the description keywords (optionally
 	 *         <code>null</code>)
@@ -1172,14 +1193,14 @@ public class DDMTemplateLocalServiceImpl
 	 */
 	@Override
 	public int searchCount(
-			long companyId, long[] groupIds, long[] classNameIds, long classPK,
-			String name, String description, String type, String mode,
-			String language, boolean andOperator)
+			long companyId, long[] groupIds, long[] classNameIds,
+			long[] classPKs, String name, String description, String type,
+			String mode, String language, boolean andOperator)
 		throws SystemException {
 
 		return ddmTemplateFinder.countByC_G_C_C_N_D_T_M_L(
-			companyId, groupIds, classNameIds, classPK, name, description, type,
-			mode, language, andOperator);
+			companyId, groupIds, classNameIds, classPKs, name, description,
+			type, mode, language, andOperator);
 	}
 
 	/**
@@ -1217,6 +1238,8 @@ public class DDMTemplateLocalServiceImpl
 			boolean smallImage, String smallImageURL, File smallImageFile,
 			ServiceContext serviceContext)
 		throws PortalException, SystemException {
+
+		script = formatScript(type, language, script);
 
 		byte[] smallImageBytes = null;
 
@@ -1277,6 +1300,23 @@ public class DDMTemplateLocalServiceImpl
 		}
 
 		return smallImageFile;
+	}
+
+	protected String formatScript(String type, String language, String script)
+		throws PortalException {
+
+		if (type.equals(DDMTemplateConstants.TEMPLATE_TYPE_FORM) ||
+			language.equals(TemplateConstants.LANG_TYPE_XSL)) {
+
+			try {
+				script = DDMXMLUtil.formatXML(script);
+			}
+			catch (Exception e) {
+				throw new TemplateScriptException();
+			}
+		}
+
+		return script;
 	}
 
 	protected void saveImages(

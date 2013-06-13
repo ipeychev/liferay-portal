@@ -28,6 +28,8 @@ import com.liferay.portal.util.PropsValues;
 
 import freemarker.cache.TemplateCache;
 
+import freemarker.debug.impl.DebuggerService;
+
 import freemarker.template.Configuration;
 
 import java.lang.reflect.Field;
@@ -56,6 +58,10 @@ public class FreeMarkerManager extends BaseTemplateManager {
 		_templateContextHelper.removeAllHelperUtilities();
 
 		_templateContextHelper = null;
+
+		if (isEnableDebuggerService()) {
+			DebuggerService.shutdown();
+		}
 	}
 
 	@Override
@@ -107,6 +113,10 @@ public class FreeMarkerManager extends BaseTemplateManager {
 		catch (Exception e) {
 			throw new TemplateException("Unable to init freemarker manager", e);
 		}
+
+		if (isEnableDebuggerService()) {
+			DebuggerService.getBreakpoints("*");
+		}
 	}
 
 	public void setTemplateContextHelper(
@@ -136,6 +146,16 @@ public class FreeMarkerManager extends BaseTemplateManager {
 	@Override
 	protected TemplateContextHelper getTemplateContextHelper() {
 		return _templateContextHelper;
+	}
+
+	protected boolean isEnableDebuggerService() {
+		if ((System.getProperty("freemarker.debug.password") != null) &&
+			(System.getProperty("freemarker.debug.port") != null)) {
+
+			return true;
+		}
+
+		return false;
 	}
 
 	private Configuration _configuration;

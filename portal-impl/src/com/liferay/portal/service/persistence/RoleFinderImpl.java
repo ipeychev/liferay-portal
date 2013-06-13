@@ -27,8 +27,10 @@ import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.Group;
+import com.liferay.portal.model.ResourceAction;
 import com.liferay.portal.model.Role;
 import com.liferay.portal.model.impl.RoleImpl;
+import com.liferay.portal.service.ResourceActionLocalServiceUtil;
 import com.liferay.portal.service.persistence.impl.BasePersistenceImpl;
 import com.liferay.util.dao.orm.CustomSQLUtil;
 
@@ -483,7 +485,12 @@ public class RoleFinderImpl
 
 			qPos.add(resourceBlockId);
 			qPos.add(className);
-			qPos.add(actionId);
+
+			ResourceAction resourceAction =
+				ResourceActionLocalServiceUtil.getResourceAction(
+					className, actionId);
+
+			qPos.add(resourceAction.getBitwiseValue());
 
 			return q.list(true);
 		}
@@ -644,7 +651,12 @@ public class RoleFinderImpl
 			qPos.add(name);
 			qPos.add(scope);
 			qPos.add(primKey);
-			qPos.add(actionId);
+
+			ResourceAction resourceAction =
+				ResourceActionLocalServiceUtil.getResourceAction(
+					name, actionId);
+
+			qPos.add(resourceAction.getBitwiseValue());
 
 			return q.list(true);
 		}

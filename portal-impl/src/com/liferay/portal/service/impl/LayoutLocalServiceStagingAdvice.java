@@ -24,6 +24,7 @@ import com.liferay.portal.kernel.staging.LayoutStagingUtil;
 import com.liferay.portal.kernel.staging.MergeLayoutPrototypesThreadLocal;
 import com.liferay.portal.kernel.staging.StagingUtil;
 import com.liferay.portal.kernel.util.ArrayUtil;
+import com.liferay.portal.kernel.util.AutoResetThreadLocal;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
@@ -483,6 +484,24 @@ public class LayoutLocalServiceStagingAdvice implements MethodInterceptor {
 		return layout;
 	}
 
+	protected Layout getProxiedLayout(Layout layout) {
+		Map<Layout, Object> proxiedLayouts = _proxiedLayouts.get();
+
+		Object proxiedLayout = proxiedLayouts.get(layout);
+
+		if (proxiedLayout != null) {
+			return (Layout)proxiedLayout;
+		}
+
+		proxiedLayout = ProxyUtil.newProxyInstance(
+			ClassLoaderUtil.getPortalClassLoader(), new Class[] {Layout.class},
+			new LayoutStagingHandler(layout));
+
+		proxiedLayouts.put(layout, proxiedLayout);
+
+		return (Layout)proxiedLayout;
+	}
+
 	protected Layout unwrapLayout(Layout layout) {
 		LayoutStagingHandler layoutStagingHandler =
 			LayoutStagingUtil.getLayoutStagingHandler(layout);
@@ -506,9 +525,7 @@ public class LayoutLocalServiceStagingAdvice implements MethodInterceptor {
 			return layout;
 		}
 
-		return (Layout)ProxyUtil.newProxyInstance(
-			ClassLoaderUtil.getPortalClassLoader(), new Class[] {Layout.class},
-			new LayoutStagingHandler(layout));
+		return getProxiedLayout(layout);
 	}
 
 	protected List<Layout> wrapLayouts(
@@ -606,5 +623,10 @@ public class LayoutLocalServiceStagingAdvice implements MethodInterceptor {
 		_layoutLocalServiceStagingAdviceMethodNames.add("updateLookAndFeel");
 		_layoutLocalServiceStagingAdviceMethodNames.add("updateName");
 	}
+
+	private static ThreadLocal<Map<Layout, Object>> _proxiedLayouts =
+		new AutoResetThreadLocal<Map<Layout, Object>>(
+			LayoutLocalServiceStagingAdvice.class + "._proxiedLayouts",
+			new HashMap<Layout, Object>());
 
 }

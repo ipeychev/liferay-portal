@@ -31,6 +31,7 @@ import com.liferay.portal.service.BaseLocalService;
  * @see JournalStructureLocalServiceUtil
  * @see com.liferay.portlet.journal.service.base.JournalStructureLocalServiceBaseImpl
  * @see com.liferay.portlet.journal.service.impl.JournalStructureLocalServiceImpl
+ * @deprecated As of 6.2.0, see LPS-35112
  * @generated
  */
 @Transactional(isolation = Isolation.PORTAL, rollbackFor =  {
@@ -120,6 +121,11 @@ public interface JournalStructureLocalService extends BaseLocalService {
 	public void deleteStructures(long groupId)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public com.liferay.portlet.journal.model.JournalStructure fetchStructure(
+		long groupId, java.lang.String structureId)
+		throws com.liferay.portal.kernel.exception.SystemException;
 
 	public java.util.List<com.liferay.portlet.journal.model.JournalStructure> findAll()
 		throws com.liferay.portal.kernel.exception.SystemException;

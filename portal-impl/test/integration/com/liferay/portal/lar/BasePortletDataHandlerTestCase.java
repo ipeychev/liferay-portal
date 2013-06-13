@@ -21,6 +21,7 @@ import com.liferay.portal.kernel.lar.PortletDataContextFactoryUtil;
 import com.liferay.portal.kernel.lar.PortletDataHandler;
 import com.liferay.portal.kernel.lar.PortletDataHandlerBoolean;
 import com.liferay.portal.kernel.transaction.Transactional;
+import com.liferay.portal.kernel.util.LongWrapper;
 import com.liferay.portal.kernel.util.Time;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
@@ -77,17 +78,18 @@ public abstract class BasePortletDataHandlerTestCase extends PowerMockito {
 		ManifestSummary manifestSummary =
 			portletDataContext.getManifestSummary();
 
-		Map<String, Long> modelCounters = manifestSummary.getModelCounters();
+		Map<String, LongWrapper> modelAdditionCounters =
+			manifestSummary.getModelAdditionCounters();
 
-		Map<String, Long> expectedModelCounters = new HashMap<String, Long>(
-			modelCounters);
+		Map<String, LongWrapper> expectedModelAdditionCounters =
+			new HashMap<String, LongWrapper>(modelAdditionCounters);
 
-		modelCounters.clear();
+		modelAdditionCounters.clear();
 
 		portletDataHandler.exportData(
 			portletDataContext, portletId, new PortletPreferencesImpl());
 
-		checkManifestSummary(expectedModelCounters);
+		checkManifestSummary(expectedModelAdditionCounters);
 	}
 
 	protected void addBooleanParameter(
@@ -108,27 +110,38 @@ public abstract class BasePortletDataHandlerTestCase extends PowerMockito {
 	protected abstract void addStagedModels() throws Exception;
 
 	protected void checkManifestSummary(
-		Map<String, Long> expectedModelCounters) {
+		Map<String, LongWrapper> expectedModelAdditionCounters) {
 
 		ManifestSummary manifestSummary =
 			portletDataContext.getManifestSummary();
 
-		Map<String, Long> modelCounters = manifestSummary.getModelCounters();
+		Map<String, LongWrapper> modelAdditionCounters =
+			manifestSummary.getModelAdditionCounters();
 
-		int expectedModelCountersSize = expectedModelCounters.size();
+		int expectedModelAdditionCountersSize =
+			expectedModelAdditionCounters.size();
 
-		for (String className : expectedModelCounters.keySet()) {
-			if (expectedModelCounters.get(className) == 0) {
-				expectedModelCountersSize--;
+		for (String manifestSummaryKey :
+				expectedModelAdditionCounters.keySet()) {
+
+			LongWrapper expectedModelAdditionCounter =
+				expectedModelAdditionCounters.get(manifestSummaryKey);
+
+			if (expectedModelAdditionCounter.getValue() == 0) {
+				expectedModelAdditionCountersSize--;
 			}
 			else {
+				LongWrapper modelAdditionCounter = modelAdditionCounters.get(
+					manifestSummaryKey);
+
 				Assert.assertEquals(
-					expectedModelCounters.get(className),
-					modelCounters.get(className));
+					expectedModelAdditionCounter.getValue(),
+					modelAdditionCounter.getValue());
 			}
 		}
 
-		Assert.assertEquals(modelCounters.size(), expectedModelCountersSize);
+		Assert.assertEquals(
+			modelAdditionCounters.size(), expectedModelAdditionCountersSize);
 	}
 
 	protected abstract PortletDataHandler createPortletDataHandler();

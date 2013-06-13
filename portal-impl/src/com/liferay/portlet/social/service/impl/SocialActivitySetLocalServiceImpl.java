@@ -174,6 +174,16 @@ public class SocialActivitySetLocalServiceImpl
 	}
 
 	@Override
+	public SocialActivitySet getUserActivitySet(
+			long groupId, long userId, long classNameId, int type)
+		throws SystemException {
+
+		return socialActivitySetPersistence.fetchByG_U_C_T_First(
+			groupId, userId, classNameId, type,
+			new SocialActivitySetModifiedDateComparator());
+	}
+
+	@Override
 	public List<SocialActivitySet> getUserActivitySets(
 			long userId, int start, int end)
 		throws SystemException {

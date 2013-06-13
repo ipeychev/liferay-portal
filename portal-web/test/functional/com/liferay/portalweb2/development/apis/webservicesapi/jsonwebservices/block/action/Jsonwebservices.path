@@ -35,12 +35,12 @@
 </tr>
 <tr>
 	<td>ADDRESS</td>
-	<td>//div[@id='apiServiceAddressPanel']/div</td>
+	<td>//div[@id='apiServiceAddressPanelContent']/div</td>
 	<td></td>
 </tr>
 <tr>
 	<td>WIKI_PAGE</td>
-	<td>//div[@id='apiServiceWikiPagePanel']/div</td>
+	<td>//div[@id='apiServiceWikiPagePanelContent']/div</td>
 	<td></td>
 </tr>
 <tr>

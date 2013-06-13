@@ -46,9 +46,10 @@ import java.util.Locale;
 import java.util.Map;
 
 /**
- * @author Brian Wing Shun Chan
- * @author Raymond Augé
- * @author Marcellus Tavares
+ * @author     Brian Wing Shun Chan
+ * @author     Raymond Augé
+ * @author     Marcellus Tavares
+ * @deprecated As of 6.2.0, see LPS-35112
  */
 public class JournalStructureLocalServiceImpl
 	extends JournalStructureLocalServiceBaseImpl {
@@ -245,7 +246,19 @@ public class JournalStructureLocalServiceImpl
 	}
 
 	@Override
-	@SuppressWarnings("deprecation")
+	public JournalStructure fetchStructure(long groupId, String structureId)
+		throws SystemException {
+
+		DDMStructure ddmStructure = fetchDDMStructure(groupId, structureId);
+
+		if (ddmStructure != null) {
+			return new JournalStructureAdapter(ddmStructure);
+		}
+
+		return null;
+	}
+
+	@Override
 	public List<JournalStructure> findAll() throws SystemException {
 		List<DDMStructure> ddmStructures =
 			ddmStructureLocalService.getClassStructures(
@@ -445,18 +458,6 @@ public class JournalStructureLocalServiceImpl
 		return ddmStructureLocalService.fetchStructure(
 			groupId, PortalUtil.getClassNameId(JournalArticle.class),
 			structureId);
-	}
-
-	protected JournalStructure fetchStructure(long groupId, String structureId)
-		throws SystemException {
-
-		DDMStructure ddmStructure = fetchDDMStructure(groupId, structureId);
-
-		if (ddmStructure != null) {
-			return new JournalStructureAdapter(ddmStructure);
-		}
-
-		return null;
 	}
 
 	protected DDMStructure getDDMStructure(JournalStructure structure)

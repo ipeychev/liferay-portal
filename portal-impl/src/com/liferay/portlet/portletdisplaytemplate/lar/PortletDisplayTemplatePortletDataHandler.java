@@ -52,7 +52,7 @@ public class PortletDisplayTemplatePortletDataHandler
 		long totalModelCount = -1;
 
 		for (long classNameId : TemplateHandlerRegistryUtil.getClassNameIds()) {
-			long modelCount = manifestSummary.getModelCount(
+			long modelCount = manifestSummary.getModelAdditionCount(
 				DDMTemplate.class.getName(),
 				PortalUtil.getClassName(classNameId));
 

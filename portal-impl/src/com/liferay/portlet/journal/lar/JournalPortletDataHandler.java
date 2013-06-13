@@ -292,7 +292,7 @@ public class JournalPortletDataHandler extends BasePortletDataHandler {
 		ActionableDynamicQuery ddmTemplateActionableDynamicQuery =
 			getDDMTemplateActionableDynamicQuery(portletDataContext);
 
-		manifestSummary.addModelCount(
+		manifestSummary.addModelAdditionCount(
 			DDMTemplate.class, DDMStructure.class,
 			ddmTemplateActionableDynamicQuery.performCount() +
 				ddmTemplates.size());

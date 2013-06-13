@@ -243,6 +243,26 @@ public class GroupServiceImpl extends GroupServiceBaseImpl {
 	}
 
 	/**
+	 * Returns the company group.
+	 *
+	 * @param  companyId the primary key of the company
+	 * @return the group associated with the company
+	 * @throws PortalException if a matching group could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	@Override
+	public Group getCompanyGroup(long companyId)
+		throws PortalException, SystemException {
+
+		Group group = groupLocalService.getCompanyGroup(companyId);
+
+		GroupPermissionUtil.check(
+			getPermissionChecker(), group.getGroupId(), ActionKeys.VIEW);
+
+		return group;
+	}
+
+	/**
 	 * Returns the group with the primary key.
 	 *
 	 * @param  groupId the primary key of the group

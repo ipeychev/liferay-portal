@@ -29,6 +29,7 @@ import com.liferay.portal.kernel.util.ReferenceRegistry;
  * @see JournalStructureLocalService
  * @see com.liferay.portlet.journal.service.base.JournalStructureLocalServiceBaseImpl
  * @see com.liferay.portlet.journal.service.impl.JournalStructureLocalServiceImpl
+ * @deprecated As of 6.2.0, see LPS-35112
  * @generated
  */
 public class JournalStructureLocalServiceUtil {
@@ -155,6 +156,12 @@ public class JournalStructureLocalServiceUtil {
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		getService().deleteStructures(groupId);
+	}
+
+	public static com.liferay.portlet.journal.model.JournalStructure fetchStructure(
+		long groupId, java.lang.String structureId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getService().fetchStructure(groupId, structureId);
 	}
 
 	public static java.util.List<com.liferay.portlet.journal.model.JournalStructure> findAll()

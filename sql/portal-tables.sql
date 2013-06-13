@@ -910,27 +910,6 @@ create table JournalFolder (
 	statusDate DATE null
 );
 
-create table JournalTemplate (
-	uuid_ VARCHAR(75) null,
-	id_ LONG not null primary key,
-	groupId LONG,
-	companyId LONG,
-	userId LONG,
-	userName VARCHAR(75) null,
-	createDate DATE null,
-	modifiedDate DATE null,
-	templateId VARCHAR(75) null,
-	structureId VARCHAR(75) null,
-	name STRING null,
-	description STRING null,
-	xsl TEXT null,
-	langType VARCHAR(75) null,
-	cacheable BOOLEAN,
-	smallImage BOOLEAN,
-	smallImageId LONG,
-	smallImageURL STRING null
-);
-
 create table Layout (
 	uuid_ VARCHAR(75) null,
 	plid LONG not null primary key,
@@ -1080,7 +1059,7 @@ create table LayoutSetBranch (
 	wapThemeId VARCHAR(75) null,
 	wapColorSchemeId VARCHAR(75) null,
 	css TEXT null,
-	settings_ STRING null,
+	settings_ TEXT null,
 	layoutSetPrototypeUuid VARCHAR(75) null,
 	layoutSetPrototypeLinkEnabled BOOLEAN
 );
@@ -2009,6 +1988,7 @@ create table SocialActivitySet (
 	classNameId LONG,
 	classPK LONG,
 	type_ INTEGER,
+	extraData STRING null,
 	activityCount INTEGER
 );
 

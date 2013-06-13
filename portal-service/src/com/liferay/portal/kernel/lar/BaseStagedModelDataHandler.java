@@ -43,7 +43,7 @@ public abstract class BaseStagedModelDataHandler<T extends StagedModel>
 			ManifestSummary manifestSummary =
 				portletDataContext.getManifestSummary();
 
-			manifestSummary.incrementModelCount(
+			manifestSummary.incrementModelAdditionCount(
 				getManifestSummaryKey(stagedModel));
 		}
 		catch (Exception e) {
@@ -85,7 +85,7 @@ public abstract class BaseStagedModelDataHandler<T extends StagedModel>
 			ManifestSummary manifestSummary =
 				portletDataContext.getManifestSummary();
 
-			manifestSummary.incrementModelCount(
+			manifestSummary.incrementModelAdditionCount(
 				getManifestSummaryKey(stagedModel));
 		}
 		catch (Exception e) {

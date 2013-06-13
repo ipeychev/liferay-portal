@@ -21,6 +21,7 @@ import com.liferay.portal.service.ServiceWrapper;
  *
  * @author Brian Wing Shun Chan
  * @see JournalStructureLocalService
+ * @deprecated As of 6.2.0, see LPS-35112
  * @generated
  */
 public class JournalStructureLocalServiceWrapper
@@ -157,6 +158,13 @@ public class JournalStructureLocalServiceWrapper
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		_journalStructureLocalService.deleteStructures(groupId);
+	}
+
+	@Override
+	public com.liferay.portlet.journal.model.JournalStructure fetchStructure(
+		long groupId, java.lang.String structureId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _journalStructureLocalService.fetchStructure(groupId, structureId);
 	}
 
 	@Override
