@@ -119,6 +119,8 @@ AUI.add(
 						var imageIndex = previewImage.attr(ATTR_DATA_IMAGE_INDEX);
 
 						instance.set('currentIndex', imageIndex, {src: 'scroller'});
+
+						instance._getMaxPreviewImage().attr('src', instance._baseImageURL + (parseInt(imageIndex) + 1));
 					},
 
 					_onImageListMouseEnter: function(event) {
@@ -131,6 +133,8 @@ AUI.add(
 						var imageIndex = previewImage.attr(ATTR_DATA_IMAGE_INDEX);
 
 						instance.set('currentIndex', imageIndex, MAP_EVENT_SCROLLER);
+
+						instance._getMaxPreviewImage().attr('src', instance._baseImageURL + (parseInt(imageIndex) + 1));
 					},
 
 					_onImageListScroll: function(event) {
