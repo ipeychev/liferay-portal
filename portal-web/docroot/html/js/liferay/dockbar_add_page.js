@@ -178,7 +178,7 @@ AUI.add(
 					_updateNavigationProxy: function(event) {
 						var instance = this;
 
-						Liferay.fire('dockbaraddpage:updatePage',
+						Liferay.fire('dockbaraddpage:previewPageTitle',
 							{
 								data: {
 									hidden: instance._hiddenCheckbox.get('checked'),
