@@ -9,6 +9,8 @@ AUI.add(
 
 		var CSS_IMAGE_SELECTED = 'lfr-preview-file-image-selected';
 
+		var SRC_SRC = 'src';
+
 		var STR_SCROLLER = 'scroller';
 
 		var MAP_EVENT_SCROLLER = {
@@ -119,6 +121,8 @@ AUI.add(
 						var imageIndex = previewImage.attr(ATTR_DATA_IMAGE_INDEX);
 
 						instance.set('currentIndex', imageIndex, {src: 'scroller'});
+
+						instance._getMaxPreviewImage().attr(SRC_SRC, instance._baseImageURL + (parseInt(imageIndex) + 1));
 					},
 
 					_onImageListMouseEnter: function(event) {
@@ -131,6 +135,8 @@ AUI.add(
 						var imageIndex = previewImage.attr(ATTR_DATA_IMAGE_INDEX);
 
 						instance.set('currentIndex', imageIndex, MAP_EVENT_SCROLLER);
+
+						instance._getMaxPreviewImage().attr(SRC_SRC, instance._baseImageURL + (parseInt(imageIndex) + 1));
 					},
 
 					_onImageListScroll: function(event) {
@@ -306,7 +312,7 @@ AUI.add(
 								instance._updateIndex(-1);
 							}
 
-							instance._getMaxPreviewImage().attr('src', instance._baseImageURL + (instance.get('currentIndex') + 1));
+							instance._getMaxPreviewImage().attr(SRC_SRC, instance._baseImageURL + (instance.get('currentIndex') + 1));
 						}
 					},
 
@@ -416,7 +422,7 @@ AUI.add(
 
 						var displayedIndex = value + 1;
 
-						instance._currentPreviewImage.attr('src', instance._baseImageURL + displayedIndex);
+						instance._currentPreviewImage.attr(SRC_SRC, instance._baseImageURL + displayedIndex);
 						instance._previewFileIndexNode.setContent(displayedIndex);
 
 						var nodeList = instance._nodeList;
