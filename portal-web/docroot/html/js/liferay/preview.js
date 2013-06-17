@@ -9,6 +9,8 @@ AUI.add(
 
 		var CSS_IMAGE_SELECTED = 'lfr-preview-file-image-selected';
 
+		var STR_SRC = 'src';
+
 		var STR_SCROLLER = 'scroller';
 
 		var MAP_EVENT_SCROLLER = {
@@ -166,6 +168,8 @@ AUI.add(
 					_maximizePreview: function(event) {
 						var instance = this;
 
+						instance._getMaxPreviewImage().attr(STR_SRC, instance._baseImageURL + (instance.get('currentIndex') + 1));
+
 						instance._getMaxOverlay().show();
 					},
 
@@ -306,7 +310,7 @@ AUI.add(
 								instance._updateIndex(-1);
 							}
 
-							instance._getMaxPreviewImage().attr('src', instance._baseImageURL + (instance.get('currentIndex') + 1));
+							instance._getMaxPreviewImage().attr(STR_SRC, instance._baseImageURL + (instance.get('currentIndex') + 1));
 						}
 					},
 
@@ -416,7 +420,7 @@ AUI.add(
 
 						var displayedIndex = value + 1;
 
-						instance._currentPreviewImage.attr('src', instance._baseImageURL + displayedIndex);
+						instance._currentPreviewImage.attr(STR_SRC, instance._baseImageURL + displayedIndex);
 						instance._previewFileIndexNode.setContent(displayedIndex);
 
 						var nodeList = instance._nodeList;
