@@ -678,22 +678,23 @@
 					<replacetoken><![CDATA[var oCombo = document.getElementById('cmbType') ;]]></replacetoken>
 					<replacevalue>
 						<![CDATA[
-						var inArray = function( e, arr) {
-							var len = arr.length,
-							i,
-							coreArr = [];
+						var inArray = function(item, array) {
+							var found = false;
 
-							if ( coreArr.indexOf ) {
-								return coreArr.indexOf.call( arr, e ) > -1;
+							if ( typeof array.indexOf == 'function' ) {
+								found = !!(array.indexOf(item) > -1);
 							}
+							else {
+								for ( var i = 0, len = array.length; i < len; i++ ) {
+									if ( array[ i ] === item ) {
+										found = true;
 
-							for ( i = 0; i < len; i += 1 ) {
-								if ( i in arr && arr[ i ] === e ) {
-									return true;
+										break;
+									}
 								}
 							}
 
-							return false;
+							return found;
 						}
 
 						var oCombo = document.getElementById('cmbType') ;
