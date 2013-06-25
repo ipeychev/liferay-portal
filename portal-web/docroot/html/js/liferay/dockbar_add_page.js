@@ -64,7 +64,7 @@ AUI.add(
 
 						var nodeList = instance.get(STR_NODE_LIST);
 
-						instance._togglerDelegate = new A.TogglerDelegate(
+						instance._togglerDelegate = new Liferay.KeyFilteredTogglerDelegate(
 							{
 								animated: true,
 								closeAllOnExpand: true,
@@ -212,6 +212,6 @@ AUI.add(
 	},
 	'',
 	{
-		requires: ['aui-loading-mask-deprecated', 'aui-parse-content', 'aui-toggler-delegate', 'liferay-dockbar', 'liferay-dockbar-add-base', 'liferay-dockbar-add-page-search']
+		requires: ['aui-loading-mask-deprecated', 'aui-parse-content', 'liferay-dockbar', 'liferay-dockbar-add-base', 'liferay-dockbar-add-page-search', 'liferay-key-filtered-toggler-delegate']
 	}
 );
