@@ -12,22 +12,25 @@
  * details.
  */
 
-package com.liferay.portal.messaging.async;
+package com.liferay.portal.cache.ehcache;
 
-import com.liferay.portal.kernel.messaging.BaseMessageListener;
-import com.liferay.portal.kernel.messaging.Message;
+import java.util.Properties;
+
+import net.sf.ehcache.bootstrap.BootstrapCacheLoader;
+import net.sf.ehcache.bootstrap.BootstrapCacheLoaderFactory;
 
 /**
  * @author Shuyang Zhou
- * @author Brian Wing Shun Chan
+ * @author Sherry Yang
  */
-public class AsyncMessageListener extends BaseMessageListener {
+public class EhcacheStreamBootstrapCacheLoaderFactory
+	extends BootstrapCacheLoaderFactory {
 
 	@Override
-	protected void doReceive(Message message) throws Exception {
-		AsyncRunnable asyncRunnable = (AsyncRunnable)message.getPayload();
+	public BootstrapCacheLoader createBootstrapCacheLoader(
+		Properties properties) {
 
-		asyncRunnable.run();
+		return new EhcacheStreamBootstrapCacheLoader(properties);
 	}
 
 }

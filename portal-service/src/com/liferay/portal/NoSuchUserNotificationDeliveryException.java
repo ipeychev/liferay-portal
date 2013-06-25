@@ -12,22 +12,30 @@
  * details.
  */
 
-package com.liferay.portal.messaging.async;
-
-import com.liferay.portal.kernel.messaging.BaseMessageListener;
-import com.liferay.portal.kernel.messaging.Message;
+package com.liferay.portal;
 
 /**
- * @author Shuyang Zhou
  * @author Brian Wing Shun Chan
  */
-public class AsyncMessageListener extends BaseMessageListener {
+public class NoSuchUserNotificationDeliveryException
+	extends NoSuchModelException {
 
-	@Override
-	protected void doReceive(Message message) throws Exception {
-		AsyncRunnable asyncRunnable = (AsyncRunnable)message.getPayload();
+	public NoSuchUserNotificationDeliveryException() {
+		super();
+	}
 
-		asyncRunnable.run();
+	public NoSuchUserNotificationDeliveryException(String msg) {
+		super(msg);
+	}
+
+	public NoSuchUserNotificationDeliveryException(
+		String msg, Throwable cause) {
+
+		super(msg, cause);
+	}
+
+	public NoSuchUserNotificationDeliveryException(Throwable cause) {
+		super(cause);
 	}
 
 }

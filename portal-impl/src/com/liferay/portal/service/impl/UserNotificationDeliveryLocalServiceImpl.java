@@ -12,22 +12,13 @@
  * details.
  */
 
-package com.liferay.portal.messaging.async;
+package com.liferay.portal.service.impl;
 
-import com.liferay.portal.kernel.messaging.BaseMessageListener;
-import com.liferay.portal.kernel.messaging.Message;
+import com.liferay.portal.service.base.UserNotificationDeliveryLocalServiceBaseImpl;
 
 /**
- * @author Shuyang Zhou
  * @author Brian Wing Shun Chan
  */
-public class AsyncMessageListener extends BaseMessageListener {
-
-	@Override
-	protected void doReceive(Message message) throws Exception {
-		AsyncRunnable asyncRunnable = (AsyncRunnable)message.getPayload();
-
-		asyncRunnable.run();
-	}
-
+public class UserNotificationDeliveryLocalServiceImpl
+	extends UserNotificationDeliveryLocalServiceBaseImpl {
 }
