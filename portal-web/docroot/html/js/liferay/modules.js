@@ -591,6 +591,13 @@ window.YUI_config = {
 					requires: [
 						'aui-base'
 					]
+				},
+				'liferay-widget-zidex': {
+					path: 'widget-zindex.js',
+					requires: [
+						'aui-modal',
+						'plugin'
+					]
 				}
 			},
 			root: PATH_JAVASCRIPT + '/liferay/'
