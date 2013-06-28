@@ -114,10 +114,14 @@ public class PageCommandReceiver extends BaseCommandReceiver {
 				fileElement.setAttribute("name", _getLayoutName(layout));
 				fileElement.setAttribute("desc", _getLayoutName(layout));
 				fileElement.setAttribute("size", StringPool.BLANK);
-				fileElement.setAttribute(
-					"url",
-					PortalUtil.getLayoutURL(
-						layout, commandArgument.getThemeDisplay(), false));
+
+				String layoutURL = PortalUtil.getLayoutFullURL(
+					layout, commandArgument.getThemeDisplay(), false);
+
+				layoutURL = PortalUtil.getCanonicalURL(
+					layoutURL, commandArgument.getThemeDisplay(), layout, true);
+
+				fileElement.setAttribute("url", layoutURL);
 			}
 		}
 		else {
@@ -142,10 +146,14 @@ public class PageCommandReceiver extends BaseCommandReceiver {
 				fileElement.setAttribute("name", _getLayoutName(layout));
 				fileElement.setAttribute("desc", _getLayoutName(layout));
 				fileElement.setAttribute("size", getSize());
-				fileElement.setAttribute(
-					"url",
-					PortalUtil.getLayoutURL(
-						layout, commandArgument.getThemeDisplay(), false));
+
+				String layoutURL = PortalUtil.getLayoutFullURL(
+					layout, commandArgument.getThemeDisplay(), false);
+
+				layoutURL = PortalUtil.getCanonicalURL(
+					layoutURL, commandArgument.getThemeDisplay(), layout, true);
+
+				fileElement.setAttribute("url", layoutURL);
 			}
 		}
 	}
