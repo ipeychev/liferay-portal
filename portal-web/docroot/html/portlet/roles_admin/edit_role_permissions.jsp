@@ -272,7 +272,7 @@ editPermissionsURL.setParameter("roleId", String.valueOf(role.getRoleId()));
 			'query',
 			function(event) {
 				if (event.query) {
-		            togglerDelegate.expandAll();
+					togglerDelegate.expandAll();
 				}
 				else {
 					togglerDelegate.collapseAll();
