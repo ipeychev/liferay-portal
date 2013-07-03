@@ -267,11 +267,11 @@ editPermissionsURL.setParameter("roleId", String.valueOf(role.getRoleId()));
 			var results = [];
 
 			permissionNavigationItems.each(
-				function(node) {
+				function(item, index, collection) {
 					results.push(
 						{
-							node: node.ancestor(),
-							data: trim(node.text())
+							node: item.ancestor(),
+							data: trim(item.text())
 						}
 					);
 				}
@@ -337,17 +337,13 @@ editPermissionsURL.setParameter("roleId", String.valueOf(role.getRoleId()));
 
 				permissionNavigationSectionsNode.each(
 					function(item, index, collection) {
-						var action = 'addClass';
-
 						var visibleItem = item.one('.permission-navigation-item-container:not(.hide)');
 
 						if (visibleItem) {
-							action = 'removeClass';
-
 							foundVisibleSection = true;
 						}
 
-						item[action]('hide');
+						item.toggleClass('hide', visibleIterm);
 					}
 				);
 
