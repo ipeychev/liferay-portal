@@ -63,9 +63,7 @@ public interface DLFileEntry extends DLFileEntryModel, PersistedModel {
 	public int getFileVersionsCount(int status)
 		throws com.liferay.portal.kernel.exception.SystemException;
 
-	public com.liferay.portlet.documentlibrary.model.DLFolder getFolder()
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException;
+	public com.liferay.portlet.documentlibrary.model.DLFolder getFolder();
 
 	public java.lang.String getIcon();
 
@@ -78,25 +76,9 @@ public interface DLFileEntry extends DLFileEntryModel, PersistedModel {
 
 	public java.lang.String getLuceneProperties();
 
-	public com.liferay.portlet.documentlibrary.model.DLFolder getTrashContainer()
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException;
+	public com.liferay.portal.kernel.lar.StagedModelType getStagedModelType();
 
-	/**
-	* @deprecated As of 6.2.0, replaced by {@link DLFileVersion#getUserId()}
-	*/
-	public long getVersionUserId();
-
-	/**
-	* @deprecated As of 6.2.0, replaced by {@link DLFileVersion#getUserName()}
-	*/
-	public java.lang.String getVersionUserName();
-
-	/**
-	* @deprecated As of 6.2.0, replaced by {@link DLFileVersion#getUserUuid()}
-	*/
-	public java.lang.String getVersionUserUuid()
-		throws com.liferay.portal.kernel.exception.SystemException;
+	public com.liferay.portlet.documentlibrary.model.DLFolder getTrashContainer();
 
 	public boolean hasLock();
 
@@ -104,9 +86,7 @@ public interface DLFileEntry extends DLFileEntryModel, PersistedModel {
 
 	public boolean isInHiddenFolder();
 
-	public boolean isInTrashContainer()
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException;
+	public boolean isInTrashContainer();
 
 	public void setExtraSettingsProperties(
 		com.liferay.portal.kernel.util.UnicodeProperties extraSettingsProperties);
