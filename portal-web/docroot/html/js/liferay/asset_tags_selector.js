@@ -104,6 +104,8 @@ AUI.add(
 							var instance = this;
 
 							if (Lang.isString(value)) {
+								value = Liferay.Util.escapeHTML(value);
+
 								value = value.split(',');
 							}
 
