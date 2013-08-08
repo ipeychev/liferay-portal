@@ -25,8 +25,16 @@ List<DLFileEntryType> fileEntryTypes = Collections.emptyList();
 
 boolean showAddFileEntryTypes = ((folder == null) || folder.isSupportsMetadata());
 
+boolean inherited = true;
+
+if ((folder != null) && (folder.getModel() instanceof DLFolder)) {
+	DLFolder dlFolder = (DLFolder)folder.getModel();
+
+	inherited = !dlFolder.isOverrideFileEntryTypes();
+}
+
 if (showAddFileEntryTypes) {
-	fileEntryTypes = DLFileEntryTypeServiceUtil.getFolderFileEntryTypes(PortalUtil.getSiteAndCompanyGroupIds(themeDisplay), folderId, true);
+	fileEntryTypes = DLFileEntryTypeServiceUtil.getFolderFileEntryTypes(PortalUtil.getSiteAndCompanyGroupIds(themeDisplay), folderId, inherited);
 }
 
 long repositoryId = GetterUtil.getLong((String)request.getAttribute("view.jsp-repositoryId"));
