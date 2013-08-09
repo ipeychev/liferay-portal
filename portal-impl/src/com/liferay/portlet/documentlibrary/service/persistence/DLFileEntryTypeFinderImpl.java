@@ -256,7 +256,7 @@ public class DLFileEntryTypeFinderImpl
 			}
 
 			if (includeBasicFileEntryType) {
-				sql = sql.concat(StringPool.CLOSE_BRACKET);
+				sql = sql.concat(StringPool.CLOSE_PARENTHESIS);
 			}
 
 			SQLQuery q = session.createSQLQuery(sql);
