@@ -1447,8 +1447,7 @@
 			}
 
 			Liferay.Util.openWindow(config);
-		},
-		['aui-base', 'liferay-util-window']
+		}
 	);
 
 	Liferay.provide(
