@@ -39,7 +39,6 @@
 			<c:if test="<%= !group.isControlPanel() && (hasLayoutAddPermission || hasLayoutUpdatePermission || (layoutTypePortlet.isCustomizable() && layoutTypePortlet.isCustomizedView() && hasLayoutCustomizePermission)) %>">
 				<div class="add-content-menu" id="<portlet:namespace />addPanelContainer">
 					<aui:button cssClass="close pull-right" name="closePanelAdd" value="&times;" />
-					<h1><liferay-ui:message key="add" /></h1>
 
 					<%
 					String[] tabs1Names = new String[0];

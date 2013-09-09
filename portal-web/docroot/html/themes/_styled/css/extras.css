@@ -226,10 +226,8 @@ body > .lfr-menu-list ul, .active-area-proxy, .entry-display-style .entry-thumbn
 }
 
 .lfr-add-dialog, .lfr-add-panel {
-	.add-content-menu {
-		.search-query {
-			@include border-radius(15px);
-		}
+	.add-content-menu .search-query {
+		@include border-radius(15px);
 	}
 }
 

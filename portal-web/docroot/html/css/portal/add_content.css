@@ -147,12 +147,6 @@
 			.lfr-page-template-title {
 				position: relative;
 
-				.panel-arrow {
-					position: absolute;
-					right: 5px;
-					top: 0;
-				}
-
 				label {
 					margin-left: 0;
 					margin-bottom: 5px;
@@ -164,27 +158,23 @@
 					margin-right: 6px;
 				}
 
-				&.toggler-header-collapsed {
-					.lfr-page-template-description {
-						height: 1.6em;
-						overflow: hidden;
-						padding-left: 26px;
-						text-overflow: ellipsis;
-						white-space: nowrap;
-						width: 285px;
-					}
+				&.toggler-header-collapsed .lfr-page-template-description {
+					height: 1.6em;
+					overflow: hidden;
+					padding-left: 26px;
+					text-overflow: ellipsis;
+					white-space: nowrap;
+					width: 285px;
 				}
 
-				&.toggler-header-expanded {
-					.lfr-page-template-description {
-						padding-left: 26px;
-						padding-right: 20px;
-					}
+				&.toggler-header-expanded .lfr-page-template-description {
+					padding-left: 26px;
+					padding-right: 20px;
 				}
 			}
 
 			.lfr-page-template-options {
-				border-bottom: solid 1px #EEE;
+				border-bottom: 1px solid transparent;
 				margin: 10px 10px 0 25px;
 				padding-bottom: 20px;
 			}
@@ -287,13 +277,6 @@
 			color: #999;
 		}
 
-
-		h1 {
-			color: #009AE5;
-			font-size: 26px;
-			line-height: 26px;
-		}
-
 		.control-label {
 			color: #555;
 			font-weight: 400;
@@ -332,34 +315,26 @@
 		}
 
 		.lfr-page-template {
-			.lfr-page-template-title {
-				.panel-arrow {
-					color: #8D8D8D;
-				}
-
-				&.active {
-					.panel-arrow {
-						color: #FFF;
-					}
-				}
-
-				.lfr-page-template-description {
-					color: #8D8D8D;
-					line-height: 15px;
-				}
+			.lfr-page-template-title .lfr-page-template-description {
+				color: #8D8D8D;
+				line-height: 15px;
 			}
 
 			.toggler-header {
 				&.active {
 					&.lfr-page-template-title label {
 						background-color: #0DB5E7;
-						color: #FFFFFF;
+						color: #FFF;
 					}
 				}
 			}
 
 			&:hover {
 				background-color: #F0F0F0;
+			}
+
+			.lfr-page-template-options {
+				border-bottom-color: #EEE;
 			}
 		}
 
