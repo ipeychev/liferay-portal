@@ -73,13 +73,6 @@ boolean skipEditorLoading = GetterUtil.getBoolean((String)request.getAttribute("
 		},
 
 		init: function(value) {
-			if (typeof value == 'string') {
-				value = decodeURIComponent(value);
-			}
-			else {
-				value = '';
-			}
-
 			window['<%= name %>'].setHTML(value);
 		},
 
