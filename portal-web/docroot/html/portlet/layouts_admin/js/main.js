@@ -5,6 +5,8 @@ AUI.add(
 
 		var FAILURE_TIMEOUT = 10000;
 
+		var MASK = '%M%D%Y %I:%M %p';
+
 		var REGEX_LAYOUT_ID = /plid_(\d+)/;
 
 		var RENDER_INTERVAL_IDLE = 60000;
@@ -604,9 +606,24 @@ AUI.add(
 														click: function(event) {
 															event.domEvent.preventDefault();
 
-															instance._reloadForm();
+															var dates = instance.all('.input-medium');
+															var times = instance.all('.input-small');
 
-															rangeDialog.hide();
+															var startDate = A.Date.parse(MASK, dates.item(0).attr('value') + ' ' + times.item(0).attr('value'));
+															var endDate = A.Date.parse(MASK, dates.item(1).attr('value') + ' ' + times.item(1).attr('value'));
+
+															startDate.setSeconds(0);
+															startDate.setMilliseconds(0);
+															endDate.setSeconds(0);
+															endDate.setMilliseconds(0);
+
+															var isEndDateGreater = A.Date.isGreater(endDate, startDate);
+
+															if (isEndDateGreater) {
+																instance._reloadForm();
+
+																rangeDialog.hide();
+															}
 														}
 													},
 													label: Liferay.Language.get('ok'),
