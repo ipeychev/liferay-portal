@@ -546,7 +546,7 @@ AUI.add(
 							var addButtonContainer = instance.byId('addButtonContainer');
 
 							if (addButtonContainer) {
-								addButtonContainer.replace(addButton.html());
+								addButtonContainer.setContent(addButton.html());
 							}
 						}
 

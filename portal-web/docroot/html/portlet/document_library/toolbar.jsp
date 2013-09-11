@@ -71,7 +71,9 @@ Group scopeGroup = themeDisplay.getScopeGroup();
 			<aui:nav-item href="<%= taglibURL %>" iconClass="icon-remove" id="deleteAction" label="delete" />
 		</aui:nav-item>
 
-		<liferay-util:include page="/html/portlet/document_library/add_button.jsp" />
+		<span class="add-button" id="<portlet:namespace />addButtonContainer">
+			<liferay-util:include page="/html/portlet/document_library/add_button.jsp" />
+		</span>
 
 		<liferay-util:include page="/html/portlet/document_library/sort_button.jsp" />
 
