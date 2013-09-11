@@ -548,6 +548,19 @@ AUI.add(
 							if (addButtonContainer) {
 								addButtonContainer.replace(addButton.html());
 							}
+							else {
+								debugger;
+								var toolbarContainer = instance.byId('toolbarContainer');
+
+								var actionsButtonContainer = instance.one('#actionsButtonContainer', toolbarContainer);
+
+								if (actionsButtonContainer) {
+									toolbarContainer.insertBefore(addButton.html(), actionsButtonContainer.next());
+								}
+								else {
+									toolbarContainer.prepend(addButton.html());
+								}
+							}
 						}
 
 						var displayStyleButtons = instance.one('#displayStyleButtons', content);
