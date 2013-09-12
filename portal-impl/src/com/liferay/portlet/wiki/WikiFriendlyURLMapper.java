@@ -35,13 +35,8 @@ public class WikiFriendlyURLMapper extends DefaultFriendlyURLMapper {
 
 		buildRouteParameters(liferayPortletURL, routeParameters);
 
-		if (routeParameters.containsKey("title")) {
-			String title = routeParameters.get("title");
-
-			title = StringUtil.replace(title, _UNESCAPED_CHARS, _ESCAPED_CHARS);
-
-			routeParameters.put("title", title);
-		}
+		addParameter(routeParameters, "nodeName");
+		addParameter(routeParameters, "title");
 
 		String friendlyURLPath = router.parametersToUrl(routeParameters);
 
@@ -57,18 +52,28 @@ public class WikiFriendlyURLMapper extends DefaultFriendlyURLMapper {
 		return friendlyURLPath;
 	}
 
+	protected void addParameter(
+		Map<String, String> routeParameters, String name) {
+
+		if (!routeParameters.containsKey(name)) {
+			return;
+		}
+
+		String nodeName = routeParameters.get(name);
+
+		nodeName = StringUtil.replace(
+			nodeName, _ESCAPED_CHARS, _UNESCAPED_CHARS);
+
+		routeParameters.put(name, nodeName);
+	}
+
 	@Override
 	protected void populateParams(
 		Map<String, String[]> parameterMap, String namespace,
 		Map<String, String> routeParameters) {
 
-		if (routeParameters.containsKey("title")) {
-			String title = routeParameters.get("title");
-
-			title = StringUtil.replace(title, _ESCAPED_CHARS, _UNESCAPED_CHARS);
-
-			routeParameters.put("title", title);
-		}
+		addParameter(routeParameters, "nodeName");
+		addParameter(routeParameters, "title");
 
 		super.populateParams(parameterMap, namespace, routeParameters);
 	}

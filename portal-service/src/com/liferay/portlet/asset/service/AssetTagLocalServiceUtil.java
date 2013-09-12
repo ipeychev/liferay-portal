@@ -430,11 +430,11 @@ public class AssetTagLocalServiceUtil {
 		getService().addTagResources(tag, groupPermissions, guestPermissions);
 	}
 
-	public static void checkTags(long userId, long groupId,
-		java.lang.String[] names)
+	public static java.util.List<com.liferay.portlet.asset.model.AssetTag> checkTags(
+		long userId, long groupId, java.lang.String[] names)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
-		getService().checkTags(userId, groupId, names);
+		return getService().checkTags(userId, groupId, names);
 	}
 
 	public static com.liferay.portlet.asset.model.AssetTag decrementAssetCount(

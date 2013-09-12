@@ -365,7 +365,8 @@ public interface AssetTagLocalService extends BaseLocalService,
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException;
 
-	public void checkTags(long userId, long groupId, java.lang.String[] names)
+	public java.util.List<com.liferay.portlet.asset.model.AssetTag> checkTags(
+		long userId, long groupId, java.lang.String[] names)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException;
 

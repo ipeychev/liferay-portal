@@ -57,7 +57,7 @@ String defaultLanguageId = LocalizationUtil.getDefaultLanguageId(script);
 										<liferay-ui:message key="fields" />
 									</a>
 								</li>
-								<li>
+								<li class="disabled">
 									<a href="javascript:;">
 										<liferay-ui:message key="settings" />
 									</a>

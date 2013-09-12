@@ -59,7 +59,7 @@
 	<target name="build-alloy">
 		<antcall target="build-alloy-bootstrap" />
 
-		<property name="alloy.version" value="2.0.0pr6" />
+		<property name="alloy.version" value="2.0.0pr7" />
 
 		<property name="alloy.file" value="alloy-${alloy.version}.zip" />
 
@@ -713,7 +713,7 @@
 
 				<replaceregexp file="docroot/html/js/editor/fckeditor/editor/filemanager/browser/liferay/frmresourcetype.html"
 					match="var aTypes = \[\r?(\n)(\t*)(.)+\] ;"
-					replace="var aTypes = [\1\2['Document','Document'],\1\2['Page','Page'],\1\2['Attachment', 'Attachment'],\1\2['Video', 'Video']\1] ;"
+					replace="var aTypes = [\1\2['Document','Document'],\1\2['Page','Page'],\1\2['Attachment', 'Attachment'],\1\2['Video', 'Video'],\1\2['Audio', 'Audio']\1] ;"
 					flags="s"
 				/>
 
@@ -800,6 +800,9 @@
 								break ;
 							case 210:
 								alert( 'You cannot upload a video file if video preview generation is disabled.' );
+								break ;
+							case 211:
+								alert( 'You cannot upload an audio file if audio preview generation is disabled.' );
 								break ;
 							default :
 						]]>
