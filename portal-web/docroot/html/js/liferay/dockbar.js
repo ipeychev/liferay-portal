@@ -231,29 +231,35 @@ AUI.add(
 			function(panelId) {
 				var instance = this;
 
-				instance._setLoadingAnimation(panelId);
-
 				var panel = A.one('#' + instance._namespace + panelId);
 
 				if (panel) {
-					var uri = panel.ancestor().attr('data-panelURL');
+					var panelContentHash = instance._panelContentHash[panelId];
 
-					A.io.request(
-						uri,
-						{
-							after: {
-								success: function(event, id, obj) {
-									var response = this.get('responseData');
+					if (!panelContentHash) {
+						instance._setLoadingAnimation(panelId);
 
-									var panelNode = instance.getPanelNode(panelId);
+						var uri = panel.ancestor().getData('panelURL');
 
-									panelNode.plug(A.Plugin.ParseContent);
+						A.io.request(
+							uri,
+							{
+								after: {
+									success: function(event, id, obj) {
+										var response = this.get('responseData');
 
-									panelNode.setContent(response);
+										var panelNode = instance.getPanelNode(panelId);
+
+										panelNode.plug(A.Plugin.ParseContent);
+
+										panelNode.setContent(response);
+
+										instance._panelContentHash[panelId] = true;
+									}
 								}
 							}
-						}
-					);
+						);
+					}
 				}
 			},
 			['aui-io-request', 'aui-parse-content', 'event-outside']
