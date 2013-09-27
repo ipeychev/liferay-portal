@@ -84,9 +84,9 @@ if (layout != null) {
 
 	<aui:nav collapsible="<%= false %>" cssClass="staging-bar" id="stagingBar">
 		<c:if test="<%= !group.isStagedRemotely() && ((liveGroup != null) && layout.isPrivateLayout() ? (liveGroup.getPrivateLayoutsPageCount() > 0) : (liveGroup.getPublicLayoutsPageCount() > 0)) %>">
-			<aui:nav-item cssClass='<%= ((layoutSetBranches != null) ? " active" : StringPool.BLANK) + " staging-toggle" %>' href="<%= (layoutSetBranches != null) ? null : stagingFriendlyURL %>" label="staging" />
+			<aui:nav-item cssClass='<%= ((layoutSetBranches != null) ? " active" : StringPool.BLANK) + " staging-toggle" %>' href="<%= (layoutSetBranches != null) ? null : stagingFriendlyURL %>" id="stagingNavEl" label="staging" />
 
-			<aui:nav-item cssClass='<%= (!group.isStagingGroup() ? "active" : StringPool.BLANK) + " live-link staging-toggle" %>' href="<%= !group.isStagingGroup() ? null : liveFriendlyURL %>" label="live" />
+			<aui:nav-item cssClass='<%= (!group.isStagingGroup() ? "active" : StringPool.BLANK) + " live-link staging-toggle" %>' href="<%= !group.isStagingGroup() ? null : liveFriendlyURL %>" id="liveNavEl" label="live" />
 		</c:if>
 
 		<aui:nav-item anchorCssClass="staging-link" cssClass="site-variations" dropdown="<%= true %>" iconClass="icon-cog" label="staging">
@@ -464,8 +464,11 @@ if (layout != null) {
 		<aui:script use="liferay-staging">
 			Liferay.StagingBar.init(
 				{
+					groupId: '<%= liveGroup.getGroupId() %>',
+					isPending: 'false',
 					namespace: '<portlet:namespace />',
-					portletId: '<%= portletDisplay.getId() %>'
+					portletId: '<%= portletDisplay.getId() %>',
+					taskExecutorClassName: '<%= LayoutStagingBackgroundTaskExecutor.class.getName() %>'
 				}
 			);
 		</aui:script>
