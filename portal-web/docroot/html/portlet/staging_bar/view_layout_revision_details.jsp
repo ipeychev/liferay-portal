@@ -212,7 +212,12 @@ else {
 																location.href = '<%= currentURL %>';
 															</c:when>
 															<c:otherwise>
-																Liferay.fire('updatedLayout');
+																setTimeout(
+																	function(){
+																		Liferay.fire('updatedLayout');
+																	},
+																	500
+																);
 															</c:otherwise>
 														</c:choose>
 													}
