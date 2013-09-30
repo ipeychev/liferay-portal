@@ -46,6 +46,7 @@ java.lang.String id = GetterUtil.getString((java.lang.String)request.getAttribut
 java.lang.String label = GetterUtil.getString((java.lang.String)request.getAttribute("aui:nav-item:label"));
 boolean selected = GetterUtil.getBoolean(String.valueOf(request.getAttribute("aui:nav-item:selected")));
 java.lang.String title = GetterUtil.getString((java.lang.String)request.getAttribute("aui:nav-item:title"));
+boolean toggle = GetterUtil.getBoolean(String.valueOf(request.getAttribute("aui:nav-item:toggle")));
 boolean useDialog = GetterUtil.getBoolean(String.valueOf(request.getAttribute("aui:nav-item:useDialog")), false);
 boolean wrapDropDownMenu = GetterUtil.getBoolean(String.valueOf(request.getAttribute("aui:nav-item:wrapDropDownMenu")), true);
 
@@ -63,6 +64,7 @@ _updateOptions(_options, "id", id);
 _updateOptions(_options, "label", label);
 _updateOptions(_options, "selected", selected);
 _updateOptions(_options, "title", title);
+_updateOptions(_options, "toggle", toggle);
 _updateOptions(_options, "useDialog", useDialog);
 _updateOptions(_options, "wrapDropDownMenu", wrapDropDownMenu);
 %>

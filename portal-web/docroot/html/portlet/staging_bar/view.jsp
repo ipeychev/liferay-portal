@@ -360,7 +360,7 @@ if (layout != null) {
 					<aui:nav-item cssClass='<%= (!group.isStagingGroup() ? "active" : StringPool.BLANK) + " live-link staging-toggle" %>' href="<%= !group.isStagingGroup() ? null : liveFriendlyURL %>" label="live" />
 				</c:when>
 				<c:otherwise>
-					<aui:nav-item anchorCssClass="staging-link" cssClass="active live-link staging-toggle" dropdown="<%= true %>" label="live">
+					<aui:nav-item anchorCssClass="staging-link" cssClass="active live-link staging-toggle" dropdown="<%= true %>" label="live" toggle="<%= true %>">
 						<aui:nav-item cssClass="row-fluid">
 							<div class="staging-details">
 
