@@ -50,7 +50,7 @@ boolean viewPreview = ParamUtil.getBoolean(request, "viewPreview");
 			%>
 
 			<liferay-ui:panel collapsible="<%= false %>" cssClass="clearfix lfr-component panel-page-category recent" extended="<%= true %>" id="manageRecentPanel" persistState="<%= true %>" title="<%= panelTitle %>">
-				<aui:nav cssClass="<%= navListCssClass %>">
+				<aui:nav cssClass="<%= navListCssClass %>" collapsible="<%= true %>">
 
 					<%
 					int deltaDefault = GetterUtil.getInteger(SessionClicks.get(request, "liferay_addpanel_numitems", "10"));
