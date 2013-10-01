@@ -87,7 +87,7 @@ if (layout != null) {
 			<c:choose>
 				<c:when test="<%= group.isStagingGroup() || group.isStagedRemotely() %>">
 					<c:if test="<%= stagingGroup != null %>">
-						<aui:nav-item anchorCssClass="staging-link" cssClass="active staging-toggle site-variations" dropdown="<%= true %>" label="staging">
+						<aui:nav-item anchorCssClass="staging-link" cssClass="active staging-toggle site-variations" dropdown="<%= true %>" id="stagingNavEl" label="staging">
 							<aui:nav-item cssClass="row-fluid">
 								<c:if test="<%= (layoutSetBranches != null) && (layoutSetBranches.size() >= 1) %>">
 									<div class="site-pages-variation-options span6">
@@ -335,7 +335,7 @@ if (layout != null) {
 					</c:if>
 				</c:when>
 				<c:otherwise>
-					<aui:nav-item cssClass='<%= ((layoutSetBranches != null) ? " active" : StringPool.BLANK) + " staging-toggle" %>' href="<%= (layoutSetBranches != null) ? null : stagingFriendlyURL %>" label="staging" />
+					<aui:nav-item cssClass='<%= ((layoutSetBranches != null) ? " active" : StringPool.BLANK) + " staging-toggle" %>' href="<%= (layoutSetBranches != null) ? null : stagingFriendlyURL %>" id="stagingNavEl" label="staging" />
 				</c:otherwise>
 			</c:choose>
 
@@ -381,8 +381,11 @@ if (layout != null) {
 		<aui:script use="liferay-staging">
 			Liferay.StagingBar.init(
 				{
+					groupId: '<%= liveGroup.getGroupId() %>',
+					isPending: 'false',
 					namespace: '<portlet:namespace />',
-					portletId: '<%= portletDisplay.getId() %>'
+					portletId: '<%= portletDisplay.getId() %>',
+					taskExecutorClassName: '<%= LayoutStagingBackgroundTaskExecutor.class.getName() %>'
 				}
 			);
 		</aui:script>
