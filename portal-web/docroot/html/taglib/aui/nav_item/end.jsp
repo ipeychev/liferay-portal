@@ -65,6 +65,8 @@ if (bodyContent != null) {
 
 		<c:if test="<%= dropdown %>">
 			<aui:script use="aui-base,event-move,event-outside,liferay-store">
+				A.Event.defineOutside('MSPointerUp');
+
 				A.Event.defineOutside('touchend');
 
 				var container = A.one('#<%= id %>');
