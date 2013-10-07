@@ -17,6 +17,10 @@ AUI.add(
 
 		var EVENT_CLICK = 'click';
 
+		var SELECTOR_NAV_ACCOUNT_CONTROLS = '.nav-account-controls';
+
+		var SELECTOR_NAV_ADD_CONTROLS = '.nav-add-controls';
+
 		var STR_ADD_PANEL = 'addPanel';
 
 		var STR_EDIT_LAYOUT_PANEL = 'editLayoutPanel';
@@ -47,9 +51,16 @@ AUI.add(
 					var eventHandle = dockBar.on(
 						['focus', 'mousemove', 'touchstart'],
 						function(event) {
+							var target = event.target;
+							var type = event.type;
+
 							Liferay.fire('initDockbar');
 
 							eventHandle.detach();
+
+							if (themeDisplay.isSignedIn()) {
+								instance._initInteraction(target, type);
+							}
 						}
 					);
 
@@ -257,6 +268,61 @@ AUI.add(
 				Liferay.fire('dockbarLoaded');
 			},
 			['aui-io-request', 'liferay-node', 'liferay-store', 'node-focusmanager']
+		);
+
+		Liferay.provide(
+			Dockbar,
+			'_initInteraction',
+			function(target, type) {
+				var instance = this;
+
+				var dockBar = instance.dockBar;
+				var navAccountControls = dockBar.one(SELECTOR_NAV_ACCOUNT_CONTROLS);
+				var navAddControls = dockBar.one(SELECTOR_NAV_ADD_CONTROLS);
+
+				if (navAddControls) {
+					navAddControls.plug(
+						A.Plugin.NodeFocusManager,
+						{
+							circular: true,
+							descendants: 'li a',
+							keys: {
+								next: 'down:39,40',
+								previous: 'down:37,38'
+							}
+						}
+					);
+
+					navAddControls.focusManager.after(
+						'focusedChange',
+						function (event) {
+							if (!event.newVal) {
+								this.set('activeDescendant', 0);
+							}
+						}
+					);
+				}
+
+				if (navAccountControls) {
+					navAccountControls.plug(Liferay.DockbarKeyboardInteraction);
+				}
+
+				if (type === 'focus') {
+					var navAccountControlsAncestor = target.ancestor(SELECTOR_NAV_ACCOUNT_CONTROLS);
+					var navAddControlsAncestor = target.ancestor(SELECTOR_NAV_ADD_CONTROLS);
+
+					if (navAddControlsAncestor) {
+						target.blur();
+						target.focus();
+					}
+
+					if (navAccountControlsAncestor) {
+						navAccountControlsAncestor.one('li a').blur();
+						navAccountControlsAncestor.one('li a').focus();
+					}
+				}
+			},
+			['liferay-dockbar-keyboard-interaction', 'node-focusmanager']
 		);
 
 		Liferay.provide(
