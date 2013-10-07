@@ -280,9 +280,9 @@ portletURL.setParameter("tabs3", "current-and-previous");
 														</li>
 													</ul>
 
-													<aui:input id="rangeLast" inlineField="<%= true %>" label="last" name="range" type="radio" value="last" />
+													<aui:input id="rangeLast" label="last" name="range" type="radio" value="last" />
 
-													<aui:select inlineField="<%= true %>" label="" name="last">
+													<aui:select label="" name="last">
 														<aui:option label='<%= LanguageUtil.format(pageContext, "x-hours", "12") %>' value="12" />
 														<aui:option label='<%= LanguageUtil.format(pageContext, "x-hours", "24") %>' value="24" />
 														<aui:option label='<%= LanguageUtil.format(pageContext, "x-hours", "48") %>' value="48" />
