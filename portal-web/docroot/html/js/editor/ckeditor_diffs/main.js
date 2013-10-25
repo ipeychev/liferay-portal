@@ -40,6 +40,8 @@ AUI.add(
 					initializer: function(config) {
 						var instance = this;
 
+						debugger;
+
 						var editor = instance.get(EDITOR);
 
 						instance._eventHandles = [
