@@ -118,15 +118,13 @@ public class JournalArticlePermission {
 		if (actionId.equals(ActionKeys.VIEW) &&
 			PropsValues.PERMISSIONS_VIEW_DYNAMIC_INHERITANCE) {
 
-			long articleFolderId = article.getFolderId();
+			long folderId = article.getFolderId();
 
-			if (articleFolderId !=
-					JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID) {
-
+			if (folderId != JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID) {
 				try {
 					JournalFolder folder =
 						JournalFolderLocalServiceUtil.getFolder(
-							articleFolderId);
+							folderId);
 
 					if (!JournalFolderPermission.contains(
 							permissionChecker, folder, ActionKeys.ACCESS) &&
