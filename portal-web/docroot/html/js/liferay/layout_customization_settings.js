@@ -53,6 +53,11 @@ AUI.add(
 									}
 								}
 							);
+
+							instance._eventHandles = [
+								Liferay.on('dockbarHidePanel', instance._onPanelStateChange, instance),
+								Liferay.on('dockbarShowPanel', instance._onPanelStateChange, instance)
+							];
 						}
 					},
 
@@ -141,6 +146,32 @@ AUI.add(
 						);
 					},
 
+					_onPanelStateChange: function(event) {
+						var instance = this;
+
+						var columns = A.all('.portlet-column');
+
+						columns.each(
+							function(item, index, collection) {
+								var overlayMask = item.getData('customizationControls');
+
+								if (overlayMask) {
+									overlayMask.hide();
+								}
+							}
+						);
+
+						var customizationsHandle = instance._customizationsHandle;
+
+						if (customizationsHandle) {
+							customizationsHandle.detach();
+
+							instance._customizationsHandle = null;
+						}
+
+						(new A.EventHandle(instance._eventHandles)).detach();
+					},
+
 					_onManageCustomization: function(event) {
 						var instance = this;
 
@@ -158,7 +189,7 @@ AUI.add(
 						else {
 							customizationsHandle.detach();
 
-							customizationsHandle = null;
+							instance._customizationsHandle = null;
 						}
 
 						instance._manageCustomization.html(customizationString).toggleClass(CSS_ACTIVE);
