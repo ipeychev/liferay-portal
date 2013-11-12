@@ -73,6 +73,21 @@ if (!Validator.isNull(languageId)) {
 List<String> languageIds = new ArrayList<String>();
 
 String fieldName = HtmlUtil.escapeAttribute(name + fieldSuffix);
+
+Exception exception = (Exception)request.getAttribute("liferay-ui:error:exception");
+String focusField = (String)request.getAttribute("liferay-ui:error:focusField");
+
+Set<Locale> errorLocales = new HashSet<Locale>();
+
+if ((exception != null) && fieldName.equals(focusField)) {
+	if (LocalizedException.class.isAssignableFrom(exception.getClass())) {
+		LocalizedException le = (LocalizedException)exception;
+
+		Map<Locale, Exception> localizedExceptions = le.getLocalizedExceptions();
+
+		errorLocales = localizedExceptions.keySet();
+	}
+}
 %>
 
 <span class="input-localized input-localized-<%= type %>" id="<portlet:namespace /><%= id %>BoundingBox">
