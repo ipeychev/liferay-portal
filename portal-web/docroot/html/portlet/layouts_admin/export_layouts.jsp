@@ -183,18 +183,22 @@ portletURL.setParameter("rootNodeName", rootNodeName);
 													<aui:input label="<%= portletTitle %>" name="<%= PortletDataHandlerKeys.PORTLET_CONFIGURATION + StringPool.UNDERLINE + portlet.getRootPortletId() %>" type="checkbox" value="<%= true %>" />
 
 													<div class="hide" id="<portlet:namespace />configuration_<%= portlet.getRootPortletId() %>">
-														<aui:fieldset cssClass="portlet-type-data-section" label="<%= portletTitle %>">
-															<ul class="lfr-tree unstyled">
+														<ul class="lfr-tree unstyled">
+															<li class="tree-item">
+																<aui:fieldset cssClass="portlet-type-data-section" label="<%= portletTitle %>">
+																	<ul class="lfr-tree unstyled">
 
-																<%
-																request.setAttribute("render_controls.jsp-action", Constants.EXPORT);
-																request.setAttribute("render_controls.jsp-controls", configurationControls);
-																request.setAttribute("render_controls.jsp-portletId", portlet.getRootPortletId());
-																%>
+																		<%
+																		request.setAttribute("render_controls.jsp-action", Constants.EXPORT);
+																		request.setAttribute("render_controls.jsp-controls", configurationControls);
+																		request.setAttribute("render_controls.jsp-portletId", portlet.getRootPortletId());
+																		%>
 
-																<liferay-util:include page="/html/portlet/layouts_admin/render_controls.jsp" />
-															</ul>
-														</aui:fieldset>
+																		<liferay-util:include page="/html/portlet/layouts_admin/render_controls.jsp" />
+																	</ul>
+																</aui:fieldset>
+															</li>
+														</ul>
 													</div>
 
 													<ul class="hide" id="<portlet:namespace />showChangeConfiguration_<%= portlet.getRootPortletId() %>">
@@ -613,6 +617,30 @@ portletURL.setParameter("rootNodeName", rootNodeName);
 		'submit',
 		function(event) {
 			event.preventDefault();
+
+			var A = AUI();
+
+			var allContentRadioChecked = A.one('#<portlet:namespace />allContent').attr('checked');
+
+			if (allContentRadioChecked) {
+				var selectedContents = A.one('#<portlet:namespace />selectContents');
+
+				var checkedNodes = selectedContents.all('input[type=checkbox]');
+
+				checkedNodes.each(
+					function(item, index, collection) {
+						if (!item.checked) {
+							item.attr('checked', true);
+
+							Liferay.Util.updateCheckboxValue(item);
+						}
+					}
+				);
+
+				var portletDataControlDefault = A.one('#<portlet:namespace /><%= PortletDataHandlerKeys.PORTLET_DATA_CONTROL_DEFAULT %>');
+
+				portletDataControlDefault.attr('value', true);
+			}
 
 			submitForm(form, form.attr('action'), false);
 		}

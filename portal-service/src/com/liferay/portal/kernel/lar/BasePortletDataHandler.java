@@ -187,10 +187,16 @@ public abstract class BasePortletDataHandler implements PortletDataHandler {
 				companyId, PortletKeys.PREFS_OWNER_TYPE_COMPANY,
 				portlet.getRootPortletId(), false) > 0)) {
 
+				PortletDataHandlerControl[] portletDataHandlerControls = null;
+
+				if (isDisplayPortlet()) {
+					portletDataHandlerControls = getExportControls();
+				}
+
 				configurationControls.add(
 					new PortletDataHandlerBoolean(
 						null, PortletDataHandlerKeys.PORTLET_SETUP, "setup",
-						true, false, null, null, null));
+						true, false, portletDataHandlerControls, null, null));
 		}
 
 		// Archived setups
@@ -261,10 +267,16 @@ public abstract class BasePortletDataHandler implements PortletDataHandler {
 		// Setup
 
 		if (ArrayUtil.contains(configurationPortletOptions, "setup")) {
+			PortletDataHandlerControl[] portletDataHandlerControls = null;
+
+			if (isDisplayPortlet()) {
+				portletDataHandlerControls = getExportControls();
+			}
+
 			configurationControls.add(
 				new PortletDataHandlerBoolean(
 					null, PortletDataHandlerKeys.PORTLET_SETUP, "setup", true,
-					false, null, null, null));
+					false, portletDataHandlerControls, null, null));
 		}
 
 		// Archived setups
