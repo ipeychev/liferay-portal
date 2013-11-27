@@ -163,7 +163,7 @@ portletURL.setParameter("classTypeId", String.valueOf(classTypeId));
 							Util.getWindow().hide();
 						}
 						else {
-							message.html('<span class="error-message"><%= UnicodeLanguageUtil.get(locale, "the-field-value-should-not-be-empty") %></span>');
+							message.html('<span class="error-message"><%= UnicodeLanguageUtil.get(locale, "the-field-value-cannot-be-empty") %></span>');
 
 							message.show();
 						}
