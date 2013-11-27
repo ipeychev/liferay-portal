@@ -17,14 +17,12 @@ package com.liferay.portlet.assetpublisher.action;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.portlet.DefaultConfigurationAction;
-import com.liferay.portal.kernel.portlet.PortletResponseUtil;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.servlet.SessionMessages;
 import com.liferay.portal.kernel.staging.LayoutStagingUtil;
 import com.liferay.portal.kernel.staging.StagingUtil;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.Constants;
-import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.DateFormatFactoryUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
@@ -219,14 +217,13 @@ public class ConfigurationActionImpl extends DefaultConfigurationAction {
 
 		JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
 
-		jsonObject.put("success", true);
-
-		if (fieldValue == null) {
+		if (fieldValue != null) {
+			jsonObject.put("success", true);
+		}
+		else {
 			jsonObject.put("success", false);
 
-			resourceResponse.setContentType(ContentTypes.APPLICATION_JSON);
-
-			PortletResponseUtil.write(resourceResponse, jsonObject.toString());
+			writeJSON(resourceRequest, resourceResponse, jsonObject);
 
 			return;
 		}
@@ -265,9 +262,7 @@ public class ConfigurationActionImpl extends DefaultConfigurationAction {
 			jsonObject.put("value", (String)fieldValue);
 		}
 
-		resourceResponse.setContentType(ContentTypes.APPLICATION_JSON);
-
-		PortletResponseUtil.write(resourceResponse, jsonObject.toString());
+		writeJSON(resourceRequest, resourceResponse, jsonObject);
 	}
 
 	protected void addScope(
