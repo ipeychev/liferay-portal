@@ -32,6 +32,7 @@ portletURL.setParameter("classTypeId", String.valueOf(classTypeId));
 %>
 
 <div class="alert alert-error hide" id="<portlet:namespace />message">
+	<span class="error-message"><%= UnicodeLanguageUtil.get(locale, "the-field-value-cannot-be-empty") %></span>
 </div>
 
 <div id="<portlet:namespace />selectDDMStructureFieldForm">
@@ -154,8 +155,6 @@ portletURL.setParameter("classTypeId", String.valueOf(classTypeId));
 							result.displayValue = respondData.displayValue;
 							result.value = respondData.value;
 
-							message.html('');
-
 							message.hide();
 
 							Util.getOpener().Liferay.fire('<%= HtmlUtil.escapeJS(eventName) %>', result);
@@ -163,8 +162,6 @@ portletURL.setParameter("classTypeId", String.valueOf(classTypeId));
 							Util.getWindow().hide();
 						}
 						else {
-							message.html('<span class="error-message"><%= UnicodeLanguageUtil.get(locale, "the-field-value-cannot-be-empty") %></span>');
-
 							message.show();
 						}
 					}
