@@ -95,10 +95,10 @@
 
 	var TEMPLATE_IMAGE = '<img src="{image}">';
 
-	var newThreadURL;
 	var emoticonImages;
 	var emoticonPath;
 	var emoticonSymbols;
+	var newThreadURL;
 
 	var bbcodeDataProcessorProto = {
 		toDataFormat: function(html, fixForBody ) {
@@ -817,10 +817,10 @@
 			init: function(editor) {
 				var editorConfig = editor.config;
 
-				newThreadURL = editorConfig.newThreadURL;
 				emoticonImages = editorConfig.smiley_images;
 				emoticonPath = editorConfig.smiley_path;
 				emoticonSymbols = editorConfig.smiley_symbols;
+				newThreadURL = editorConfig.newThreadURL;
 
 				editor.dataProcessor = new CKEDITOR.htmlDataProcessor(editor);
 
