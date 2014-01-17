@@ -61,7 +61,7 @@ if (Validator.isNull(title)) {
 		</c:if>
 
 		<c:if test="<%= dropdown %>">
-			<aui:script use="aui-base,event-move,event-outside,liferay-store,liferay-menu-toggle">
+			<aui:script use="aui-base,event-move,event-outside,liferay-menu-toggle,liferay-store">
 				var test = new Liferay.MenuToggle(
 					{
 						content: '#<%= id %>',

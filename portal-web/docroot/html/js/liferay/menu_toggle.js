@@ -24,11 +24,14 @@ AUI.add(
 
 				prototype: {
 					initializer: function(config) {
-						var instance = this,
-							triggerId = config.trigger;
+						var instance = this;
+
+						var triggerId = config.trigger;
 
 						instance._handleId = triggerId + 'Handle';
+
 						instance._triggerNode = A.one(triggerId);
+
 						instance._content = A.all(config.content);
 
 						A.Event.defineOutside('touchend');
@@ -39,7 +42,7 @@ AUI.add(
 					_bindUI: function() {
 						var instance = this;
 
-						if (instance._triggerNode != null) {
+						if (instance._triggerNode) {
 							instance._triggerNode.on(
 								'gesturemovestart',
 								function(event) {
@@ -104,7 +107,7 @@ AUI.add(
 						A.each(
 							instance._content,
 							function(item, index, collection) {
-								if (item != null) {
+								if (item) {
 									item.toggleClass('open', force);
 								}
 							}
@@ -112,9 +115,10 @@ AUI.add(
 					},
 
 					_toggleMenu: function(event, target) {
-						var instance = this,
-							toggle = instance.get('toggle'),
-							toggleTouch = instance.get('toggleTouch');
+						var instance = this;
+
+						var toggle = instance.get('toggle');
+						var toggleTouch = instance.get('toggleTouch');
 
 						instance._toggleContent();
 
