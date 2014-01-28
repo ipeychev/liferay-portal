@@ -17,6 +17,12 @@
 <c:if test="<%= (portlets != null) && !portlets.isEmpty() %>">
 
 	<%
+	StringBuilder sb = new StringBuilder();
+
+	long javaScriptLastModified = ServletContextUtil.getLastModified(application, "/html/js/", true);
+
+	String alloyComboPath = PortalUtil.getStaticResourceURL(request, themeDisplay.getCDNDynamicResourcesHost() + themeDisplay.getPathContext() + "/combo/", "minifierType=", javaScriptLastModified);
+
 	Set<String> portletResourceStaticURLs = (Set<String>)request.getAttribute(WebKeys.PORTLET_RESOURCE_STATIC_URLS);
 
 	if (portletResourceStaticURLs == null) {
@@ -27,6 +33,8 @@
 
 	for (Portlet curPortlet : portlets) {
 		for (String footerPortalCss : curPortlet.getFooterPortalCss()) {
+			System.out.println(footerPortalCss);
+
 			if (!HttpUtil.hasProtocol(footerPortalCss)) {
 				Portlet curRootPortlet = curPortlet.getRootPortlet();
 
@@ -50,8 +58,23 @@
 		}
 	}
 
+	if (sb.length() > 0) {
+        sb.insert(0, alloyComboPath);
+
+    %>
+
+		<link href="<%= sb.toString() %>" rel="stylesheet" type="text/css" />
+
+    <%
+
+    	sb.delete(0, sb.length());
+
+    }
+
 	for (Portlet curPortlet : portlets) {
 		for (String footerPortletCss : curPortlet.getFooterPortletCss()) {
+			System.out.println(footerPortletCss);
+
 			if (!HttpUtil.hasProtocol(footerPortletCss)) {
 				Portlet curRootPortlet = curPortlet.getRootPortlet();
 
@@ -74,6 +97,19 @@
 			}
 		}
 	}
+
+	if (sb.length() > 0) {
+        sb.insert(0, alloyComboPath);
+
+    %>
+		<link href="<%= sb.toString() %>" rel="stylesheet" type="text/css" />
+
+    <%
+
+    	sb.delete(0, sb.length());
+
+    }
+
 	%>
 
 </c:if>
