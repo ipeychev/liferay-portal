@@ -60,7 +60,7 @@
 		}
 	}
 
-	if (sb.length() > 0) {
+	if (themeDisplay.isThemeJsFastLoad() && sb.length() > 0) {
         sb.insert(0, alloyComboPath);
 
     %>
@@ -106,7 +106,7 @@
 		}
 	}
 
-    if (sb.length() > 0) {
+    if (themeDisplay.isThemeJsFastLoad() && sb.length() > 0) {
         sb.insert(0, alloyComboPath);
 
     %>
