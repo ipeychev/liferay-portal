@@ -164,6 +164,8 @@ public class ComboServlet extends HttpServlet {
 			for (int i = 0; i < modulePaths.length; i++) {
 				String modulePath = modulePaths[i];
 
+				System.out.println(modulePath);
+
 				if (!validateModuleExtension(modulePath)) {
 					response.setHeader(
 						HttpHeaders.CACHE_CONTROL,
