@@ -49,8 +49,6 @@ import com.liferay.portlet.journal.util.JournalTestUtil;
 import com.liferay.portlet.trash.BaseTrashHandlerTestCase;
 import com.liferay.portlet.trash.util.TrashUtil;
 
-import java.io.InputStream;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -81,8 +79,12 @@ public class JournalArticleTrashHandlerTest extends BaseTrashHandlerTestCase {
 			JournalArticleImageLocalServiceUtil.getArticleImagesCount(
 				group.getGroupId());
 
+		Class<?> clazz = getClass();
+
 		String xsd = StringUtil.read(
-			getFile("test-ddm-structure-image-field.xml"));
+			clazz.getResourceAsStream(
+				"/com/liferay/portlet/journal/dependencies/" +
+					"test-ddm-structure-image-field.xml"));
 
 		DDMStructure ddmStructure = DDMStructureTestUtil.addStructure(
 			serviceContext.getScopeGroupId(), JournalArticle.class.getName(),
@@ -92,12 +94,17 @@ public class JournalArticleTrashHandlerTest extends BaseTrashHandlerTestCase {
 			serviceContext.getScopeGroupId(), ddmStructure.getStructureId());
 
 		String content = StringUtil.read(
-			getFile("test-journal-content-image-field.xml"));
+			clazz.getResourceAsStream(
+				"/com/liferay/portlet/journal/dependencies/" +
+					"test-journal-content-image-field.xml"));
 
 		Map<String, byte[]> images = new HashMap<String, byte[]>();
 
 		images.put(
-			"_image_1_0_en_US", FileUtil.getBytes(getFile("liferay.png")));
+			"_image_1_0_en_US",
+			FileUtil.getBytes(
+				clazz,
+				"/com/liferay/portlet/journal/dependencies/liferay.png"));
 
 		baseModel = JournalTestUtil.addArticleWithXMLContent(
 			JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID, content,
@@ -210,17 +217,6 @@ public class JournalArticleTrashHandlerTest extends BaseTrashHandlerTestCase {
 
 		return JournalArticleLocalServiceUtil.getArticles(
 			folder.getGroupId(), folder.getFolderId());
-	}
-
-	protected InputStream getFile(String fileName) throws Exception {
-		Class<?> clazz = getClass();
-
-		ClassLoader classLoader = clazz.getClassLoader();
-
-		InputStream inputStream = classLoader.getResourceAsStream(
-			"com/liferay/portlet/journal/dependencies/" + fileName);
-
-		return inputStream;
 	}
 
 	@Override
