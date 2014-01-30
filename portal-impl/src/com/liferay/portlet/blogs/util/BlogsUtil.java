@@ -15,8 +15,6 @@
 package com.liferay.portlet.blogs.util;
 
 import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.log.Log;
-import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.FriendlyURLNormalizerUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
@@ -204,8 +202,6 @@ public class BlogsUtil {
 		return ModelHintsUtil.trimString(
 			BlogsEntry.class.getName(), "urlTitle", title);
 	}
-
-	private static Log _log = LogFactoryUtil.getLog(BlogsUtil.class);
 
 	private static Pattern _friendlyURLPattern = Pattern.compile("[^a-z0-9_-]");
 

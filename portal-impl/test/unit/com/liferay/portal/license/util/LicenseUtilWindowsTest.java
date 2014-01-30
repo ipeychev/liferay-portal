@@ -28,6 +28,7 @@ public class LicenseUtilWindowsTest extends BaseLicenseUtilTestCase {
 		return "windows";
 	}
 
+	@Override
 	protected void testMacAddresses(Set<String> macAddresses) {
 		Assert.assertEquals(macAddresses.size(), 3);
 		Assert.assertTrue(macAddresses.contains("08:00:27:62:4c:9d"));

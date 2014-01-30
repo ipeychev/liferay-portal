@@ -17,6 +17,7 @@ package com.liferay.portal.upgrade;
 import com.liferay.portal.kernel.upgrade.UpgradeProcess;
 import com.liferay.portal.kernel.util.ReleaseInfo;
 import com.liferay.portal.upgrade.v7_0_0.UpgradeSchema;
+import com.liferay.portal.upgrade.v7_0_0.UpgradeShopping;
 
 /**
  * @author Julio Camarero
@@ -31,6 +32,7 @@ public class UpgradeProcess_7_0_0 extends UpgradeProcess {
 	@Override
 	protected void doUpgrade() throws Exception {
 		upgrade(UpgradeSchema.class);
+		upgrade(UpgradeShopping.class);
 	}
 
 }
