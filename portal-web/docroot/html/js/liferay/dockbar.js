@@ -143,6 +143,8 @@ AUI.add(
 						var panelTrigger = A.one('#' + namespace + panelId);
 
 						if (panelTrigger) {
+							panelTrigger.on('key', A.bind('_togglePanel', instance, panelId), 'down:13');
+
 							panelTrigger.on(
 								'gesturemovestart',
 								function(event) {
@@ -316,34 +318,74 @@ AUI.add(
 				var handle;
 
 				if (btnNavigation && navigation) {
-					btnNavigation.on(
-						EVENT_CLICK,
+					var toggleNavigation = function(event) {
+						var open = navigation.hasClass(STR_OPEN);
+
+						if (open && handle) {
+							handle.detach();
+
+							handle = null;
+						}
+						else {
+							handle = navigation.on(
+								EVENT_MOUSEDOWN_OUTSIDE,
+								function(event) {
+									if (!btnNavigation.contains(event.target)) {
+										handle.detach();
+
+										btnNavigation.removeClass(STR_ACTIVE);
+										navigation.removeClass(STR_OPEN);
+									}
+								}
+							);
+						}
+
+						btnNavigation.toggleClass(STR_ACTIVE);
+						navigation.toggleClass(STR_OPEN);
+					};
+
+					var handleNavigationBtnKeyDown = function(event) {
+						var open = navigation.hasClass(STR_OPEN);
+
+						var shouldToggle = true;
+
+						if (event.isKey('DOWN')) {
+							event.preventDefault();
+
+							if (!open) {
+								toggleNavigation();
+							}
+
+							navigation.one('li a').focus();
+						}
+						else if ((open && event.isKey('TAB')) || !event.isKey('TAB')) {
+							toggleNavigation();
+						}
+					};
+
+					Liferay.on(
+						'exitNavigation',
 						function(event) {
 							var open = navigation.hasClass(STR_OPEN);
 
-							if (open && handle) {
-								handle.detach();
+							var nextElement = btnNavigation.siblings('.nav-collapse:visible').first();
 
-								handle = null;
+							if (nextElement) {
+								if (open) {
+									toggleNavigation();
+								}
+
+								if (!event.originalEvent.shiftKey) {
+									event.originalEvent.preventDefault();
+
+									nextElement.one('li a').focus();
+								}
 							}
-							else {
-								handle = navigation.on(
-									EVENT_MOUSEDOWN_OUTSIDE,
-									function(event) {
-										if (!btnNavigation.contains(event.target)) {
-											handle.detach();
-
-											btnNavigation.removeClass(STR_ACTIVE);
-											navigation.removeClass(STR_OPEN);
-										}
-									}
-								);
-							}
-
-							btnNavigation.toggleClass(STR_ACTIVE);
-							navigation.toggleClass(STR_OPEN);
 						}
 					);
+
+					btnNavigation.on(EVENT_CLICK, toggleNavigation);
+					btnNavigation.on('key', handleNavigationBtnKeyDown, 'down:9,13,40');
 				}
 
 				Liferay.fire('dockbarLoaded');
@@ -399,6 +441,14 @@ AUI.add(
 									instance.set('activeDescendant', 0);
 								}
 							}
+						);
+
+						navAddControls.on(
+							'key',
+							function(event) {
+								navAddControls.one('li').removeClass('open');
+							},
+							'down:9'
 						);
 					}
 				}
