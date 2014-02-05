@@ -382,7 +382,7 @@ AUI.add(
 							A.Plugin.NodeFocusManager,
 							{
 								circular: true,
-								descendants: 'li a',
+								descendants: '.dropdown-menu li a',
 								keys: {
 									next: 'down:39,40',
 									previous: 'down:37,38'
