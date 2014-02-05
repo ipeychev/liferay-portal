@@ -66,62 +66,82 @@ if (Validator.isNull(title)) {
 
 				var container = A.one('#<%= id %>');
 
-				container.one('a').on(
+				var toggleDropdown = function(event) {
+					var currentTarget = event.currentTarget;
+
+					var menuOpen = container.hasClass('open');
+
+					var shouldToggle = true;
+
+					if (event.isKey('TAB')) {
+						shouldToggle = menuOpen;
+					}
+					else if (event.isKey('DOWN')) {
+						shouldToggle = !menuOpen;
+					}
+
+					if (shouldToggle) {
+						container.toggleClass('open');
+
+						menuOpen = !menuOpen;
+					}
+
+					if (event.isKey('DOWN')) {
+						event.preventDefault();
+
+						var focusEl = container.one('.dropdown-menu li a');
+
+						if (focusEl) {
+							focusEl.focus();
+						}
+					}
+
+					<c:choose>
+						<c:when test="<%= !toggle %>">
+							var handle = Liferay.Data['<%= id %>Handle'];
+
+							if (menuOpen && !handle) {
+								handle = currentTarget.on(
+									'mouseupoutside',
+									function(event) {
+										if (!event.target.ancestor('#<%= id %>')) {
+											Liferay.Data['<%= id %>Handle'] = null;
+
+											handle.detach();
+
+											container.removeClass('open');
+										}
+									}
+								);
+							}
+							else if (handle) {
+								handle.detach();
+
+								handle = null;
+							}
+
+							Liferay.Data['<%= id %>Handle'] = handle;
+						</c:when>
+						<c:otherwise>
+							var data = {};
+
+							data['<%= id %>'] = menuOpen ? 'open' : 'closed';
+
+							Liferay.Store(data);
+						</c:otherwise>
+					</c:choose>
+				};
+
+				var containerTrigger = container.one('a');
+
+				containerTrigger.on('key', toggleDropdown, 'down:9,13,40');
+
+				containerTrigger.on(
 					'gesturemovestart',
 					function(event) {
 						var currentTarget = event.currentTarget;
 
-						currentTarget.once(
-							'gesturemoveend',
-							function(event) {
-								container.toggleClass('open');
-
-								var menuOpen = container.hasClass('open');
-
-								<c:choose>
-									<c:when test="<%= !toggle %>">
-										var handle = Liferay.Data['<%= id %>Handle'];
-
-										if (menuOpen && !handle) {
-											var eventOutside = event._event.type;
-
-											if (eventOutside === 'MSPointerUp') {
-												eventOutside = 'mouseup';
-											}
-
-											eventOutside = eventOutside + 'outside';
-
-											handle = currentTarget.on(
-												eventOutside,
-												function(event) {
-													if (!event.target.ancestor('#<%= id %>')) {
-														Liferay.Data['<%= id %>Handle'] = null;
-
-														handle.detach();
-
-														container.removeClass('open');
-													}
-												}
-											);
-										}
-										else if (handle) {
-											handle.detach();
-
-											handle = null;
-										}
-
-										Liferay.Data['<%= id %>Handle'] = handle;
-									</c:when>
-									<c:otherwise>
-										var data = {};
-
-										data['<%= id %>'] = menuOpen ? 'open' : 'closed';
-
-										Liferay.Store(data);
-									</c:otherwise>
-								</c:choose>
-							}
-						);
+						currentTarget.once('gesturemoveend', toggleDropdown);
 					}
 				);
 			</aui:script>
