@@ -67,6 +67,13 @@ AUI.add(
 						}
 
 						instance._hideMenu();
+
+						Liferay.fire(
+							'exitNavigation',
+							{
+								originalEvent: event
+							}
+						);
 					},
 
 					_handleKey: function(event, direction) {
