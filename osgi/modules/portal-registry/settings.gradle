@@ -1,0 +1,3 @@
+include
+	'portal-registry-api',
+	'portal-registry-impl'

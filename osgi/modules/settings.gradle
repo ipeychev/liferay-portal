@@ -1,0 +1,3 @@
+include 'portal-registry'
+
+rootProject.name = 'osgi-modules'

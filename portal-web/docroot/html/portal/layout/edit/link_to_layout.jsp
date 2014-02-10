@@ -30,37 +30,15 @@ if (selLayout != null) {
 <aui:select label="link-to-layout" name="TypeSettingsProperties--linkToLayoutId--" showEmptyOption="<%= true %>">
 
 	<%
-	List layoutList = (List)request.getAttribute(WebKeys.LAYOUT_LISTER_LIST);
+	List<LayoutDescription> layoutDescriptions = (List<LayoutDescription>)request.getAttribute(WebKeys.LAYOUT_DESCRIPTIONS);
 
-	for (int i = 0; i < layoutList.size(); i++) {
+	for (LayoutDescription layoutDescription : layoutDescriptions) {
+		Layout layoutDescriptionLayout = LayoutLocalServiceUtil.fetchLayout(layoutDescription.getPlid());
 
-		// id | parentId | ls | obj id | name | img | depth
-
-		String layoutDesc = (String)layoutList.get(i);
-
-		String[] nodeValues = StringUtil.split(layoutDesc, '|');
-
-		long objId = GetterUtil.getLong(nodeValues[3]);
-		String name = nodeValues[4];
-
-		int depth = 0;
-
-		if (i != 0) {
-			depth = GetterUtil.getInteger(nodeValues[6]);
-		}
-
-		name = HtmlUtil.escape(name);
-
-		for (int j = 0; j < depth; j++) {
-			name = "-&nbsp;" + name;
-		}
-
-		Layout linkableLayout = LayoutLocalServiceUtil.fetchLayout(objId);
-
-		if (linkableLayout != null) {
+		if (layoutDescriptionLayout != null) {
 	%>
 
-			<aui:option disabled="<%= (selLayout != null) && (selLayout.getPlid() == linkableLayout.getPlid()) %>" label="<%= name %>" selected="<%= (linkToLayoutId == linkableLayout.getLayoutId()) %>" value="<%= linkableLayout.getLayoutId() %>" />
+			<aui:option disabled="<%= (selLayout != null) && (selLayout.getPlid() == layoutDescriptionLayout.getPlid()) %>" label="<%= layoutDescription.getDisplayName() %>" selected="<%= (linkToLayoutId == layoutDescriptionLayout.getLayoutId()) %>" value="<%= layoutDescriptionLayout.getLayoutId() %>" />
 
 	<%
 		}

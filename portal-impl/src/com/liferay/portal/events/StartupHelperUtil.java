@@ -39,6 +39,10 @@ public class StartupHelperUtil {
 		return getStartupHelper().isUpgraded();
 	}
 
+	public static boolean isUpgrading() {
+		return getStartupHelper().isUpgrading();
+	}
+
 	public static boolean isVerified() {
 		return getStartupHelper().isVerified();
 	}

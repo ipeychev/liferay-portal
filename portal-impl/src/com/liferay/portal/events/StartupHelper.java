@@ -48,6 +48,10 @@ public class StartupHelper {
 		return _upgraded;
 	}
 
+	public boolean isUpgrading() {
+		return _upgrading;
+	}
+
 	public boolean isVerified() {
 		return _verified;
 	}
@@ -108,38 +112,46 @@ public class StartupHelper {
 	}
 
 	public void upgradeProcess(int buildNumber) throws UpgradeException {
-		if (buildNumber == ReleaseInfo.getParentBuildNumber()) {
-			if (_log.isDebugEnabled()) {
-				_log.debug(
-					"Skipping upgrade process from " + buildNumber + " to " +
-						ReleaseInfo.getParentBuildNumber());
-			}
+		_upgrading = true;
 
-			return;
-		}
-
-		String[] upgradeProcessClassNames = getUpgradeProcessClassNames(
-			PropsKeys.UPGRADE_PROCESSES);
-
-		if (upgradeProcessClassNames.length == 0) {
-			upgradeProcessClassNames = getUpgradeProcessClassNames(
-				PropsKeys.UPGRADE_PROCESSES + StringPool.PERIOD + buildNumber);
-
-			if (upgradeProcessClassNames.length == 0) {
-				if (_log.isInfoEnabled()) {
-					_log.info(
-						"Upgrading from " + buildNumber + " to " +
-							ReleaseInfo.getParentBuildNumber() + " is not " +
-								"supported");
+		try {
+			if (buildNumber == ReleaseInfo.getParentBuildNumber()) {
+				if (_log.isDebugEnabled()) {
+					_log.debug(
+						"Skipping upgrade process from " + buildNumber +
+							" to " + ReleaseInfo.getParentBuildNumber());
 				}
 
-				System.exit(0);
+				return;
 			}
-		}
 
-		_upgraded = UpgradeProcessUtil.upgradeProcess(
-			buildNumber, upgradeProcessClassNames,
-			ClassLoaderUtil.getPortalClassLoader());
+			String[] upgradeProcessClassNames = getUpgradeProcessClassNames(
+				PropsKeys.UPGRADE_PROCESSES);
+
+			if (upgradeProcessClassNames.length == 0) {
+				upgradeProcessClassNames = getUpgradeProcessClassNames(
+					PropsKeys.UPGRADE_PROCESSES + StringPool.PERIOD +
+						buildNumber);
+
+				if (upgradeProcessClassNames.length == 0) {
+					if (_log.isInfoEnabled()) {
+						_log.info(
+							"Upgrading from " + buildNumber + " to " +
+								ReleaseInfo.getParentBuildNumber() +
+									" is not supported");
+					}
+
+					System.exit(0);
+				}
+			}
+
+			_upgraded = UpgradeProcessUtil.upgradeProcess(
+				buildNumber, upgradeProcessClassNames,
+				ClassLoaderUtil.getPortalClassLoader());
+		}
+		finally {
+			_upgrading = false;
+		}
 	}
 
 	public void verifyProcess(boolean newBuildNumber, boolean verified)
@@ -168,6 +180,7 @@ public class StartupHelper {
 	private boolean _dropIndexes;
 	private boolean _startupFinished;
 	private boolean _upgraded;
+	private boolean _upgrading;
 	private boolean _verified;
 
 }

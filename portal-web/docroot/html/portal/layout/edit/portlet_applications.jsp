@@ -23,43 +23,15 @@ String copyLayoutIdPrefix = ParamUtil.getString(request, "copyLayoutIdPrefix");
 <aui:select id='<%= copyLayoutIdPrefix + "copyLayoutId" %>' label="copy-from-page" name="copyLayoutId" showEmptyOption="<%= true %>">
 
 	<%
-	List layoutList = (List)request.getAttribute(WebKeys.LAYOUT_LISTER_LIST);
+	List<LayoutDescription> layoutDescriptions = (List<LayoutDescription>)request.getAttribute(WebKeys.LAYOUT_DESCRIPTIONS);
 
-	for (int i = 0; i < layoutList.size(); i++) {
+	for (LayoutDescription layoutDescription : layoutDescriptions) {
+		Layout layoutDescriptionLayout = LayoutLocalServiceUtil.fetchLayout(layoutDescription.getPlid());
 
-		// id | parentId | ls | obj id | name | img | depth
-
-		String layoutDesc = (String)layoutList.get(i);
-
-		String[] nodeValues = StringUtil.split(layoutDesc, '|');
-
-		long objId = GetterUtil.getLong(nodeValues[3]);
-		String name = nodeValues[4];
-
-		int depth = 0;
-
-		if (i != 0) {
-			depth = GetterUtil.getInteger(nodeValues[6]);
-		}
-
-		name = HtmlUtil.escape(name);
-
-		for (int j = 0; j < depth; j++) {
-			name = "-&nbsp;" + name;
-		}
-
-		Layout copiableLayout = null;
-
-		try {
-			copiableLayout = LayoutLocalServiceUtil.getLayout(objId);
-		}
-		catch (Exception e) {
-		}
-
-		if (copiableLayout != null) {
+		if (layoutDescriptionLayout != null) {
 	%>
 
-			<aui:option disabled="<%= (selLayout != null) && selLayout.getPlid() == copiableLayout.getPlid() %>" label="<%= name %>" value="<%= copiableLayout.getLayoutId() %>" />
+			<aui:option disabled="<%= (selLayout != null) && selLayout.getPlid() == layoutDescriptionLayout.getPlid() %>" label="<%= layoutDescription.getDisplayName() %>" value="<%= layoutDescriptionLayout.getLayoutId() %>" />
 
 	<%
 		}
