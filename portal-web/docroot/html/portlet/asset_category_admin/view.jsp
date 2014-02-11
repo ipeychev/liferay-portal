@@ -16,6 +16,19 @@
 
 <%@ include file="/html/portlet/asset_category_admin/init.jsp" %>
 
+<aui:input name="test123" type="textarea"/>
+
+<aui:script use="liferay-autocomplete-input">
+	var lai = new Liferay.AutoCompleteInput(
+		{
+			input: '#<portlet:namespace />test123',
+			source: ['sergio', 'iliyan', 'chema', 'carlos', 'carlos1', 'carlos2', 'carlos3']
+		}
+	);
+
+
+</aui:script>
+
 <aui:form name="fm">
 	<aui:nav-bar>
 		<aui:nav>

@@ -108,6 +108,14 @@
 							'sortable'
 						]
 					},
+					'liferay-autocomplete-input': {
+						path: 'autocomplete_input.js',
+						requires: [
+							'aui-base',
+							'autocomplete',
+							'aui-event-input'
+						]
+					},
 					'liferay-browser-selectors': {
 						path: 'browser_selectors.js',
 						requires: ['yui-base']
