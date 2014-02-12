@@ -66,7 +66,7 @@ AUI.add(
 									select: A.bind(instance._onACSelect, instance)
 								},
 								resultFilters: 'phraseMatch',
-    							resultHighlighter: 'phraseMatch',
+								resultHighlighter: 'phraseMatch',
 								source: instance.get('source')
 							}
 						).render();
@@ -79,50 +79,53 @@ AUI.add(
 					_getCursorPos: function(node) {
 						var instance = this;
 
-						var result = null;
-
 						node = node || instance.get('input');
 
 						var input = node.getDOMNode();
 
 						var docNode = A.getDoc().getDOMNode();
 
-						if ('selectionStart' in input && docNode.activeElement === input) {
-							result = {
-								end: input.selectionEnd,
-								start: input.selectionStart
-							};
-						}
-						else if (input.createTextRange) {
-							var sel = docNode.selection.createRange();
+						var start = 0;
+						var end = 0;
 
-							if (sel.parentElement() === input) {
-								var range = input.createTextRange();
+						var normalizedValue, range, textInputRange, len, endRange;
 
-								range.moveToBookmark(sel.getBookmark());
+						if (Lang.isNumber(input.selectionStart) && Lang.isNumber(input.selectionEnd)) {
+							start = input.selectionStart;
+							end = input.selectionEnd;
+						} else {
+							range = docNode.selection.createRange();
 
-								for (var len = 0; range.compareEndPoints('EndToStart', range) > 0; range.moveEnd('character', -1)) {
-									len++;
+							if (range && range.parentElement() === input) {
+								len = input.value.length;
+								normalizedValue = input.value.replace(/\r\n/g, '\n');
+
+								textInputRange = input.createTextRange();
+								textInputRange.moveToBookmark(range.getBookmark());
+
+								endRange = input.createTextRange();
+								endRange.collapse(false);
+
+								if (textInputRange.compareEndPoints('StartToEnd', endRange) > -1) {
+									start = end = len;
+								} else {
+									start = -textInputRange.moveStart('character', -len);
+									start += normalizedValue.slice(0, start).split('\n').length - 1;
+
+									if (textInputRange.compareEndPoints('EndToEnd', endRange) > -1) {
+										end = len;
+									} else {
+										end = -textInputRange.moveEnd('character', -len);
+										end += normalizedValue.slice(0, end).split('\n').length - 1;
+									}
 								}
-
-								range.setEndPoint('StartToStart', input.createTextRange());
-
-								var pos = {
-									end: len,
-									start: 0
-								};
-
-								for (; range.compareEndPoints('EndToStart', range) > 0; range.moveEnd('character', -1)) {
-									pos.start++;
-
-									pos.end++;
-								}
-
-								result = pos;
 							}
 						}
 
-						return result;
+						return {
+							start: start,
+							end: end
+						};
 					},
 
 					_getPrevTermIndex: function(content, position) {
@@ -132,11 +135,41 @@ AUI.add(
 
 						var term = instance.get('term');
 
-						for(var i = position; i >= 0; --i) {
+						for (var i = position; i >= 0; --i) {
 							if (content.charAt(i) === term) {
 								result = i;
 
 								break;
+							}
+						}
+
+						return result;
+					},
+
+					_getQuery: function(val) {
+						var instance = this;
+
+						var result = null;
+
+						var cursorPos = instance._getCursorPos();
+
+						if (cursorPos) {
+							val = val.substring(0, cursorPos.start);
+
+							var term = instance.get('term');
+
+							var lastTermIndex = val.lastIndexOf(term);
+
+							if (lastTermIndex >= 0) {
+								val = val.substring(lastTermIndex);
+
+								var regExp = instance.get('regExp');
+
+								if (regExp.test(val)) {
+									console.log('valid: ' + val.substring(1));
+
+									result = val;
+								}
 							}
 						}
 
@@ -158,8 +191,6 @@ AUI.add(
 							var val = inputNode.val();
 
 							if (val) {
-								//debugger;
-
 								var lastTermIndex = instance._getPrevTermIndex(val, cursorPos.start);
 
 								if (lastTermIndex >= 0) {
@@ -172,9 +203,22 @@ AUI.add(
 									var res = regExp.exec(val);
 
 									if (res) {
-										var newVal = prefix + instance.get('term') + rawResult + val.substring(res[1].length + 1);
+										var restText = val.substring(res[1].length + 1);
+
+										if (restText.length === 0) {
+											rawResult += ' ';
+										}
+
+										var resultText = prefix + instance.get('term') + rawResult;
+
+										var newVal = resultText + restText;
+
+										var resultEndPos = resultText.length + 1;
 
 										inputNode.val(newVal);
+
+										console.log('start: ' + resultEndPos + ' end: ' + resultEndPos);
+										instance._setCursorPos(inputNode, resultEndPos);
 									}
 								}
 							}
@@ -215,36 +259,6 @@ AUI.add(
 						}
 					},
 
-					_getQuery: function(val) {
-						var instance = this;
-
-						var result = null;
-
-						var cursorPos = instance._getCursorPos();
-
-						if (cursorPos) {
-							val = val.substring(0, cursorPos.start);
-
-							var term = instance.get('term');
-
-							var lastTermIndex = val.lastIndexOf(term);
-
-							if (lastTermIndex >= 0) {
-								val = val.substring(lastTermIndex);
-
-								var regExp = instance.get('regExp');
-
-								if (regExp.test(val)) {
-									console.log('valid: ' + val.substring(1));
-
-									result = val;
-								}
-							}
-						}
-
-						return result;
-					},
-
 					_processKeyUp: function(event) {
 						var instance = this;
 
@@ -263,6 +277,37 @@ AUI.add(
 							console.log('key no query');
 
 							instance.ac.hide();
+						}
+					},
+
+					_setCursorPos: function(node, cursorPos) {
+						var instance = this;
+
+						node = node || instance.get('input');
+
+						var input = node.getDOMNode();
+
+						if (input.createTextRange) {
+							var val = node.val().substring(0, cursorPos);
+
+							var count = 0;
+
+							var newLines = /\r\n/g;
+
+							while (newLines.exec(val) !== null) {
+								count++;
+							}
+
+							var range = input.createTextRange();
+
+							range.move('character', cursorPos - count);
+
+							range.select();
+						}
+						else if (Lang.isNumber(input.selectionStart)) {
+							input.focus();
+
+							input.setSelectionRange(cursorPos, cursorPos);
 						}
 					},
 
