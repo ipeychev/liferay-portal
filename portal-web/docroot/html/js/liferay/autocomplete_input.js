@@ -22,7 +22,7 @@ AUI.add(
 
 					regExp: {
 						setter: '_setRegExp',
-						value: '(?:\\sterm|^term)[^\\s]+$'
+						value: '(?:\\sterm|^term)([^\\s]+)'
 					},
 
 					source: {
@@ -58,12 +58,15 @@ AUI.add(
 
 						var ac = new A.AutoComplete(
 							{
+								activateFirstItem: true,
 								inputNode: inputNode,
 								maxResults: instance.get('maxResults'),
 								on: {
 									query: A.bind(instance._onACQuery, instance),
 									select: A.bind(instance._onACSelect, instance)
 								},
+								resultFilters: 'phraseMatch',
+    							resultHighlighter: 'phraseMatch',
 								source: instance.get('source')
 							}
 						).render();
@@ -74,7 +77,11 @@ AUI.add(
 					},
 
 					_getCursorPos: function(node) {
+						var instance = this;
+
 						var result = null;
+
+						node = node || instance.get('input');
 
 						var input = node.getDOMNode();
 
@@ -118,36 +125,102 @@ AUI.add(
 						return result;
 					},
 
+					_getPrevTermIndex: function(content, position) {
+						var instance = this;
+
+						var result = -1;
+
+						var term = instance.get('term');
+
+						for(var i = position; i >= 0; --i) {
+							if (content.charAt(i) === term) {
+								result = i;
+
+								break;
+							}
+						}
+
+						return result;
+					},
+
 					_onACSelect: function(event) {
-						
+						var instance = this;
+
+						event.preventDefault();
+
+						var rawResult = event.result.raw;
+
+						var cursorPos = instance._getCursorPos();
+
+						if (cursorPos) {
+							var inputNode = instance.get('input');
+
+							var val = inputNode.val();
+
+							if (val) {
+								//debugger;
+
+								var lastTermIndex = instance._getPrevTermIndex(val, cursorPos.start);
+
+								if (lastTermIndex >= 0) {
+									var prefix = val.substring(0, lastTermIndex);
+
+									val = val.substring(lastTermIndex);
+
+									var regExp = instance.get('regExp');
+
+									var res = regExp.exec(val);
+
+									if (res) {
+										var newVal = prefix + instance.get('term') + rawResult + val.substring(res[1].length + 1);
+
+										inputNode.val(newVal);
+									}
+								}
+							}
+						}
 					},
 
 					_onACQuery: function(event) {
 						var instance = this;
 
-						var input = instance._processQuery(event.query);
+						var input = instance._getQuery(event.query);
 
-						event.query = input;
+						if (input) {
+							event.query = input.substring(1);
 
-						console.log(event.query);
+							console.log('original query: ' + event.query);
+						}
+						else {
+							console.log('original no query');
+
+							event.preventDefault();
+
+							if (instance.ac.get('visible')) {
+								instance.ac.hide();
+							}
+						}
 					},
 
 					_onKeyUp: function(event) {
 						var instance = this;
 
-						var inputNode = instance.get('input');
+						var acVisible = instance.ac.get('visible');
 
-						instance._processQuery(inputNode.val());
+						if (!acVisible) {
+							instance._processKeyUp(event);
+						}
+						else if(event.keyCode === 37 || event.keyCode === 39) {
+							instance._processKeyUp(event);
+						}
 					},
 
-					_processQuery: function(val) {
+					_getQuery: function(val) {
 						var instance = this;
 
 						var result = null;
 
-						var inputNode = instance.get('input');
-
-						var cursorPos = instance._getCursorPos(inputNode);
+						var cursorPos = instance._getCursorPos();
 
 						if (cursorPos) {
 							val = val.substring(0, cursorPos.start);
@@ -172,6 +245,27 @@ AUI.add(
 						return result;
 					},
 
+					_processKeyUp: function(event) {
+						var instance = this;
+
+						var inputNode = instance.get('input');
+
+						var input = instance._getQuery(inputNode.val());
+
+						if (input) {
+							input = input.substring(1);
+
+							console.log('key query: ' + input);
+
+							instance.ac.sendRequest(input);
+						}
+						else if (instance.ac.get('visible')) {
+							console.log('key no query');
+
+							instance.ac.hide();
+						}
+					},
+
 					_setRegExp: function(value) {
 						var instance = this;
 
@@ -187,6 +281,6 @@ AUI.add(
 	},
 	'',
 	{
-		requires: ['aui-base', 'autocomplete', 'aui-event-input']
+		requires: ['aui-base', 'autocomplete', 'autocomplete-filters', 'autocomplete-highlighters']
 	}
 );

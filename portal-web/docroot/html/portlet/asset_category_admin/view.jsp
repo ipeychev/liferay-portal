@@ -16,19 +16,6 @@
 
 <%@ include file="/html/portlet/asset_category_admin/init.jsp" %>
 
-<aui:input name="test123" type="textarea"/>
-
-<aui:script use="liferay-autocomplete-input">
-	var lai = new Liferay.AutoCompleteInput(
-		{
-			input: '#<portlet:namespace />test123',
-			source: ['sergio', 'iliyan', 'chema', 'carlos', 'carlos1', 'carlos2', 'carlos3']
-		}
-	);
-
-
-</aui:script>
-
 <aui:form name="fm">
 	<aui:nav-bar>
 		<aui:nav>
@@ -80,6 +67,87 @@
 					<div class="unstyled vocabulary-list"></div>
 
 			<div class="vocabularies-pagination"></div>
+
+			<aui:input name="test123" type="textarea"
+			value="@c test
+
+@c sdfasdf"/>
+
+			<aui:script use="liferay-autocomplete-input">
+				var lai = new Liferay.AutoCompleteInput(
+					{
+						input: '#<portlet:namespace />test123',
+						source: ['sergio', 'iliyan', 'chema', 'carlos', 'carlos1', 'carlos2', 'carlos3']
+					}
+				);
+
+
+			</aui:script>
+
+			<aui:input name="ac-input"/>
+
+
+			<aui:script use="autocomplete,autocomplete-filters,autocomplete-highlighters">
+				var states = [
+				    'Alabama',
+				    'Alaska',
+				    'Arizona',
+				    'Arkansas',
+				    'California',
+				    'Colorado',
+				    'Connecticut',
+				    'Delaware',
+				    'Florida',
+				    'Georgia',
+				    'Hawaii',
+				    'Idaho',
+				    'Illinois',
+				    'Indiana',
+				    'Iowa',
+				    'Kansas',
+				    'Kentucky',
+				    'Louisiana',
+				    'Maine',
+				    'Maryland',
+				    'Massachusetts',
+				    'Michigan',
+				    'Minnesota',
+				    'Mississippi',
+				    'Missouri',
+				    'Montana',
+				    'Nebraska',
+				    'Nevada',
+				    'New Hampshire',
+				    'New Jersey',
+				    'New Mexico',
+				    'New York',
+				    'North Dakota',
+				    'North Carolina',
+				    'Ohio',
+				    'Oklahoma',
+				    'Oregon',
+				    'Pennsylvania',
+				    'Rhode Island',
+				    'South Carolina',
+				    'South Dakota',
+				    'Tennessee',
+				    'Texas',
+				    'Utah',
+				    'Vermont',
+				    'Virginia',
+				    'Washington',
+				    'West Virginia',
+				    'Wisconsin',
+				    'Wyoming'
+				  ];
+
+				  A.one('#<portlet:namespace />ac-input').plug(A.Plugin.AutoComplete, {
+				    resultFilters    : 'phraseMatch',
+				    resultHighlighter: 'phraseMatch',
+				    source           : states
+				  });
+			</aui:script>
+
 		</aui:col>
 
 		<aui:col cssClass="vocabulary-categories-container" width="<%= 40 %>">

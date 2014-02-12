@@ -113,7 +113,9 @@
 						requires: [
 							'aui-base',
 							'autocomplete',
-							'aui-event-input'
+							'autocomplete',
+							'autocomplete-filters',
+							'autocomplete-highlighters'
 						]
 					},
 					'liferay-browser-selectors': {
