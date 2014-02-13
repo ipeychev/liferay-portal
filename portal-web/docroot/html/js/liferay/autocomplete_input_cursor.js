@@ -1,7 +1,6 @@
 AUI.add(
 	'liferay-autocomplete-input-cursor',
 	function(A) {
-		debugger;
 		var AutcompleteInputCursor = function(){};
 
 		AutcompleteInputCursor.prototype = {
