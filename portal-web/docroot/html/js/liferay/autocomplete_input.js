@@ -12,7 +12,11 @@ AUI.add(
 			40
 		];
 
-		var KEY_DOWN = 40;
+		var KEY_ARROW_DOWN = 40;
+
+		var KEY_ARROW_LEFT = 37;
+
+		var KEY_ARROW_RIGHT = 39;
 
 		var REGEX_NEW_LINE = /\r\n/g;
 
@@ -79,7 +83,7 @@ AUI.add(
 
 						ac.on('query', instance._onACQuery, instance);
 
-						ac._keys[KEY_DOWN] = A.bind(instance._onACKeyDown, instance);
+						ac._keys[KEY_ARROW_DOWN] = A.bind(instance._onACKeyDown, instance);
 
 						ac._updateValue = A.bind(instance._acUpdateValue, instance);
 
@@ -134,21 +138,13 @@ AUI.add(
 									if (res) {
 										var restText = val.substring(res[1].length + 1);
 
-										if (restText.length === 0 || REGEX_NEW_LINE.test(restText.charAt(restText.length - 1))) {
-											var spaceAdded = true;
-
-											text += ' ';
-										}
-
-										var resultText = prefix + instance.get(STR_TERM) + text;
+										var resultText = prefix + instance.get(STR_TERM) + text + ' ';
 
 										var newVal = resultText + restText;
 
-										var resultEndPos = resultText.length + (spaceAdded ? 0 : 1);
-
 										inputNode.val(newVal);
 
-										instance._setCursorPos(inputNode, resultEndPos);
+										instance._setCursorPos(inputNode, resultText.length);
 									}
 								}
 							}
@@ -273,7 +269,7 @@ AUI.add(
 						if (!acVisible) {
 							instance._processKeyUp(event);
 						}
-						else if(event.keyCode === 37 || event.keyCode === 39) {
+						else if(event.keyCode === KEY_ARROW_LEFT || event.keyCode === KEY_ARROW_RIGHT) {
 							instance._processKeyUp(event);
 						}
 					},

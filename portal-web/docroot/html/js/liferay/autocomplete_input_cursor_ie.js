@@ -1,8 +1,6 @@
 AUI.add(
 	'liferay-autocomplete-input-cursor-ie',
 	function(A) {
-		var REGEX_NEW_LINE = /\r\n/g;
-
 		var STR_CHARACTER = 'character';
 
 		var STR_END_TO_END = 'EndToEnd';
@@ -30,7 +28,7 @@ AUI.add(
 
 				if (range && range.parentElement() === input) {
 					len = input.value.length;
-					normalizedValue = input.value.replace(REGEX_NEW_LINE, '\n');
+					normalizedValue = input.value.replace(/\r\n/g, '\n');
 
 					textInputRange = input.createTextRange();
 					textInputRange.moveToBookmark(range.getBookmark());
@@ -67,12 +65,13 @@ AUI.add(
 				var input = node.getDOMNode();
 
 				if (input.createTextRange) {
-					debugger;
 					var val = node.val().substring(0, cursorPos);
 
 					var count = 0;
 
-					while (REGEX_NEW_LINE.exec(val) !== null) {
+					var regExpNewLine = /\r\n/g;
+
+					while (regExpNewLine.exec(val) !== null) {
 						count++;
 					}
 
