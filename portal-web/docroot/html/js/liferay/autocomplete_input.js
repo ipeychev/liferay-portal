@@ -26,6 +26,8 @@ AUI.add(
 
 		var STR_SOURCE = 'source';
 
+		var STR_SPACE = ' ';
+
 		var STR_TERM = 'term';
 
 		var STR_TPL_RESULTS = 'tplResults';
@@ -138,13 +140,21 @@ AUI.add(
 									if (res) {
 										var restText = val.substring(res[1].length + 1);
 
-										var resultText = prefix + instance.get(STR_TERM) + text + ' ';
+										if (restText.length === 0 || restText.charAt(0) !== STR_SPACE) {
+											text += ' ';
+
+											var spaceAdded = true;
+										}
+
+										var resultText = prefix + instance.get(STR_TERM) + text;
 
 										var newVal = resultText + restText;
 
+										var resultEndPos = resultText.length + (spaceAdded ? 0 : 1);
+
 										inputNode.val(newVal);
 
-										instance._setCursorPos(inputNode, resultText.length);
+										instance._setCursorPos(inputNode, resultEndPos);
 									}
 								}
 							}
