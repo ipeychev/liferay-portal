@@ -8,6 +8,12 @@
 
 	var PATH_JAVASCRIPT = LiferayAUI.getJavaScriptRootPath();
 
+	var hasSelection = function() {
+		var input = document.createElement('input');
+
+		return ((typeof input.selectionStart === 'number') && (typeof input.selectionEnd === 'number'));
+	}();
+
 	window.YUI_config = {
 		base: PATH_JAVASCRIPT + '/aui/',
 		combine: COMBINE,
@@ -116,6 +122,32 @@
 							'autocomplete',
 							'autocomplete-filters',
 							'autocomplete-highlighters'
+						]
+					},
+					'liferay-autocomplete-input-cursor': {
+						condition: {
+							name: 'liferay-autocomplete-input-cursor',
+							test: function() {
+								return hasSelection;
+							},
+							trigger: 'liferay-autocomplete-input'
+						},
+						path: 'autocomplete_input_cursor.js',
+						requires: [
+							'liferay-autocomplete-input'
+						]
+					},
+					'liferay-autocomplete-input-cursor-ie': {
+						condition: {
+							name: 'liferay-autocomplete-input-cursor-ie',
+							test: function() {
+								return !hasSelection;
+							},
+							trigger: 'liferay-autocomplete-input'
+						},
+						path: 'autocomplete_input_cursor_ie.js',
+						requires: [
+							'liferay-autocomplete-input'
 						]
 					},
 					'liferay-browser-selectors': {

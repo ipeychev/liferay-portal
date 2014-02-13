@@ -68,7 +68,7 @@
 
 			<div class="vocabularies-pagination"></div>
 
-			<aui:input name="test123" type="textarea"
+			<aui:input name="test123" type="textarea" with="300" height="400"
 			value="@c test
 
 @c sdfasdf"/>
@@ -76,11 +76,48 @@
 			<aui:script use="liferay-autocomplete-input">
 				var lai = new Liferay.AutoCompleteInput(
 					{
-						input: '#<portlet:namespace />test123',
-						source: ['sergio', 'iliyan', 'chema', 'carlos', 'carlos1', 'carlos2', 'carlos3']
+						'acConfig.resultFormatter': function() {
+							debugger;
+						},
+						'acConfig.resultTextLocator': 'text',
+						inputNode: '#<portlet:namespace />test123',
+						source: [
+							{
+							    text: 'chema',
+							    name: 'chema'
+							},
+							{
+							    text: 'iliyan',
+							    name: 'iliyan'
+							},
+							{
+							    text: 'carlos',
+							    name: 'carlos'
+							},
+							{
+							    text: 'carlos1',
+							    name: 'carlos1'
+							},
+							{
+							    text: 'carlos2',
+							    name: 'carlos2'
+							},
+							{
+							    text: 'migue',
+							    name: 'migue'
+							},
+							{
+							    text: 'miguel',
+							    name: 'miguel'
+							},
+							{
+							    text: 'jose',
+							    name: 'jose'
+							}
+						],
+						tplResults: '<div>{name}</div>'
 					}
 				);
-
 
 			</aui:script>
 
