@@ -5,6 +5,8 @@ AUI.add(
 
 		var AArray = A.Array;
 
+		var ANode = A.Node;
+
 		var ARROW_KEYS = [
 			37,
 			38,
@@ -33,6 +35,35 @@ AUI.add(
 		var STR_TPL_RESULTS = 'tplResults';
 
 		var STR_VISIBLE = 'visible';
+
+		var TPL_CARET = '<span class="input-caret">&nbsp</span>';
+
+		var TPL_INPUT_MIRROR = '<div class="input-mirror">' +
+			'</div>';
+
+		var MIRROR_STYLES = [
+			'boxSizing',
+			'fontFamily',
+			'fontSize',
+			'fontStyle',
+			'fontVariant',
+			'fontWeight',
+			'height',
+			'left',
+			'letterSpacing',
+			'lineHeight',
+			'maxHeight',
+			'minHeight',
+			'padding',
+			'textDecoration',
+			'textIndent',
+			'textTransform',
+			'top',
+			'whiteSpace',
+			'width',
+			'word-wrap',
+			'wordSpacing'
+		];
 
 		var AutoCompleteInput = A.Component.create(
 			{
@@ -85,11 +116,17 @@ AUI.add(
 
 						ac.on('query', instance._onACQuery, instance);
 
+						ac.after('visibleChange', instance._afterACVisibleChange, instance);
+
 						ac._keys[KEY_ARROW_DOWN] = A.bind(instance._onACKeyDown, instance);
+
+						A.Do.before(instance._syncACPosition, ac, '_syncUIPosAlign', instance);
 
 						ac._updateValue = A.bind(instance._acUpdateValue, instance);
 
 						instance.ac = ac;
+
+						instance._renderUI();
 
 						instance._bindUI();
 					},
@@ -98,6 +135,8 @@ AUI.add(
 						var instance = this;
 
 						instance.ac.destroy();
+
+						instance._inputMirror.remove();
 					},
 
 					_acResultFormatter: function(query, results) {
@@ -161,6 +200,91 @@ AUI.add(
 						}
 					},
 
+					_adjustACPosition: function() {
+						var instance = this;
+
+						instance._applyMirrorStyles();
+
+						instance._applyMirrorContent();
+
+						var caretXY = instance._getCaretXY();
+
+						var inputNode = instance.get(STR_INPUT_NODE);
+
+						var xy = inputNode.getXY();
+
+						xy[0] += caretXY.x;
+						xy[1] += caretXY.y + Lang.toInt(inputNode.getStyle('fontSize')) + 2;
+
+						var acBoundingBox = instance.ac.get('boundingBox');
+
+						acBoundingBox.setStyle('left', xy[0]);
+						acBoundingBox.setStyle('top', xy[1]);
+					},
+
+					_afterACVisibleChange: function(event) {
+						var instance = this;
+
+						if (event.newVal) {
+							instance._syncACPosition();
+						}
+					},
+
+					_applyMirrorContent: function() {
+						var instance = this;
+
+						var input = instance.get(STR_INPUT_NODE);
+
+						var cursorPos = instance._getCursorPos().start;
+
+						var val = input.val();
+
+						var content;
+
+						var character;
+
+						if (cursorPos === val.length) {
+							content = val + TPL_CARET;
+						}
+						else {
+							var tmp = [];
+
+							for (var i = 0, len = val.length; i < len; i++) {
+								if (i === cursorPos) {
+									character = TPL_CARET;
+								}
+								else {
+									character = val.charAt(i);
+								}
+
+								tmp.push(character);
+
+								content = tmp.join('');
+							}
+						}
+
+						instance._inputMirror.html(content);
+					},
+
+					_applyMirrorStyles: function() {
+						var instance = this;
+
+						var inputMirror = instance._inputMirror;
+						var inputNode = instance.get(STR_INPUT_NODE);
+
+						var styles = {};
+
+						AArray.each(
+							MIRROR_STYLES,
+							function(item, index, collection) {
+
+								styles[item] = inputNode.getStyle(item, index);
+							}
+						);
+
+						inputMirror.setStyles(styles);
+					},
+
 					_bindUI: function() {
 						var instance = this;
 
@@ -193,6 +317,26 @@ AUI.add(
 						}
 
 						return acConfig;
+					},
+
+					_getCaretXY: function() {
+						var instance = this;
+
+						var inputCaretNode = instance._inputMirror.one('.input-caret');
+
+						var inputCaretDOMNode = inputCaretNode.getDOMNode();
+
+						var input = instance.get('inputNode');
+
+						var domNode = input.getDOMNode();
+
+						var scrollLeft = domNode.scrollLeft;
+						var scrollTop = domNode.scrollTop;
+
+						return {
+							x: inputCaretDOMNode.offsetLeft + scrollLeft,
+							y: inputCaretDOMNode.offsetTop - scrollTop
+						}
 					},
 
 					_getPrevTermIndex: function(content, position) {
@@ -301,12 +445,32 @@ AUI.add(
 						}
 					},
 
+					_renderUI: function() {
+						var instance = this;
+
+						var inputMirror = ANode.create(TPL_INPUT_MIRROR);
+
+						A.getBody().appendChild(inputMirror);
+
+						instance._inputMirror = inputMirror;
+					},
+
 					_setRegExp: function(value) {
 						var instance = this;
 
 						var term = instance.get(STR_TERM);
 
 						return new RegExp(value.replace(/term/g, term));
+					},
+
+					_syncACPosition: function() {
+						var instance = this;
+
+						instance._adjustACPosition();
+
+						console.log('instance._adjustACPosition();');
+
+						return new A.Do.Halt(null, -1);
 					}
 				}
 			}

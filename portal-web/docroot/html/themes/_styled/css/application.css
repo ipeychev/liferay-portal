@@ -460,6 +460,16 @@
 	background-color: transparent;
 }
 
+/* ---------- Input mirror ---------- */
+
+.input-mirror {
+	left: -9999px;
+	overflow: auto;
+	position: absolute;
+	top: -9999px;
+	visibility: hidden;
+}
+
 /* ---------- Page customization ---------- */
 
 .dragging .portlet-column.customizable {
