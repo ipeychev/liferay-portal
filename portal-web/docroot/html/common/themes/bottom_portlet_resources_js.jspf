@@ -20,9 +20,10 @@
 
 	<%
 		PredicateFilter<String> resourcePredicateFilter = new JavascriptPortletResourceFilter(themeDisplay);
-
 		PortletResourcesAccessor[] portletResourcesAccessors = new PortletResourcesAccessor[] {PortletResourcesAccessor.footerPortalJavaScript, PortletResourcesAccessor.footerPortletJavaScript};
 		List<String> resourceUrls = new ArrayList<String>();
+		boolean resourceFastLoad = themeDisplay.isThemeJsFastLoad();
+
 	%>
 	<%@ include file="portlet_resources.jspf" %>
 
