@@ -33,30 +33,42 @@ import javax.servlet.http.HttpServletRequest;
 public class PortletResourcesUrlGenerator {
 
 	public List<String> generate(
-		Portlet portlet, String contextPath,
-		PortletResourcesAccessor resourcePortletAccesor) {
+		Portlet portlet,
+		PortletResourcesAccessor ... portletResourcesAccessors) {
 
 		List<String> urls = new ArrayList<String>();
 
-		for (String resource : resourcePortletAccesor.get(portlet)) {
-			if (!HttpUtil.hasProtocol(resource)) {
-				Portlet curRootPortlet = portlet.getRootPortlet();
+		for (PortletResourcesAccessor portletResourcesAccessor :
+			portletResourcesAccessors) {
 
-				resource = PortalUtil.getStaticResourceURL(
-					_request, contextPath + resource,
-					curRootPortlet.getTimestamp());
+			String contextPath;
+			if (portletResourcesAccessor.isPortalResource()) {
+				contextPath = PortalUtil.getPathContext();
+			}
+			else {
+				contextPath = portlet.getContextPath();
 			}
 
-			if (!resource.contains(Http.PROTOCOL_DELIMITER)) {
-				String cdnBaseURL = _themeDisplay.getCDNBaseURL();
+			for (String resource : portletResourcesAccessor.get(portlet)) {
+				if (!HttpUtil.hasProtocol(resource)) {
+					Portlet curRootPortlet = portlet.getRootPortlet();
 
-				resource = cdnBaseURL.concat(resource);
-			}
+					resource = PortalUtil.getStaticResourceURL(
+						_request, contextPath + resource,
+						curRootPortlet.getTimestamp());
+				}
 
-			if (!_visited.contains(resource)) {
-				urls.add(resource);
+				if (!resource.contains(Http.PROTOCOL_DELIMITER)) {
+					String cdnBaseURL = _themeDisplay.getCDNBaseURL();
 
-				_visited.add(resource);
+					resource = cdnBaseURL.concat(resource);
+				}
+
+				if (!_visited.contains(resource)) {
+					urls.add(resource);
+
+					_visited.add(resource);
+				}
 			}
 		}
 
