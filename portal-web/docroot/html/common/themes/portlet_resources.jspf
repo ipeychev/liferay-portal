@@ -25,10 +25,10 @@
 		request.setAttribute(WebKeys.PORTLET_RESOURCE_STATIC_URLS, portletResourceStaticURLs);
 	}
 
-	if (themeDisplay.isThemeJsFastLoad()) {
+	if (resourceFastLoad) {
 		ComboServletUrlGenerator comboServletUrlGenerator = new ComboServletUrlGenerator();
 
-		String comboURLPrefix = PortalUtil.getStaticResourceURL(request, themeDisplay.getCDNDynamicResourcesHost() + themeDisplay.getPathContext() + "/combo", "minifierType=");
+		String comboURLPrefix = PortalUtil.getStaticResourceURL(request, themeDisplay.getCDNDynamicResourcesHost() + themeDisplay.getPathContext() + "/combo", "minifierType=&themeId=" + themeDisplay.getThemeId(), -1);
 
 		comboServletUrlGenerator.setComboURLPrefix(comboURLPrefix);
 
