@@ -68,122 +68,171 @@
 
 			<div class="vocabularies-pagination"></div>
 
-			<aui:input name="test123" type="textarea" with="300" height="400"
-			value="@c test
+			<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 
-@c sdfasdf"/>
+			<script type="text/javascript">
+				/**
+ * jQuery plugin for getting position of cursor in textarea
 
-			<aui:script use="liferay-autocomplete-input">
-				var lai = new Liferay.AutoCompleteInput(
-					{
-						'acConfig.resultFormatter': function() {
-							debugger;
-						},
-						'acConfig.resultTextLocator': 'text',
-						inputNode: '#<portlet:namespace />test123',
-						source: [
-							{
-							    text: 'chema',
-							    name: 'chema'
-							},
-							{
-							    text: 'iliyan',
-							    name: 'iliyan'
-							},
-							{
-							    text: 'carlos',
-							    name: 'carlos'
-							},
-							{
-							    text: 'carlos1',
-							    name: 'carlos1'
-							},
-							{
-							    text: 'carlos2',
-							    name: 'carlos2'
-							},
-							{
-							    text: 'migue',
-							    name: 'migue'
-							},
-							{
-							    text: 'miguel',
-							    name: 'miguel'
-							},
-							{
-							    text: 'jose',
-							    name: 'jose'
-							}
-						],
-						tplResults: '<div>{name}</div>'
-					}
-				);
+ * @license under Apache license
+ * @author Bevis Zhao (i@bevis.me, http://bevis.me)
+ */
 
-			</aui:script>
+(function($, window, document, undefined){
+	$(function() {
+		var calculator = {
+			// key styles
+			primaryStyles: ['fontFamily', 'fontSize', 'fontWeight', 'fontVariant', 'fontStyle',
+				'paddingLeft', 'paddingTop', 'paddingBottom', 'paddingRight',
+				'marginLeft', 'marginTop', 'marginBottom', 'marginRight',
+				'borderLeftColor', 'borderTopColor', 'borderBottomColor', 'borderRightColor',
+				'borderLeftStyle', 'borderTopStyle', 'borderBottomStyle', 'borderRightStyle',
+				'borderLeftWidth', 'borderTopWidth', 'borderBottomWidth', 'borderRightWidth',
+				'line-height', 'outline'],
 
-			<aui:input name="ac-input"/>
+			specificStyle: {
+				'white-space': 'pre-wrap',
+				'word-wrap': 'break-word',
+				'overflow-x': 'hidden',
+				'overflow-y': 'auto'
+			},
+
+			simulator : $('<div id="textarea_simulator"/>').css({
+					position: 'absolute',
+					top: 0,
+					left: 0,
+					visibility: 'hidden'
+				}).appendTo(document.body),
+
+			toHtml : function(text) {
+				return text;
+			},
+			// calculate position
+			getCaretPosition: function() {
+				var cal = calculator, self = this, element = self[0], elementOffset = self.offset();
+
+				// IE has easy way to get caret offset position
+				if ($.browser.msie) {
+					// must get focus first
+					element.focus();
+				    var range = document.selection.createRange();
+				    return {
+				        left: range.boundingLeft - elementOffset.left,
+				        top: parseInt(range.boundingTop) - elementOffset.top + element.scrollTop
+							+ document.documentElement.scrollTop + parseInt(self.getComputedStyle("fontSize"))
+				    };
+				}
+				cal.simulator.empty();
+				// clone primary styles to imitate textarea
+				$.each(cal.primaryStyles, function(index, styleName) {
+					self.cloneStyle(cal.simulator, styleName);
+				});
+
+				// caculate width and height
+				cal.simulator.css($.extend({
+					'width': self.width(),
+					'height': self.height()
+				}, cal.specificStyle));
+
+				var value = self.val(), cursorPosition = self.getCursorPosition();
+				var beforeText = value.substring(0, cursorPosition),
+					afterText = value.substring(cursorPosition);
+
+				var before = cal.toHtml(beforeText),
+					focus = $('<span class="focus"/>'),
+					after = cal.toHtml(afterText);
+
+				cal.simulator.append(before).append(focus).append(after);
+				var focusOffset = focus.offset(), simulatorOffset = cal.simulator.offset();
+				// alert(focusOffset.left  + ',' +  simulatorOffset.left + ',' + element.scrollLeft);
+				return {
+					top: focusOffset.top - simulatorOffset.top - element.scrollTop
+						// calculate and add the font height except Firefox
+						+ parseInt(self.getComputedStyle("fontSize")),
+					left: focus[0].offsetLeft -  cal.simulator[0].offsetLeft - element.scrollLeft
+				};
+			}
+		};
+
+		$.fn.extend({
+			getComputedStyle: function(styleName) {
+				if (this.length == 0) return;
+				var thiz = this[0];
+				var result = this.css(styleName);
+				result = result || ($.browser.msie ?
+					thiz.currentStyle[styleName]:
+					document.defaultView.getComputedStyle(thiz, null)[styleName]);
+				return result;
+			},
+			// easy clone method
+			cloneStyle: function(target, styleName) {
+				var styleVal = this.getComputedStyle(styleName);
+				if (!!styleVal) {
+					$(target).css(styleName, styleVal);
+				}
+			},
+			cloneAllStyle: function(target, style) {
+				var thiz = this[0];
+				for (var styleName in thiz.style) {
+					var val = thiz.style[styleName];
+					typeof val == 'string' || typeof val == 'number'
+						? this.cloneStyle(target, styleName)
+						: NaN;
+				}
+			},
+			getCursorPosition : function() {
+		        var thiz = this[0], result = 0;
+		        if ('selectionStart' in thiz) {
+		            result = thiz.selectionStart;
+		        } else if('selection' in document) {
+		        	var range = document.selection.createRange();
+		        	if (parseInt($.browser.version) > 6) {
+			            thiz.focus();
+			            var length = document.selection.createRange().text.length;
+			            range.moveStart('character', - thiz.value.length);
+			            result = range.text.length - length;
+		        	} else {
+		                var bodyRange = document.body.createTextRange();
+		                bodyRange.moveToElementText(thiz);
+		                for (; bodyRange.compareEndPoints("StartToStart", range) < 0; result++)
+		                	bodyRange.moveStart('character', 1);
+		                for (var i = 0; i <= result; i ++){
+		                    if (thiz.value.charAt(i) == '\n')
+		                        result++;
+		                }
+		                var enterCount = thiz.value.split('\n').length - 1;
+						result -= enterCount;
+	                    return result;
+		        	}
+		        }
+		        return result;
+		    },
+			getCaretPosition: calculator.getCaretPosition
+		});
+	});
+})(jQuery, window, document);
 
 
-			<aui:script use="autocomplete,autocomplete-filters,autocomplete-highlighters">
-				var states = [
-				    'Alabama',
-				    'Alaska',
-				    'Arizona',
-				    'Arkansas',
-				    'California',
-				    'Colorado',
-				    'Connecticut',
-				    'Delaware',
-				    'Florida',
-				    'Georgia',
-				    'Hawaii',
-				    'Idaho',
-				    'Illinois',
-				    'Indiana',
-				    'Iowa',
-				    'Kansas',
-				    'Kentucky',
-				    'Louisiana',
-				    'Maine',
-				    'Maryland',
-				    'Massachusetts',
-				    'Michigan',
-				    'Minnesota',
-				    'Mississippi',
-				    'Missouri',
-				    'Montana',
-				    'Nebraska',
-				    'Nevada',
-				    'New Hampshire',
-				    'New Jersey',
-				    'New Mexico',
-				    'New York',
-				    'North Dakota',
-				    'North Carolina',
-				    'Ohio',
-				    'Oklahoma',
-				    'Oregon',
-				    'Pennsylvania',
-				    'Rhode Island',
-				    'South Carolina',
-				    'South Dakota',
-				    'Tennessee',
-				    'Texas',
-				    'Utah',
-				    'Vermont',
-				    'Virginia',
-				    'Washington',
-				    'West Virginia',
-				    'Wisconsin',
-				    'Wyoming'
-				  ];
+			</script>
+			<script type="text/javascript">
+				$(function() {
+					var tip = $('#tip');
+					$('#textarea').bind('keyup', function(e) {
+						if (e.keyCode == 65) {
+							var pos = $(this).getCaretPosition();
+							tip.css({
+								left: this.offsetLeft + pos.left,
+								top: this.offsetTop + pos.top
+							}).show();
+						}
+					})
+				});
+			</script>
 
-				  A.one('#<portlet:namespace />ac-input').plug(A.Plugin.AutoComplete, {
-				    resultFilters    : 'phraseMatch',
-				    resultHighlighter: 'phraseMatch',
-				    source           : states
-				  });
-			</aui:script>
+
+			<h2>Input 'a' in textarea for test!</h2>
+			<textarea id="textarea" rows='3' style='width:415px;' style='resize:none'></textarea>
+			<div id="tip" style='width:20px; height:5px; background-color:red; display:none; position:absolute;background-color:red;font-size:0;'></div>
 
 		</aui:col>
 
