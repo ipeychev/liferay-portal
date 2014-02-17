@@ -11,9 +11,11 @@ AUI.add(
 
 		var KEY_ARROW_RIGHT = 39;
 
-		var KEY_ARROW_UP = 39;
+		var KEY_ARROW_UP = 38;
 
 		var STR_INPUT_NODE = 'inputNode';
+
+		var STR_PHRASE_MATCH = 'phraseMatch';
 
 		var STR_REG_EXP = 'regExp';
 
@@ -34,8 +36,8 @@ AUI.add(
 						validator: Lang.isObject,
 						value: {
 							activateFirstItem: true,
-							resultFilters: 'phraseMatch',
-							resultHighlighter: 'phraseMatch'
+							resultFilters: STR_PHRASE_MATCH,
+							resultHighlighter: STR_PHRASE_MATCH
 						}
 					},
 
@@ -45,11 +47,7 @@ AUI.add(
 					},
 
 					inputNode: {
-						setter: function(value) {
-							var res = A.one(value);
-
-							return res;
-						},
+						setter: A.one,
 						writeOnce: true
 					},
 
@@ -97,6 +95,8 @@ AUI.add(
 						if (instance._inputMirror) {
 							instance._inputMirror.remove();
 						}
+
+						(new A.EventHandle(instance._eventHandles)).detach();
 					},
 
 					_acResultFormatter: function(query, results) {
@@ -161,8 +161,6 @@ AUI.add(
 					_adjustACPosition: function() {
 						var instance = this;
 
-						console.log('_adjustACPosition');
-
 						var inputNode = instance.get(STR_INPUT_NODE);
 
 						var xy = inputNode.getXY();
@@ -216,8 +214,10 @@ AUI.add(
 
 						var inputNode = instance.get(STR_INPUT_NODE);
 
-						inputNode.on('key', A.bind(instance._onKeyUp, instance), 'up:' +
-							KEY_ARROW_DOWN + ',' + KEY_ARROW_LEFT + ',' + KEY_ARROW_RIGHT + ',' + KEY_ARROW_UP);
+						instance._eventHandles = [
+							inputNode.on('key', A.bind(instance._onKeyUp, instance), 'up:' +
+								KEY_ARROW_DOWN + ',' + KEY_ARROW_LEFT + ',' + KEY_ARROW_RIGHT + ',' + KEY_ARROW_UP)
+						];
 					},
 
 					_getACConfig: function() {
@@ -327,10 +327,7 @@ AUI.add(
 
 						var acVisible = instance._ac.get(STR_VISIBLE);
 
-						if (!acVisible) {
-							instance._processKeyUp(event);
-						}
-						else if(event.keyCode === KEY_ARROW_LEFT || event.keyCode === KEY_ARROW_RIGHT) {
+						if (!acVisible || event.isKeyInSet('left', 'right')) {
 							instance._processKeyUp(event);
 						}
 					},
@@ -361,14 +358,10 @@ AUI.add(
 					},
 
 					_syncACPosition: function() {
-						var instance = this;
-
 						return new A.Do.Halt(null, -1);
 					},
 
 					_validateOffset: function(value) {
-						var instance = this;
-
 						return (Lang.isArray(value) || Lang.isNumber(value));
 					}
 				}

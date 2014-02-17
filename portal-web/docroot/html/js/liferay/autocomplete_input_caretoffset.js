@@ -66,7 +66,7 @@ AUI.add(
 				AArray.each(
 					MIRROR_STYLES,
 					function(item, index, collection) {
-						styles[item] = inputNode.getStyle(item, index);
+						styles[item] = inputNode.getStyle(item);
 					}
 				);
 
