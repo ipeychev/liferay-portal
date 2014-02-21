@@ -101,10 +101,7 @@ public class MinifierUtil {
 	}
 
 	private String _minifyJavaScript(String resource, String content) {
-		JavaScriptMinifier javaScriptMinifier =
-			new GoogleClosureCompileJavaScriptMinifier();
-
-		return javaScriptMinifier.compress(resource, content);
+		return _javaScriptMinifierInstance.compress(resource, content);
 	}
 
 	private static Log _log = LogFactoryUtil.getLog(MinifierUtil.class);
