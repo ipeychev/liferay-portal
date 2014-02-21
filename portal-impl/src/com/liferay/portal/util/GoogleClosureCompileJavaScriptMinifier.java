@@ -21,8 +21,10 @@ import com.google.javascript.jscomp.CompilerOptions;
 import com.google.javascript.jscomp.DiagnosticGroups;
 import com.google.javascript.jscomp.JSError;
 import com.google.javascript.jscomp.MessageFormatter;
+import com.google.javascript.jscomp.PropertyRenamingPolicy;
 import com.google.javascript.jscomp.SourceFile;
 
+import com.google.javascript.jscomp.VariableRenamingPolicy;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.StringPool;
@@ -44,11 +46,35 @@ public class GoogleClosureCompileJavaScriptMinifier
 		compilerOptions.setWarningLevel(
 			DiagnosticGroups.NON_STANDARD_JSDOC, CheckLevel.OFF);
 
+
 		compiler.compile(
 			SourceFile.fromCode(
 				"extern", StringPool.BLANK), sourceFile, compilerOptions);
 
 		return compiler.toSource();
+	}
+
+	private void _applySimpleCompileLevelOptions(
+		CompilerOptions compilerOptions) {
+
+		compilerOptions.closurePass = true;
+		compilerOptions.setRenamingPolicy(
+			VariableRenamingPolicy.LOCAL, PropertyRenamingPolicy.OFF);
+		compilerOptions.setInlineVariables(CompilerOptions.Reach.LOCAL_ONLY);
+		compilerOptions.flowSensitiveInlineVariables = true;
+		compilerOptions.setInlineFunctions(CompilerOptions.Reach.LOCAL_ONLY);
+		compilerOptions.setAssumeClosuresOnlyCaptureReferences(false);
+		compilerOptions.checkGlobalThisLevel = CheckLevel.OFF;
+		compilerOptions.foldConstants = true;
+		compilerOptions.coalesceVariableNames = true;
+		compilerOptions.deadAssignmentElimination = true;
+		compilerOptions.collapseVariableDeclarations = true;
+		compilerOptions.convertToDottedProperties = true;
+		compilerOptions.labelRenaming = true;
+		compilerOptions.removeDeadCode = true;
+		compilerOptions.optimizeArgumentsArray = true;
+		compilerOptions.setRemoveUnusedVariables(
+			CompilerOptions.Reach.LOCAL_ONLY);
 	}
 
 	private static Log _log = LogFactoryUtil.getLog(
