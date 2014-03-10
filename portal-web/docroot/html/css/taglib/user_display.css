@@ -35,6 +35,24 @@
 		}
 	}
 
+	&.display-style-4 {
+		padding: 0;
+
+		.user-profile-image {
+			display: inline-block;
+			vertical-align: middle;
+		}
+
+		.user-name {
+			font-weight: bold;
+			margin-left: 8px;
+		}
+
+		.user-details {
+			margin-left: 8px;
+		}
+	}
+
 	.user-details {
 		margin-top: 1em;
 	}
@@ -52,7 +70,7 @@
 		font-weight: bold;
 	}
 
-	&.display-style-3 {
+	&.display-style-3, &.display-style-4 {
 		.user-profile-image {
 			background: #333 no-repeat center;
 		}
