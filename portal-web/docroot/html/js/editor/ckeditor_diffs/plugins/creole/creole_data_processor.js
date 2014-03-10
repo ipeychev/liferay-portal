@@ -49,8 +49,6 @@
 
 	var attachmentURLPrefix;
 
-	var editor;
-
 	var CreoleDataProcessor = function() {};
 
 	CreoleDataProcessor.prototype = {
@@ -58,10 +56,6 @@
 
 		toDataFormat: function(html, fixForBody ) {
 			var instance = this;
-
-			var htmlDataProcessor = new CKEDITOR.htmlDataProcessor(editor);
-
-			html = htmlDataProcessor.toDataFormat(html);
 
 			var data = instance._convert(html);
 
@@ -571,11 +565,9 @@
 	CKEDITOR.plugins.add(
 		'creole_data_processor',
 		{
-			requires: ['htmlwriter','htmldataprocessor'],
+			requires: ['htmlwriter'],
 
-			init: function(editorInit) {
-				editor = editorInit;
-
+			init: function(editor) {
 				attachmentURLPrefix = editor.config.attachmentURLPrefix;
 
 				editor.dataProcessor = new CreoleDataProcessor(editor);
