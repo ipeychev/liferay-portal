@@ -60,6 +60,10 @@ public class InputLocalizedTag extends IncludeTag {
 		_displayWidth = displayWidth;
 	}
 
+	public void setFieldPrefix(String fieldPrefix) {
+		_fieldPrefix = fieldPrefix;
+	}
+
 	public void setFormName(String formName) {
 		_formName = formName;
 	}
@@ -99,6 +103,7 @@ public class InputLocalizedTag extends IncludeTag {
 		_cssClass = null;
 		_disabled = false;
 		_displayWidth = ModelHintsConstants.TEXT_DISPLAY_WIDTH;
+		_fieldPrefix = null;
 		_formName = null;
 		_id = null;
 		_ignoreRequestValue = false;
@@ -150,6 +155,8 @@ public class InputLocalizedTag extends IncludeTag {
 		request.setAttribute(
 			"liferay-ui:input-localized:dynamicAttributes",
 			getDynamicAttributes());
+		request.setAttribute(
+			"liferay-ui:input-localized:fieldPrefix", _fieldPrefix);
 		request.setAttribute("liferay-ui:input-localized:formName", formName);
 		request.setAttribute("liferay-ui:input-localized:id", id);
 		request.setAttribute(
@@ -174,6 +181,7 @@ public class InputLocalizedTag extends IncludeTag {
 	private String _defaultLanguageId;
 	private boolean _disabled;
 	private String _displayWidth = ModelHintsConstants.TEXT_DISPLAY_WIDTH;
+	private String _fieldPrefix;
 	private String _formName;
 	private String _id;
 	private boolean _ignoreRequestValue;
