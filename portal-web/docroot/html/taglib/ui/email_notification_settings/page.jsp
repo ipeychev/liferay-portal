@@ -28,6 +28,9 @@ String helpMessage = (String)request.getAttribute("liferay-ui:email-notification
 String languageId = (String)request.getAttribute("liferay-ui:email-notification-settings:languageId");
 boolean showEmailEnabled = GetterUtil.getBoolean(request.getAttribute("liferay-ui:email-notification-settings:showEmailEnabled"));
 boolean showSubject = GetterUtil.getBoolean(request.getAttribute("liferay-ui:email-notification-settings:showSubject"));
+
+boolean isSubjectLocalized = Validator.isNotNull(emailSubject) && Validator.isXml(emailSubject);
+boolean isBodyLocalized = Validator.isNotNull(emailBody) && Validator.isXml(emailBody);
 %>
 
 <aui:fieldset>
@@ -36,13 +39,38 @@ boolean showSubject = GetterUtil.getBoolean(request.getAttribute("liferay-ui:ema
 	</c:if>
 
 	<c:if test="<%= showSubject %>">
-		<aui:input cssClass="lfr-input-text-container" label="subject" name='<%= fieldPrefix + "--" + emailParam + "Subject" + (Validator.isNotNull(languageId) ? ("_" + languageId) : StringPool.BLANK) + "--" %>' value="<%= emailSubject %>" />
+		<c:choose>
+			<c:when test="<%= isSubjectLocalized %>">
+				<aui:field-wrapper label="subject">
+					<liferay-ui:input-localized
+						fieldPrefix="<%= fieldPrefix %>"
+						name='<%= emailParam + "Subject" %>'
+						xml="<%= emailSubject %>"
+					/>
+				</aui:field-wrapper>
+			</c:when>
+			<c:otherwise>
+				<aui:input cssClass="lfr-input-text-container" label="subject" name='<%= fieldPrefix + "--" + emailParam + "Subject" + (Validator.isNotNull(languageId) ? ("_" + languageId) : StringPool.BLANK) + "--" %>' value="<%= emailSubject %>" />
+			</c:otherwise>
+		</c:choose>
 	</c:if>
 
 	<aui:field-wrapper helpMessage="<%= helpMessage %>" label="<%= bodyLabel %>">
-		<liferay-ui:input-editor editorImpl="<%= EDITOR_WYSIWYG_IMPL_KEY %>" initMethod='<%= "init" + emailParam + "BodyEditor" %>' name="<%= emailParam %>" />
+		<c:choose>
+			<c:when test="<%= isBodyLocalized %>">
+				<liferay-ui:input-localized
+					fieldPrefix="<%= fieldPrefix %>"
+					name='<%= emailParam + "Body" %>'
+					type="editor"
+					xml="<%= emailBody %>"
+				/>
+			</c:when>
+			<c:otherwise>
+				<liferay-ui:input-editor editorImpl="<%= EDITOR_WYSIWYG_IMPL_KEY %>" initMethod='<%= "init" + emailParam + "BodyEditor" %>' name="<%= emailParam %>" />
 
-		<aui:input name='<%= fieldPrefix + "--" + emailParam + "Body" + (Validator.isNotNull(languageId) ? ("_" + languageId) : StringPool.BLANK) + "--" %>' type="hidden" />
+				<aui:input name='<%= fieldPrefix + "--" + emailParam + "Body" + (Validator.isNotNull(languageId) ? ("_" + languageId) : StringPool.BLANK) + "--" %>' type="hidden" />
+			</c:otherwise>
+		</c:choose>
 	</aui:field-wrapper>
 </aui:fieldset>
 
@@ -69,11 +97,13 @@ boolean showSubject = GetterUtil.getBoolean(request.getAttribute("liferay-ui:ema
 	</aui:fieldset>
 </c:if>
 
-<aui:script>
-	function <portlet:namespace />init<%= emailParam %>BodyEditor() {
-		return "<%= UnicodeFormatter.toString(emailBody) %>";
-	}
-</aui:script>
+<c:if test="<%= !isBodyLocalized %>">
+	<aui:script>
+		function <portlet:namespace />init<%= emailParam %>BodyEditor() {
+			return "<%= UnicodeFormatter.toString(emailBody) %>";
+		}
+	</aui:script>
+</c:if>
 
 <%!
 public static final String EDITOR_WYSIWYG_IMPL_KEY = "editor.wysiwyg.portal-web.docroot.html.taglib.ui.email_notification_settings.jsp";
