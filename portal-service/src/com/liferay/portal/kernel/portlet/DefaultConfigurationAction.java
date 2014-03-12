@@ -136,6 +136,9 @@ public class DefaultConfigurationAction
 					portletPreferences.setValues(name, values);
 				}
 			}
+
+			postProcessPreferences(
+				themeDisplay.getCompanyId(), actionRequest, portletPreferences);
 		}
 		else {
 			String serviceName = ParamUtil.getString(
@@ -216,6 +219,12 @@ public class DefaultConfigurationAction
 		}
 	}
 
+	public void postProcessPreferences(
+			long companyId, PortletRequest portletRequest,
+			PortletPreferences portletPreferences)
+		throws Exception {
+	}
+
 	@Override
 	public String render(
 			PortletConfig portletConfig, RenderRequest renderRequest,
@@ -289,6 +298,19 @@ public class DefaultConfigurationAction
 			selPortlet, servletContext);
 
 		return selPortletConfig;
+	}
+
+	protected void removeDefaultValuePreference (
+			PortletRequest portletRequest,
+			PortletPreferences portletPreferences, String paramName,
+			String defaultValue)
+		throws Exception{
+
+		String value = getParameter(portletRequest, paramName);
+
+		if (defaultValue.equals(value)) {
+			portletPreferences.reset(paramName);
+		}
 	}
 
 	protected void validateEmail(
