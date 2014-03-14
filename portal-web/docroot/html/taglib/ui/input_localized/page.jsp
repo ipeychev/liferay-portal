@@ -198,7 +198,7 @@ if ((exception != null) && fieldName.equals(focusField)) {
 		}
 		%>
 
-		<div class="input-localized-content" id="<portlet:namespace /><%= id %>ContentBox">
+		<div class="input-localized-content" id="<portlet:namespace /><%= id %>ContentBox" role="menu">
 			<table class="palette-container">
 				<tr class="palette-items-container">
 
@@ -233,7 +233,7 @@ if ((exception != null) && fieldName.equals(focusField)) {
 						}
 					%>
 
-						<td class="palette-item <%= itemCssClass %>" data-index="<%= index++ %>" data-value="<%= curLanguageId %>">
+						<td class="palette-item <%= itemCssClass %>" data-index="<%= index++ %>" data-value="<%= curLanguageId %>" role="menuitem">
 							<a class="palette-item-inner" href="javascript:void(0);">
 								<img class="lfr-input-localized-flag" data-languageid="<%= curLanguageId %>" src="<%= themeDisplay.getPathThemeImages() %>/language/<%= curLanguageId %>.png" alt="<%= curLocale.getDisplayName(LocaleUtil.fromLanguageId(LanguageUtil.getLanguageId(request))) %> <liferay-ui:message key="translation" />" />
 								<div class='<%= errorLocales.contains(curLocale) ? "lfr-input-localized-state lfr-input-localized-state-error" : "lfr-input-localized-state" %>'></div>

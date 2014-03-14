@@ -142,13 +142,13 @@ AUI.add(
 							{
 								descendants: '.palette-item a',
 								keys: {
-									next: 'down:39',
-									previous: 'down:37'
+									next: 'down:39,40',
+									previous: 'down:37,38'
 								}
 							}
 						);
 
-						instance._inputPlaceholderDescription = inputPlaceholder.siblings('#' + inputPlaceholder.attr('id') + '_desc');
+						instance._inputPlaceholderDescription = inputPlaceholder.get('parentNode').one('#' + inputPlaceholder.attr('id') + '_desc');
 					},
 
 					destructor: function() {
