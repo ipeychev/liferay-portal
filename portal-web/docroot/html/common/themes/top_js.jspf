@@ -400,6 +400,98 @@
 	// ]]>
 </script>
 
+<script type="text/javascript">
+	YUI({
+		filter: 'raw',
+		filters: {
+			'aui-surface': 'debug'
+		}
+	}).use('aui-surface-app', 'aui-surface-screen-html', 'transition', function(A) {
+		// A.Surface.TRANSITION = function(from, to) {
+		//    return new A.Promise(function(resolve) {
+		// 	   if (from) {
+		// 		   from.setStyle('opacity', 0).hide();
+		// 		   resolve();
+		// 	   }
+		// 	   if (to) {
+		// 		   to.show(true, resolve);
+		// 	   }
+		//    });
+	 //   };
+
+	 	A.PortletScreen = A.Base.create('portletScreen', A.HTMLScreen, [], {
+	    }, {
+	        ATTRS: {
+	            urlParams: {
+	                value: {
+	                	p_p_isolated: true
+	                }
+	            },
+	            cacheable: {
+	            	value: true
+	            }
+	        }
+	    });
+
+		var surfaces = ['breadcrumbs'];
+
+		var ids = '';
+
+		<c:if test="<%= (layoutTypePortlet != null) %>">
+
+	    <%
+
+	    List<Portlet> allPortlets = layoutTypePortlet.getAllPortlets(false);
+
+	    StringBundler sbIds = new StringBundler(allPortlets.size() * 2);
+		StringBundler sbSurfaces = new StringBundler(allPortlets.size() * 2);
+
+	    for (Portlet portlet : allPortlets) {
+
+	    	if (portlet.isActive() && portlet.isReady() && !portlet.isUndeployedPortlet()) {
+				sbSurfaces.append("'p_p_id_");
+				sbSurfaces.append(HtmlUtil.escapeJS(portlet.getPortletId()));
+				sbSurfaces.append("_surface'");
+				sbSurfaces.append(",");
+
+				sbIds.append(HtmlUtil.escapeJS(portlet.getPortletId()));
+				sbIds.append("|");
+			}
+		}
+
+		if (sbSurfaces.index() > 0) {
+			sbSurfaces.setIndex(sbSurfaces.index() - 1);
+		}
+
+		if (sbIds.index() > 0) {
+			sbIds.setIndex(sbIds.index() - 1);
+		}
+
+		%>
+
+		ids = '<%= sbIds.toString() %>';
+		surfaces = surfaces.concat([<%= sbSurfaces.toString() %>]);
+
+		</c:if>
+
+		var app = new A.SurfaceApp({
+			linkSelector: 'a',
+			root: '/web',
+			scrollToTop: false
+		});
+
+		app.addScreens([
+			{
+				path: new RegExp('p_p_id=(' + ids + ')&p_p_lifecycle=0&p_p_state=normal'),
+				screen: A.PortletScreen
+			}
+		]);
+
+		app.addSurfaces(surfaces);
+	});
+
+</script>
+
 <%-- Analytics --%>
 
 <%

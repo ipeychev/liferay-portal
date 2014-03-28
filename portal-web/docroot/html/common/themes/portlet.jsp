@@ -86,7 +86,7 @@ boolean wsrp = ParamUtil.getBoolean(PortalUtil.getOriginalServletRequest(request
 		<%@ include file="/html/common/themes/portlet_content_wrapper.jspf" %>
 	</c:when>
 	<c:when test="<%= themeDisplay.isStatePopUp() %>">
-		<div class="portlet-body">
+		<div class="portlet-body" id="p_p_id_<%= portlet.getPortletId() %>_surface-default">
 			<c:if test='<%= !tilesPortletContent.endsWith("/error.jsp") %>'>
 				<%@ include file="/html/common/themes/portlet_messages.jspf" %>
 			</c:if>
@@ -129,7 +129,7 @@ boolean wsrp = ParamUtil.getBoolean(PortalUtil.getOriginalServletRequest(request
 		<c:choose>
 			<c:when test="<%= portletDecorate %>">
 				<liferay-theme:wrap-portlet page="portlet.jsp">
-					<div class="<%= portletDisplay.isStateMin() ? "hide" : "" %> portlet-content-container" <%= containerStyles %>>
+					<div class="<%= portletDisplay.isStateMin() ? "hide" : "" %> portlet-content-container" <%= containerStyles %> id="p_p_id_<%= portlet.getPortletId() %>_surface">
 						<%@ include file="/html/common/themes/portlet_content_wrapper.jspf" %>
 					</div>
 				</liferay-theme:wrap-portlet>
