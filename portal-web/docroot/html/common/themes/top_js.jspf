@@ -419,7 +419,21 @@
 		//    });
 	 //   };
 
+	 	var AObject = A.Object;
+
 	 	A.PortletScreen = A.Base.create('portletScreen', A.HTMLScreen, [], {
+	 		deactivate: function() {
+	 			if (window.CKEDITOR) {
+	 				var ckeditorInstances = window.CKEDITOR.instances;
+
+	 				AObject.each(
+	 					ckeditorInstances,
+	 					function(value, key) {
+	 						ckeditorInstances[key].destroy();
+	 					}
+	 				);
+	 			}
+	 		}
 	    }, {
 	        ATTRS: {
 	            urlParams: {
