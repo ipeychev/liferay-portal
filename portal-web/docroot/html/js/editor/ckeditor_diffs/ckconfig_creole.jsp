@@ -37,7 +37,8 @@ long wikiPageResourcePrimKey = ParamUtil.getLong(request, "wikiPageResourcePrimK
 response.setContentType(ContentTypes.TEXT_JAVASCRIPT);
 %>
 
-;(function() {
+;window['<%= HtmlUtil.escapeJS(name) %>Config'] = function() {
+	debugger;
 	var ckEditor = CKEDITOR.instances['<%= HtmlUtil.escapeJS(name) %>'];
 
 	var config = ckEditor.config;
@@ -186,4 +187,6 @@ response.setContentType(ContentTypes.TEXT_JAVASCRIPT);
 			}
 		}
 	);
-})();
+};
+
+window['<%= HtmlUtil.escapeJS(name) %>Config']();

@@ -424,14 +424,23 @@
 	 	A.PortletScreen = A.Base.create('portletScreen', A.HTMLScreen, [], {
 	 		deactivate: function() {
 	 			if (window.CKEDITOR) {
-	 				var ckeditorInstances = window.CKEDITOR.instances;
+	 				try {
+	 					var ckeditorInstances = window.CKEDITOR.instances;
 
-	 				AObject.each(
-	 					ckeditorInstances,
-	 					function(value, key) {
-	 						ckeditorInstances[key].destroy();
-	 					}
-	 				);
+		 				AObject.each(
+		 					ckeditorInstances,
+		 					function(value, key) {
+		 						var inst = ckeditorInstances[key];
+
+		 						delete ckeditorInstances[key];
+
+		 						inst.destroy();
+		 					}
+		 				);
+	 				}
+	 				catch(err) {
+	 					// damn, but there is nothing to do
+	 				}
 	 			}
 	 		}
 	    }, {
@@ -490,13 +499,14 @@
 
 		var app = new A.SurfaceApp({
 			linkSelector: 'a',
-			root: '/web',
 			scrollToTop: false
 		});
 
+		console.log(ids);
+
 		app.addScreens([
 			{
-				path: new RegExp('p_p_id=(' + ids + ')&p_p_lifecycle=0&p_p_state=normal'),
+				path: new RegExp('p_p_id=(' + ids + ')&p_p_lifecycle=0'),
 				screen: A.PortletScreen
 			}
 		]);

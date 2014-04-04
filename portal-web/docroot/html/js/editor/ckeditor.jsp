@@ -317,8 +317,8 @@ if (inlineEdit && (inlineEditSaveURL != null)) {
 			}
 		);
 
-		if (window['<%= name %>Config']) {
-			window['<%= name %>Config']();
+		if (window['<%= HtmlUtil.escapeJS(name) %>Config']) {
+			window['<%= HtmlUtil.escapeJS(name) %>Config']();
 		}
 
 		var ckEditor = CKEDITOR.instances['<%= name %>'];
