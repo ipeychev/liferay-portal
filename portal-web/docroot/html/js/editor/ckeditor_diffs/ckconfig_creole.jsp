@@ -38,7 +38,6 @@ response.setContentType(ContentTypes.TEXT_JAVASCRIPT);
 %>
 
 ;window['<%= HtmlUtil.escapeJS(name) %>Config'] = function() {
-	debugger;
 	var ckEditor = CKEDITOR.instances['<%= HtmlUtil.escapeJS(name) %>'];
 
 	var config = ckEditor.config;
