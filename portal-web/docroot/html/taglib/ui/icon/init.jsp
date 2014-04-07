@@ -17,6 +17,7 @@
 <%@ include file="/html/taglib/init.jsp" %>
 
 <%@ page import="java.net.URL" %>
+<%@ page import="java.util.regex.Pattern" %>
 
 <%
 IntegerWrapper iconListIconCount = (IntegerWrapper)request.getAttribute("liferay-ui:icon-list:icon-count");
@@ -80,8 +81,11 @@ if (useDialog && Validator.isNull(data.get("title"))) {
 	data.put("title", HtmlUtil.stripHtml(localizeMessage ? LanguageUtil.get(pageContext, message) : message));
 }
 
-if (Validator.isNull(method)) {
+if (Validator.isNull(method) && (Pattern.matches("&?p_p_lifecycle=1", url) || useDialog)) {
 	method = "post";
+}
+else {
+	method = "get";
 }
 
 boolean auiImage = (image != null) && image.startsWith(_AUI_PATH);

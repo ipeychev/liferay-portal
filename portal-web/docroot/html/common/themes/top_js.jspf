@@ -502,11 +502,13 @@
 			scrollToTop: false
 		});
 
-		console.log(ids);
+		var regexp1 = new RegExp('p_p_id=(?:' + ids + ')(?=&?p_p_lifecycle=0)|p_p_lifecycle=0(?=&?p_p_id=(?:' + ids + '))(?=&?p_p_state=normal)');
+
+		console.log(regexp1);
 
 		app.addScreens([
 			{
-				path: new RegExp('p_p_id=(?:' + ids + ')(?=&?p_p_lifecycle=0)|p_p_lifecycle=0(?=&?p_p_id=(?:' + ids + '))'),
+				path: regexp1,
 				screen: A.PortletScreen
 			}
 		]);
