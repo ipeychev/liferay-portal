@@ -504,8 +504,6 @@
 
 		console.log(ids);
 
-		debugger;
-
 		app.addScreens([
 			{
 				path: new RegExp('p_p_id=(?:' + ids + ')(?=&?p_p_lifecycle=0)|p_p_lifecycle=0(?=&?p_p_id=(?:' + ids + '))'),
