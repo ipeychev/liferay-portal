@@ -32,7 +32,9 @@ AUI.add(
 			_forcePost: function(event) {
 				var instance = this;
 
-				Liferay.Util.forcePost(event.currentTarget);
+				if (!Liferay.Surface.app) {
+					Liferay.Util.forcePost(event.currentTarget);
+				}
 
 				event.preventDefault();
 			},
