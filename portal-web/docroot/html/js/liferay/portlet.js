@@ -10,6 +10,8 @@
 	var Portlet = {
 		list: [],
 
+		readyCounter: 0,
+
 		isStatic: function(portletId) {
 			var instance = this;
 
@@ -527,21 +529,15 @@
 					}
 				);
 
-				var list = instance.list;
+				instance.readyCounter++;
 
-				var index = arrayIndexOf(list, portletId);
-
-				if (index > -1) {
-					list.splice(index, 1);
-
-					if (!list.length) {
-						Liferay.fire(
-							'allPortletsReady',
-							{
-								portletId: portletId
-							}
-						);
-					}
+				if (instance.readyCounter === instance.list.length) {
+					Liferay.fire(
+						'allPortletsReady',
+						{
+							portletId: portletId
+						}
+					);
 				}
 			}
 		},
