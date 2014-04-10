@@ -306,6 +306,64 @@ if (layout != null) {
 		}
 	};
 
+	Liferay.Surface.EventScreen = A.Component.create(
+		{
+			EXTENDS: A.HTMLScreen,
+
+			NAME: 'baseScreen',
+
+			prototype: {
+				afterFlip: function() {
+					var instance = this;
+
+					Liferay.fire(
+						'surfaceScreenAfterFlip',
+						{
+							app: Liferay.Surface.app,
+							screen: instance
+						}
+					);
+				},
+
+				beforeFlip: function() {
+					var instance = this;
+
+					Liferay.fire(
+						'surfaceScreenBeforeFlip',
+						{
+							app: Liferay.Surface.app,
+							screen: instance
+						}
+					);
+				},
+
+				deactivate: function() {
+					var instance = this;
+
+					Liferay.fire(
+						'surfaceScreenDeactivate',
+						{
+							app: Liferay.Surface.app,
+							screen: instance
+						}
+					);
+				},
+
+				destructor: function() {
+					var instance = this;
+
+					Liferay.fire(
+						'surfaceScreenDestructor',
+						{
+							app: Liferay.Surface.app,
+							screen: instance
+						}
+					);
+				}
+			}
+		}
+	);
+
 	Liferay.Surface.ActionURLScreen = A.Component.create(
 		{
 			ATTRS: {
@@ -317,7 +375,7 @@ if (layout != null) {
 				}
 			},
 
-			EXTENDS: A.HTMLScreen,
+			EXTENDS: Liferay.Surface.EventScreen,
 
 			NAME: 'actionURLScreen',
 
@@ -330,6 +388,8 @@ if (layout != null) {
 					var title = instance.get('title');
 
 					Liferay.Surface.sendRedirect(redirect, title);
+
+					instance.constructor.superclass.beforeFlip.apply(instance, arguments);
 				}
 			}
 		}
@@ -348,7 +408,7 @@ if (layout != null) {
 				}
 			},
 
-			EXTENDS: A.HTMLScreen,
+			EXTENDS: Liferay.Surface.EventScreen,
 
 			NAME: 'renderURLScreen'
 		}
@@ -362,6 +422,14 @@ if (layout != null) {
 					if (Liferay.Surface.isActionURL(event.url)) {
 						event.url = Liferay.Surface.isolatePortletURLRedirect(event.url);
 					}
+
+					Liferay.fire(
+						'surfaceNavigate',
+						{
+							app: Liferay.Surface.app,
+							url: event.url
+						}
+					);
 				}
 			},
 			root: Liferay.Surface.getLinkRootPath(),
