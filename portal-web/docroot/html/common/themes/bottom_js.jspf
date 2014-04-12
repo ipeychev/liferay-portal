@@ -215,7 +215,7 @@ if (layout != null) {
 			);
 		},
 
-		getLinkRootPath: function() {
+		getBasePath: function() {
 			var instance = this;
 
 			var layoutRelativeURL = themeDisplay.getLayoutRelativeURL();
@@ -402,7 +402,7 @@ if (layout != null) {
 
 	Liferay.Surface.app = new A.SurfaceApp(
 		{
-			basePath: Liferay.Surface.getLinkRootPath(),
+			basePath: Liferay.Surface.getBasePath(),
 			linkSelector: 'a:not(.portlet-icon-back)',
 			on: {
 				endNavigate: function(event) {
