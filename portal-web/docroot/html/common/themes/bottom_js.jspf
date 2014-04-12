@@ -377,21 +377,7 @@ if (layout != null) {
 
 			EXTENDS: Liferay.Surface.EventScreen,
 
-			NAME: 'actionURLScreen',
-
-			prototype: {
-				beforeFlip: function() {
-					var instance = this;
-
-					var redirect = Liferay.Surface.getRedirect(Liferay.Surface.app._getURL());
-
-					var title = instance.get('title');
-
-					Liferay.Surface.sendRedirect(redirect, title);
-
-					instance.constructor.superclass.beforeFlip.apply(instance, arguments);
-				}
-			}
+			NAME: 'actionURLScreen'
 		}
 	);
 
@@ -416,23 +402,44 @@ if (layout != null) {
 
 	Liferay.Surface.app = new A.SurfaceApp(
 		{
+			basePath: Liferay.Surface.getLinkRootPath(),
 			linkSelector: 'a:not(.portlet-icon-back)',
 			on: {
-				navigate: function(event) {
-					if (Liferay.Surface.isActionURL(event.url)) {
-						event.url = Liferay.Surface.isolatePortletURLRedirect(event.url);
+				endNavigate: function(event) {
+					var instance = this;
+
+					if (Liferay.Surface.isActionURL(event.path)) {
+						var redirect = Liferay.Surface.getRedirect(event.path);
+
+						var title = instance.get('title');
+
+						Liferay.Surface.sendRedirect(redirect, title);
 					}
 
 					Liferay.fire(
-						'surfaceNavigate',
+						'surfaceEndNavigate',
 						{
 							app: Liferay.Surface.app,
-							url: event.url
+							path: event.path
+						}
+					);
+				},
+				startNavigate: function(event) {
+					var instance = this;
+
+					if (Liferay.Surface.isActionURL(event.path)) {
+						event.path = Liferay.Surface.isolatePortletURLRedirect(event.path);
+					}
+
+					Liferay.fire(
+						'surfaceStartNavigate',
+						{
+							app: Liferay.Surface.app,
+							path: event.path
 						}
 					);
 				}
 			},
-			root: Liferay.Surface.getLinkRootPath(),
 			scrollToTop: false
 		}
 	);
