@@ -423,6 +423,8 @@ if (layout != null) {
 							path: event.path
 						}
 					);
+
+					A.one('body').removeClass('surface-loading');
 				},
 				startNavigate: function(event) {
 					var instance = this;
@@ -438,6 +440,8 @@ if (layout != null) {
 							path: event.path
 						}
 					);
+
+					A.one('body').addClass('surface-loading');
 				}
 			},
 			scrollToTop: false
@@ -463,3 +467,5 @@ if (layout != null) {
 
 	Liferay.Surface.app.addSurfaces(Liferay.Surface.getSurfaceIds());
 </aui:script>
+
+<div class="surface-loading-bar"></div>
