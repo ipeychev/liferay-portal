@@ -187,9 +187,11 @@ if (layout != null) {
 	</c:if>
 </aui:script>
 
-<aui:script use="aui-surface-app,aui-surface-base,aui-surface-screen-html,liferay-portlet-url">
+<aui:script use="aui-surface-app,aui-surface-base,aui-surface-screen-html,aui-surface-screen-route,liferay-portlet-url">
 	A.config.filter = 'debug';
 	A.config.useBrowserConsole = true;
+
+	var Lang = A.Lang;
 
 	Liferay.Surface = {
 		app: null,
@@ -323,7 +325,7 @@ if (layout != null) {
 					Liferay.fire(
 						'surfaceScreenAfterFlip',
 						{
-							app: Liferay.Surface.app,
+							app: App,
 							screen: instance
 						}
 					);
@@ -335,7 +337,7 @@ if (layout != null) {
 					Liferay.fire(
 						'surfaceScreenBeforeFlip',
 						{
-							app: Liferay.Surface.app,
+							app: App,
 							screen: instance
 						}
 					);
@@ -347,7 +349,7 @@ if (layout != null) {
 					Liferay.fire(
 						'surfaceScreenDeactivate',
 						{
-							app: Liferay.Surface.app,
+							app: App,
 							screen: instance
 						}
 					);
@@ -359,7 +361,7 @@ if (layout != null) {
 					Liferay.fire(
 						'surfaceScreenDestructor',
 						{
-							app: Liferay.Surface.app,
+							app: App,
 							screen: instance
 						}
 					);
@@ -423,7 +425,7 @@ if (layout != null) {
 					Liferay.fire(
 						'surfaceEndNavigate',
 						{
-							app: Liferay.Surface.app,
+							app: App,
 							path: event.path
 						}
 					);
@@ -440,7 +442,7 @@ if (layout != null) {
 					Liferay.fire(
 						'surfaceStartNavigate',
 						{
-							app: Liferay.Surface.app,
+							app: App,
 							path: event.path
 						}
 					);
@@ -452,24 +454,72 @@ if (layout != null) {
 		}
 	);
 
-	Liferay.Surface.app.addScreens(
-		[
-			{
-				path: Liferay.Surface.getPatternPortletURL(Liferay.PortletURL.ACTION_PHASE),
-				screen: Liferay.Surface.ActionURLScreen
+	var App = Liferay.Surface.app;
+
+	var screenRouteActionURL = new A.ScreenRoute(
+		{
+			path: function(url) {
+				if (!screenRouteActionURL._regExp) {
+					screenRouteActionURL._regExp = Liferay.Surface.getPatternPortletURL(Liferay.PortletURL.ACTION_PHASE);
+				}
+
+				return url.search(screenRouteActionURL._regExp) > -1;
 			},
+
+			screen: Liferay.Surface.ActionURLScreen
+		}
+	);
+
+	var screenRouteRenderURL = new A.ScreenRoute(
+		{
+			path: function(url) {
+				if (!screenRouteRenderURL._regExp) {
+					screenRouteRenderURL._regExp = Liferay.Surface.getPatternPortletURL(Liferay.PortletURL.RENDER_PHASE);
+				}
+
+				return url.search(screenRouteRenderURL._regExp) > -1;
+			},
+
+			screen: Liferay.Surface.RenderURLScreen
+		}
+	);
+
+	App.addScreens(
+		[
+			screenRouteActionURL,
 			{
 				path: Liferay.Surface.getPatternFriendlyURL(),
 				screen: Liferay.Surface.RenderURLScreen
 			},
-			{
-				path: Liferay.Surface.getPatternPortletURL(Liferay.PortletURL.RENDER_PHASE),
-				screen: Liferay.Surface.RenderURLScreen
-			}
+			screenRouteRenderURL
 		]
 	);
 
-	Liferay.Surface.app.addSurfaces(Liferay.Surface.getSurfaceIds());
+	App.addSurfaces(Liferay.Surface.getSurfaceIds());
+
+	Liferay.on(
+		'addPortlet',
+		function(event) {
+			var portletId = event.portlet.portletId;
+
+			if (!Liferay.Surface.blacklist[portletId]) {
+				App.addSurfaces('p_p_id_' + portletId + '_');
+
+				screenRouteActionURL._regExp = null;
+				screenRouteRenderURL._regExp = null;
+			}
+		}
+	);
+
+	Liferay.on(
+		'closePortlet',
+		function(event) {
+			var portletId = event.portlet.portletId;
+
+			screenRouteActionURL._regExp = null;
+			screenRouteRenderURL._regExp = null;
+		}
+	);
 </aui:script>
 
 <div class="surface-loading-bar"></div>

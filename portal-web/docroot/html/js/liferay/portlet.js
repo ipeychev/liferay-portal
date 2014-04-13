@@ -1,7 +1,8 @@
 ;(function(A, Liferay) {
 	var Util = Liferay.Util;
+	var AArray = A.Array;
 
-	var arrayIndexOf = A.Array.indexOf;
+	var arrayIndexOf = AArray.indexOf;
 
 	var STR_HEAD = 'head';
 
@@ -157,6 +158,8 @@
 				if (onCompleteFn) {
 					onCompleteFn(portlet, portletId);
 				}
+
+				instance.list.push(portlet.portletId);
 
 				Liferay.fire(
 					'addPortlet',
@@ -372,6 +375,12 @@
 				options.doAsUserId = options.doAsUserId || themeDisplay.getDoAsUserIdEncoded();
 				options.portlet = portlet;
 				options.portletId = portlet.portletId;
+
+				var portletIndex = AArray.indexOf(instance.list, portlet.portletId);
+
+				if (portletIndex >= 0) {
+					instance.list.splice(portletIndex, 1);
+				}
 
 				Liferay.fire('closePortlet', options);
 			}
