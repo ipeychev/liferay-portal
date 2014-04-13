@@ -195,6 +195,10 @@ if (layout != null) {
 		app: null,
 
 		blacklist: {
+			15: true,
+			20: true,
+			99: true,
+			147: true,
 			'<%= PortletKeys.NESTED_PORTLETS %>': true
 		},
 
