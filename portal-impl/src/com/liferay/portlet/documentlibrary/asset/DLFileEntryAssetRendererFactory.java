@@ -16,6 +16,7 @@ package com.liferay.portlet.documentlibrary.asset;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.portlet.LiferayPortletURL;
@@ -32,6 +33,7 @@ import com.liferay.portlet.asset.model.BaseAssetRendererFactory;
 import com.liferay.portlet.assetpublisher.util.AssetPublisherUtil;
 import com.liferay.portlet.documentlibrary.model.DLFileEntry;
 import com.liferay.portlet.documentlibrary.model.DLFileEntryType;
+import com.liferay.portlet.documentlibrary.model.DLFileEntryTypeConstants;
 import com.liferay.portlet.documentlibrary.service.DLAppLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.service.DLFileEntryTypeLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.service.DLFileEntryTypeServiceUtil;
@@ -142,6 +144,15 @@ public class DLFileEntryAssetRendererFactory extends BaseAssetRendererFactory {
 
 		Map<Long, String> classTypes = new HashMap<Long, String>();
 
+		DLFileEntryType basicDocumentDLFileEntryType =
+			DLFileEntryTypeLocalServiceUtil.fetchDLFileEntryType(
+				DLFileEntryTypeConstants.FILE_ENTRY_TYPE_ID_BASIC_DOCUMENT);
+
+		classTypes.put(
+			basicDocumentDLFileEntryType.getFileEntryTypeId(),
+			LanguageUtil.get(
+				locale, DLFileEntryTypeConstants.NAME_BASIC_DOCUMENT));
+
 		List<DLFileEntryType> dlFileEntryTypes =
 			DLFileEntryTypeServiceUtil.getFileEntryTypes(groupIds);
 
@@ -152,6 +163,11 @@ public class DLFileEntryAssetRendererFactory extends BaseAssetRendererFactory {
 		}
 
 		return classTypes;
+	}
+
+	@Override
+	public String getIconCssClass() {
+		return "icon-paper-clip";
 	}
 
 	@Override
