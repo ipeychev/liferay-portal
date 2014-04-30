@@ -80,6 +80,37 @@ AUI.add(
 		);
 
 		Surface.app.addSurfaces(Surface.getSurfaceIds());
+
+		Liferay.on(
+			'closePortlet',
+			function(event) {
+				var portletId = event.portletId;
+
+				var surfaceId = Surface.getPortletBoundaryId(portletId);
+
+				delete Surface.app.surfaces[surfaceId];
+			}
+		);
+
+		Liferay.on(
+			'portletReady',
+			function(event) {
+				var portletId = event.portletId;
+
+				var surfaceId = Surface.getPortletBoundaryId(portletId);
+
+				if (Surface.isAllowedPortletId(portletId) && !Surface.app.surfaces[surfaceId]) {
+					Surface.app.addSurfaces(surfaceId);
+				}
+			}
+		);
+
+		Liferay.on(
+			'surfaceStartNavigate',
+			function(event) {
+				Surface.resetAllPortlets();
+			}
+		);
 	},
 	'',
 	{
