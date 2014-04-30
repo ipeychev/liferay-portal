@@ -51,7 +51,7 @@ boolean resizable = ParamUtil.getBoolean(request, "resizable");
 response.setContentType(ContentTypes.TEXT_JAVASCRIPT);
 %>
 
-;(function() {
+;window['<%= HtmlUtil.escapeJS(name) %>Config'] = function() {
 	var config = CKEDITOR.instances['<%= HtmlUtil.escapeJS(name) %>'].config;
 
 	config.height = 265;
@@ -147,4 +147,6 @@ response.setContentType(ContentTypes.TEXT_JAVASCRIPT);
 	config.smiley_path = '<%= HtmlUtil.escapeJS(emoticonsPath) %>' + '/';
 
 	config.smiley_symbols = ['<%= StringUtil.merge(BBCodeTranslatorUtil.getEmoticonSymbols(), "','") %>'];
-})();
+};
+
+window['<%= HtmlUtil.escapeJS(name) %>Config']();
