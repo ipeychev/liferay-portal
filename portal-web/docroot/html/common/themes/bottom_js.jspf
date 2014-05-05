@@ -206,5 +206,20 @@ if (layout != null) {
 		}
 	</aui:script>
 
+	<div id="bottomJs">
+		<div id="bottomJs-default">
+			<script>
+
+				<%
+				String currentURL = PortalUtil.getCurrentURL(request);
+				%>
+
+				Liferay.currentURL = '<%= HtmlUtil.escapeJS(currentURL) %>';
+				Liferay.currentURLEncoded = '<%= HttpUtil.encodeURL(currentURL) %>';
+
+			</script>
+		</div>
+	</div>
+
 	<div class="lfr-surface-loading-bar"></div>
 </c:if>
