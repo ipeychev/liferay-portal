@@ -253,7 +253,7 @@ if (!defaultFolderView && (folder != null) && (portletName.equals(PortletKeys.DO
 					copyCurrentRenderParameters="<%= false %>"
 					varImpl="mainURL"
 				/>
-				
+
 				mainUrl: '<%= mainURL %>',
 				strutsAction: '/document_library/view'
 			},

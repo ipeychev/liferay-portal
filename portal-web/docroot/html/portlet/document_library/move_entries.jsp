@@ -366,7 +366,7 @@ for (DLFileShortcut curFileShortcut : fileShortcuts) {
 						<portlet:param name="struts_action" value="/document_library/select_folder" />
 						<portlet:param name="folderId" value="<%= String.valueOf(newFolderId) %>" />
 					</portlet:renderURL>
-					
+
 					uri: '<%= selectFolderURL.toString() %>'
 				},
 				function(event) {

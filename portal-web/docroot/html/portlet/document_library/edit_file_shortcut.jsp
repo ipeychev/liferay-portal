@@ -150,7 +150,7 @@ portletURL.setParameter("fileShortcutId", String.valueOf(fileShortcutId));
 					<portlet:renderURL var="selectGroupURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
 						<portlet:param name="struts_action" value="/document_library/select_group" />
 					</portlet:renderURL>
-	
+
 					uri: '<%= selectGroupURL.toString() %>'
 				},
 				function(event) {
@@ -187,7 +187,7 @@ portletURL.setParameter("fileShortcutId", String.valueOf(fileShortcutId));
 					<portlet:renderURL var="selectFileEntryURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
 						<portlet:param name="struts_action" value="/document_library/select_file_entry" />
 					</portlet:renderURL>
-					
+
 					uri: <portlet:namespace />createSelectFileEntryURL('<%= selectFileEntryURL.toString() %>')
 				},
 				function(event) {

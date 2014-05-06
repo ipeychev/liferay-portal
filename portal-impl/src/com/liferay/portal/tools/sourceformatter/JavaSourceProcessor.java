@@ -2583,7 +2583,8 @@ public class JavaSourceProcessor extends BaseSourceProcessor {
 			"**\\model\\impl\\*BaseImpl.java", "**\\model\\impl\\*Model.java",
 			"**\\model\\impl\\*ModelImpl.java", "**\\portal\\service\\**",
 			"**\\portal-client\\**", "**\\portal-web\\test\\**\\*Test.java",
-			"**\\portlet\\**\\service\\**", "**\\test\\*-generated\\**"
+			"**\\portlet\\**\\service\\**", "**\\test\\*-generated\\**",
+			"**\\tools\\sdk\\**"
 		};
 		String[] includes = new String[] {"**\\*.java"};
 

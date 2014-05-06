@@ -176,7 +176,7 @@ else {
 						/>
 
 						<c:if test="<%= themeDisplay.isSignedIn() %>">
-						
+
 							<%
 							dataView = new HashMap<String, Object>();
 

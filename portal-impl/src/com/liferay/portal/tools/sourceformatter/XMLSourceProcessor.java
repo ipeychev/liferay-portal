@@ -292,7 +292,7 @@ public class XMLSourceProcessor extends BaseSourceProcessor {
 		String[] excludes = new String[] {
 			"**\\.bnd\\**", "**\\.idea\\**", "portal-impl\\**\\*.action",
 			"portal-impl\\**\\*.function", "portal-impl\\**\\*.macro",
-			"portal-impl\\**\\*.testcase"
+			"portal-impl\\**\\*.testcase", "tools\\sdk\\**"
 		};
 
 		String[] includes = new String[] {

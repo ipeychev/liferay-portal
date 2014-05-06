@@ -276,7 +276,7 @@ boolean showAddAction = ParamUtil.getBoolean(request, "showAddAction", true);
 										var="permissionURL"
 										windowState="<%= LiferayWindowState.POP_UP.toString() %>"
 									/>
-									
+
 									uri: '<%= permissionURL %>'
 								}
 							);
