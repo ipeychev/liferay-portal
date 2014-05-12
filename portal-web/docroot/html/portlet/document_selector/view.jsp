@@ -73,6 +73,7 @@ boolean showGroupsSelector = ParamUtil.getBoolean(request, "showGroupsSelector")
 
 		selectGroupURL.setParameter("struts_action", "/document_selector/view");
 		selectGroupURL.setParameter("eventName", eventName);
+		selectGroupURL.setParameter("showGroupsSelector", String.valueOf(showGroupsSelector));
 
 		for (Group group : PortalUtil.getBrowsableScopeGroups(themeDisplay.getUserId(), themeDisplay.getCompanyId(), themeDisplay.getScopeGroupId(), refererPortletName)) {
 			selectGroupURL.setParameter("groupId", String.valueOf(group.getGroupId()));
