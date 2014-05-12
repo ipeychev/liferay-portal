@@ -438,6 +438,30 @@ if (inlineEdit && (inlineEditSaveURL != null)) {
 					CKEDITOR.instances['<%= name %>'].on('focus', window['<%= name %>'].onFocusCallback);
 				</c:if>
 
+				var destroyInstance = function(event) {
+					if (event.portletId === '<%= portletId %>') {
+						try {
+		 					var ckeditorInstances = window.CKEDITOR.instances;
+
+			 				A.Object.each(
+			 					ckeditorInstances,
+			 					function(value, key) {
+			 						var inst = ckeditorInstances[key];
+
+			 						delete ckeditorInstances[key];
+
+			 						inst.destroy();
+			 					}
+			 				);
+		 				}
+		 				catch(error) {
+		 				}
+
+		 				Liferay.detach('destroyPortlet', destroyInstance);
+		 			}
+				};
+
+				Liferay.on('destroyPortlet', destroyInstance);
 			}
 		);
 
