@@ -1,11 +1,19 @@
 AUI.add(
 	'liferay-hudcrumbs',
 	function(A) {
-		var Lang = A.Lang,
+		var Lang = A.Lang;
 
-			getClassName = A.ClassNameManager.getClassName,
+		var NAME = 'hudcrumbs';
 
-			NAME = 'hudcrumbs';
+		var DOCKBAR_PINNED = 'dockbar:pinned';
+
+		var STR_SCROLL = 'scroll';
+
+		var SURFACE_START_NAVIGATE = 'surfaceStartNavigate';
+
+		var WINDOW_RESIZE = 'windowresize';
+
+		var getClassName = A.ClassNameManager.getClassName;
 
 		var Hudcrumbs = A.Component.create(
 			{
@@ -14,12 +22,15 @@ AUI.add(
 						value: null
 					},
 					hostMidpoint: {
+						validtor: Lang.isNumber,
 						value: 0
 					},
-					top: {
-						value: 0
+					scrollDelay: {
+						validator: Lang.isNumber,
+						value: 100
 					},
 					width: {
+						validtor: Lang.isNumber,
 						value: 0
 					}
 				},
@@ -55,12 +66,29 @@ AUI.add(
 
 						instance._calculateDimensions();
 
-						win.on('scroll', instance._onScroll, instance);
-						win.on('resize', instance._calculateDimensions, instance);
+						instance._debouncedScrollFn = A.debounce(instance._onScroll, instance.get('scrollDelay'), instance);
+
+						win.on(STR_SCROLL, instance._debouncedScrollFn);
+						win.on(WINDOW_RESIZE, instance._calculateDimensions, instance);
 
 						body.append(hudcrumbs);
 
-						Liferay.on('dockbar:pinned', instance._calculateDimensions, instance);
+						Liferay.on(DOCKBAR_PINNED, instance._calculateDimensions, instance);
+
+						Liferay.on(SURFACE_START_NAVIGATE, instance._onStartNavigate, instance);
+					},
+
+					destructor: function() {
+						var instance = this;
+
+						Liferay.detach(SURFACE_START_NAVIGATE, instance._onStartNavigate);
+
+						Liferay.detach(DOCKBAR_PINNED, instance._calculateDimensions);
+
+						var win = instance._win;
+
+						win.detach(STR_SCROLL, instance._debouncedScrollFn);
+						win.detach(WINDOW_RESIZE, instance._calculateDimensions);
 					},
 
 					_calculateDimensions: function(event) {
@@ -95,6 +123,12 @@ AUI.add(
 						}
 
 						instance.lastAction = action;
+					},
+
+					_onStartNavigate: function(event) {
+						var instance = this;
+
+						instance.get('clone').hide();
 					}
 				}
 			}
@@ -104,6 +138,6 @@ AUI.add(
 	},
 	'',
 	{
-		requires: ['aui-base', 'aui-component', 'plugin']
+		requires: ['aui-base', 'aui-debounce', 'event-resize']
 	}
 );

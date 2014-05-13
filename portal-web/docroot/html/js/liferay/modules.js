@@ -412,7 +412,8 @@
 						path: 'hudcrumbs.js',
 						requires: [
 							'aui-base',
-							'plugin'
+							'aui-debounce',
+							'event-resize'
 						]
 					},
 					'liferay-icon': {
