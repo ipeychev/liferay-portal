@@ -545,6 +545,22 @@ if (inlineEdit && (inlineEditSaveURL != null)) {
 		createEditor();
 	</c:if>
 
+	CKEDITOR.scriptLoader.loadScripts = function(scripts, success, failure) {
+		scripts = A.Array.filter(
+			scripts,
+			function(item) {
+				return !A.one('script[src=' + item + ']');
+			}
+		);
+
+		if (scripts.length) {
+			CKEDITOR.scriptLoader.load(scripts, success, failure);
+		}
+		else {
+			success();
+		}
+	};
+
 </aui:script>
 
 <%!
