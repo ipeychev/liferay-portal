@@ -3,7 +3,7 @@
 
 <#assign group = themeDisplay.getScopeGroup() />
 
-<#assign apiKey = group.getLiveParentTypeSettingsProperty("googleMapsKey")!"" />
+<#assign apiKey = group.getLiveParentTypeSettingsProperty("googleMapsApiKey")!"" />
 
 <#assign defaultLatitude = -3.6833 />
 <#assign defaultLongitude = 40.40 />
@@ -17,12 +17,12 @@
 <#if apiKey = "">
 	<#assign companyPrefs = prefsPropsUtil.getPreferences(companyId) />
 
-	<#assign apiKey = companyPrefs.getValue("googleMapsKey", "") />
+	<#assign apiKey = companyPrefs.getValue("googleMapsApiKey", "") />
 </#if>
 
 <#if apiKey = "">
 	<div class="alert alert-warning">
-		${languageUtil.get(locale, "please-configure-your-google-maps-key-in-the-site-or-portal-settings")}
+		${languageUtil.get(locale, "please-configure-your-google-maps-api-key-in-the-site-or-portal-settings")}
 	</div>
 <#else>
 	<#assign minHeight = "400px" />

@@ -392,14 +392,9 @@
 		},
 
 		getGeolocation: function(callback, defaultCallback) {
-			if (!callback || !navigator.geolocation) {
-				if (defaultCallback) {
-					defaultCallback();
-				}
-			}
-			else {
+			if (callback && navigator.geolocation) {
 				navigator.geolocation.getCurrentPosition(
-					function (position) {
+					function(position) {
 						callback.call(
 							this,
 							position.coords.latitude,
@@ -408,6 +403,9 @@
 					},
 					defaultCallback
 				);
+			}
+			else if (defaultCallback) {
+				defaultCallback();
 			}
 		},
 
