@@ -255,6 +255,7 @@
 				<classpath mode="compile">lib/development/antelope.jar</classpath>
 				<classpath mode="compile">lib/development/catalina.jar</classpath>
 				<classpath mode="compile">lib/development/cobertura.jar</classpath>
+				<classpath mode="compile">lib/development/com.liferay.ant.bnd.jar</classpath>
 				<classpath mode="compile">lib/development/deployment.jar</classpath>
 				<classpath mode="compile">lib/development/derby.jar</classpath>
 				<classpath mode="compile">lib/development/derbytools.jar</classpath>
@@ -476,7 +477,6 @@
 				<classpath mode="compile">lib/portal/poi-ooxml.jar</classpath>
 				<classpath mode="compile">lib/portal/poi-scratchpad.jar</classpath>
 				<classpath mode="compile">lib/portal/poi.jar</classpath>
-				<classpath mode="compile">lib/portal/portal-ant-shared.jar</classpath>
 				<classpath mode="compile">lib/portal/portal-client.jar</classpath>
 				<classpath mode="compile">lib/portal/portals-bridges.jar</classpath>
 				<classpath mode="compile">lib/portal/portletbridge-core.jar</classpath>
