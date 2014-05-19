@@ -162,8 +162,6 @@
 	</target>
 
 	<target name="clean">
-		<setup-sdk />
-
 		<ant dir="classes" target="clean" inheritAll="false" />
 
 		<ant dir="portal-service" target="clean" inheritAll="false" />
@@ -300,6 +298,8 @@
 				<delete dir="${app.server.work.dir}" />
 			</then>
 		</if>
+
+		<setup-sdk />
 
 		<ant-execute
 			ant.dir="${project.dir}/modules"
