@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="ivy-report.xsl"?>
+<ivy-report version="1.0">
+	<info
+		organisation="com.liferay"
+		module="com.liferay.portal.http.service"
+		revision="working@mbpro.local"
+		conf="default"
+		confs="default"
+		date="20140522153757"/>
+	<dependencies>
+		<module organisation="org.osgi" name="org.osgi.core">
+			<revision name="4.3.1" status="release" pubdate="20121030024430" resolver="liferay-public" artresolver="default" homepage="     http://www.osgi.org   " downloaded="false" searched="false" default="false" conf="default, compile, runtime, master" position="2">
+				<license name="         Apache License, Version 2.0       " url="         http://opensource.org/licenses/apache2.0.php       "/>
+				<metadata-artifact status="no" details="" size="2674" time="0" location="/Users/brian/dev/projects/github/liferay-portal/.ivy/cache/org.osgi/org.osgi.core/ivy-4.3.1.xml" searched="false" origin-is-local="false" origin-location="http://cdn.repository.liferay.com/nexus/content/groups/public/org/osgi/org.osgi.core/4.3.1/org.osgi.core-4.3.1.pom"/>
+				<caller organisation="com.liferay" name="com.liferay.portal.http.service" conf="default" rev="4.3.1" rev-constraint-default="4.3.1" rev-constraint-dynamic="4.3.1" callerrev="working@mbpro.local"/>
+				<artifacts>
+					<artifact name="org.osgi.core" type="jar" ext="jar" status="no" details="" size="349985" time="0" location="/Users/brian/dev/projects/github/liferay-portal/.ivy/cache/org.osgi/org.osgi.core/jars/org.osgi.core-4.3.1.jar">
+						<origin-location is-local="false" location="http://cdn.repository.liferay.com/nexus/content/groups/public/org/osgi/org.osgi.core/4.3.1/org.osgi.core-4.3.1.jar"/>
+					</artifact>
+				</artifacts>
+			</revision>
+		</module>
+		<module organisation="org.osgi" name="org.osgi.compendium">
+			<revision name="4.3.1" status="release" pubdate="20121030024539" resolver="liferay-public" artresolver="default" homepage="     http://www.osgi.org   " downloaded="false" searched="false" default="false" conf="default, compile, runtime, master" position="1">
+				<license name="         Apache License, Version 2.0       " url="         http://opensource.org/licenses/apache2.0.php       "/>
+				<metadata-artifact status="no" details="" size="2704" time="0" location="/Users/brian/dev/projects/github/liferay-portal/.ivy/cache/org.osgi/org.osgi.compendium/ivy-4.3.1.xml" searched="false" origin-is-local="false" origin-location="http://cdn.repository.liferay.com/nexus/content/groups/public/org/osgi/org.osgi.compendium/4.3.1/org.osgi.compendium-4.3.1.pom"/>
+				<caller organisation="com.liferay" name="com.liferay.portal.http.service" conf="default" rev="4.3.1" rev-constraint-default="4.3.1" rev-constraint-dynamic="4.3.1" callerrev="working@mbpro.local"/>
+				<artifacts>
+					<artifact name="org.osgi.compendium" type="jar" ext="jar" status="no" details="" size="767142" time="0" location="/Users/brian/dev/projects/github/liferay-portal/.ivy/cache/org.osgi/org.osgi.compendium/jars/org.osgi.compendium-4.3.1.jar">
+						<origin-location is-local="false" location="http://cdn.repository.liferay.com/nexus/content/groups/public/org/osgi/org.osgi.compendium/4.3.1/org.osgi.compendium-4.3.1.jar"/>
+					</artifact>
+				</artifacts>
+			</revision>
+		</module>
+		<module organisation="org.eclipse.birt.runtime" name="org.eclipse.osgi.services">
+			<revision name="3.3.100.v20120522-1822" status="release" pubdate="20120627195916" resolver="liferay-public" artresolver="default" homepage="http://www.eclipse.org/projects/project.php?id=birt" downloaded="false" searched="false" default="false" conf="default, compile, runtime, master" position="0">
+				<license name="Eclipse Public License - v 1.0" url="http://www.eclipse.org/org/documents/epl-v10.html"/>
+				<metadata-artifact status="no" details="" size="3073" time="0" location="/Users/brian/dev/projects/github/liferay-portal/.ivy/cache/org.eclipse.birt.runtime/org.eclipse.osgi.services/ivy-3.3.100.v20120522-1822.xml" searched="false" origin-is-local="false" origin-location="http://cdn.repository.liferay.com/nexus/content/groups/public/org/eclipse/birt/runtime/org.eclipse.osgi.services/3.3.100.v20120522-1822/org.eclipse.osgi.services-3.3.100.v20120522-1822.pom"/>
+				<caller organisation="com.liferay" name="com.liferay.portal.http.service" conf="default" rev="3.3.100.v20120522-1822" rev-constraint-default="3.3.100.v20120522-1822" rev-constraint-dynamic="3.3.100.v20120522-1822" callerrev="working@mbpro.local"/>
+				<artifacts>
+					<artifact name="org.eclipse.osgi.services" type="jar" ext="jar" status="no" details="" size="83086" time="0" location="/Users/brian/dev/projects/github/liferay-portal/.ivy/cache/org.eclipse.birt.runtime/org.eclipse.osgi.services/jars/org.eclipse.osgi.services-3.3.100.v20120522-1822.jar">
+						<origin-location is-local="false" location="http://cdn.repository.liferay.com/nexus/content/groups/public/org/eclipse/birt/runtime/org.eclipse.osgi.services/3.3.100.v20120522-1822/org.eclipse.osgi.services-3.3.100.v20120522-1822.jar"/>
+					</artifact>
+				</artifacts>
+			</revision>
+		</module>
+	</dependencies>
+</ivy-report>

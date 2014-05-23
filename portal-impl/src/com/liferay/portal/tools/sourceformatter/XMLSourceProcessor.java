@@ -292,9 +292,10 @@ public class XMLSourceProcessor extends BaseSourceProcessor {
 	@Override
 	protected void format() throws Exception {
 		String[] excludes = new String[] {
-			"**\\.bnd\\**", "**\\.idea\\**", "portal-impl\\**\\*.action",
-			"portal-impl\\**\\*.function", "portal-impl\\**\\*.macro",
-			"portal-impl\\**\\*.testcase", "tools\\sdk\\**"
+			"**\\.bnd\\**", "**\\.idea\\**", "**\\.ivy\\**",
+			"portal-impl\\**\\*.action", "portal-impl\\**\\*.function",
+			"portal-impl\\**\\*.macro", "portal-impl\\**\\*.testcase",
+			"tools\\sdk\\**"
 		};
 
 		String[] includes = new String[] {

@@ -38,6 +38,7 @@ import com.liferay.portal.kernel.util.HttpUtil;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.PredicateFilter;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.UnicodeProperties;
@@ -62,6 +63,8 @@ import com.liferay.portlet.asset.model.AssetRendererFactory;
 import com.liferay.portlet.asset.model.AssetTag;
 import com.liferay.portlet.asset.model.AssetTagProperty;
 import com.liferay.portlet.asset.model.AssetVocabulary;
+import com.liferay.portlet.asset.model.ClassType;
+import com.liferay.portlet.asset.model.ClassTypeReader;
 import com.liferay.portlet.asset.service.AssetCategoryLocalServiceUtil;
 import com.liferay.portlet.asset.service.AssetCategoryPropertyLocalServiceUtil;
 import com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil;
@@ -252,26 +255,20 @@ public class AssetUtil {
 	public static List<AssetVocabulary> filterVocabularies(
 		List<AssetVocabulary> vocabularies, String className) {
 
-		List<AssetVocabulary> filteredVocabularies =
-			new ArrayList<AssetVocabulary>();
+		final long classNameId = PortalUtil.getClassNameId(className);
 
-		for (AssetVocabulary vocabulary : vocabularies) {
-			UnicodeProperties settingsProperties =
-				vocabulary.getSettingsProperties();
+		PredicateFilter<AssetVocabulary> predicateFilter =
+			new PredicateFilter<AssetVocabulary>() {
 
-			long[] selectedClassNameIds = StringUtil.split(
-				settingsProperties.getProperty("selectedClassNameIds"), 0L);
-			long classNameId = PortalUtil.getClassNameId(className);
+				@Override
+				public boolean filter(AssetVocabulary vocabulary) {
+					return vocabulary.isAssociatedToAssetRendererFactory(
+						classNameId);
+				}
 
-			if ((selectedClassNameIds.length == 0) ||
-				(selectedClassNameIds[0] == 0) ||
-				ArrayUtil.contains(selectedClassNameIds, classNameId)) {
+			};
 
-				filteredVocabularies.add(vocabulary);
-			}
-		}
-
-		return filteredVocabularies;
+		return ListUtil.filter(vocabularies, predicateFilter);
 	}
 
 	public static long[] filterVocabularyIds(
@@ -489,10 +486,14 @@ public class AssetUtil {
 				continue;
 			}
 
-			Map<Long, String> classTypes = assetRendererFactory.getClassTypes(
-				PortalUtil.getCurrentAndAncestorSiteGroupIds(
-					themeDisplay.getScopeGroupId()),
-				themeDisplay.getLocale());
+			ClassTypeReader classTypeReader =
+				assetRendererFactory.getClassTypeReader();
+
+			List<ClassType> classTypes =
+				classTypeReader.getAvailableClassTypes(
+					PortalUtil.getCurrentAndAncestorSiteGroupIds(
+						themeDisplay.getScopeGroupId()),
+					themeDisplay.getLocale());
 
 			if ((classTypeIds.length == 0) || classTypes.isEmpty()) {
 				PortletURL addPortletURL = getAddPortletURL(
@@ -505,7 +506,9 @@ public class AssetUtil {
 				}
 			}
 
-			for (long classTypeId : classTypes.keySet()) {
+			for (ClassType classType : classTypes) {
+				long classTypeId = classType.getClassTypeId();
+
 				if (ArrayUtil.contains(classTypeIds, classTypeId) ||
 					(classTypeIds.length == 0)) {
 
@@ -517,7 +520,7 @@ public class AssetUtil {
 					if (addPortletURL != null) {
 						String mesage =
 							className + CLASSNAME_SEPARATOR +
-								classTypes.get(classTypeId);
+								classType.getName();
 
 						addPortletURLs.put(mesage, addPortletURL);
 					}

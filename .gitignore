@@ -10,7 +10,6 @@
 .sass_cache_*.css
 _sass_cache_*.css
 cobertura.ser
-log
 
 **/.sonar
 
@@ -39,6 +38,8 @@ log
 /svn-revision
 /test.*.properties
 /WEB-INF
+
+/.ivy/cache/resolved-*
 
 /benchmarks/*.csv
 /benchmarks/*.sql

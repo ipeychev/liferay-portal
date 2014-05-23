@@ -1,8 +1,10 @@
 <#include "../init.ftl">
 
-<#assign skipEditorLoading = paramUtil.getBoolean(request, "p_p_isolated")>
+<#assign fieldValue = paramUtil.getString(request, "${namespacedFieldName}Editor", fieldValue)>
 
 <@aui["field-wrapper"] data=data helpMessage=escape(fieldStructure.tip) label=escape(label) required=required>
+	<#assign skipEditorLoading = paramUtil.getBoolean(request, "p_p_isolated")>
+
 	<@liferay_ui["input-editor"] initMethod="${namespacedFieldName}InitEditor" name="${namespacedFieldName}Editor" onBlurMethod="${namespacedFieldName}OnBlurEditor" skipEditorLoading=skipEditorLoading />
 
 	<@aui.input name=namespacedFieldName type="hidden" value=fieldValue>

@@ -19,14 +19,14 @@
 
 		<unzip
 			dest="classes"
-			src="lib/wstx-asl.jar"
+			src="lib/${original.lib.name}.jar"
 		/>
 
 		<antcall target="patch">
 			<param name="patch.destination" value="**/com/ctc/wstx/sw/BufferingXmlWriter.java" />
 			<param name="patch.original.lib.name" value="${original.lib.name}" />
-			<param name="patch.original.lib.version" value="${original.lib.version}" />
 			<param name="patch.original.lib.url" value="${original.lib.url}" />
+			<param name="patch.original.lib.version" value="${original.lib.version}" />
 			<param name="patch.source" value="patches/LPS-46720.patch" />
 		</antcall>
 
