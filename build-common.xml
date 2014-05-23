@@ -5,7 +5,11 @@
 	xmlns:artifact="antlib:org.apache.maven.artifact.ant"
 	xmlns:sonar="antlib:org.sonar.ant"
 >
-	<dirname file="${ant.file.build-common}" property="project.dir" />
+	<dirname file="${ant.file.build-common}" property="project.dir.native" />
+
+	<pathconvert property="project.dir" targetos="unix">
+		<path location="${project.dir.native}" />
+	</pathconvert>
 
 	<property name="test.properties" value="com/liferay/portal/tools/dependencies/portal-tools.properties" />
 
@@ -498,6 +502,24 @@ Please set the environment variable ANT_OPTS to the recommended value of
 					</exec>
 				</else>
 			</if>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="app-server-properties-reset">
+		<sequential>
+			<delete file="app.server.${user.name}.properties" />
+
+			<delete file="${project.dir}/tools/sdk/build.${user.name}.properties" />
+		</sequential>
+	</macrodef>
+
+	<macrodef name="app-server-properties-update">
+		<text name="properties.content" />
+
+		<sequential>
+			<echo file="app.server.${user.name}.properties">@{properties.content}</echo>
+
+			<echo file="${project.dir}/tools/sdk/build.${user.name}.properties">@{properties.content}</echo>
 		</sequential>
 	</macrodef>
 

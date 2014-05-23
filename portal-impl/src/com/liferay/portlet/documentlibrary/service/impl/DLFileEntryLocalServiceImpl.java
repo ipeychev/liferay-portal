@@ -116,6 +116,7 @@ import java.io.InputStream;
 import java.io.Serializable;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -686,9 +687,6 @@ public class DLFileEntryLocalServiceImpl
 			for (DLFileEntry dlFileEntry : dlFileEntries) {
 				if (includeTrashedEntries ||
 					!dlFileEntry.isInTrashExplicitly()) {
-
-					dlAppHelperLocalService.deleteFileEntry(
-						new LiferayFileEntry(dlFileEntry));
 
 					dlFileEntryLocalService.deleteFileEntry(dlFileEntry);
 				}
@@ -1291,6 +1289,32 @@ public class DLFileEntryLocalServiceImpl
 	}
 
 	@Override
+	public List<DLFileEntry> getGroupFileEntries(
+			long groupId, long userId, long rootFolderId, int start, int end,
+			OrderByComparator obc)
+		throws SystemException {
+
+		List<Long> folderIds = dlFolderLocalService.getFolderIds(
+			groupId, rootFolderId);
+
+		if (folderIds.isEmpty()) {
+			return Collections.emptyList();
+		}
+
+		QueryDefinition queryDefinition = new QueryDefinition(
+			WorkflowConstants.STATUS_ANY, start, end, obc);
+
+		if (userId <= 0) {
+			return dlFileEntryFinder.findByG_F(
+				groupId, folderIds, queryDefinition);
+		}
+		else {
+			return dlFileEntryFinder.findByG_U_F(
+				groupId, userId, folderIds, queryDefinition);
+		}
+	}
+
+	@Override
 	public int getGroupFileEntriesCount(long groupId) throws SystemException {
 		return dlFileEntryPersistence.countByGroupId(groupId);
 	}
@@ -1422,9 +1446,6 @@ public class DLFileEntryLocalServiceImpl
 		try {
 			DLFileEntry dlFileEntry = moveFileEntryImpl(
 				userId, fileEntryId, newFolderId, serviceContext);
-
-			dlAppHelperLocalService.moveFileEntry(
-				new LiferayFileEntry(dlFileEntry));
 
 			return dlFileEntryTypeLocalService.updateFileEntryFileEntryType(
 				dlFileEntry, serviceContext);

@@ -3,20 +3,6 @@
 <project name="portal" basedir="." default="compile" xmlns:antelope="antlib:ise.antelope.tasks">
 	<import file="build-common.xml" />
 
-	<macrodef name="app-server-properties-reset">
-		<sequential>
-			<delete file="app.server.${user.name}.properties" />
-		</sequential>
-	</macrodef>
-
-	<macrodef name="app-server-properties-update">
-		<text name="properties" />
-
-		<sequential>
-			<echo file="app.server.${user.name}.properties">@{properties}</echo>
-		</sequential>
-	</macrodef>
-
 	<macrodef name="setup-jrebel">
 		<sequential>
 			<echo file="${app.server.lib.global.dir}/rebel.xml"><![CDATA[<?xml version="1.0"?>
@@ -80,12 +66,7 @@
 
 	<macrodef name="setup-sdk">
 		<sequential>
-			<delete failonerror="false" includeemptydirs="true">
-				<fileset
-					dir="${project.dir}/tools/sdk"
-					excludes=".ivy/**"
-				/>
-			</delete>
+			<delete dir="${project.dir}/tools/sdk" />
 
 			<unzip
 				dest="${project.dir}/tools"
@@ -216,6 +197,7 @@
 				auto.deploy.dir=${liferay.home}/osgi/apps
 				clean.delete.ivy.md5=true
 				clean.delete.lib=true
+				ivy.home=${project.dir}/.ivy
 				liferay.home=${liferay.home}
 			</echo>
 
