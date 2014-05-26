@@ -197,14 +197,12 @@ public class WikiUtil {
 			double targetVersion, PageContext pageContext)
 		throws SystemException {
 
-		List<WikiPage> intermediatePages = new ArrayList<WikiPage>();
-
 		double previousVersion = 0;
 		double nextVersion = 0;
 
 		List<WikiPage> pages = WikiPageLocalServiceUtil.getPages(
 			nodeId, title, QueryUtil.ALL_POS, QueryUtil.ALL_POS,
-			new PageVersionComparator());
+			new PageVersionComparator(true));
 
 		for (WikiPage page : pages) {
 			if ((page.getVersion() < sourceVersion) &&
@@ -218,17 +216,11 @@ public class WikiUtil {
 
 				nextVersion = page.getVersion();
 			}
-
-			if ((page.getVersion() > sourceVersion) &&
-				(page.getVersion() <= targetVersion)) {
-
-				intermediatePages.add(page);
-			}
 		}
 
 		List<DiffVersion> diffVersions = new ArrayList<DiffVersion>();
 
-		for (WikiPage page : intermediatePages) {
+		for (WikiPage page : pages) {
 			String extraInfo = StringPool.BLANK;
 
 			if (page.isMinorEdit()) {
@@ -236,8 +228,8 @@ public class WikiUtil {
 			}
 
 			DiffVersion diffVersion = new DiffVersion(
-				page.getUserId(), page.getVersion(), page.getSummary(),
-				extraInfo);
+				page.getUserId(), page.getVersion(), page.getModifiedDate(),
+				page.getSummary(), extraInfo);
 
 			diffVersions.add(diffVersion);
 		}
