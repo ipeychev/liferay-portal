@@ -264,6 +264,7 @@ portletURL.setParameter("folderId", String.valueOf(folderId));
 		SearchContext searchContext = SearchContextFactory.getInstance(request);
 
 		searchContext.setAttribute("groupId", groupId);
+		searchContext.setAttribute("mimeTypes", DocumentSelectorUtil.getMimeTypes(request));
 		searchContext.setAttribute("paginationType", "regular");
 		searchContext.setEnd(entryEnd);
 		searchContext.setFolderIds(new long[]{folderId});
