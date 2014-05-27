@@ -57,3 +57,34 @@ boolean showGroupsSelector = ParamUtil.getBoolean(request, "showGroupsSelector")
 
 	</liferay-ui:icon-menu>
 </c:if>
+
+<%
+String tabsString = ParamUtil.getString(renderRequest, "tabs", "documents,pages");
+
+String[] tabs = StringUtil.split(tabsString);
+%>
+
+<c:choose>
+	<c:when test="<%= !ArrayUtil.isEmpty(tabs) && (tabs.length > 1) %>">
+		<liferay-ui:tabs names="<%= tabsString %>" refresh="<%= false %>" type="pills">
+
+			<%
+			for (String tab : tabs) {
+			%>
+
+				<liferay-ui:section>
+					<div>
+						<liferay-util:include page='<%= "/html/portlet/document_selector/" + tab + ".jsp" %>'/>
+					</div>
+				</liferay-ui:section>
+
+			<%
+			}
+			%>
+
+		</liferay-ui:tabs>
+	</c:when>
+	<c:otherwise>
+		<liferay-util:include page='<%= "/html/portlet/document_selector/" + tabs[0] + ".jsp" %>'/>
+	</c:otherwise>
+</c:choose>
