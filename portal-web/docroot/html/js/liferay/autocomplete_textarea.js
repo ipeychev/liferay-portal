@@ -85,7 +85,7 @@ AUI.add(
 				return {
 					index: result,
 					value: trigger
-				}
+				};
 			},
 
 			_getQuery: function(val) {
@@ -126,7 +126,7 @@ AUI.add(
 
 				var acVisible = instance.get('visible');
 
-				if (!acVisible || event.isKeyInSet('left', 'right')) {
+				if (!acVisible || event.isKeyInSet(KeyMap.LEFT, KeyMap.RIGHT)) {
 					var inputNode = instance.get(STR_INPUT_NODE);
 
 					var query = instance._getQuery(inputNode.val());
