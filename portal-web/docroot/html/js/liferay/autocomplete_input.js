@@ -67,6 +67,8 @@ AUI.add(
 				instance.set('resultFormatter', A.bind('_acResultFormatter', instance));
 
 				instance._bindUIACIBase();
+
+				A.mix(TRIGGER_CONFIG_DEFAULTS, instance.getAttrs());
 			},
 
 			destructor: function() {
@@ -231,11 +233,15 @@ AUI.add(
 			_setTriggerConfig: function(trigger) {
 				var instance = this;
 
-				var triggers = instance._getTriggers();
+				if (trigger !== instance._trigger) {
+					var triggers = instance._getTriggers();
 
-				var triggerConfig = instance.get(STR_TRIGGER)[AArray.indexOf(triggers, trigger)];
+					var triggerConfig = instance.get(STR_TRIGGER)[AArray.indexOf(triggers, trigger)];
 
-				instance.setAttrs(A.merge(TRIGGER_CONFIG_DEFAULTS, triggerConfig));
+					instance.setAttrs(A.merge(TRIGGER_CONFIG_DEFAULTS, triggerConfig));
+
+				 	instance._trigger = trigger;
+				}
 			},
 
 			_syncUIPosAlign: function() {},
