@@ -1,9 +1,11 @@
 ;(function() {
 	var A = AUI();
 
-	var KeyMap = A.Event.KeyMap;
-
 	var Lang = A.Lang;
+
+	var AArray = A.Array;
+
+	var KeyMap = A.Event.KeyMap;
 
 	var STR_EDITOR = 'editor';
 
@@ -155,7 +157,7 @@
 
 			var triggers = instance._getTriggers();
 
-			A.Array.each(
+			AArray.each(
 				triggers,
 				function(item, index, collection) {
 					var triggerPosition = query.lastIndexOf(item);
@@ -176,13 +178,13 @@
 					if (node.type === CKEDITOR.NODE_TEXT && node.$ !== caretContainer.$) {
 						var nodeText = node.getText();
 
-						A.Array.each(
+						AArray.each(
 							triggers,
 							function(item, index, collection) {
 								var triggerPosition = nodeText.lastIndexOf(item);
 
 								if (triggerPosition !== -1 && triggerPosition > triggerIndex) {
-									trigger = item
+									trigger = item;
 									triggerIndex = triggerPosition;
 								}
 							}
@@ -287,17 +289,17 @@
 
 				var acVisible = instance.get('visible');
 
-				if (acVisible && (KeyMap.isKeyInSet(event.keyCode, 'down', 'enter', 'up'))) {
+				if (acVisible && (KeyMap.isKeyInSet(event.keyCode, KeyMap.DOWN, KeyMap.ENTER, KeyMap.UP))) {
 					var editor = instance.get(STR_EDITOR);
 
 					var inlineEditor = editor.editable().isInline();
 
-					if (KeyMap.isKey(event.keyCode, 'enter') || !inlineEditor) {
+					if (KeyMap.isKey(event.keyCode, KeyMap.ENTER) || !inlineEditor) {
 						instance._onInputKey(event);
 					}
 				}
 				else {
-					A.soon(instance._processCaret);
+					A.debounce(instance._processCaret, 100);
 				}
 			}
 		},
@@ -358,7 +360,7 @@
 					node = updateWalker.next();
 				}
 
-				A.Array.invoke(removeNodes, 'remove');
+				AArray.invoke(removeNodes, 'remove');
 
 				nextElement = newElement.getNext();
 			}
