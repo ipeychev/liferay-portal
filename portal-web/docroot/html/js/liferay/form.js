@@ -213,6 +213,8 @@ AUI.add(
 
 					instance._INSTANCES[formName] = form;
 
+					console.log('firing form:registered');
+
 					Liferay.fire(
 						'form:registered',
 						{
