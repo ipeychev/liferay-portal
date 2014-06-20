@@ -48,7 +48,19 @@ AUI.add(
 
 				var allowedPortlets = instance.getAllowedPortletIds();
 
-				return new RegExp('p_p_id=(' + allowedPortlets.join('|') + ')&p_p_lifecycle=' + lifecycle);
+				var windowState = 'NORMAL';
+
+				if (themeDisplay.isStateExclusive()) {
+					windowState = 'EXCLUSIVE';
+				}
+				else if (themeDisplay.isStatePopUp()) {
+					windowState = 'POP_UP';
+				}
+				else if (themeDisplay.isStateMaximized()) {
+					windowState = 'MAXIMIZED';
+				}
+
+				return new RegExp('p_p_id=(' + allowedPortlets.join('|') + ')&p_p_lifecycle=' + lifecycle + '&p_p_state=' + windowState.toLowerCase());
 			},
 
 			getPortletBoundaryId: function(portletId) {
