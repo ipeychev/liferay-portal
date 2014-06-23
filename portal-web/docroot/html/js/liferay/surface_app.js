@@ -61,7 +61,9 @@ AUI.add(
 					screen: Surface.ActionURLScreen
 				},
 				{
-					path: Surface.getPatternFriendlyURL(),
+					path: function(url) {
+						return Surface.isAllowedFriendlyURL(url);
+					},
 					screen: Surface.RenderURLScreen
 				},
 				{

@@ -3,6 +3,10 @@ AUI.add(
 	function(A) {
 		var AArray = A.Array;
 
+		var REGEX_FRIENDLY_URL = /\/-\//;
+
+		var REGEX_FRIENDLY_URL_MAXIMIZED = /\/maximized/;
+
 		A.Surface.DEFAULT = 'defaultScreen';
 
 		var Surface = {
@@ -22,25 +26,15 @@ AUI.add(
 			},
 
 			getBasePath: function() {
-				var instance = this;
-
 				var layoutRelativeURL = themeDisplay.getLayoutRelativeURL();
 
 				return layoutRelativeURL.substr(0, layoutRelativeURL.lastIndexOf('/'));
 			},
 
 			getNamespace: function(portletURL) {
-				var instance = this;
-
 				var url = new A.Url(portletURL);
 
 				return Liferay.Util.getPortletNamespace(url.getParameter('p_p_id'));
-			},
-
-			getPatternFriendlyURL: function() {
-				var instance = this;
-
-				return /\/-\//;
 			},
 
 			getPatternPortletURL: function(lifecycle) {
@@ -48,24 +42,12 @@ AUI.add(
 
 				var allowedPortlets = instance.getAllowedPortletIds();
 
-				var windowState = 'NORMAL';
+				var windowState = instance._getCurrentWindowState();
 
-				if (themeDisplay.isStateExclusive()) {
-					windowState = 'EXCLUSIVE';
-				}
-				else if (themeDisplay.isStatePopUp()) {
-					windowState = 'POP_UP';
-				}
-				else if (themeDisplay.isStateMaximized()) {
-					windowState = 'MAXIMIZED';
-				}
-
-				return new RegExp('p_p_id=(' + allowedPortlets.join('|') + ')&p_p_lifecycle=' + lifecycle + '&p_p_state=' + windowState.toLowerCase());
+				return new RegExp('p_p_id=(' + allowedPortlets.join('|') + ')&p_p_lifecycle=' + lifecycle + '&p_p_state=' + windowState);
 			},
 
 			getPortletBoundaryId: function(portletId) {
-				var instance = this;
-
 				return 'p_p_id_' + portletId + '_';
 			},
 
@@ -100,13 +82,34 @@ AUI.add(
 			},
 
 			isActionURL: function(url) {
-				var instance = this;
-
 				if (url.indexOf('p_p_lifecycle=1') > -1) {
 					return true;
 				}
 
 				return false;
+			},
+
+			isAllowedFriendlyURL: function(url) {
+				var instance = this;
+
+				var result = false;
+
+				if (url.search(REGEX_FRIENDLY_URL) >= 0) {
+					var isURLStateMaximized = (url.search(REGEX_FRIENDLY_URL_MAXIMIZED) >= 0);
+
+					var currentWindowState = instance._getCurrentWindowState();
+
+					if (isURLStateMaximized) {
+						if (currentWindowState === 'maximized') {
+							result = true;
+						}
+					}
+					else if (currentWindowState === 'normal') {
+						result = true;
+					}
+				}
+
+				return result;
 			},
 
 			isAllowedPortletId: function(portletId) {
@@ -157,8 +160,6 @@ AUI.add(
 			},
 
 			sendRedirect: function(redirect, title) {
-				var instance = this;
-
 				if (redirect) {
 					var url = new A.Url(redirect);
 
@@ -166,6 +167,22 @@ AUI.add(
 
 					A.config.win.history.replaceState(null, title, url.toString());
 				}
+			},
+
+			_getCurrentWindowState: function() {
+				var windowState = 'NORMAL';
+
+				if (themeDisplay.isStateExclusive()) {
+					windowState = 'EXCLUSIVE';
+				}
+				else if (themeDisplay.isStatePopUp()) {
+					windowState = 'POP_UP';
+				}
+				else if (themeDisplay.isStateMaximized()) {
+					windowState = 'MAXIMIZED';
+				}
+
+				return windowState.toLowerCase();
 			}
 		};
 
