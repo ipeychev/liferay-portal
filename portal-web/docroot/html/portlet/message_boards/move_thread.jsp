@@ -79,7 +79,7 @@ boolean splitThread = false;
 			</aui:input>
 
 			<aui:field-wrapper label="body">
-				<%@ include file="/html/portlet/message_boards/bbcode_editor.jspf" %>
+				<%@ include file="/html/portlet/message_boards/html_editor.jspf" %>
 
 				<aui:input name="body" type="hidden" />
 			</aui:field-wrapper>

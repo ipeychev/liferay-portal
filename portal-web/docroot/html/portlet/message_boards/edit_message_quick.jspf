@@ -71,14 +71,8 @@ boolean splitThread = ParamUtil.getBoolean(request, "splitThread");
 
 	<aui:fieldset>
 		<aui:field-wrapper label="quick-reply">
-			<c:choose>
-				<c:when test='<%= messageFormat.equals("bbcode") %>'>
-					<%@ include file="/html/portlet/message_boards/bbcode_editor.jspf" %>
-				</c:when>
-				<c:otherwise>
-					<%@ include file="/html/portlet/message_boards/html_editor.jspf" %>
-				</c:otherwise>
-			</c:choose>
+			<%@ include file="/html/portlet/message_boards/html_editor.jspf" %>
+			
 			<aui:input name="body" type="hidden" />
 		</aui:field-wrapper>
 
