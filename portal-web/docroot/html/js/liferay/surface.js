@@ -3,7 +3,7 @@ AUI.add(
 	function(A) {
 		var AArray = A.Array;
 
-		var REGEX_FRIENDLY_URL = /\/-\//;
+		var REGEX_FRIENDLY_URL = /^(?!(?:web|guest|user))[^\/]+\/[^\/]+\/[^\/]+\/-\//;
 
 		var REGEX_FRIENDLY_URL_MAXIMIZED = /\/maximized/;
 
@@ -94,7 +94,7 @@ AUI.add(
 
 				var result = false;
 
-				if (url.search(REGEX_FRIENDLY_URL) >= 0) {
+				if ((Surface.getBasePath() + url).search(REGEX_FRIENDLY_URL) >= 0) {
 					var isURLStateMaximized = (url.search(REGEX_FRIENDLY_URL_MAXIMIZED) >= 0);
 
 					var currentWindowState = instance._getCurrentWindowState();
