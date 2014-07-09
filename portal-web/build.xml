@@ -249,15 +249,19 @@
 
 				<unzip src="third-party/${alloyeditor.file}" dest="docroot/html/js/editor/_tmp" />
 
-				<copy todir="docroot/html/js/editor/_tmp/alloy-editor-${alloy.version}/alloy-editor" overwrite="true" preservelastmodified="true" />
+				<copy todir="docroot/html/js/editor/alloyeditor" overwrite="true" preservelastmodified="true">
+					<fileset dir="docroot/html/js/editor/_tmp/alloy-editor-${alloyeditor.version}/alloy-editor" />
+				</copy>
 
 				<copy todir="docroot/html/js/editor/alloyeditor" overwrite="true" preservelastmodified="true">
-					<fileset dir="docroot/html/js/editor/alloy_diffs" />
+					<fileset dir="docroot/html/js/editor/alloyeditor_diffs" />
 				</copy>
+
+				<delete dir="docroot/html/js/editor/_tmp" />
 			</then>
 			<else>
 				<copy todir="docroot/html/js/editor/alloyeditor" preservelastmodified="true">
-					<fileset dir="docroot/html/js/editor/alloy_diffs" />
+					<fileset dir="docroot/html/js/editor/alloyeditor_diffs" />
 				</copy>
 			</else>
 		</if>
