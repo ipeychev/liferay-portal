@@ -1089,6 +1089,7 @@ Please set the property "jdk.6.home" in build.properties.
 
 	<target name="deploy">
 		<antcall target="build-alloy" />
+		<antcall target="build-alloy-editor" />
 		<antcall target="build-ckeditor" />
 		<antcall target="build-dtd" />
 		<antcall target="build-tinymce" />
