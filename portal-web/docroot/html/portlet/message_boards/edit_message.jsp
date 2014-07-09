@@ -228,14 +228,8 @@ else {
 		<aui:input autoFocus="<%= (windowState.equals(WindowState.MAXIMIZED) && !themeDisplay.isFacebook()) %>" name="subject" value="<%= subject %>" />
 
 		<aui:field-wrapper label="body">
-			<c:choose>
-				<c:when test='<%= ((messageId != 0) && message.isFormatBBCode()) || ((messageId == 0) && messageFormat.equals("bbcode")) %>'>
-					<%@ include file="/html/portlet/message_boards/bbcode_editor.jspf" %>
-				</c:when>
-				<c:otherwise>
-					<%@ include file="/html/portlet/message_boards/html_editor.jspf" %>
-				</c:otherwise>
-			</c:choose>
+			<%@ include file="/html/portlet/message_boards/html_editor.jspf" %>
+
 			<aui:input name="body" type="hidden" />
 		</aui:field-wrapper>
 

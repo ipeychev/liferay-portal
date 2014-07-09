@@ -109,14 +109,7 @@ boolean splitThread = true;
 			<aui:input model="<%= MBMessage.class %>" name="subject" value='<%= LanguageUtil.get(request, "thread-split") %>' />
 
 			<aui:field-wrapper label="body">
-				<c:choose>
-					<c:when test="<%= message.isFormatBBCode() %>">
-						<%@ include file="/html/portlet/message_boards/bbcode_editor.jspf" %>
-					</c:when>
-					<c:otherwise>
-						<%@ include file="/html/portlet/message_boards/html_editor.jspf" %>
-					</c:otherwise>
-				</c:choose>
+				<%@ include file="/html/portlet/message_boards/html_editor.jspf" %>
 
 				<aui:input name="body" type="hidden" />
 			</aui:field-wrapper>
