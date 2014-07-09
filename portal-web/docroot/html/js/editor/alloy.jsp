@@ -47,9 +47,9 @@ boolean inlineEdit = GetterUtil.getBoolean((String)request.getAttribute("liferay
 boolean resizable = GetterUtil.getBoolean((String)request.getAttribute("liferay-ui:input-editor:resizable"));
 %>
 
-<link href="/html/js/editor/alloy/assets/alloy-editor.css" rel="stylesheet">
+<link href="/html/js/editor/alloyeditor/assets/alloy-editor.css" rel="stylesheet">
 
-<script src="/html/js/editor/alloy/ckeditor/ckeditor.js"></script>
+<script src="/html/js/editor/alloyeditor/ckeditor/ckeditor.js"></script>
 
 <script type="text/javascript">
 	CKEDITOR.disableAutoInline = true;
@@ -57,7 +57,7 @@ boolean resizable = GetterUtil.getBoolean((String)request.getAttribute("liferay-
 	CKEDITOR.env.isCompatible = true;
 </script>
 
-<script src="/html/js/editor/alloy/all.js"></script>
+<script src="/html/js/editor/alloyeditor/all.js"></script>
 
 <aui:script use="aui-base">
 	window['<%= name %>'] = {
@@ -82,7 +82,7 @@ boolean resizable = GetterUtil.getBoolean((String)request.getAttribute("liferay-
 	CKEDITOR.inline(
 		'<%= name %>',
 		{
-			customConfig: '<%= PortalUtil.getPathContext() %>/html/js/editor/alloy/<%= HtmlUtil.escapeJS(alloyEditorConfigFileName) %>?p_p_id=<%= HttpUtil.encodeURL(portletId) %>&p_main_path=<%= HttpUtil.encodeURL(mainPath) %>&contentsLanguageId=<%= HttpUtil.encodeURL(contentsLanguageId) %>&colorSchemeCssClass=<%= HttpUtil.encodeURL(themeDisplay.getColorScheme().getCssClass()) %>&cssClasses=<%= HttpUtil.encodeURL(cssClasses) %>&cssPath=<%= HttpUtil.encodeURL(themeDisplay.getPathThemeCss()) %>&doAsGroupId=<%= HttpUtil.encodeURL(String.valueOf(doAsGroupId)) %>&doAsUserId=<%= HttpUtil.encodeURL(doAsUserId) %>&imagesPath=<%= HttpUtil.encodeURL(themeDisplay.getPathThemeImages()) %>&inlineEdit=<%= inlineEdit %><%= configParams %>&languageId=<%= HttpUtil.encodeURL(LocaleUtil.toLanguageId(locale)) %>&name=<%= name %>&resizable=<%= resizable %>',
+			customConfig: '<%= PortalUtil.getPathContext() %>/html/js/editor/alloyeditor/<%= HtmlUtil.escapeJS(alloyEditorConfigFileName) %>?p_p_id=<%= HttpUtil.encodeURL(portletId) %>&p_main_path=<%= HttpUtil.encodeURL(mainPath) %>&contentsLanguageId=<%= HttpUtil.encodeURL(contentsLanguageId) %>&colorSchemeCssClass=<%= HttpUtil.encodeURL(themeDisplay.getColorScheme().getCssClass()) %>&cssClasses=<%= HttpUtil.encodeURL(cssClasses) %>&cssPath=<%= HttpUtil.encodeURL(themeDisplay.getPathThemeCss()) %>&doAsGroupId=<%= HttpUtil.encodeURL(String.valueOf(doAsGroupId)) %>&doAsUserId=<%= HttpUtil.encodeURL(doAsUserId) %>&imagesPath=<%= HttpUtil.encodeURL(themeDisplay.getPathThemeImages()) %>&inlineEdit=<%= inlineEdit %><%= configParams %>&languageId=<%= HttpUtil.encodeURL(LocaleUtil.toLanguageId(locale)) %>&name=<%= name %>&resizable=<%= resizable %>',
 		}
 	);
 
