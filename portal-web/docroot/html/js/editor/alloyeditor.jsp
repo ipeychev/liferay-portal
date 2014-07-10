@@ -42,7 +42,26 @@ String configParams = marshallParams(configParamsMap);
 String contentsLanguageId = (String)request.getAttribute("liferay-ui:input-editor:contentsLanguageId");
 String cssClasses = GetterUtil.getString((String)request.getAttribute("liferay-ui:input-editor:cssClasses"));
 String name = namespace + GetterUtil.getString((String)request.getAttribute("liferay-ui:input-editor:name"));
+String initMethod = (String)request.getAttribute("liferay-ui:input-editor:initMethod");
 boolean inlineEdit = GetterUtil.getBoolean((String)request.getAttribute("liferay-ui:input-editor:inlineEdit"));
+
+String onBlurMethod = (String)request.getAttribute("liferay-ui:input-editor:onBlurMethod");
+
+if (Validator.isNotNull(onBlurMethod)) {
+	onBlurMethod = namespace + onBlurMethod;
+}
+
+String onChangeMethod = (String)request.getAttribute("liferay-ui:input-editor:onChangeMethod");
+
+if (Validator.isNotNull(onChangeMethod)) {
+	onChangeMethod = namespace + onChangeMethod;
+}
+
+String onFocusMethod = (String)request.getAttribute("liferay-ui:input-editor:onFocusMethod");
+
+if (Validator.isNotNull(onFocusMethod)) {
+	onFocusMethod = namespace + onFocusMethod;
+}
 
 boolean resizable = GetterUtil.getBoolean((String)request.getAttribute("liferay-ui:input-editor:resizable"));
 %>
@@ -62,20 +81,69 @@ boolean resizable = GetterUtil.getBoolean((String)request.getAttribute("liferay-
 <aui:script use="aui-base">
 	window['<%= name %>'] = {
 		destroy: function() {
+			CKEDITOR.instances['<%= name %>'].destroy();
+
+			window['<%= name %>'] = null;
 		},
 
 		focus: function() {
+			CKEDITOR.instances['<%= name %>'].focus();
+		},
+
+		getCkData: function() {
+			var data;
+
+			if (!window['<%= name %>'].instanceReady && window['<%= HtmlUtil.escapeJS(namespace + initMethod) %>']) {
+				data = window['<%= HtmlUtil.escapeJS(namespace + initMethod) %>']();
+			}
+			else {
+				data = CKEDITOR.instances['<%= name %>'].getData();
+
+				if (CKEDITOR.env.gecko && (CKEDITOR.tools.trim(data) == '<br />')) {
+					data = '';
+				}
+			}
+
+			return data;
 		},
 
 		getHTML: function() {
+			return window['<%= name %>'].getCkData();
 		},
 
-		initEditor: function() {
+		getText: function() {
+			return window['<%= name %>'].getCkData();
 		},
 
 		instanceReady: false,
 
+		<c:if test="<%= Validator.isNotNull(onBlurMethod) %>">
+			onBlurCallback: function() {
+				window['<%= HtmlUtil.escapeJS(onBlurMethod) %>'](CKEDITOR.instances['<%= name %>']);
+			},
+		</c:if>
+
+		<c:if test="<%= Validator.isNotNull(onChangeMethod) %>">
+			onChangeCallback: function() {
+				var ckEditor = CKEDITOR.instances['<%= name %>'];
+				var dirty = ckEditor.checkDirty();
+
+				if (dirty) {
+					window['<%= HtmlUtil.escapeJS(onChangeMethod) %>'](window['<%= name %>'].getText());
+
+					ckEditor.resetDirty();
+				}
+			},
+		</c:if>
+
+		<c:if test="<%= Validator.isNotNull(onFocusMethod) %>">
+			onFocusCallback: function() {
+				window['<%= HtmlUtil.escapeJS(onFocusMethod) %>'](CKEDITOR.instances['<%= name %>']);
+			},
+		</c:if>
+
 		setHTML: function(value) {
+			CKEDITOR.instances['<%= name %>'].setData(value);
 		}
 	};
 
