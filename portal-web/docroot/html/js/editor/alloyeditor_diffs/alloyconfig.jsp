@@ -62,8 +62,7 @@ response.setContentType(ContentTypes.TEXT_JAVASCRIPT);
 
 	alloyEditor.config.title = false;
 
-	alloyEditor.config.placeholderValue = 'Write here!';
-	alloyEditor.config.placeholderClass = 'editor-placeholder';
+	alloyEditor.config.placeholderClass = 'alloy-editor-placeholder';
 
 	alloyEditor.config.bodyClass = 'alloy-editor';
 
