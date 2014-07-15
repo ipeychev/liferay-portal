@@ -1,0 +1,183 @@
+@import "compass";
+@import "mixins";
+
+.cke_editable.cke_editable_inline {
+	outline: 0;
+}
+
+.alloy-editor-toolbar {
+	border: solid 1px;
+
+	.alloy-editor-toolbar-content {
+		.alloy-editor-button {
+			@include transition-property(color);
+
+			border: none;
+			border-left: solid 1px;
+			border-right: solid 1px;
+
+			&:hover {
+				border-left: solid 1px;
+				border-right: solid 1px;
+			}
+
+			&:first-child {
+				border-left: none;
+			}
+
+			&:last-child {
+				border-right: none;
+			}
+		}
+
+		.link-wrapper {
+			.alloy-editor-button {
+				border: none;
+			}
+
+			.input-wrapper {
+				margin: 3px 0;
+
+				.input-container {
+					padding: 1px;
+
+					input {
+						border: none;
+						margin: 0;
+						padding: 2px 5px;
+					}
+
+					.input-clear {
+						margin: 0 6px;
+					}
+				}
+			}
+
+			.switch-to-edit {
+				margin-left: 2px;
+			}
+
+			.show-buttons-container, .input-close-container {
+				margin-top: 2px;
+			}
+		}
+	}
+}
+
+.alloy-editor-tooltip-link {
+	border: solid 1px;
+	padding: 3px 2px;
+
+	.link-container {
+		.icon-link-container {
+			vertical-align: middle;
+		}
+	}
+}
+
+/* Skin */
+
+.cke_editable.cke_editable_inline {
+	$prefixes: ("-webkit-", "-moz-", "-o-", "");
+	@each $prefix in $prefixes {
+		::#{$prefix}selection {
+			background: #E1EDF9 !important;
+			color: #000;
+
+			@include text-shadow(none);
+		}
+	}
+}
+
+.alloy-editor-toolbar {
+	@include background-image(linear-gradient(#278FE2, #1B7BC8));
+	@include border-radius(3px);
+	@include opacity(0.95);
+
+	border-color: #327CB4;
+
+	&.alloy-editor-arrow-box-bottom {
+		&:before {
+			border-top-color: #327CB4;
+		}
+
+		&:after {
+			border-top-color: #1B7BC8;
+		}
+	}
+
+	&.alloy-editor-arrow-box-top {
+		&:before {
+			border-bottom-color: #327CB4;
+		}
+
+		&:after {
+			border-bottom-color: #278FE2;
+		}
+	}
+
+	.alloy-editor-toolbar-content {
+		.alloy-editor-button {
+			@include box-shadow(none);
+
+			background-color: transparent;
+			background-image: none;
+			border-left-color: #348BD3;
+			border-right-color: #2C83CD;
+			color: #124E8D;
+
+			&:focus, &:active {
+				color: #124E8D;
+			}
+
+			&:hover {
+				@include box-shadow(none);
+
+				background-image: none;
+				border-left-color: #348BD3;
+				border-right-color: #2C83CD;
+				color: #FFF;
+			}
+
+			&.yui3-button-selected {
+				color: #FFF;
+			}
+		}
+
+		.link-wrapper {
+			.input-wrapper {
+				.input-container {
+					border-color: #DDD;
+
+					.input-clear {
+						color: #CCC;
+						font-size: 1.1em;
+					}
+				}
+			}
+
+			.input-close-container {
+				background: transparent;
+
+				.alloy-editor-button {
+					color: #FFF;
+				}
+			}
+		}
+	}
+}
+
+.alloy-editor-tooltip-link {
+	@include background-image(linear-gradient(#278FE2, #1B7BC8));
+	@include border-radius(3px);
+	@include opacity(0.95);
+
+	border-color: #327CB4;
+	color: #FFF;
+
+	.link-container {
+		.link-preview {
+			color: #FFF;
+		}
+	}
+}

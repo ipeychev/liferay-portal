@@ -68,6 +68,8 @@ boolean resizable = GetterUtil.getBoolean((String)request.getAttribute("liferay-
 
 <link href="/html/js/editor/alloyeditor/assets/alloy-editor.css" rel="stylesheet">
 
+<link href="/html/js/editor/alloyeditor/skin/main.css?themeId=classic" rel="stylesheet">
+
 <script src="/html/js/editor/alloyeditor/ckeditor/ckeditor.js"></script>
 
 <script type="text/javascript">
