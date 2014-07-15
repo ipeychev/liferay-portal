@@ -257,12 +257,22 @@
 					<fileset dir="docroot/html/js/editor/alloyeditor_diffs" />
 				</copy>
 
+				<concat destfile="docroot/html/js/editor/alloyeditor/assets/lfr-alloy-editor.css" append="true">
+					<fileset file="docroot/html/js/editor/alloyeditor/assets/alloy-editor.css" />
+					<fileset dir="docroot/html/js/editor/alloyeditor_diffs" includes="**/*.css" />
+				</concat>
+
 				<delete dir="docroot/html/js/editor/_tmp" />
 			</then>
 			<else>
 				<copy todir="docroot/html/js/editor/alloyeditor" preservelastmodified="true">
 					<fileset dir="docroot/html/js/editor/alloyeditor_diffs" />
 				</copy>
+
+				<concat destfile="docroot/html/js/editor/alloyeditor/assets/lfr-alloy-editor.css" append="true">
+					<fileset file="docroot/html/js/editor/alloyeditor/assets/alloy-editor.css" />
+					<fileset dir="docroot/html/js/editor/alloyeditor_diffs" includes="**/*.css" />
+				</concat>
 			</else>
 		</if>
 	</target>
