@@ -41,6 +41,7 @@ String configParams = marshallParams(configParamsMap);
 
 String contentsLanguageId = (String)request.getAttribute("liferay-ui:input-editor:contentsLanguageId");
 String cssClasses = GetterUtil.getString((String)request.getAttribute("liferay-ui:input-editor:cssClasses"));
+String editorImpl = (String)request.getAttribute("liferay-ui:input-editor:editorImpl");
 String name = namespace + GetterUtil.getString((String)request.getAttribute("liferay-ui:input-editor:name"));
 String initMethod = (String)request.getAttribute("liferay-ui:input-editor:initMethod");
 boolean inlineEdit = GetterUtil.getBoolean((String)request.getAttribute("liferay-ui:input-editor:inlineEdit"));
@@ -64,13 +65,26 @@ if (Validator.isNotNull(onFocusMethod)) {
 }
 
 boolean resizable = GetterUtil.getBoolean((String)request.getAttribute("liferay-ui:input-editor:resizable"));
+boolean skipEditorLoading = GetterUtil.getBoolean((String)request.getAttribute("liferay-ui:input-editor:skipEditorLoading"));
 %>
 
-<link href="/html/js/editor/alloyeditor/assets/alloy-editor.css" rel="stylesheet">
+<c:if test="<%= !skipEditorLoading %>">
+	<liferay-util:html-top outputKey="js_editor_alloyeditor_skip_editor_loading">
+		<link href="<%= PortalUtil.getStaticResourceURL(request, themeDisplay.getCDNHost() + themeDisplay.getPathJavaScript() + "/editor/alloyeditor/assets/lfr-alloy-editor.css") %>" rel="stylesheet" type="text/css" />
 
-<link href="/html/js/editor/alloyeditor/skin/main.css?themeId=classic" rel="stylesheet">
+		<%
+		long javaScriptLastModified = ServletContextUtil.getLastModified(application, "/html/js/", true);
+		%>
 
-<script src="/html/js/editor/alloyeditor/ckeditor/ckeditor.js"></script>
+		<script src="<%= HtmlUtil.escape(PortalUtil.getStaticResourceURL(request, themeDisplay.getCDNHost() + themeDisplay.getPathJavaScript() + "/editor/alloyeditor/ckeditor/ckeditor.js", javaScriptLastModified)) %>" type="text/javascript"></script>
+
+		<script src="<%= HtmlUtil.escape(PortalUtil.getStaticResourceURL(request, themeDisplay.getCDNHost() + themeDisplay.getPathJavaScript() + "/editor/alloyeditor/core.js", javaScriptLastModified)) %>" type="text/javascript"></script>
+
+		<script type="text/javascript">
+			Liferay.namespace('EDITORS')['<%= editorImpl %>'] = true;
+		</script>
+	</liferay-util:html-top>
+</c:if>
 
 <script type="text/javascript">
 	CKEDITOR.disableAutoInline = true;
@@ -78,9 +92,18 @@ boolean resizable = GetterUtil.getBoolean((String)request.getAttribute("liferay-
 	CKEDITOR.env.isCompatible = true;
 </script>
 
-<script src="/html/js/editor/alloyeditor/all.js"></script>
-
 <aui:script use="aui-base">
+	YUI.applyConfig({
+		groups: {
+			AlloyEditor: {
+				base: Liferay.AUI.getJavaScriptRootPath() + '/editor/alloyeditor/',
+				combine: true,
+				comboBase: Liferay.AUI.getComboPath(),
+				root: Liferay.AUI.getJavaScriptRootPath() + '/editor/alloyeditor/'
+			}
+		}
+	});
+
 	window['<%= name %>'] = {
 		destroy: function() {
 			CKEDITOR.instances['<%= name %>'].destroy();
