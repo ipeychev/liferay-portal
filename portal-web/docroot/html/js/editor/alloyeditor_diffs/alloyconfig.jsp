@@ -58,7 +58,7 @@ response.setContentType(ContentTypes.TEXT_JAVASCRIPT);
 	config.contentsLanguage = '<%= contentsLanguageId.replace("iw_", "he_") %>';
 
 	alloyEditor.config.removePlugins = 'contextmenu,toolbar,elementspath,resize,liststyle,tabletools,link';
-	alloyEditor.config.extraPlugins = 'debounce,linktools,uicore,selectionregion,dropimages,placeholder,linktooltip,uitools,uiloader';
+	alloyEditor.config.extraPlugins = 'uicore,selectionregion,dropimages,placeholder,linktooltip,uiloader';
 
 	alloyEditor.config.title = false;
 
