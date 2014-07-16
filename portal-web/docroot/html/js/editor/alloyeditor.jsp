@@ -76,9 +76,24 @@ boolean skipEditorLoading = GetterUtil.getBoolean((String)request.getAttribute("
 		long javaScriptLastModified = ServletContextUtil.getLastModified(application, "/html/js/", true);
 		%>
 
-		<script src="<%= HtmlUtil.escape(PortalUtil.getStaticResourceURL(request, themeDisplay.getCDNHost() + themeDisplay.getPathJavaScript() + "/editor/alloyeditor/ckeditor/ckeditor.js", javaScriptLastModified)) %>" type="text/javascript"></script>
+		<script src="<%= HtmlUtil.escape(PortalUtil.getStaticResourceURL(request, themeDisplay.getCDNHost() + themeDisplay.getPathJavaScript() + "/editor/alloyeditor/ckeditor.js", javaScriptLastModified)) %>" type="text/javascript"></script>
 
-		<script src="<%= HtmlUtil.escape(PortalUtil.getStaticResourceURL(request, themeDisplay.getCDNHost() + themeDisplay.getPathJavaScript() + "/editor/alloyeditor/core.js", javaScriptLastModified)) %>" type="text/javascript"></script>
+		<script type="text/javascript">
+			YUI.applyConfig(
+				{
+					groups: {
+						AlloyEditor: {
+							base: Liferay.AUI.getJavaScriptRootPath() + '/editor/alloyeditor/',
+							combine: true,
+							comboBase: Liferay.AUI.getComboPath(),
+							root: Liferay.AUI.getJavaScriptRootPath() + '/editor/alloyeditor/'
+						}
+					}
+				}
+			);
+		</script>
+
+		<script src="<%= HtmlUtil.escape(PortalUtil.getStaticResourceURL(request, themeDisplay.getCDNHost() + themeDisplay.getPathJavaScript() + "/editor/alloyeditor/alloy-editor-core.js", javaScriptLastModified)) %>" type="text/javascript"></script>
 
 		<script type="text/javascript">
 			Liferay.namespace('EDITORS')['<%= editorImpl %>'] = true;
@@ -87,23 +102,10 @@ boolean skipEditorLoading = GetterUtil.getBoolean((String)request.getAttribute("
 </c:if>
 
 <script type="text/javascript">
-	CKEDITOR.disableAutoInline = true;
-
 	CKEDITOR.env.isCompatible = true;
 </script>
 
 <aui:script use="aui-base">
-	YUI.applyConfig({
-		groups: {
-			AlloyEditor: {
-				base: Liferay.AUI.getJavaScriptRootPath() + '/editor/alloyeditor/',
-				combine: true,
-				comboBase: Liferay.AUI.getComboPath(),
-				root: Liferay.AUI.getJavaScriptRootPath() + '/editor/alloyeditor/'
-			}
-		}
-	});
-
 	window['<%= name %>'] = {
 		destroy: function() {
 			CKEDITOR.instances['<%= name %>'].destroy();
