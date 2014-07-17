@@ -822,6 +822,7 @@
 		<delete dir="classes" />
 		<delete dir="docroot/dtd" />
 		<delete dir="docroot/html/js/aui" />
+		<delete dir="docroot/html/js/editor/alloyeditor" />
 		<delete dir="docroot/html/js/editor/ckeditor" />
 		<delete dir="docroot/html/js/editor/tinymce" />
 		<delete dir="docroot/html/portal/aui" />
