@@ -414,27 +414,28 @@ public class HtmlBBCodeTranslatorImpl implements BBCodeTranslator {
 
 				if (attribute.startsWith(_ALT_TEXT_PREFIX)) {
 					sb.append(attribute);
+
+					continue;
 				}
-				else {
-					String[] dim = StringUtil.split(
-						attribute, CharPool.LOWER_CASE_X);
 
-					sb.append("style=\"");
+				String[] dim = StringUtil.split(
+					attribute, CharPool.LOWER_CASE_X);
 
-					if (!dim[0].equals("auto")) {
-						sb.append("width:");
-						sb.append(HtmlUtil.escapeAttribute(dim[0]));
-						sb.append("px;");
-					}
+				sb.append("style=\"");
 
-					if (!dim[1].equals("auto")) {
-						sb.append("height:");
-						sb.append(HtmlUtil.escapeAttribute(dim[1]));
-						sb.append("px;");
-					}
-
-					sb.append("\"");
+				if (!dim[0].equals("auto")) {
+					sb.append("width:");
+					sb.append(HtmlUtil.escapeAttribute(dim[0]));
+					sb.append("px;");
 				}
+
+				if (!dim[1].equals("auto")) {
+					sb.append("height:");
+					sb.append(HtmlUtil.escapeAttribute(dim[1]));
+					sb.append("px;");
+				}
+
+				sb.append("\"");
 			}
 		}
 
