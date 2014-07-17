@@ -35,6 +35,10 @@
 				border: none;
 			}
 
+			.input-close-container, .show-buttons-container {
+				margin-top: 2px;
+			}
+
 			.input-wrapper {
 				margin: 3px 0;
 
@@ -56,10 +60,6 @@
 			.switch-to-edit {
 				margin-left: 2px;
 			}
-
-			.show-buttons-container, .input-close-container {
-				margin-top: 2px;
-			}
 		}
 	}
 }
@@ -68,10 +68,8 @@
 	border: solid 1px;
 	padding: 3px 2px;
 
-	.link-container {
-		.icon-link-container {
-			vertical-align: middle;
-		}
+	.link-container .icon-link-container {
+		vertical-align: middle;
 	}
 }
 
@@ -91,51 +89,48 @@
 
 .alloy-editor-toolbar {
 	@include background-image(linear-gradient(#278FE2, #1B7BC8));
+	border-color: #327CB4;
 	@include border-radius(3px);
 	@include opacity(0.95);
 
-	border-color: #327CB4;
-
 	&.alloy-editor-arrow-box-bottom {
-		&:before {
-			border-top-color: #327CB4;
-		}
-
 		&:after {
 			border-top-color: #1B7BC8;
+		}
+
+		&:before {
+			border-top-color: #327CB4;
 		}
 	}
 
 	&.alloy-editor-arrow-box-top {
-		&:before {
-			border-bottom-color: #327CB4;
-		}
-
 		&:after {
 			border-bottom-color: #278FE2;
+		}
+
+		&:before {
+			border-bottom-color: #327CB4;
 		}
 	}
 
 	.alloy-editor-toolbar-content {
 		.alloy-editor-button {
-			@include box-shadow(none);
-
 			background-color: transparent;
 			background-image: none;
 			border-left-color: #348BD3;
 			border-right-color: #2C83CD;
+			@include box-shadow(none);
 			color: #124E8D;
 
-			&:focus, &:active {
+			&:active, &:focus {
 				color: #124E8D;
 			}
 
 			&:hover {
-				@include box-shadow(none);
-
 				background-image: none;
 				border-left-color: #348BD3;
 				border-right-color: #2C83CD;
+				@include box-shadow(none);
 				color: #FFF;
 			}
 
@@ -145,14 +140,12 @@
 		}
 
 		.link-wrapper {
-			.input-wrapper {
-				.input-container {
-					border-color: #DDD;
+			.input-container {
+				border-color: #DDD;
 
-					.input-clear {
-						color: #CCC;
-						font-size: 1.1em;
-					}
+				.input-clear {
+					color: #CCC;
+					font-size: 1.1em;
 				}
 			}
 
@@ -169,15 +162,13 @@
 
 .alloy-editor-tooltip-link {
 	@include background-image(linear-gradient(#278FE2, #1B7BC8));
+	border-color: #327CB4;
 	@include border-radius(3px);
+	color: #FFF;
 	@include opacity(0.95);
 
-	border-color: #327CB4;
-	color: #FFF;
 
-	.link-container {
-		.link-preview {
-			color: #FFF;
-		}
+	.link-container .link-preview {
+		color: #FFF;
 	}
 }
