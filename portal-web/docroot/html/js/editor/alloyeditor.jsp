@@ -76,7 +76,7 @@ boolean skipEditorLoading = GetterUtil.getBoolean((String)request.getAttribute("
 		long javaScriptLastModified = ServletContextUtil.getLastModified(application, "/html/js/", true);
 		%>
 
-		<script src="<%= HtmlUtil.escape(PortalUtil.getStaticResourceURL(request, themeDisplay.getCDNHost() + themeDisplay.getPathJavaScript() + "/editor/alloyeditor/ckeditor.js", javaScriptLastModified)) %>" type="text/javascript"></script>
+		<script src="<%= HtmlUtil.escape(PortalUtil.getStaticResourceURL(request, themeDisplay.getCDNHost() + themeDisplay.getPathJavaScript() + "/editor/ckeditor/ckeditor.js", javaScriptLastModified)) %>" type="text/javascript"></script>
 
 		<script type="text/javascript">
 			YUI.applyConfig(
@@ -194,6 +194,13 @@ boolean skipEditorLoading = GetterUtil.getBoolean((String)request.getAttribute("
 					ckeditorInstances,
 					function(value, key) {
 						var inst = ckeditorInstances[key];
+
+						A.Object.each(
+							inst.config.toolbars,
+							function(value, key) {
+								value.destroy();
+							}
+						);
 
 						delete ckeditorInstances[key];
 
