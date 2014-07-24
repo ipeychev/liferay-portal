@@ -122,7 +122,7 @@ boolean showHeader = ParamUtil.getBoolean(request, "showHeader", true);
 		<aui:field-wrapper label="content">
 			<liferay-ui:input-editor editorImpl="<%= EDITOR_WYSIWYG_IMPL_KEY %>" />
 
-			<div class="alloy-editor-placeholder" contenteditable="true" id="<portlet:namespace />editor" data-placeholder="Write blog content here" style="min-height: 300px; min-width: 300px"></div>
+			<div class="alloy-editor alloy-editor-placeholder" contenteditable="true" id="<portlet:namespace />editor" data-placeholder="Write blog content here" style="min-height: 300px; min-width: 300px"></div>
 
 			<aui:input name="content" type="hidden" />
 		</aui:field-wrapper>
