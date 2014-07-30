@@ -741,6 +741,10 @@ public class LiferaySeleniumHelper {
 		return false;
 	}
 
+	public static boolean isMobileDeviceEnabled() {
+		return TestPropsValues.MOBILE_DEVICE_ENABLED;
+	}
+
 	public static boolean isNotChecked(
 		LiferaySelenium liferaySelenium, String locator) {
 
@@ -1079,6 +1083,10 @@ public class LiferaySeleniumHelper {
 		sb.append("\");");
 
 		liferaySelenium.runScript(sb.toString());
+	}
+
+	public static void typeScreen(String value) {
+		_screen.type(value);
 	}
 
 	public static void waitForElementNotPresent(

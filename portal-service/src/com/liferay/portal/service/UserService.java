@@ -628,6 +628,20 @@ public interface UserService extends BaseService {
 	public boolean hasRoleUser(long roleId, long userId)
 		throws com.liferay.portal.kernel.exception.PortalException;
 
+	public boolean sendPasswordByEmailAddress(long companyId,
+		java.lang.String emailAddress,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException;
+
+	public boolean sendPasswordByScreenName(long companyId,
+		java.lang.String screenName,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException;
+
+	public boolean sendPasswordByUserId(long companyId, long userId,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException;
+
 	/**
 	* Sets the Spring bean ID for this bean.
 	*

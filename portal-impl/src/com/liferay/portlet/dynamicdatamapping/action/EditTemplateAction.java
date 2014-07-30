@@ -21,7 +21,6 @@ import com.liferay.portal.kernel.upload.UploadPortletRequest;
 import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.FileUtil;
-import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HttpUtil;
 import com.liferay.portal.kernel.util.LocalizationUtil;
 import com.liferay.portal.kernel.util.MimeTypesUtil;
@@ -45,6 +44,7 @@ import com.liferay.portlet.dynamicdatamapping.TemplateSmallImageSizeException;
 import com.liferay.portlet.dynamicdatamapping.model.DDMTemplate;
 import com.liferay.portlet.dynamicdatamapping.model.DDMTemplateConstants;
 import com.liferay.portlet.dynamicdatamapping.service.DDMTemplateServiceUtil;
+import com.liferay.portlet.dynamicdatamapping.util.DDMXSDUtil;
 
 import java.io.File;
 
@@ -242,17 +242,21 @@ public class EditTemplateAction extends PortletAction {
 
 		File file = uploadPortletRequest.getFile("script");
 
-		if (file == null) {
-			return scriptContent;
+		if (file != null) {
+			scriptContent = FileUtil.read(file);
+
+			if (Validator.isNotNull(scriptContent) && !isValidFile(file)) {
+				throw new TemplateScriptException();
+			}
 		}
 
-		String script = FileUtil.read(file);
+		String type = ParamUtil.getString(uploadPortletRequest, "type");
 
-		if (Validator.isNotNull(script) && !isValidFile(file)) {
-			throw new TemplateScriptException();
+		if (type.equals(DDMTemplateConstants.TEMPLATE_TYPE_FORM)) {
+			scriptContent = DDMXSDUtil.getXSD(scriptContent);
 		}
 
-		return GetterUtil.getString(script, scriptContent);
+		return scriptContent;
 	}
 
 	protected boolean isValidFile(File file) {

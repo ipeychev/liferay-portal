@@ -34,7 +34,6 @@ import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
-import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.search.elasticsearch.connection.ElasticsearchConnectionManager;
 import com.liferay.portal.search.elasticsearch.facet.ElasticsearchFacetFieldCollector;
 import com.liferay.portal.search.elasticsearch.facet.FacetProcessorUtil;
@@ -181,6 +180,8 @@ public class ElasticsearchIndexSearcher extends BaseIndexSearcher {
 			return;
 		}
 
+		addHighlightedField(
+			searchRequestBuilder, queryConfig, Field.ASSET_CATEGORY_TITLES);
 		addHighlightedField(searchRequestBuilder, queryConfig, Field.CONTENT);
 		addHighlightedField(
 			searchRequestBuilder, queryConfig, Field.DESCRIPTION);
@@ -275,6 +276,9 @@ public class ElasticsearchIndexSearcher extends BaseIndexSearcher {
 		}
 
 		addSnippets(
+			document, queryTerms, highlightFields, Field.ASSET_CATEGORY_TITLES,
+			queryConfig.getLocale());
+		addSnippets(
 			document, queryTerms, highlightFields, Field.CONTENT,
 			queryConfig.getLocale());
 		addSnippets(
@@ -292,29 +296,25 @@ public class ElasticsearchIndexSearcher extends BaseIndexSearcher {
 			return;
 		}
 
+		Set<String> sortFieldNames = new HashSet<String>();
+
 		for (Sort sort : sorts) {
 			if (sort == null) {
 				continue;
 			}
 
-			String sortFieldName = sort.getFieldName();
+			String sortFieldName = DocumentImpl.getSortFieldName(
+				sort, "_score");
 
-			if (DocumentImpl.isSortableTextField(sortFieldName)) {
-				sortFieldName = DocumentImpl.getSortableFieldName(
-					sortFieldName);
+			if (sortFieldNames.contains(sortFieldName)) {
+				continue;
 			}
+
+			sortFieldNames.add(sortFieldName);
 
 			SortOrder sortOrder = SortOrder.ASC;
 
-			if (Validator.isNull(sortFieldName) ||
-				!sortFieldName.endsWith("sortable")) {
-
-				sortOrder = SortOrder.DESC;
-
-				sortFieldName = "_score";
-			}
-
-			if (sort.isReverse()) {
+			if (sort.isReverse() || sortFieldName.equals("_score")) {
 				sortOrder = SortOrder.DESC;
 			}
 

@@ -26,7 +26,6 @@ import com.liferay.portlet.dynamicdatamapping.storage.DDMFormValues;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -61,18 +60,10 @@ public class DDMFormValuesJSONSerializerTest extends BaseDDMTestCase {
 		JSONAssert.assertEquals(expectedJSON, actualJSON, false);
 	}
 
-	protected List<Locale> createAvailableLocales() {
-		List<Locale> availableLocales = new ArrayList<Locale>();
-
-		availableLocales.add(LocaleUtil.US);
-		availableLocales.add(LocaleUtil.BRAZIL);
-
-		return availableLocales;
-	}
-
 	protected DDMFormFieldValue createBooleanDDMFormFieldValue() {
 		DDMFormFieldValue ddmFormFieldValue = new DDMFormFieldValue();
 
+		ddmFormFieldValue.setInstanceId("njar");
 		ddmFormFieldValue.setName("Boolean2282");
 		ddmFormFieldValue.setNestedDDMFormFields(
 			createBooleanNestedDDMFormFieldValues());
@@ -85,8 +76,8 @@ public class DDMFormValuesJSONSerializerTest extends BaseDDMTestCase {
 		List<DDMFormFieldValue> ddmFormFieldValues =
 			new ArrayList<DDMFormFieldValue>();
 
-		ddmFormFieldValues.add(createHTMLDDMFormFieldValue(0));
-		ddmFormFieldValues.add(createHTMLDDMFormFieldValue(1));
+		ddmFormFieldValues.add(createHTMLDDMFormFieldValue(0, "nabr"));
+		ddmFormFieldValues.add(createHTMLDDMFormFieldValue(1, "uwyg"));
 
 		return ddmFormFieldValues;
 	}
@@ -94,8 +85,8 @@ public class DDMFormValuesJSONSerializerTest extends BaseDDMTestCase {
 	protected Value createBooleanValue() {
 		Value value = new LocalizedValue();
 
-		value.addValue(LocaleUtil.US, "false");
-		value.addValue(LocaleUtil.BRAZIL, "true");
+		value.addString(LocaleUtil.US, "false");
+		value.addString(LocaleUtil.BRAZIL, "true");
 
 		return value;
 	}
@@ -115,16 +106,20 @@ public class DDMFormValuesJSONSerializerTest extends BaseDDMTestCase {
 	protected DDMFormValues createDDMFormValues() {
 		DDMFormValues ddmFormValues = new DDMFormValues();
 
-		ddmFormValues.setAvailableLocales(createAvailableLocales());
+		ddmFormValues.setAvailableLocales(
+			createAvailableLocales(LocaleUtil.BRAZIL, LocaleUtil.US));
 		ddmFormValues.setDDMFormFieldValues(createDDMFormFieldValues());
 		ddmFormValues.setDefaultLocale(LocaleUtil.US);
 
 		return ddmFormValues;
 	}
 
-	protected DDMFormFieldValue createHTMLDDMFormFieldValue(int index) {
+	protected DDMFormFieldValue createHTMLDDMFormFieldValue(
+		int index, String instanceId) {
+
 		DDMFormFieldValue ddmFormFieldValue = new DDMFormFieldValue();
 
+		ddmFormFieldValue.setInstanceId(instanceId);
 		ddmFormFieldValue.setName("HTML4512");
 		ddmFormFieldValue.setValue(createHTMLValue(index));
 
@@ -134,16 +129,19 @@ public class DDMFormValuesJSONSerializerTest extends BaseDDMTestCase {
 	protected Value createHTMLValue(int index) {
 		Value value = new LocalizedValue();
 
-		value.addValue(LocaleUtil.US, "<p>This is a test. " + index + "</p>");
-		value.addValue(
+		value.addString(LocaleUtil.US, "<p>This is a test. " + index + "</p>");
+		value.addString(
 			LocaleUtil.BRAZIL, "<p>Isto e um teste. " + index + "</p>");
 
 		return value;
 	}
 
-	protected DDMFormFieldValue createImageDDMFormFieldValue(int index) {
+	protected DDMFormFieldValue createImageDDMFormFieldValue(
+		int index, String instanceId) {
+
 		DDMFormFieldValue ddmFormFieldValue = new DDMFormFieldValue();
 
+		ddmFormFieldValue.setInstanceId(instanceId);
 		ddmFormFieldValue.setName("Image4751");
 		ddmFormFieldValue.setValue(createImageValue(index));
 
@@ -154,9 +152,9 @@ public class DDMFormValuesJSONSerializerTest extends BaseDDMTestCase {
 		List<DDMFormFieldValue> imageDDMFormFieldValues =
 			new ArrayList<DDMFormFieldValue>();
 
-		for (int i = 0; i < 3; i++) {
-			imageDDMFormFieldValues.add(createImageDDMFormFieldValue(i));
-		}
+		imageDDMFormFieldValues.add(createImageDDMFormFieldValue(0, "uaht"));
+		imageDDMFormFieldValues.add(createImageDDMFormFieldValue(1, "pppj"));
+		imageDDMFormFieldValues.add(createImageDDMFormFieldValue(2, "nmab"));
 
 		return imageDDMFormFieldValues;
 	}
@@ -170,12 +168,15 @@ public class DDMFormValuesJSONSerializerTest extends BaseDDMTestCase {
 		return new UnlocalizedValue(jsonObject.toString());
 	}
 
-	protected DDMFormFieldValue createSeparatorDDMFormFieldValue(int index) {
+	protected DDMFormFieldValue createSeparatorDDMFormFieldValue(
+		int index, String instanceId) {
+
 		DDMFormFieldValue ddmFormFieldValue = new DDMFormFieldValue();
 
+		ddmFormFieldValue.setInstanceId(instanceId);
 		ddmFormFieldValue.setName("Separator7211");
 		ddmFormFieldValue.setNestedDDMFormFields(
-			createSeparatorNestedDDMFormFieldValues(index));
+			createSeparatorNestedDDMFormFieldValues(index, "xyz" + index));
 
 		return ddmFormFieldValue;
 	}
@@ -184,28 +185,33 @@ public class DDMFormValuesJSONSerializerTest extends BaseDDMTestCase {
 		List<DDMFormFieldValue> separatorDDMFormFieldValues =
 			new ArrayList<DDMFormFieldValue>();
 
-		for (int i = 0; i < 2; i++) {
-			separatorDDMFormFieldValues.add(
-				createSeparatorDDMFormFieldValue(i));
-		}
+		separatorDDMFormFieldValues.add(
+			createSeparatorDDMFormFieldValue(0, "uayx"));
+
+		separatorDDMFormFieldValues.add(
+			createSeparatorDDMFormFieldValue(1, "lahy"));
 
 		return separatorDDMFormFieldValues;
 	}
 
 	protected List<DDMFormFieldValue> createSeparatorNestedDDMFormFieldValues(
-		int index) {
+		int index, String instanceId) {
 
 		List<DDMFormFieldValue> ddmFormFieldValues =
 			new ArrayList<DDMFormFieldValue>();
 
-		ddmFormFieldValues.add(createTextBoxDDMFormFieldValue(index));
+		ddmFormFieldValues.add(
+			createTextBoxDDMFormFieldValue(index, instanceId));
 
 		return ddmFormFieldValues;
 	}
 
-	protected DDMFormFieldValue createTextBoxDDMFormFieldValue(int index) {
+	protected DDMFormFieldValue createTextBoxDDMFormFieldValue(
+		int index, String instanceId) {
+
 		DDMFormFieldValue ddmFormFieldValue = new DDMFormFieldValue();
 
+		ddmFormFieldValue.setInstanceId(instanceId);
 		ddmFormFieldValue.setName("Text_Box6748");
 		ddmFormFieldValue.setValue(createTextBoxValue(index));
 
@@ -215,8 +221,8 @@ public class DDMFormValuesJSONSerializerTest extends BaseDDMTestCase {
 	protected Value createTextBoxValue(int index) {
 		Value value = new LocalizedValue();
 
-		value.addValue(LocaleUtil.US, "Content " + index);
-		value.addValue(LocaleUtil.BRAZIL, "Conteudo " + index);
+		value.addString(LocaleUtil.US, "Content " + index);
+		value.addString(LocaleUtil.BRAZIL, "Conteudo " + index);
 
 		return value;
 	}
@@ -224,6 +230,7 @@ public class DDMFormValuesJSONSerializerTest extends BaseDDMTestCase {
 	protected DDMFormFieldValue createTextDDMFormFieldValue() {
 		DDMFormFieldValue ddmFormFieldValue = new DDMFormFieldValue();
 
+		ddmFormFieldValue.setInstanceId("baht");
 		ddmFormFieldValue.setName("Text6513");
 		ddmFormFieldValue.setValue(createTextValue());
 
@@ -233,8 +240,8 @@ public class DDMFormValuesJSONSerializerTest extends BaseDDMTestCase {
 	protected Value createTextValue() {
 		Value value = new LocalizedValue();
 
-		value.addValue(LocaleUtil.US, "Text");
-		value.addValue(LocaleUtil.BRAZIL, "Texto");
+		value.addString(LocaleUtil.US, "Text");
+		value.addString(LocaleUtil.BRAZIL, "Texto");
 
 		return value;
 	}

@@ -64,22 +64,16 @@ public abstract class BaseWebDriverImpl
 				_sikuliImagesDirName, "linux", "windows");
 		}
 
-		WebDriver.Options options = webDriver.manage();
+		if (!TestPropsValues.MOBILE_DEVICE_ENABLED) {
+			WebDriver.Options options = webDriver.manage();
 
-		WebDriver.Window window = options.window();
+			WebDriver.Window window = options.window();
 
-		int x = 1065;
-		int y = 1040;
+			int x = 1065;
+			int y = 1040;
 
-		if (TestPropsValues.MOBILE_DEVICE_ENABLED) {
-			String[] screenResolution = StringUtil.split(
-				TestPropsValues.MOBILE_DEVICE_RESOLUTION, "x");
-
-			x = GetterUtil.getInteger(screenResolution[0]);
-			y = GetterUtil.getInteger(screenResolution[1]);
+			window.setSize(new Dimension(x, y));
 		}
-
-		window.setSize(new Dimension(x, y));
 
 		webDriver.get(browserURL);
 	}
@@ -218,6 +212,14 @@ public abstract class BaseWebDriverImpl
 
 				if (javaScriptErrorValue.contains(
 						"NS_ERROR_NOT_INITIALIZED:")) {
+
+					continue;
+				}
+
+				// LPS-42469
+
+				if (javaScriptErrorValue.contains(
+						"https://apis.google.com/_/+1/fastbutton")) {
 
 					continue;
 				}
@@ -505,6 +507,11 @@ public abstract class BaseWebDriverImpl
 	}
 
 	@Override
+	public boolean isMobileDeviceEnabled() {
+		return LiferaySeleniumHelper.isMobileDeviceEnabled();
+	}
+
+	@Override
 	public boolean isNotChecked(String locator) {
 		return LiferaySeleniumHelper.isNotChecked(this, locator);
 	}
@@ -738,6 +745,26 @@ public abstract class BaseWebDriverImpl
 	}
 
 	@Override
+	public void setWindowSize(String coordString) {
+		WebElement bodyWebElement = getWebElement("//body");
+
+		WrapsDriver wrapsDriver = (WrapsDriver)bodyWebElement;
+
+		WebDriver webDriver = wrapsDriver.getWrappedDriver();
+
+		WebDriver.Options options = webDriver.manage();
+
+		WebDriver.Window window = options.window();
+
+		String[] screenResolution = StringUtil.split(coordString, ",");
+
+		int x = GetterUtil.getInteger(screenResolution[0]);
+		int y = GetterUtil.getInteger(screenResolution[1]);
+
+		window.setSize(new Dimension(x, y));
+	}
+
+	@Override
 	public void sikuliAssertElementNotPresent(String image) throws Exception {
 		LiferaySeleniumHelper.sikuliAssertElementNotPresent(this, image);
 	}
@@ -830,6 +857,11 @@ public abstract class BaseWebDriverImpl
 	@Override
 	public void typeFrame(String locator, String value) {
 		LiferaySeleniumHelper.typeFrame(this, locator, value);
+	}
+
+	@Override
+	public void typeScreen(String value) {
+		LiferaySeleniumHelper.typeScreen(value);
 	}
 
 	@Override

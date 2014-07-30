@@ -707,6 +707,32 @@ public class UserServiceWrapper implements UserService,
 		return _userService.hasRoleUser(roleId, userId);
 	}
 
+	@Override
+	public boolean sendPasswordByEmailAddress(long companyId,
+		java.lang.String emailAddress,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return _userService.sendPasswordByEmailAddress(companyId, emailAddress,
+			serviceContext);
+	}
+
+	@Override
+	public boolean sendPasswordByScreenName(long companyId,
+		java.lang.String screenName,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return _userService.sendPasswordByScreenName(companyId, screenName,
+			serviceContext);
+	}
+
+	@Override
+	public boolean sendPasswordByUserId(long companyId, long userId,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return _userService.sendPasswordByUserId(companyId, userId,
+			serviceContext);
+	}
+
 	/**
 	* Sets the Spring bean ID for this bean.
 	*

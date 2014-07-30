@@ -52,11 +52,12 @@ import com.liferay.portlet.dynamicdatamapping.storage.DDMFormValues;
 import java.io.IOException;
 import java.io.InputStream;
 
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import org.junit.runner.RunWith;
 
@@ -126,8 +127,8 @@ public abstract class BaseDDMTestCase extends PowerMockito {
 		return dynamicElement;
 	}
 
-	protected List<Locale> createAvailableLocales(Locale... locales) {
-		List<Locale> availableLocales = new ArrayList<Locale>();
+	protected Set<Locale> createAvailableLocales(Locale... locales) {
+		Set<Locale> availableLocales = new LinkedHashSet<Locale>();
 
 		for (Locale locale : locales) {
 			availableLocales.add(locale);
@@ -137,7 +138,7 @@ public abstract class BaseDDMTestCase extends PowerMockito {
 	}
 
 	protected DDMForm createDDMForm(
-		List<Locale> availableLocales, Locale defaultLocale) {
+		Set<Locale> availableLocales, Locale defaultLocale) {
 
 		DDMForm ddmForm = new DDMForm();
 
@@ -221,7 +222,7 @@ public abstract class BaseDDMTestCase extends PowerMockito {
 		structure.setName(name);
 		structure.setDefinition(definition);
 
-		_structures.put(structure.getStructureId(), structure);
+		structures.put(structure.getStructureId(), structure);
 
 		return structure;
 	}
@@ -242,7 +243,7 @@ public abstract class BaseDDMTestCase extends PowerMockito {
 		template.setMode(mode);
 		template.setScript(script);
 
-		_templates.put(template.getTemplateId(), template);
+		templates.put(template.getTemplateId(), template);
 
 		return template;
 	}
@@ -252,7 +253,7 @@ public abstract class BaseDDMTestCase extends PowerMockito {
 	}
 
 	protected DDMFormField createTextDDMFormField(
-		String name, String label,  boolean localizable, boolean repeatable,
+		String name, String label, boolean localizable, boolean repeatable,
 		boolean required) {
 
 		DDMFormField ddmFormField = new DDMFormField(name, "text");
@@ -264,7 +265,7 @@ public abstract class BaseDDMTestCase extends PowerMockito {
 
 		LocalizedValue localizedValue = ddmFormField.getLabel();
 
-		localizedValue.addValue(LocaleUtil.US, label);
+		localizedValue.addString(LocaleUtil.US, label);
 
 		return ddmFormField;
 	}
@@ -328,7 +329,7 @@ public abstract class BaseDDMTestCase extends PowerMockito {
 
 					Long structureId = (Long)args[0];
 
-					return _structures.get(structureId);
+					return structures.get(structureId);
 				}
 
 			}
@@ -351,7 +352,7 @@ public abstract class BaseDDMTestCase extends PowerMockito {
 
 					Long templateId = (Long)args[0];
 
-					return _templates.get(templateId);
+					return templates.get(templateId);
 				}
 
 			}
@@ -411,6 +412,14 @@ public abstract class BaseDDMTestCase extends PowerMockito {
 			LocaleUtil.toLanguageId(LocaleUtil.BRAZIL)
 		).thenReturn(
 			"pt_BR"
+		);
+
+		when(
+			LocaleUtil.toLanguageIds(
+				Matchers.eq(new Locale[] {LocaleUtil.BRAZIL, LocaleUtil.US})
+			)
+		).thenReturn(
+			new String[] {"pt_BR", "en_US"}
 		);
 	}
 
@@ -476,9 +485,9 @@ public abstract class BaseDDMTestCase extends PowerMockito {
 		saxReaderUtil.setSAXReader(new SAXReaderImpl());
 	}
 
-	private Map<Long, DDMStructure> _structures =
+	protected Map<Long, DDMStructure> structures =
 		new HashMap<Long, DDMStructure>();
-	private Map<Long, DDMTemplate> _templates =
+	protected Map<Long, DDMTemplate> templates =
 		new HashMap<Long, DDMTemplate>();
 
 }

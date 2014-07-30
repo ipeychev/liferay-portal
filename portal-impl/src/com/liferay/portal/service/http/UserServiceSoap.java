@@ -965,6 +965,56 @@ public class UserServiceSoap {
 		}
 	}
 
+	public static boolean sendPasswordByEmailAddress(long companyId,
+		java.lang.String emailAddress,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws RemoteException {
+		try {
+			boolean returnValue = UserServiceUtil.sendPasswordByEmailAddress(companyId,
+					emailAddress, serviceContext);
+
+			return returnValue;
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static boolean sendPasswordByScreenName(long companyId,
+		java.lang.String screenName,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws RemoteException {
+		try {
+			boolean returnValue = UserServiceUtil.sendPasswordByScreenName(companyId,
+					screenName, serviceContext);
+
+			return returnValue;
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static boolean sendPasswordByUserId(long companyId, long userId,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws RemoteException {
+		try {
+			boolean returnValue = UserServiceUtil.sendPasswordByUserId(companyId,
+					userId, serviceContext);
+
+			return returnValue;
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
 	/**
 	* Sets the users in the role, removing and adding users to the role as
 	* necessary.

@@ -1983,9 +1983,23 @@ public interface UserLocalService extends BaseLocalService,
 	* @throws PortalException if a user with the email address could not be
 	found
 	*/
-	public void sendPassword(long companyId, java.lang.String emailAddress,
+	public boolean sendPassword(long companyId, java.lang.String emailAddress,
 		java.lang.String fromName, java.lang.String fromAddress,
 		java.lang.String subject, java.lang.String body,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException;
+
+	public boolean sendPasswordByEmailAddress(long companyId,
+		java.lang.String emailAddress,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException;
+
+	public boolean sendPasswordByScreenName(long companyId,
+		java.lang.String screenName,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException;
+
+	public boolean sendPasswordByUserId(long companyId, long userId,
 		com.liferay.portal.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException;
 

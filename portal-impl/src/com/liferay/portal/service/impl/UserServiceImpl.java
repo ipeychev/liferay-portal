@@ -1010,6 +1010,33 @@ public class UserServiceImpl extends UserServiceBaseImpl {
 		return userLocalService.hasRoleUser(companyId, name, userId, inherited);
 	}
 
+	@Override
+	public boolean sendPasswordByEmailAddress(
+			long companyId, String emailAddress, ServiceContext serviceContext)
+		throws PortalException {
+
+		return userLocalService.sendPasswordByEmailAddress(
+			companyId, emailAddress, serviceContext);
+	}
+
+	@Override
+	public boolean sendPasswordByScreenName(
+			long companyId, String screenName, ServiceContext serviceContext)
+		throws PortalException {
+
+		return userLocalService.sendPasswordByScreenName(
+			companyId, screenName, serviceContext);
+	}
+
+	@Override
+	public boolean sendPasswordByUserId(
+			long companyId, long userId, ServiceContext serviceContext)
+		throws PortalException {
+
+		return userLocalService.sendPasswordByUserId(
+			companyId, userId, serviceContext);
+	}
+
 	/**
 	 * Sets the users in the role, removing and adding users to the role as
 	 * necessary.

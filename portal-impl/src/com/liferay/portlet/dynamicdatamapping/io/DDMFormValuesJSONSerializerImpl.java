@@ -24,6 +24,7 @@ import com.liferay.portlet.dynamicdatamapping.storage.DDMFormValues;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 /**
  * @author Marcellus Tavares
@@ -44,7 +45,7 @@ public class DDMFormValuesJSONSerializerImpl
 	}
 
 	protected void addAvailableLanguageIds(
-		JSONObject jsonObject, List<Locale> availableLocales) {
+		JSONObject jsonObject, Set<Locale> availableLocales) {
 
 		JSONArray jsonArray = JSONFactoryUtil.createJSONArray();
 
@@ -89,7 +90,7 @@ public class DDMFormValuesJSONSerializerImpl
 			jsonObject.put("value", toJSONObject(value));
 		}
 		else {
-			jsonObject.put("value", value.getValue(LocaleUtil.ROOT));
+			jsonObject.put("value", value.getString(LocaleUtil.ROOT));
 		}
 	}
 
@@ -108,6 +109,7 @@ public class DDMFormValuesJSONSerializerImpl
 	protected JSONObject toJSONObject(DDMFormFieldValue ddmFormFieldValue) {
 		JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
 
+		jsonObject.put("instanceId", ddmFormFieldValue.getInstanceId());
 		jsonObject.put("name", ddmFormFieldValue.getName());
 
 		addNestedFieldValues(
@@ -123,7 +125,7 @@ public class DDMFormValuesJSONSerializerImpl
 		for (Locale availableLocale : value.getAvailableLocales()) {
 			jsonObject.put(
 				LocaleUtil.toLanguageId(availableLocale),
-				value.getValue(availableLocale));
+				value.getString(availableLocale));
 		}
 
 		return jsonObject;

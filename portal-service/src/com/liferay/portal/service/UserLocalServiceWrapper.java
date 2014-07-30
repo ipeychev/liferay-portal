@@ -2448,13 +2448,39 @@ public class UserLocalServiceWrapper implements UserLocalService,
 	found
 	*/
 	@Override
-	public void sendPassword(long companyId, java.lang.String emailAddress,
+	public boolean sendPassword(long companyId, java.lang.String emailAddress,
 		java.lang.String fromName, java.lang.String fromAddress,
 		java.lang.String subject, java.lang.String body,
 		com.liferay.portal.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
-		_userLocalService.sendPassword(companyId, emailAddress, fromName,
-			fromAddress, subject, body, serviceContext);
+		return _userLocalService.sendPassword(companyId, emailAddress,
+			fromName, fromAddress, subject, body, serviceContext);
+	}
+
+	@Override
+	public boolean sendPasswordByEmailAddress(long companyId,
+		java.lang.String emailAddress,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return _userLocalService.sendPasswordByEmailAddress(companyId,
+			emailAddress, serviceContext);
+	}
+
+	@Override
+	public boolean sendPasswordByScreenName(long companyId,
+		java.lang.String screenName,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return _userLocalService.sendPasswordByScreenName(companyId,
+			screenName, serviceContext);
+	}
+
+	@Override
+	public boolean sendPasswordByUserId(long companyId, long userId,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return _userLocalService.sendPasswordByUserId(companyId, userId,
+			serviceContext);
 	}
 
 	/**

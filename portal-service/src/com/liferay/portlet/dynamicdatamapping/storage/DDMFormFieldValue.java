@@ -27,8 +27,20 @@ import java.util.Map;
  */
 public class DDMFormFieldValue {
 
+	public void addNestedDDMFormFieldValue(
+		DDMFormFieldValue nestedDDMFormFieldValue) {
+
+		nestedDDMFormFieldValue.setDDMFormValues(_ddmFormValues);
+
+		_nestedDDMFormFieldValues.add(nestedDDMFormFieldValue);
+	}
+
 	public DDMFormValues getDDMFormValues() {
 		return _ddmFormValues;
+	}
+
+	public String getInstanceId() {
+		return _instanceId;
 	}
 
 	public String getName() {
@@ -39,15 +51,24 @@ public class DDMFormFieldValue {
 		return _nestedDDMFormFieldValues;
 	}
 
-	public Map<String, DDMFormFieldValue> getNestedDDMFormFieldValuesMap() {
-		Map<String, DDMFormFieldValue> nestedDDMFormFieldValuesMap =
-			new HashMap<String, DDMFormFieldValue>();
+	public Map<String, List<Value>> getNestedDDMFormFieldValuesMap() {
+		Map<String, List<Value>> nestedDDMFormFieldValuesMap =
+			new HashMap<String, List<Value>>();
 
 		for (DDMFormFieldValue nestedDDMFormFieldValue :
 				_nestedDDMFormFieldValues) {
 
-			nestedDDMFormFieldValuesMap.put(
-				nestedDDMFormFieldValue.getName(), nestedDDMFormFieldValue);
+			List<Value> values = nestedDDMFormFieldValuesMap.get(
+				nestedDDMFormFieldValue.getName());
+
+			if (values == null) {
+				values = new ArrayList<Value>();
+
+				nestedDDMFormFieldValuesMap.put(
+					nestedDDMFormFieldValue.getName(), values);
+			}
+
+			values.add(nestedDDMFormFieldValue.getValue());
 		}
 
 		return nestedDDMFormFieldValuesMap;
@@ -67,6 +88,10 @@ public class DDMFormFieldValue {
 		_ddmFormValues = ddmFormValues;
 	}
 
+	public void setInstanceId(String instanceId) {
+		_instanceId = instanceId;
+	}
+
 	public void setName(String name) {
 		_name = name;
 	}
@@ -82,6 +107,7 @@ public class DDMFormFieldValue {
 	}
 
 	private DDMFormValues _ddmFormValues;
+	private String _instanceId;
 	private String _name;
 	private List<DDMFormFieldValue> _nestedDDMFormFieldValues =
 		new ArrayList<DDMFormFieldValue>();

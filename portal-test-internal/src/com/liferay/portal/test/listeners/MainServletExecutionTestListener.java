@@ -23,20 +23,13 @@ import com.liferay.portal.kernel.test.TestContext;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.service.ServiceTestUtil;
 import com.liferay.portal.servlet.MainServlet;
+import com.liferay.portal.test.mock.AutoDeployMockServletContext;
 import com.liferay.portal.test.rule.DeleteAfterTestRunRule;
 import com.liferay.portal.util.test.TestPropsValues;
-
-import java.io.File;
-
-import java.lang.reflect.Field;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.servlet.ServletException;
 
 import org.springframework.core.io.FileSystemResourceLoader;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.mock.web.MockServletConfig;
 import org.springframework.mock.web.MockServletContext;
 
@@ -72,23 +65,22 @@ public class MainServletExecutionTestListener
 
 		ServiceTestUtil.initPermissions();
 
-		if (mainServlet != null) {
+		if (_mainServlet != null) {
 			return;
 		}
 
 		MockServletContext mockServletContext =
-			new AutoDeployMockServletContext(
-				getResourceBasePath(), new FileSystemResourceLoader());
+			new AutoDeployMockServletContext(new FileSystemResourceLoader());
 
 		ServletContextPool.put(StringPool.BLANK, mockServletContext);
 
 		MockServletConfig mockServletConfig = new MockServletConfig(
 			mockServletContext);
 
-		mainServlet = new MainServlet();
+		_mainServlet = new MainServlet();
 
 		try {
-			mainServlet.init(mockServletConfig);
+			_mainServlet.init(mockServletConfig);
 		}
 		catch (ServletException se) {
 			throw new RuntimeException(
@@ -96,53 +88,9 @@ public class MainServletExecutionTestListener
 		}
 	}
 
-	protected String getResourceBasePath() {
-		File file = new File("portal-web/docroot");
-
-		return "file:" + file.getAbsolutePath();
-	}
-
-	protected static MainServlet mainServlet;
-
-	protected static class FieldBag {
-
-		public FieldBag(Class<?> fieldClass) {
-			_fieldClass = fieldClass;
-		}
-
-		public void addField(Field field) {
-			_fields.add(field);
-		}
-
-		public Class<?> getFieldClass() {
-			return _fieldClass;
-		}
-
-		public List<Field> getFields() {
-			return _fields;
-		}
-
-		private Class<?> _fieldClass;
-		private List<Field> _fields = new ArrayList<Field>();
-
-	}
-
-	protected class AutoDeployMockServletContext extends MockServletContext {
-
-		public AutoDeployMockServletContext(
-			String resourceBasePath, ResourceLoader resourceLoader) {
-
-			super(resourceBasePath, resourceLoader);
-		}
-
-		/**
-		 * @see com.liferay.portal.server.capabilities.TomcatServerCapabilities
-		 */
-		protected Boolean autoDeploy = Boolean.TRUE;
-
-	}
-
 	private static Log _log = LogFactoryUtil.getLog(
 		MainServletExecutionTestListener.class);
+
+	private static MainServlet _mainServlet;
 
 }
