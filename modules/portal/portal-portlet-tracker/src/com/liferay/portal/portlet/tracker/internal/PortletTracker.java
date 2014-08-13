@@ -54,7 +54,6 @@ import com.liferay.portal.util.WebKeys;
 import com.liferay.portlet.PortletBagFactory;
 import com.liferay.portlet.PortletInstanceFactory;
 import com.liferay.registry.util.StringPlus;
-import com.liferay.util.JS;
 
 import java.io.IOException;
 
@@ -125,7 +124,7 @@ public class PortletTracker
 			portletName = clazz.getName();
 		}
 
-		String portletId = JS.getSafeName(portletName);
+		String portletId = StringUtil.replace(portletName, ".", "_");
 
 		if (portletId.length() > _PORTLET_ID_MAX_LENGTH) {
 			_log.error(
@@ -966,8 +965,13 @@ public class PortletTracker
 
 		bundlePortletApp.setServletContext(servletContext);
 
-		serviceRegistrations._configuration =
-			ConfigurationFactoryUtil.getConfiguration(classLoader, "portlet");
+		try {
+			serviceRegistrations._configuration =
+				ConfigurationFactoryUtil.getConfiguration(
+					classLoader, "portlet");
+		}
+		catch (Exception e) {
+		}
 
 		readResourceActions(
 			serviceRegistrations._configuration,
@@ -1060,12 +1064,8 @@ public class PortletTracker
 			List<Company> companies)
 		throws PortalException {
 
-		String categoryName = (String)serviceReference.getProperty(
-			"com.liferay.portal.portlet.display.category");
-
-		if (categoryName == null) {
-			categoryName = "category.undefined";
-		}
+		String categoryName = GetterUtil.getString(
+			get(serviceReference, "display-category"), "category.undefined");
 
 		for (Company company : companies) {
 			com.liferay.portal.model.Portlet companyPortletModel =
@@ -1114,6 +1114,10 @@ public class PortletTracker
 	protected void readResourceActions(
 		Configuration configuration, String servletContextName,
 		ClassLoader classLoader) {
+
+		if (configuration == null) {
+			return;
+		}
 
 		Properties properties = configuration.getProperties();
 

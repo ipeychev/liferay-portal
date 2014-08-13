@@ -15,10 +15,12 @@
 package com.liferay.xsl.content.portlet;
 
 import com.liferay.util.bridges.mvc.MVCPortlet;
+import com.liferay.xsl.content.upgrade.XSLContentUpgrade;
 
 import javax.portlet.Portlet;
 
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Raymond Augé
@@ -27,13 +29,14 @@ import org.osgi.service.component.annotations.Component;
 	immediate = true,
 	property = {
 		"com.liferay.portlet.css-class-wrapper=portlet-xsl-content",
+		"com.liferay.portlet.display-category=category.cms",
 		"com.liferay.portlet.instanceable=true",
 		"com.liferay.portlet.layout-cacheable=true",
 		"com.liferay.portlet.preferences-owned-by-group=true",
 		"com.liferay.portlet.private-request-attributes=false",
 		"com.liferay.portlet.private-session-attributes=false",
 		"com.liferay.portlet.render-weight=50",
-		"com.liferay.portlet.struts-path=xsl_content", "javax.portlet.name=102",
+		"com.liferay.portlet.struts-path=xsl_content",
 		"javax.portlet.display-name=XSL Content",
 		"javax.portlet.expiration-cache=0",
 		"javax.portlet.init-param.config-template=/configuration.jsp",
@@ -46,4 +49,13 @@ import org.osgi.service.component.annotations.Component;
 	service = Portlet.class
 )
 public class XSLContentPortlet extends MVCPortlet {
+
+	/**
+	 * Force upgrades to register before the portlet is registered to prevent
+	 * race conditions.
+	 */
+	@Reference(unbind = "-")
+	private void setXSLContentUpgrade(XSLContentUpgrade xslContentUpgrade) {
+	}
+
 }
