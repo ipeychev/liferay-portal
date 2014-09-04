@@ -1,8 +1,15 @@
 @import "compass";
 
-.lfr-image-gallery-actions {
-	font-size: 11px;
-	text-align: right;
+.image-viewer.image-viewer-base .image-viewer-base-image-list {
+	height: 100%;
+
+	.image-viewer-base-image-list-inner {
+		height: 100%;
+	}
+}
+
+.image-viewer-thumbnails .image-viewer-multiple{
+	position: relative;
 }
 
 .portlet-image-gallery-display {
