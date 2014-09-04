@@ -317,9 +317,6 @@ embeddedPlayerURL.setWindowState(LiferayWindowState.POP_UP);
 					fn: A.MediaViewerPlugin
 				}
 			],
-			thumbnailsConfig: {
-				width: maxWidth
-			},
 			zIndex: ++Liferay.zIndex.WINDOW
 		}
 	).render();

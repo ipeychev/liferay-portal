@@ -1,17 +1,5 @@
 @import "compass";
 
-.image-viewer.image-viewer-base .image-viewer-base-image-list {
-	height: 100%;
-
-	.image-viewer-base-image-list-inner {
-		height: 100%;
-	}
-}
-
-.image-viewer-thumbnails .image-viewer-multiple{
-	position: relative;
-}
-
 .portlet-image-gallery-display {
 	.lfr-asset-attributes {
 		clear: both;
