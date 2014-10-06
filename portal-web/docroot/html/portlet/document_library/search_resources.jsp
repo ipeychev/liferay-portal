@@ -48,7 +48,19 @@ if (searchFolderId > 0) {
 	folder = DLAppServiceUtil.getFolder(searchFolderId);
 }
 else {
-	folderIdsArray = new long[0];
+	long defaultFolderId = DLFolderConstants.getFolderId(scopeGroupId, DLFolderConstants.getDataRepositoryId(scopeGroupId, searchFolderIds));
+
+	List<Folder> folders = DLAppServiceUtil.getFolders(scopeGroupId, searchFolderIds);
+
+	List<Long> folderIds = new ArrayList<Long>(folders.size() + 1);
+
+	folderIds.add(defaultFolderId);
+
+	for (Folder subfolder : folders) {
+		folderIds.add(subfolder.getFolderId());
+	}
+
+	folderIdsArray = StringUtil.split(StringUtil.merge(folderIds), 0L);
 }
 
 List<Folder> mountFolders = DLAppServiceUtil.getMountFolders(scopeGroupId, DLFolderConstants.DEFAULT_PARENT_FOLDER_ID, QueryUtil.ALL_POS, QueryUtil.ALL_POS);
@@ -296,12 +308,28 @@ SearchContainer searchContainer = new SearchContainer(liferayPortletRequest, por
 	<c:when test="<%= showRepositoryTabs %>">
 
 		<%
+		PortletURL searchRepositoryURL = liferayPortletResponse.createRenderURL();
+
+		searchRepositoryURL.setParameter("struts_action", "/document_library/search");
+		searchRepositoryURL.setParameter("repositoryId", String.valueOf(scopeGroupId));
+		searchRepositoryURL.setParameter("searchRepositoryId", String.valueOf(scopeGroupId));
+		searchRepositoryURL.setParameter("keywords", String.valueOf(keywords));
+		searchRepositoryURL.setParameter("showRepositoryTabs", Boolean.TRUE.toString());
+		searchRepositoryURL.setParameter("showSearchInfo", Boolean.TRUE.toString());
+
+		String[] tabsUrls = new String[] {searchRepositoryURL.toString()};
+
 		String selectedTab = LanguageUtil.get(request, "local");
 
 		for (Folder mountFolder : mountFolders) {
 			if (mountFolder.getRepositoryId() == searchRepositoryId) {
 				selectedTab = HtmlUtil.escape(mountFolder.getName());
 			}
+
+			searchRepositoryURL.setParameter("repositoryId", String.valueOf(mountFolder.getRepositoryId()));
+			searchRepositoryURL.setParameter("searchRepositoryId", String.valueOf(mountFolder.getRepositoryId()));
+
+			tabsUrls = ArrayUtil.append(tabsUrls, searchRepositoryURL.toString());
 		}
 		%>
 
@@ -309,6 +337,7 @@ SearchContainer searchContainer = new SearchContainer(liferayPortletRequest, por
 			<liferay-ui:tabs
 				names='<%= LanguageUtil.get(request, "local") + "," + HtmlUtil.escape(ListUtil.toString(mountFolders, "name")) %>'
 				refresh="<%= false %>"
+				urls ="<%= tabsUrls %>"
 				value="<%= selectedTab %>"
 			>
 				<liferay-ui:section>

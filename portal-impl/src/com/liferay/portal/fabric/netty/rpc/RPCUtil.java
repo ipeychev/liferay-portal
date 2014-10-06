@@ -40,7 +40,7 @@ public class RPCUtil {
 
 		final long id = NettyChannelAttributes.nextId(channel);
 
-		NoticeableFuture<T> noticeableFuture = asyncBroker.post(id);
+		final NoticeableFuture<T> noticeableFuture = asyncBroker.post(id);
 
 		ChannelFuture channelFuture = channel.writeAndFlush(
 			new RPCRequest<T>(id, processCallable));
@@ -54,11 +54,17 @@ public class RPCUtil {
 						return;
 					}
 
+					if (channelFuture.isCancelled()) {
+						noticeableFuture.cancel(true);
+
+						return;
+					}
+
 					if (!asyncBroker.takeWithException(
 							id, channelFuture.cause())) {
 
 						_log.error(
-							"Unable to place exception  because no future " +
+							"Unable to place exception because no future " +
 								"exists with ID " + id,
 							channelFuture.cause());
 					}
