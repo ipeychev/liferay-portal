@@ -207,24 +207,24 @@ Parse.Simple.Creole = function(options) {
 
         preBlock: { tag: 'pre', capture: 2,
             regex: /(^|\n)\{\{\{\n((.*\n)*?)\}\}\}(\n|$)/,
-            replaceRegex: /^ ([ \t]*\}\}\})/gm,
+            replaceRegex: /^ (\s*\}\}\})/gm,
             replaceString: '$1' },
         tt: { tag: 'tt',
             regex: /\{\{\{(.*?\}\}\}+)/, capture: 1,
             replaceRegex: /\}\}\}$/, replaceString: '' },
 
         ulist: { tag: 'ul', capture: 0,
-            regex: /(^|\n)([ \t]*\*[^*#].*(\n|$)([ \t]*[^\s*#].*(\n|$))*([ \t]*[*#]{2}.*(\n|$))*)+/ },
+            regex: /(^|\n)(\s*\*[^*#].*(\n|$)(\s*[^\s*#].*(\n|$))*(\s*[*#]{2}.*(\n|$))*)+/ },
         olist: { tag: 'ol', capture: 0,
-            regex: /(^|\n)([ \t]*#[^*#].*(\n|$)([ \t]*[^\s*#].*(\n|$))*([ \t]*[*#]{2}.*(\n|$))*)+/ },
+            regex: /(^|\n)(\s*#[^*#].*(\n|$)(\s*[^\s*#].*(\n|$))*(\s*[*#]{2}.*(\n|$))*)+/ },
         li: { tag: 'li', capture: 0,
-            regex: /[ \t]*([*#]).+(\n[ \t]*[^*#\s].*)*(\n[ \t]*[*#]{2}.+)*/,
-            replaceRegex: /(^|\n)[ \t]*[*#]/g, replaceString: '$1' },
+            regex: /\s*([*#]).+(\n\s*[^*#\s].*)*(\n\s*[*#]{2}.+)*/,
+            replaceRegex: /(^|\n)\s*[*#]/g, replaceString: '$1' },
 
         table: { tag: 'table', capture: 0,
             attrs: { 'class': 'cke_show_border' },
-            regex: /(^|\n)(\|.*?[ \t]*(\n|$))+/ },
-        tr: { tag: 'tr', capture: 2, regex: /(^|\n)(\|.*?)\|?[ \t]*(\n|$)/ },
+            regex: /(^|\n)(\|.*?\s*(\n|$))+/ },
+        tr: { tag: 'tr', capture: 2, regex: /(^|\n)(\|.*?)\|?\s*(\n|$)/ },
         th: { tag: 'th', regex: /\|+=([^|]*)/, capture: 1 },
         td: { tag: 'td', capture: 1,
             regex: '\\|+([^|~\\[{]*((~(.|(?=\\n)|$)|' +
@@ -234,8 +234,8 @@ Parse.Simple.Creole = function(options) {
 
         singleLine: { regex: /.+/, capture: 0 },
         paragraph: { tag: 'p', capture: 0,
-            regex: /(^|\n)([ \t]*\S.*(\n|$))+/ },
-        text: { capture: 0, regex: /(^|\n)([ \t]*[^\s].*(\n|$))+/ },
+            regex: /(^|\n)(\s*\S.*(\n|$))/ },
+        text: { capture: 0, regex: /(^|\n)(\s*[^\s].*(\n|$))+/ },
 
         strong: { tag: 'strong', capture: 1,
             regex: /\*\*([^*~]*((\*(?!\*)|~(.|(?=\n)|$))[^*~]*)*)(\*\*|\n|$)/ },

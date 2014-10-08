@@ -54,7 +54,7 @@
 	CreoleDataProcessor.prototype = {
 		constructor: CreoleDataProcessor,
 
-		toDataFormat: function(html, fixForBody ) {
+		toDataFormat: function(html, config) {
 			var instance = this;
 
 			var data = instance._convert(html);
@@ -62,22 +62,34 @@
 			return data;
 		},
 
-		toHtml: function(data, fixForBody) {
+		toHtml: function(data, config) {
 			var instance = this;
 
-			var div = document.createElement('div');
+			if (config) {
+				var fragment = CKEDITOR.htmlParser.fragment.fromHtml(data);
 
-			if (!instance._creoleParser) {
-				instance._creoleParser = new CKEDITOR.CreoleParser(
-					{
-						imagePrefix: attachmentURLPrefix
-					}
-				);
+				var writer = new CKEDITOR.htmlParser.basicWriter();
+
+				config.filter.applyTo(fragment);
+				fragment.writeHtml(writer);
+
+				data = writer.getHtml();
 			}
+			else {
+				var div = document.createElement('div');
 
-			instance._creoleParser.parse(div, data);
+				if (!instance._creoleParser) {
+					instance._creoleParser = new CKEDITOR.CreoleParser(
+						{
+							imagePrefix: attachmentURLPrefix
+						}
+					);
+				}
 
-			data = div.innerHTML;
+				instance._creoleParser.parse(div, data);
+
+				data = div.innerHTML;
+			}
 
 			return data;
 		},
@@ -138,7 +150,12 @@
 
 				var child = children[i];
 
-				if (instance._isIgnorable(child) && !instance._skipParse) {
+				if (instance._skipParse) {
+					instance._handleData(child.data || child.outerHTML, node);
+
+					continue;
+				}
+				else if (instance._isIgnorable(child)) {
 					continue;
 				}
 
@@ -180,6 +197,28 @@
 			if (data) {
 				if (!instance._skipParse) {
 					data = data.replace(REGEX_NEWLINE, STR_BLANK);
+
+					data = data.replace(/(\/{1,2}|={1,6}|\[{1,2}|\\{1,2}|\*{1,}|----|{{2,3}|#{1,})/g, function(match, p1, offset, string) {
+						var res = '';
+
+						if (!instance._endResult.length) {
+							res += '~' + p1;
+						}
+						else {
+							var lastResultString = instance._endResult[instance._endResult.length - 1];
+
+							var lastResultCharacter = lastResultString.charAt(lastResultString.length - 1);
+
+							if ( lastResultCharacter !== '~' && lastResultCharacter !== p1.charAt(0)) {
+								res += '~';
+							}
+
+							res += p1;
+
+						}
+
+						return res;
+					});
 				}
 
 				instance._endResult.push(data);
@@ -243,9 +282,6 @@
 				}
 				else if (tagName == 'a') {
 					instance._handleLink(element, listTagsIn, listTagsOut);
-				}
-				else if (tagName == 'span') {
-					instance._handleSpan(element, listTagsIn, listTagsOut);
 				}
 				else if (tagName == 'strong' || tagName == 'b') {
 					instance._handleStrong(element, listTagsIn, listTagsOut);
@@ -398,14 +434,6 @@
 			listTagsIn.push('{{{', NEW_LINE);
 
 			listTagsOut.push('}}}', NEW_LINE);
-		},
-
-		_handleSpan: function(element, listTagsIn, listTagsOut) {
-			var instance = this;
-
-			if (instance._hasClass(element, CSS_ESCAPED)) {
-				listTagsIn.push(STR_TILDE);
-			}
 		},
 
 		_handleStrong: function(element, listTagsIn, listTagsOut) {
@@ -576,20 +604,6 @@
 				attachmentURLPrefix = editor.config.attachmentURLPrefix;
 
 				editor.dataProcessor = new CreoleDataProcessor(editor);
-
-				editor.on(
-					'paste',
-					function(event) {
-						var data = event.data;
-
-						var htmlData = data.dataValue;
-
-						htmlData = editor.dataProcessor.toDataFormat(htmlData);
-
-						data.dataValue = htmlData;
-					},
-					editor.element.$
-				);
 
 				editor.fire('customDataProcessorLoaded');
 			}
