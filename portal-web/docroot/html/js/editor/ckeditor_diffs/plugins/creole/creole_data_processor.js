@@ -5,6 +5,8 @@
 
 	var NEW_LINE = '\n';
 
+	var REGEX_CREOLE_RESERVED_CHARACTERS = /(\/{1,2}|={1,6}|\[{1,2}|\]{1,2}|\\{1,2}|\*{1,}|----|{{2,3}|}{2,3}|#{1,})/g;
+
 	var REGEX_HEADER = /^h([1-6])$/i;
 
 	var REGEX_LASTCHAR_NEWLINE = /(\r?\n\s*)$/;
@@ -198,27 +200,41 @@
 				if (!instance._skipParse) {
 					data = data.replace(REGEX_NEWLINE, STR_BLANK);
 
-					data = data.replace(/(\/{1,2}|={1,6}|\[{1,2}|\\{1,2}|\*{1,}|----|{{2,3}|#{1,})/g, function(match, p1, offset, string) {
-						var res = '';
+					var isHeader;
 
-						if (!instance._endResult.length) {
-							res += '~' + p1;
-						}
-						else {
-							var lastResultString = instance._endResult[instance._endResult.length - 1];
+					if (instance._isParentNode(element, 'h1') ||
+						instance._isParentNode(element, 'h2') ||
+						instance._isParentNode(element, 'h3') ||
+						instance._isParentNode(element, 'h4') ||
+						instance._isParentNode(element, 'h5') ||
+						instance._isParentNode(element, 'h6')) {
 
-							var lastResultCharacter = lastResultString.charAt(lastResultString.length - 1);
+						isHeader = true;
+					}
 
-							if ( lastResultCharacter !== '~' && lastResultCharacter !== p1.charAt(0)) {
-								res += '~';
+					if (!isHeader) {
+						data = data.replace(REGEX_CREOLE_RESERVED_CHARACTERS, function(match, p1, offset, string) {
+							var res = '';
+
+							if (!instance._endResult.length) {
+								res += '~' + p1;
+							}
+							else {
+								var lastResultString = instance._endResult[instance._endResult.length - 1];
+
+								var lastResultCharacter = lastResultString.charAt(lastResultString.length - 1);
+
+								if ( lastResultCharacter !== '~' && lastResultCharacter !== p1.charAt(0)) {
+									res += '~';
+								}
+
+								res += p1;
+
 							}
 
-							res += p1;
-
-						}
-
-						return res;
-					});
+							return res;
+						});
+					}
 				}
 
 				instance._endResult.push(data);
