@@ -584,7 +584,7 @@ if (inlineEdit && Validator.isNotNull(inlineEditSaveURL)) {
 	};
 
 	<%
-	String toogleControlsStatus = GetterUtil.getString(SessionClicks.get(request, "liferay_toggle_controls", "visible"));
+	String toogleControlsStatus = GetterUtil.getString(SessionClicks.get(request, "liferay_toggle_controls", "hidden"));
 	%>
 
 	<c:if test='<%= (inlineEdit && toogleControlsStatus.equals("visible")) || !inlineEdit %>'>;

@@ -192,12 +192,16 @@ AssetEntry assetEntry = (AssetEntry)request.getAttribute("view_entry_content.jsp
 							/>
 						</liferay-ui:custom-attributes-available>
 
-						<c:if test="<%= inlineEditEnabled %>">
+						<c:if test="<%= PropsValues.EDITOR_INLINE_EDITING_ENABLED && !WorkflowDefinitionLinkLocalServiceUtil.hasWorkflowDefinitionLink(themeDisplay.getCompanyId(), scopeGroupId, BlogsEntry.class.getName()) %>">
 							<portlet:actionURL var="updateEntryContent">
 								<portlet:param name="struts_action" value="/blogs/edit_entry" />
 								<portlet:param name="<%= Constants.CMD %>" value="<%= Constants.UPDATE_CONTENT %>" />
 								<portlet:param name="entryId" value="<%= String.valueOf(entry.getEntryId()) %>" />
 							</portlet:actionURL>
+
+							<%
+								request.setAttribute("liferay_toggle_controls", inlineEditEnabled);
+							%>
 
 							<liferay-ui:input-editor
 								editorImpl="ckeditor"
