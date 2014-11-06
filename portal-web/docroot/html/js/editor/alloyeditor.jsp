@@ -105,8 +105,40 @@ if (alloyEditorMode.equals("text")) {
 							combine: Liferay.AUI.getCombine(),
 							comboBase: Liferay.AUI.getComboPath(),
 							modules: {
+							    'toolbar-youtube': {
+							        path: 'toolbars/toolbar_youtube.js',
+							        requires: ['dom-screen', 'widget-base', 'widget-position', 'widget-position-constrain', 'toolbar-base']
+							    },
 								'button-imageselector': {
 									path: 'buttons/button_image_selector.js',
+									requires: [
+										'aui-base',
+										'button-base'
+									]
+								},
+								'button-rotate': {
+									path: 'buttons/button_rotate.js',
+									requires: [
+										'aui-base',
+										'button-base'
+									]
+								},
+								'button-filter': {
+									path: 'buttons/button_filter.js',
+									requires: [
+										'aui-base',
+										'button-base'
+									]
+								},
+								'button-details': {
+									path: 'buttons/button_details.js',
+									requires: [
+										'aui-base',
+										'button-base'
+									]
+								},
+								'button-speech': {
+									path: 'buttons/button_speech.js',
 									requires: [
 										'aui-base',
 										'button-base'
