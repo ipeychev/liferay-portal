@@ -72,7 +72,6 @@ boolean skipEditorLoading = GetterUtil.getBoolean((String)request.getAttribute("
 		%>
 
 		<script src="<%= HtmlUtil.escape(PortalUtil.getStaticResourceURL(request, themeDisplay.getCDNHost() + themeDisplay.getPathJavaScript() + "/editor/ckeditor/ckeditor.js", javaScriptLastModified)) %>" type="text/javascript"></script>
-
 		<script type="text/javascript">
 			YUI.applyConfig(
 				{
@@ -98,7 +97,6 @@ boolean skipEditorLoading = GetterUtil.getBoolean((String)request.getAttribute("
 		</script>
 
 		<script src="<%= HtmlUtil.escape(PortalUtil.getStaticResourceURL(request, themeDisplay.getCDNHost() + themeDisplay.getPathJavaScript() + "/editor/alloyeditor/alloy-editor-core.js", javaScriptLastModified)) %>" type="text/javascript"></script>
-
 		<script type="text/javascript">
 			Liferay.namespace('EDITORS')['<%= editorImpl %>'] = true;
 		</script>

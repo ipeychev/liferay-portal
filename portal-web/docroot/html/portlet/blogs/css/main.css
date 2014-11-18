@@ -125,6 +125,10 @@
 				margin-bottom: 0;
 			}
 		}
+
+		.uploading-image {
+			opacity: 0.4;
+		}
 	}
 
 	.entry.draft, .entry.pending, .entry.scheduled {
