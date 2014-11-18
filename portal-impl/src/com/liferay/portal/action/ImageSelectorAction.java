@@ -115,6 +115,9 @@ public class ImageSelectorAction extends JSONAction {
 
 			imageJSONObject.put("fileEntryId", fileEntry.getFileEntryId());
 
+			imageJSONObject.put("randomId", uploadPortletRequest.getParameter(
+				"randomId"));
+
 			imageJSONObject.put(
 				"url",
 				PortletFileRepositoryUtil.getPortletFileEntryURL(
