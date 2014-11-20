@@ -1,4 +1,3 @@
-<%--
 /**
  * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
@@ -12,23 +11,32 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
---%>
 
-<%@ include file="/html/portlet/journal/init.jsp" %>
+package com.liferay.portlet.dynamicdatamapping;
 
-<%
-String referringPortletResource = ParamUtil.getString(request, "referringPortletResource");
+import aQute.bnd.annotation.ProviderType;
 
-Portlet selPortlet = PortletLocalServiceUtil.getPortletById(company.getCompanyId(), referringPortletResource);
-%>
+import com.liferay.portal.kernel.exception.PortalException;
 
-<aui:script>
-	Liferay.fire(
-		'closeWindow',
-		{
-			id: '_<%= HtmlUtil.escapeJS(selPortlet.getPortletId()) %>_editAsset',
-			portletAjaxable: <%= selPortlet.isAjaxable() %>,
-			refresh: '<%= HtmlUtil.escapeJS(selPortlet.getPortletId()) %>'
-		}
-	);
-</aui:script>
+/**
+ * @author Brian Wing Shun Chan
+ */
+@ProviderType
+public class DDMFormValidationException extends PortalException {
+
+	public DDMFormValidationException() {
+	}
+
+	public DDMFormValidationException(String msg) {
+		super(msg);
+	}
+
+	public DDMFormValidationException(String msg, Throwable cause) {
+		super(msg, cause);
+	}
+
+	public DDMFormValidationException(Throwable cause) {
+		super(cause);
+	}
+
+}

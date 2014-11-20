@@ -12,15 +12,13 @@
  * details.
  */
 
-package com.liferay.portlet.dynamicdatamapping.storage;
-
-import com.liferay.portlet.dynamicdatamapping.StorageException;
+package com.liferay.portal.kernel.editor.util;
 
 /**
- * @author Marcellus Tavares
+ * @author Roberto Díaz
  */
-public interface DDMFormValuesValidator {
+public class EditorConstants {
 
-	public void validate(DDMFormValues ddmFormValues) throws StorageException;
+	public static final String DATA_IMAGE_ID_ATTRIBUTE = "data-image-id";
 
 }
