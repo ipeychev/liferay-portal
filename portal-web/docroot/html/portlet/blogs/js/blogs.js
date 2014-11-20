@@ -38,7 +38,7 @@ AUI.add(
 					strings: {
 						validator: Lang.isObject,
 						value: {
-							confirmRejectImages: Liferay.Language.get('images-not-completely-uploaded-will-be-removed'),
+							confirmDiscardImages: Liferay.Language.get('uploads-are-in-progress-confirmation'),
 							savedAtMessage: Liferay.Language.get('entry-saved-at-x'),
 							savedDraftAtMessage: Liferay.Language.get('draft-saved-at-x'),
 							saveDraftError: Liferay.Language.get('could-not-save-draft-to-the-server'),
@@ -145,8 +145,13 @@ AUI.add(
 						var instance = this;
 
 						if (instance._hasTemporalImages()) {
-							if (confirm(instance.get('strings').confirmRejectImages)) {
-								instance._getTemporalImages().remove();
+							if (confirm(instance.get('strings').confirmDiscardImages)) {
+
+								instance._getTemporalImages().each(
+									function(node) {
+										node.ancestor().remove();
+									}
+								);
 
 								instance._saveEntry(draft, ajax);
 							}
@@ -191,7 +196,7 @@ AUI.add(
 					_hasTemporalImages: function() {
 						var instance = this;
 
-						return instance._getTemporalImages().getDOMNodes().length != 0;
+						return instance._getTemporalImages().getDOMNodes().length !== 0;
 					},
 
 					_initDraftSaveInterval: function() {
@@ -202,7 +207,7 @@ AUI.add(
 							instance,
 							function() {
 								if (!instance._hasTemporalImages()) {
-									instance._saveEntry();
+									instance._saveEntry(true, true);
 								}
 							},
 							[true, true],

@@ -126,6 +126,14 @@
 			}
 		}
 
+		.uploading-image-container {
+			display: inline-block;
+
+			.progressbar {
+				height: 20px;
+			}
+		}
+
 		.uploading-image {
 			opacity: 0.4;
 		}
