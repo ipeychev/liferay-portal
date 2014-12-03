@@ -48,6 +48,18 @@
 				float: left;
 				margin-bottom: 30px;
 				width: 200px;
+
+				.taglib-image-selector {
+					min-height: 150px;
+
+					.drag-drop-label {
+				    	font-size: 15px;
+					}
+
+					.file-validation-info {
+				    	font-size: 13px;
+					}
+				}
 			}
 
 			.entry-description {
@@ -88,6 +100,10 @@
 		&.readonly {
 			color: #CCC;
 		}
+	}
+
+	.lfr-blogs-cover-image-selector {
+		margin: 20px 0 60px;
 	}
 
 	.entry-title {
@@ -151,6 +167,12 @@
 
 		.next {
 			float: right;
+		}
+	}
+
+	@-moz-document url-prefix() {
+		fieldset.input-container {
+			display: table-column;
 		}
 	}
 
