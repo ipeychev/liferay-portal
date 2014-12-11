@@ -323,7 +323,7 @@ AUI.add(
 					portletURL.setParameter('modelResource', modelResource);
 					portletURL.setParameter('modelResourceDescription', modelResourceDescription);
 					portletURL.setParameter('resourcePrimKey', resourcePrimKey);
-					portletURL.setPortletId(86);
+					portletURL.setPortletId(portletKeys.PORTLET_CONFIGURATION);
 					portletURL.setWindowState('MAXIMIZED');
 
 					return portletURL;
