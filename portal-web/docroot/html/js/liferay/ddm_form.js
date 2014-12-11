@@ -854,7 +854,7 @@ AUI.add(
 						portletURL.setParameter('refererPortletName', '');
 						portletURL.setParameter('struts_action', '/document_selector/view');
 						portletURL.setParameter('tabs1Names', 'documents');
-						portletURL.setPortletId('200');
+						portletURL.setPortletId('200_WAR_documentselectorweb');
 						portletURL.setWindowState('pop_up');
 
 						return portletURL.toString();
