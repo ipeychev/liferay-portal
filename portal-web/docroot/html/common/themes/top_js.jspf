@@ -271,8 +271,6 @@
 			}
 		};
 
-		var portletKeys = Liferay.PortletKeys;
-
 		var themeDisplay = Liferay.ThemeDisplay;
 
 		Liferay.AUI = {
