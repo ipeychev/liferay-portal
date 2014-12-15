@@ -65,7 +65,12 @@
 			<fileset dir="${javac.srcdir}" excludes="**/*.java" />
 		</copy>
 
-		<record action="start" name="${project.dir}/${ant.project.name}/javac.output.txt" />
+		<if>
+			<equals arg1="${javac.deprecation}" arg2="on" />
+			<then>
+				<record action="start" name="${project.dir}/${ant.project.name}/javac.output.txt" />
+			</then>
+		</if>
 
 		<javac
 			classpathref="${javac.classpathref}"
@@ -79,20 +84,25 @@
 			srcdir="${javac.srcdir}"
 		/>
 
-		<record action="stop" name="${project.dir}/${ant.project.name}/javac.output.txt" />
-
-		<loadfile property="javac.output.txt.content" srcfile="${project.dir}/${ant.project.name}/javac.output.txt" />
-
-		<delete file="${project.dir}/${ant.project.name}/javac.output.txt" />
-
 		<if>
-			<or>
-				<contains string="${javac.output.txt.content}" substring="a deprecated API" />
-				<contains string="${javac.output.txt.content}" substring="[deprecation]" />
-			</or>
+			<equals arg1="${javac.deprecation}" arg2="on" />
 			<then>
-				<echo append="true" file="${project.dir}/javac.output.txt" message="${line.separator}${ant.project.name}${line.separator}" />
-				<echo append="true" file="${project.dir}/javac.output.txt" message="${javac.output.txt.content}" />
+				<record action="stop" name="${project.dir}/${ant.project.name}/javac.output.txt" />
+
+				<loadfile property="javac.output.txt.content" srcfile="${project.dir}/${ant.project.name}/javac.output.txt" />
+
+				<delete file="${project.dir}/${ant.project.name}/javac.output.txt" />
+
+				<if>
+					<or>
+						<contains string="${javac.output.txt.content}" substring="a deprecated API" />
+						<contains string="${javac.output.txt.content}" substring="[deprecation]" />
+					</or>
+					<then>
+						<echo append="true" file="${project.dir}/javac.output.txt" message="${line.separator}${ant.project.name}${line.separator}" />
+						<echo append="true" file="${project.dir}/javac.output.txt" message="${javac.output.txt.content}" />
+					</then>
+				</if>
 			</then>
 		</if>
 
