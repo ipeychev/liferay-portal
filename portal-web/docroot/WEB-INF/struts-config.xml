@@ -297,10 +297,6 @@
 
 		<action path="/asset_tags_cloud/view" forward="portlet.asset_tags_navigation.view" />
 
-		<!-- Asset Tags Navigation -->
-
-		<action path="/asset_tags_navigation/view" forward="portlet.asset_tags_navigation.view" />
-
 		<!-- Blogs -->
 
 		<action path="/blogs/cover_image_selector" type="com.liferay.portlet.blogs.action.CoverImageSelectorAction" />
@@ -323,6 +319,8 @@
 		<action path="/blogs/small_image_selector" type="com.liferay.portlet.blogs.action.SmallImageSelectorAction" />
 
 		<action path="/blogs/trackback" type="com.liferay.portlet.blogs.action.TrackbackAction" />
+
+		<action path="/blogs/upload_editor_image" type="com.liferay.portlet.blogs.action.UploadEditorImageAction" />
 
 		<action path="/blogs/view" forward="portlet.blogs.view" />
 
@@ -347,6 +345,8 @@
 		<action path="/blogs_admin/search" forward="portlet.blogs.search" />
 
 		<action path="/blogs_admin/small_image_selector" type="com.liferay.portlet.blogs.action.SmallImageSelectorAction" />
+
+		<action path="/blogs_admin/upload_editor_image" type="com.liferay.portlet.blogs.action.UploadEditorImageAction" />
 
 		<action path="/blogs_admin/view" forward="portlet.blogs_admin.view" />
 

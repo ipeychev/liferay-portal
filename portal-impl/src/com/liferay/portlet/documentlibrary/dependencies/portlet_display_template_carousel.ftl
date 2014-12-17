@@ -22,7 +22,7 @@
 
 		<#list entries as entry>
 			<#if imageMimeTypes?seq_contains(entry.getMimeType()) >
-				<div class="carousel-item">
+				<div class="carousel-item image-viewer-base-image">
 					<img src="${dlUtil.getPreviewURL(entry, entry.getFileVersion(), themeDisplay, "")}" />
 				</div>
 			</#if>
@@ -30,7 +30,7 @@
 	</div>
 
 	<@aui.script use="aui-carousel">
-		new A.Carousel(
+		var carousel = new A.Carousel(
 			{
 				contentBox: '#<@liferay_portlet.namespace />carousel',
 				height: 250,
@@ -38,5 +38,14 @@
 				width: 700
 			}
 		).render();
+
+		carousel.after('responsive', function() {
+			this.get('boundingBox').all('.image-viewer-base-image-list, .image-viewer-base-image').setStyles({
+				height: 'auto',
+				maxHeight: event.height,
+				maxWidth: event.width,
+				width: 'auto'
+			});
+		});
 	</@aui.script>
 </#if>
