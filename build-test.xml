@@ -1306,6 +1306,19 @@ create database lportal${database.index} character set utf8;</echo>
 		</if>
 	</target>
 
+	<target name="deploy-extra-apps">
+		<var name="extra.apps.zip.file.name" value="${jenkins.shared.user.content.dir}/jobs/${top.level.job.name}/builds/${top.level.build.number}/downloads/extraapps.zip" />
+
+		<if>
+			<available file="${extra.apps.zip.file.name}" />
+			<then>
+				<ant antfile="build-test-plugins.xml" target="deploy-extra-apps">
+					<property name="extra.apps.zip.file.name" value="${extra.apps.zip.file.name}" />
+				</ant>
+			</then>
+		</if>
+	</target>
+
 	<target name="deploy-required-plugins">
 		<ant dir="${lp.plugins.dir}/portlets/marketplace-portlet" target="direct-deploy" />
 
@@ -4023,6 +4036,8 @@ if (ppstate.equals("normal")) {
 
 		<antcall target="deploy-specified-plugins" />
 
+		<antcall target="deploy-extra-apps" />
+
 		<if>
 			<isset property="app.server.bundles.size" />
 			<then>
@@ -4490,6 +4505,8 @@ Please set "ie.driver.zip" in test.properties to point to "IEDriverServer_x64_2.
 		<ant dir="portal-impl" target="test-class-group" inheritAll="false" />
 
 		<ant dir="util-java" target="test-class-group" inheritAll="false" />
+
+		<ant dir="modules" target="test-class-group" inheritAll="false" />
 	</target>
 
 	<target name="test-integration">
