@@ -4834,6 +4834,11 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
+			<name>showImageOverlay</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
 			<name>showUserDetails</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
