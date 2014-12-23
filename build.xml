@@ -419,7 +419,7 @@
 		<if>
 			<available file="javac.output.txt" />
 			<then>
-				<echo message="Deprecated APIs detected. Please see javac.output.txt for details." />
+				<fail message="Deprecated APIs detected. Please see javac.output.txt for details." />
 			</then>
 		</if>
 
