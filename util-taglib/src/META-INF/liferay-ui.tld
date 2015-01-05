@@ -2030,6 +2030,11 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
+			<name>showSource</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
 			<name>skipEditorLoading</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
