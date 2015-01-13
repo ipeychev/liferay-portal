@@ -1972,6 +1972,12 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
+			<description>Sets whether the editor instance has to be created automatically</description>
+			<name>autoCreate</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
 			<description>Sets configuration parameters using a map. The map holds key value pairs of type <![CDATA[<code>&lt;String, String&gt;</code>]]>.</description>
 			<name>configParams</name>
 			<required>false</required>
@@ -4835,6 +4841,11 @@
 		</attribute>
 		<attribute>
 			<name>imageCssClass</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>showImageOverlay</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
