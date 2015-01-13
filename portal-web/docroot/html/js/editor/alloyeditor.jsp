@@ -27,7 +27,7 @@ if (Validator.isNull(doAsUserId)) {
 
 String alloyEditorMode = ParamUtil.getString(request, "alloyEditorMode");
 
-boolean autoCreate =  GetterUtil.getBoolean((String)request.getAttribute("liferay-ui:input-editor:autoCreate"));
+boolean autoCreate = GetterUtil.getBoolean((String)request.getAttribute("liferay-ui:input-editor:autoCreate"));
 String contents = (String)request.getAttribute("liferay-ui:input-editor:contents");
 String contentsLanguageId = (String)request.getAttribute("liferay-ui:input-editor:contentsLanguageId");
 String cssClass = GetterUtil.getString((String)request.getAttribute("liferay-ui:input-editor:cssClass"));
@@ -117,13 +117,14 @@ boolean skipEditorLoading = GetterUtil.getBoolean((String)request.getAttribute("
 	CKEDITOR.env.isCompatible = true;
 </script>
 
-<div id="<%= name %>_container">
+<div id="<%= name %>Container">
 	<c:if test="<%= autoCreate %>">
 		<%= editor %>
 	</c:if>
 </div>
 
 <aui:script use="aui-base,alloy-editor,liferay-editor-image-uploader">
+
 	<%
 	Locale contentsLocale = LocaleUtil.fromLanguageId(contentsLanguageId);
 
@@ -292,15 +293,15 @@ boolean skipEditorLoading = GetterUtil.getBoolean((String)request.getAttribute("
 				event.data.dataValue = writer.getHtml();
 			}
 		);
-	}
+	};
 
 	window['<%= name %>'] = {
 		create: function() {
-			var editorEl = A.Node.create('<%= HtmlUtil.escapeJS(editor) %>');
+			var editorNode = A.Node.create('<%= HtmlUtil.escapeJS(editor) %>');
 
-			var editorContainer = A.one('#<%= name %>_container');
+			var editorContainer = A.one('#<%= name %>Container');
 
-			editorContainer.appendChild(editorEl);
+			editorContainer.appendChild(editorNode);
 
 			window['<%= name %>'].initEditor();
 		},
@@ -314,14 +315,14 @@ boolean skipEditorLoading = GetterUtil.getBoolean((String)request.getAttribute("
 		dispose: function() {
 			var editor = window['<%= name %>'].editor;
 
-			var editorEl = document.getElementById('<%= name %>');
-
 			if (editor) {
 				editor.destroy();
 			}
 
-			if (editorEl) {
-				editorEl.parentNode.removeChild(editorEl);
+			var editorNode = document.getElementById('<%= name %>');
+
+			if (editorNode) {
+				editorNode.parentNode.removeChild(editorNode);
 			}
 		},
 
