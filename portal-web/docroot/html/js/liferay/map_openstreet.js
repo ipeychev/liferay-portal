@@ -49,7 +49,8 @@ AUI.add(
 						instance._dialog = L.popup(
 							{
 								className: 'leaflet-popup',
-								minWidth: 400
+								minWidth: 400,
+								offset: new L.point(0, -30)
 							}
 						);
 					},
