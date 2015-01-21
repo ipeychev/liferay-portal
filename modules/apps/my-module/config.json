@@ -1,5 +1,5 @@
 {
-	"my-module/my-component.es": {
-		"dependencies": ["exports", "liferay/html/js/liferay/iliyan.es"]
-	}
+    "my-module/my-component.es": {
+        "dependencies": ["exports", "liferay/html/js/liferay/iliyan.es"]
+    }
 }

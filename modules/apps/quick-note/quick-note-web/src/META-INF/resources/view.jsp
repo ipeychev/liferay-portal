@@ -56,6 +56,7 @@
 		}
 	);
 </script>
+
 <c:if test="<%= portletDisplay.isShowConfigurationIcon() %>">
 	<aui:script use="aui-editable-deprecated,aui-io-request">
 		var quickNotePad = A.one('#<portlet:namespace />pad');
