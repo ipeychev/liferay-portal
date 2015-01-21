@@ -31,7 +31,11 @@ AUI.add(
 					initializer: function() {
 						var instance = this;
 
-						instance._dialog = new google.maps.InfoWindow();
+						instance._dialog = new google.maps.InfoWindow(
+							{
+								pixelOffset: new google.maps.Size(-2, -30)
+							}
+						);
 					},
 
 					open: function(cfg) {
