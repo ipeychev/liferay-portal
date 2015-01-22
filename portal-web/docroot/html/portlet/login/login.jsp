@@ -19,6 +19,14 @@
 <c:choose>
 	<c:when test="<%= themeDisplay.isSignedIn() %>">
 
+	<aui:script>
+		require(['html/js/es6-out/carlos'], function(carlos) {
+			carlos.log('Hello World!');
+		}, function(error) {
+			console.error(error);
+		});
+	</aui:script>
+
 		<%
 		String signedInAs = HtmlUtil.escape(user.getFullName());
 
