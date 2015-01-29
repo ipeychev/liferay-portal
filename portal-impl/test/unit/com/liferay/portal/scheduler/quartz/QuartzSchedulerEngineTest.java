@@ -267,10 +267,10 @@ public class QuartzSchedulerEngineTest {
 	@AdviseWith(adviceClasses = {EnableSchedulerAdvice.class})
 	@Test
 	public void testGetQuartzTrigger3() throws SchedulerException {
-		CaptureHandler captureHandler = JDKLoggerTestUtil.configureJDKLogger(
-			QuartzSchedulerEngine.class.getName(), Level.FINE);
+		try (CaptureHandler captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+					QuartzSchedulerEngine.class.getName(), Level.FINE)) {
 
-		try {
 			List<LogRecord> logRecords = captureHandler.getLogRecords();
 
 			IntervalTrigger intervalTrigger = new IntervalTrigger(
@@ -290,9 +290,6 @@ public class QuartzSchedulerEngineTest {
 				"Not scheduling " + _TEST_JOB_NAME_0 + " because interval " +
 					"is less than or equal to 0",
 				logRecord.getMessage());
-		}
-		finally {
-			captureHandler.close();
 		}
 	}
 
@@ -423,7 +420,8 @@ public class QuartzSchedulerEngineTest {
 	@AdviseWith(
 		adviceClasses = {
 			EnableSchedulerAdvice.class, PortalLocalServiceUtilAdvice.class
-		})
+		}
+	)
 	@Test
 	public void testSchedule1() throws Exception {
 		List<SchedulerResponse> schedulerResponses =
@@ -735,7 +733,8 @@ public class QuartzSchedulerEngineTest {
 	public static class EnableSchedulerAdvice {
 
 		@Around(
-			"set(* com.liferay.portal.util.PropsValues.SCHEDULER_ENABLED)")
+			"set(* com.liferay.portal.util.PropsValues.SCHEDULER_ENABLED)"
+		)
 		public Object enableScheduler(ProceedingJoinPoint proceedingJoinPoint)
 			throws Throwable {
 
@@ -749,7 +748,8 @@ public class QuartzSchedulerEngineTest {
 
 		@Around(
 			"execution(* com.liferay.portal.service.PortletLocalServiceUtil." +
-				"getPortletById(java.lang.String)) && args(portletId)")
+				"getPortletById(java.lang.String)) && args(portletId)"
+		)
 		public Portlet getPortletById(String portletId) {
 			Portlet portlet = new PortletImpl();
 

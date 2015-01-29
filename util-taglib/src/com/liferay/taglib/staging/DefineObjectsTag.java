@@ -63,9 +63,15 @@ public class DefineObjectsTag extends IncludeTag {
 
 		Layout layout = themeDisplay.getLayout();
 
+		String privateLayoutString = request.getParameter("privateLayout");
+
+		if (Validator.isNull(privateLayoutString)) {
+			privateLayoutString = String.valueOf(
+				request.getAttribute(WebKeys.PRIVATE_LAYOUT));
+		}
+
 		boolean privateLayout = GetterUtil.getBoolean(
-			ParamUtil.getBoolean(
-				request, "privateLayout", layout.isPrivateLayout()));
+			privateLayoutString, layout.isPrivateLayout());
 
 		pageContext.setAttribute("privateLayout", privateLayout);
 

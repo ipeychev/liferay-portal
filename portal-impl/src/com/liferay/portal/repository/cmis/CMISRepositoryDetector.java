@@ -23,7 +23,7 @@ import org.apache.chemistry.opencmis.commons.data.RepositoryInfo;
 /**
  * Implements the logic for CMIS repository vendor and version detection.
  *
- * @author Ivan Zaera
+ * @author Iván Zaera
  */
 public class CMISRepositoryDetector {
 

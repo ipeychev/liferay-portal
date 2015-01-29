@@ -90,6 +90,13 @@ public class AssetPublisherUtil {
 		return getAssetPublisher().getAssetCategoryIds(portletPreferences);
 	}
 
+	/**
+	 * @deprecated As of 7.0.0, replaced by {@link
+	 *             AssetEntryLocalServiceUtil#getEntries(long[], long[], String,
+	 *             String, String, String, boolean, boolean, int, int,
+	 *             String, String, String, String)}
+	 */
+	@Deprecated
 	public static List<AssetEntry> getAssetEntries(
 		long[] groupIds, long[] classNameIds, String keywords, String userName,
 		String title, String description, boolean advancedSearch,
@@ -179,6 +186,12 @@ public class AssetPublisherUtil {
 			assetEntryXmls, deleteMissingAssetEntries, checkPermission);
 	}
 
+	/**
+	 * @deprecated As of 7.0.0, replaced by {@link
+	 *             AssetEntryLocalServiceUtil#getEntriesCount(long[], long[],
+	 *             String, String, String, String, boolean, boolean, int, int)}
+	 */
+	@Deprecated
 	public static int getAssetEntriesCount(
 		long[] groupIds, long[] classNameIds, String keywords, String userName,
 		String title, String description, boolean advancedSearch,
@@ -375,6 +388,10 @@ public class AssetPublisherUtil {
 			user, portletPreferences, assetEntryQuery);
 	}
 
+	/**
+	 * @deprecated As of 7.0.0, with no direct replacement
+	 */
+	@Deprecated
 	public static void registerAssetQueryProcessor(
 		String name, AssetEntryQueryProcessor assetQueryProcessor) {
 
@@ -399,6 +416,10 @@ public class AssetPublisherUtil {
 			permissionChecker, groupId, plid, portletId);
 	}
 
+	/**
+	 * @deprecated As of 7.0.0, with no direct replacement
+	 */
+	@Deprecated
 	public static void unregisterAssetQueryProcessor(
 		String assetQueryProcessorClassName) {
 

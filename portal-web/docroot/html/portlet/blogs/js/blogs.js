@@ -5,9 +5,9 @@ AUI.add(
 
 		var STR_BLANK = '';
 
-		var STR_CLICK = 'click';
-
 		var STR_CHANGE = 'change';
+
+		var STR_CLICK = 'click';
 
 		var STR_SUFFIX = '...';
 
@@ -283,8 +283,13 @@ AUI.add(
 
 								var saveStatus = instance.one('#saveStatus');
 
+								var allowPingbacks = instance.one('#allowPingbacks');
+								var allowTrackbacks = instance.one('#allowTrackbacks');
+
 								var data = instance.ns(
 									{
+										'allowPingbacks': allowPingbacks && allowPingbacks.val(),
+										'allowTrackbacks': allowTrackbacks && allowTrackbacks.val(),
 										'assetTagNames': instance.one('#assetTagNames').val(),
 										'cmd': constants.ADD,
 										'content': content,
@@ -333,7 +338,10 @@ AUI.add(
 
 												if (message) {
 													instance.one('#entryId').val(message.entryId);
-													instance.one('#redirect').val(message.redirect);
+
+													if (message.updateRedirect) {
+														instance.one('#redirect').val(message.redirect);
+													}
 
 													if (message.blogsEntryAttachmentReferences) {
 														instance._updateImages(message.blogsEntryAttachmentReferences);

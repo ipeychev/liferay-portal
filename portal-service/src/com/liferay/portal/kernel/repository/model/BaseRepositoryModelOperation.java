@@ -17,7 +17,7 @@ package com.liferay.portal.kernel.repository.model;
 import com.liferay.portal.kernel.exception.PortalException;
 
 /**
- * @author Ivan Zaera
+ * @author Iván Zaera
  */
 public class BaseRepositoryModelOperation implements RepositoryModelOperation {
 

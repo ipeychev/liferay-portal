@@ -53,6 +53,25 @@ public class UserDisplayTag extends TagSupport {
 				(HttpServletRequest)pageContext.getRequest();
 
 			request.setAttribute(
+				"liferay-ui:user-display:author", String.valueOf(_author));
+			request.setAttribute(
+				"liferay-ui:user-display:displayStyle",
+				String.valueOf(_displayStyle));
+
+			if (Validator.isNull(_imageCssClass)) {
+				_imageCssClass = "img-circle";
+			}
+
+			request.setAttribute(
+				"liferay-ui:user-display:imageCssClass", _imageCssClass);
+
+			request.setAttribute(
+				"liferay-ui:user-display:showUserDetails",
+				String.valueOf(_showUserDetails));
+			request.setAttribute(
+				"liferay-ui:user-display:showUserName",
+				String.valueOf(_showUserName));
+			request.setAttribute(
 				"liferay-ui:user-display:user-id", String.valueOf(_userId));
 			request.setAttribute(
 				"liferay-ui:user-display:user-name", _userName);
@@ -74,23 +93,6 @@ public class UserDisplayTag extends TagSupport {
 				pageContext.removeAttribute("userDisplay");
 			}
 
-			request.setAttribute(
-				"liferay-ui:user-display:displayStyle",
-				String.valueOf(_displayStyle));
-
-			if (Validator.isNull(_imageCssClass)) {
-				_imageCssClass = "img-circle";
-			}
-
-			request.setAttribute(
-				"liferay-ui:user-display:imageCssClass", _imageCssClass);
-
-			request.setAttribute(
-				"liferay-ui:user-display:showUserDetails",
-				String.valueOf(_showUserDetails));
-			request.setAttribute(
-				"liferay-ui:user-display:showUserName",
-				String.valueOf(_showUserName));
 			request.setAttribute("liferay-ui:user-display:url", _url);
 
 			PortalIncludeUtil.include(pageContext, getStartPage());
@@ -105,6 +107,10 @@ public class UserDisplayTag extends TagSupport {
 		catch (Exception e) {
 			throw new JspException(e);
 		}
+	}
+
+	public void setAuthor(boolean author) {
+		_author = author;
 	}
 
 	public void setDisplayStyle(Object displayStyle) {
@@ -167,6 +173,7 @@ public class UserDisplayTag extends TagSupport {
 	private static final String _START_PAGE =
 		"/html/taglib/ui/user_display/start.jsp";
 
+	private boolean _author;
 	private int _displayStyle = 1;
 	private String _endPage;
 	private String _imageCssClass;

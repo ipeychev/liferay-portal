@@ -45,6 +45,11 @@ import com.liferay.portlet.documentlibrary.service.DLAppLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.util.DLUtil;
 import com.liferay.portlet.dynamicdatamapping.NoSuchTemplateException;
 import com.liferay.portlet.dynamicdatamapping.io.DDMFormValuesJSONDeserializerUtil;
+import com.liferay.portlet.dynamicdatamapping.model.DDMForm;
+import com.liferay.portlet.dynamicdatamapping.model.DDMFormField;
+import com.liferay.portlet.dynamicdatamapping.model.DDMFormLayout;
+import com.liferay.portlet.dynamicdatamapping.model.DDMFormLayoutColumn;
+import com.liferay.portlet.dynamicdatamapping.model.DDMFormLayoutRow;
 import com.liferay.portlet.dynamicdatamapping.model.DDMStructure;
 import com.liferay.portlet.dynamicdatamapping.model.DDMTemplate;
 import com.liferay.portlet.dynamicdatamapping.service.DDMStructureLocalServiceUtil;
@@ -104,21 +109,32 @@ public class DDMImpl implements DDM {
 	public static final String TYPE_SELECT = "select";
 
 	@Override
-	public DDMDisplay getDDMDisplay(ServiceContext serviceContext) {
-		String refererPortletName = (String)serviceContext.getAttribute(
-			"refererPortletName");
+	public DDMDisplay getDDMDisplay(long classNameId) {
+		List<DDMDisplay> ddmDisplays = DDMDisplayRegistryUtil.getDDMDisplays();
 
-		if (refererPortletName == null) {
-			refererPortletName = serviceContext.getPortletId();
+		for (DDMDisplay ddmDisplay : ddmDisplays) {
+			if (ArrayUtil.contains(
+					ddmDisplay.getResourceClassNameIds(), classNameId)) {
 
-			if (refererPortletName == null) {
-				throw new IllegalArgumentException(
-					"Service context must have values for either " +
-						"the referer portlet nme or portlet preference IDs");
+				return ddmDisplay;
 			}
 		}
 
-		return DDMDisplayRegistryUtil.getDDMDisplay(refererPortletName);
+		throw new IllegalArgumentException(
+			"No DDM display registered for " +
+				PortalUtil.getClassName(classNameId));
+	}
+
+	@Override
+	public DDMFormLayout getDefaultDDMFormLayout(DDMForm ddmForm) {
+		DDMFormLayout ddmFormLayout = new DDMFormLayout();
+
+		for (DDMFormField ddmFormField : ddmForm.getDDMFormFields()) {
+			ddmFormLayout.addDDMFormLayoutRow(
+				getDefaultDDMFormLayoutRow(ddmFormField));
+		}
+
+		return ddmFormLayout;
 	}
 
 	@Override
@@ -491,6 +507,18 @@ public class DDMImpl implements DDM {
 		}
 
 		return ddmStructure;
+	}
+
+	protected DDMFormLayoutRow getDefaultDDMFormLayoutRow(
+		DDMFormField ddmFormField) {
+
+		DDMFormLayoutRow ddmFormLayoutRow = new DDMFormLayoutRow();
+
+		ddmFormLayoutRow.addDDMFormLayoutColumn(
+			new DDMFormLayoutColumn(
+				ddmFormField.getName(), DDMFormLayoutColumn.FULL));
+
+		return ddmFormLayoutRow;
 	}
 
 	protected int getExistingFieldValueIndex(

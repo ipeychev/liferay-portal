@@ -34,7 +34,7 @@ import com.liferay.portal.util.PropsValues;
 import com.liferay.portal.util.WebKeys;
 import com.liferay.portlet.asset.model.AssetRendererFactory;
 import com.liferay.portlet.asset.model.BaseAssetRenderer;
-import com.liferay.portlet.asset.model.DDMFieldReader;
+import com.liferay.portlet.asset.model.DDMFormValuesReader;
 import com.liferay.portlet.documentlibrary.model.DLFileEntry;
 import com.liferay.portlet.documentlibrary.model.DLFileEntryConstants;
 import com.liferay.portlet.documentlibrary.service.permission.DLFileEntryPermission;
@@ -45,7 +45,6 @@ import com.liferay.portlet.trash.util.TrashUtil;
 import java.util.Date;
 import java.util.Locale;
 
-import javax.portlet.PortletPreferences;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 import javax.portlet.PortletURL;
@@ -89,8 +88,8 @@ public class DLFileEntryAssetRenderer
 	}
 
 	@Override
-	public DDMFieldReader getDDMFieldReader() {
-		return new DLFileEntryDDMFieldReader(_fileEntry, _fileVersion);
+	public DDMFormValuesReader getDDMFormValuesReader() {
+		return new DLFileEntryDDMFormValuesReader(_fileEntry, _fileVersion);
 	}
 
 	@Override
@@ -372,18 +371,6 @@ public class DLFileEntryAssetRenderer
 		else {
 			return null;
 		}
-	}
-
-	@Override
-	public void setAddToPagePreferences(
-			PortletPreferences preferences, String portletId,
-			ThemeDisplay themeDisplay)
-		throws Exception {
-
-		preferences.setValue("showAssetTitle", Boolean.FALSE.toString());
-		preferences.setValue("showExtraInfo", Boolean.FALSE.toString());
-
-		super.setAddToPagePreferences(preferences, portletId, themeDisplay);
 	}
 
 	private final FileEntry _fileEntry;

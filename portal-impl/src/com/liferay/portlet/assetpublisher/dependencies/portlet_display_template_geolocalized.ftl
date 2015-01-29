@@ -24,24 +24,18 @@
 <#list entries as entry>
 	<#assign assetRenderer = entry.getAssetRenderer() />
 
-	<#assign ddmReader = assetRenderer.getDDMFieldReader() />
+	<#assign ddmFormValuesReader = assetRenderer.getDDMFormValuesReader() />
 
-	<#assign fields = ddmReader.getFields("geolocation") />
+	<#assign ddmFormFieldValues = ddmFormValuesReader.getDDMFormFieldValues("ddm-geolocation") />
 
 	<#assign coordinatesJSONObjects = [] />
 
-	<#list fields.iterator() as field>
-		<#if (field.isRepeatable())>
-			<#list field.getValue() as value >
-				<#assign coordinatesJSONObject = jsonFactoryUtil.createJSONObject(value) />
+	<#list ddmFormFieldValues as ddmFormFieldValue>
+		<#assign value = ddmFormFieldValue.getValue() />
 
-				<#assign coordinatesJSONObjects = coordinatesJSONObjects + [coordinatesJSONObject] />
-			</#list>
-		<#else>
-			<#assign coordinatesJSONObject = jsonFactoryUtil.createJSONObject(field.getValue()) />
+		<#assign coordinatesJSONObject = jsonFactoryUtil.createJSONObject(value.getString(locale)) />
 
-			<#assign coordinatesJSONObjects = coordinatesJSONObjects + [coordinatesJSONObject] />
-		</#if>
+		<#assign coordinatesJSONObjects = coordinatesJSONObjects + [coordinatesJSONObject] />
 	</#list>
 
 	<#list coordinatesJSONObjects as coordinatesJSONObject>
@@ -99,11 +93,15 @@
 <@liferay.silently featureCollectionJSONObject.put("features", featureJSONArray) />
 
 <style type="text/css">
-	#<@liferay_portlet.namespace />assetEntryAbstract {
+	.asset-entry-abstract {
 		min-width: 400px;
 	}
 
-	#<@liferay_portlet.namespace />assetEntryAbstract .asset-entry-abstract-image {
+	.leaflet-popup .asset-entry-abstract {
+		display: inline-block;
+	}
+
+	.asset-entry-abstract .asset-entry-abstract-image {
 		display: block;
 		float: left;
 		height: 128px;
@@ -111,21 +109,13 @@
 		text-align: center;
 	}
 
-	#<@liferay_portlet.namespace />assetEntryAbstract .asset-entry-abstract-image img {
+	.asset-entry-abstract .asset-entry-abstract-image img {
 		display: block;
 		margin: 0 auto;
 	}
 
-	#<@liferay_portlet.namespace />assetEntryAbstract .taglib-icon {
+	.asset-entry-abstract .taglib-icon {
 		float: right;
-	}
-
-	#<@liferay_portlet.namespace />mapCanvas {
-		min-height: 400px;
-	}
-
-	#<@liferay_portlet.namespace />mapCanvas img {
-		max-width: none;
 	}
 </style>
 
@@ -148,6 +138,7 @@
 			map.openDialog(
 				{
 					content: feature.getProperty('abstract'),
+					marker: feature.getMarker(),
 					position: feature.getGeometry().get('location')
 				}
 			);

@@ -17,20 +17,19 @@
 <%@ include file="/html/portlet/init.jsp" %>
 
 <%@ page import="com.liferay.portal.kernel.search.Document" %><%@
-page import="com.liferay.portal.kernel.servlet.taglib.ui.MenuItem" %><%@
 page import="com.liferay.portlet.documentlibrary.DLPortletInstanceSettings" %><%@
 page import="com.liferay.portlet.documentlibrary.DLSettings" %><%@
 page import="com.liferay.portlet.documentlibrary.NoSuchFolderException" %><%@
-page import="com.liferay.portlet.documentlibrary.context.DLActionsDisplayContext" %><%@
-page import="com.liferay.portlet.documentlibrary.context.DLDisplayContextProviderUtil" %><%@
-page import="com.liferay.portlet.documentlibrary.context.DLViewFileVersionDisplayContext" %><%@
+page import="com.liferay.portlet.documentlibrary.display.context.DLActionsDisplayContext" %><%@
 page import="com.liferay.portlet.documentlibrary.model.DLFileShortcut" %><%@
 page import="com.liferay.portlet.documentlibrary.service.permission.DLFileEntryPermission" %><%@
 page import="com.liferay.portlet.documentlibrary.util.AudioProcessorUtil" %><%@
 page import="com.liferay.portlet.documentlibrary.util.ImageProcessorUtil" %><%@
 page import="com.liferay.portlet.documentlibrary.util.PDFProcessorUtil" %><%@
 page import="com.liferay.portlet.documentlibrary.util.VideoProcessorUtil" %><%@
-page import="com.liferay.portlet.imagegallerydisplay.context.IGConfigurationDisplayContext" %><%@
+page import="com.liferay.portlet.imagegallerydisplay.display.context.IGConfigurationDisplayContext" %><%@
+page import="com.liferay.portlet.imagegallerydisplay.display.context.IGDisplayContextProviderUtil" %><%@
+page import="com.liferay.portlet.imagegallerydisplay.display.context.IGViewFileVersionDisplayContext" %><%@
 page import="com.liferay.portlet.imagegallerydisplay.util.IGUtil" %>
 
 <%

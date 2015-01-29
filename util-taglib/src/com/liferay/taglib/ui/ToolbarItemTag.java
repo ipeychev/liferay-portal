@@ -20,7 +20,7 @@ import com.liferay.taglib.util.IncludeTag;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * @author Ivan Zaera
+ * @author Iván Zaera
  */
 public class ToolbarItemTag extends IncludeTag {
 
