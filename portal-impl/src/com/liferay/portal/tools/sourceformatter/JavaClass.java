@@ -791,8 +791,8 @@ public class JavaClass {
 
 		String javaTermContent = javaTerm.getContent();
 
-		String newJavaTermContent = JavaSourceProcessor.sortAnnotations(
-			javaTermContent, _indent);
+		String newJavaTermContent = JavaSourceProcessor.formatAnnotations(
+			_fileName, javaTerm.getName(), javaTermContent, _indent);
 
 		if (!javaTermContent.equals(newJavaTermContent)) {
 			_content = _content.replace(javaTermContent, newJavaTermContent);

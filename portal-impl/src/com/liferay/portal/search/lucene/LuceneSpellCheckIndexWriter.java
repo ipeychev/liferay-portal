@@ -26,7 +26,6 @@ import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.SearchException;
 import com.liferay.portal.kernel.search.SuggestionConstants;
 import com.liferay.portal.kernel.util.StringPool;
-import com.liferay.portal.util.PortletKeys;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -129,12 +128,12 @@ public class LuceneSpellCheckIndexWriter extends BaseSpellCheckIndexWriter {
 			languageId, Field.Store.YES, FieldInfo.IndexOptions.DOCS_ONLY,
 			true);
 		addField(
-			document, com.liferay.portal.kernel.search.Field.PORTLET_ID,
-			PortletKeys.SEARCH, Field.Store.YES,
-			FieldInfo.IndexOptions.DOCS_ONLY, true);
-		addField(
 			document, com.liferay.portal.kernel.search.Field.PRIORITY,
 			String.valueOf(weight), Field.Store.YES,
+			FieldInfo.IndexOptions.DOCS_ONLY, true);
+		addField(
+			document, com.liferay.portal.kernel.search.Field.SPELL_CHECK_WORD,
+			Boolean.TRUE.toString(), Field.Store.YES,
 			FieldInfo.IndexOptions.DOCS_ONLY, true);
 		addField(
 			document, com.liferay.portal.kernel.search.Field.TYPE,

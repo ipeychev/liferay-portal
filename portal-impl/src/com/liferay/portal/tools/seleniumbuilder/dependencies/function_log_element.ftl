@@ -6,35 +6,32 @@
 
 .sendActionLogger(
 
-<#if functionElement.getName() == "execute">
+<#if (functionElement.getName() == "condition") || (functionElement.getName() == "execute")>
 	<#assign function = functionElement.attributeValue("function")>
 
 	<#assign x = function?last_index_of("#")>
 
-	<#assign functionCommand = function?substring(x + 1)>
+	<#if x != -1>
+		<#assign elementFunctionCommandName = function?substring(x + 1)>
+		<#assign elementFunctionName = function?substring(0, x)>
+	<#else>
+		<#assign elementFunctionCommandName = seleniumBuilderContext.getFunctionDefaultCommandName(function)>
+		<#assign elementFunctionName = function>
+	</#if>
 
-	<#assign functionPathName = seleniumBuilderFileUtil.getObjectName(function?substring(0, x))>
-
-	"${seleniumBuilderFileUtil.getVariableName(function?substring(0, x))}Function#${functionCommand}",
+	"${seleniumBuilderFileUtil.getObjectName(elementFunctionName)}#${elementFunctionCommandName}",
 
 	new String[] {
 
-	<#list 1..seleniumBuilderContext.getFunctionLocatorCount(functionPathName) as i>
+	<#assign functionLocatorCount = seleniumBuilderContext.getFunctionLocatorCount(seleniumBuilderFileUtil.getObjectName(elementFunctionName))>
+
+	<#list 1..functionLocatorCount as i>
 		"",
 
 		<#if functionElement.attributeValue("locator${i}")??>
 			<#assign locator = functionElement.attributeValue("locator${i}")>
 
-			<#if locator?contains("#")>
-				<#assign y = locator?last_index_of("#")>
-
-				<#assign pathLocatorKey = locator?substring(y + 1)>
-				<#assign pathName = locator?substring(0, y)>
-
-				RuntimeVariables.evaluateVariable(${pathName}Path.getPathLocator("${seleniumBuilderFileUtil.escapeJava(pathLocatorKey)}"), ${variableContext})
-			<#else>
-				RuntimeVariables.evaluateVariable("${seleniumBuilderFileUtil.escapeJava(locator)}", ${variableContext})
-			</#if>
+			RuntimeVariables.evaluateVariable("${seleniumBuilderFileUtil.escapeJava(locator)}", ${variableContext})
 		<#else>
 			""
 		</#if>

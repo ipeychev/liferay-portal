@@ -19,6 +19,8 @@ import com.liferay.portal.kernel.security.pacl.permission.PortalRuntimePermissio
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.theme.ThemeDisplay;
+import com.liferay.portlet.dynamicdatamapping.model.DDMForm;
+import com.liferay.portlet.dynamicdatamapping.model.DDMFormLayout;
 import com.liferay.portlet.dynamicdatamapping.model.DDMStructure;
 import com.liferay.portlet.dynamicdatamapping.model.DDMTemplate;
 import com.liferay.portlet.dynamicdatamapping.storage.Field;
@@ -38,8 +40,14 @@ public class DDMUtil {
 		return _ddm;
 	}
 
-	public static DDMDisplay getDDMDisplay(ServiceContext serviceContext) {
-		return getDDM().getDDMDisplay(serviceContext);
+	public static DDMDisplay getDDMDisplay(long classNameId)
+		throws PortalException {
+
+		return getDDM().getDDMDisplay(classNameId);
+	}
+
+	public static DDMFormLayout getDefaultDDMFormLayout(DDMForm ddmForm) {
+		return getDDM().getDefaultDDMFormLayout(ddmForm);
 	}
 
 	public static Serializable getDisplayFieldValue(

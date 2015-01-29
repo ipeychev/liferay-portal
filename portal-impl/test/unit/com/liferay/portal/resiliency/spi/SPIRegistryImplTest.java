@@ -146,10 +146,9 @@ public class SPIRegistryImplTest {
 
 		mockSPI.spiConfiguration = spiConfiguration;
 
-		CaptureHandler captureHandler = JDKLoggerTestUtil.configureJDKLogger(
-			SPIRegistryImpl.class.getName(), Level.WARNING);
-
-		try {
+		try (CaptureHandler captureHandler =
+				JDKLoggerTestUtil.configureJDKLogger(
+					SPIRegistryImpl.class.getName(), Level.WARNING)) {
 
 			// With log
 
@@ -271,9 +270,6 @@ public class SPIRegistryImplTest {
 				"Skip unknown servlet context name portletApp2",
 				logRecord2.getMessage());
 		}
-		finally {
-			captureHandler.close();
-		}
 
 		_spiRegistryImpl.unregisterSPI(mockSPI);
 
@@ -306,7 +302,8 @@ public class SPIRegistryImplTest {
 		@Around(
 			"execution(public static com.liferay.portal.model.PortletApp " +
 				"com.liferay.portal.service.PortletLocalServiceUtil." +
-					"getPortletApp(String)) && args(servletContextName)")
+					"getPortletApp(String)) && args(servletContextName)"
+		)
 		public PortletApp getPortletApp(String servletContextName) {
 			if (servletContextName.equals("portletApp1")) {
 				return _createPortletAppProxy(_portletIds);
@@ -318,7 +315,8 @@ public class SPIRegistryImplTest {
 		@Around(
 			"execution(public static com.liferay.portal.model.Portlet com." +
 				"liferay.portal.service.PortletLocalServiceUtil." +
-					"getPortletById(String)) && args(portletId)")
+					"getPortletById(String)) && args(portletId)"
+		)
 		public Portlet getPortletById(String portletId) {
 			if (portletId.equals("portlet1")) {
 				return _createPortletProxy(portletId);

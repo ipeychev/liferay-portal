@@ -2,6 +2,7 @@ package ${seleniumBuilderContext.getActionPackageName(actionName)};
 
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portalweb.portal.util.liferayselenium.LiferaySelenium;
+import com.liferay.portalweb.util.RuntimeVariables;
 import com.liferay.portalweb.util.block.action.BaseAction;
 
 import ${seleniumBuilderContext.getActionClassName("BaseLiferay")};
@@ -69,11 +70,13 @@ public class ${actionSimpleClassName} extends
 		<#list commandElements as commandElement>
 			<#assign commandName = commandElement.attributeValue("name")>
 
-			<#assign functionName = seleniumBuilderFileUtil.getObjectName(commandName)>
+			<#assign functionReturnType = seleniumBuilderContext.getFunctionReturnType(seleniumBuilderFileUtil.getObjectName(commandName))>
 
-			public ${seleniumBuilderContext.getFunctionReturnType(functionName)} ${commandName}(
+			public ${functionReturnType} ${commandName}(
 
-			<#list 1..seleniumBuilderContext.getFunctionLocatorCount(functionName) as i>
+			<#assign functionLocatorCount = seleniumBuilderContext.getFunctionLocatorCount(seleniumBuilderFileUtil.getObjectName(commandName))>
+
+			<#list 1..functionLocatorCount as i>
 				String locator${i}, String locatorKey${i}, String value${i}
 
 				<#if i_has_next>
@@ -82,7 +85,7 @@ public class ${actionSimpleClassName} extends
 			</#list>
 
 			, Map<String,String> environmentScopeVariables) throws Exception {
-				<#list 1..seleniumBuilderContext.getFunctionLocatorCount(functionName) as i>
+				<#list 1..functionLocatorCount as i>
 					locator${i} = getLocator(locator${i}, locatorKey${i}, environmentScopeVariables);
 				</#list>
 
@@ -153,9 +156,9 @@ public class ${actionSimpleClassName} extends
 								return
 							</#if>
 
-							super.${seleniumBuilderFileUtil.getVariableName(functionName)}(
+							super.${seleniumBuilderFileUtil.getVariableName(commandName)}(
 
-							<#list 1..seleniumBuilderContext.getFunctionLocatorCount(functionName) as i>
+							<#list 1..functionLocatorCount as i>
 								locator${i}, locatorKey${i}, value${i}
 
 								<#if i_has_next>
@@ -177,7 +180,7 @@ public class ${actionSimpleClassName} extends
 
 			<#if actionName = "BaseLiferay">
 				public void ${commandName}Description(
-					<#list 1..seleniumBuilderContext.getFunctionLocatorCount(functionName) as i>
+					<#list 1..functionLocatorCount as i>
 						String locator${i}, String locatorKey${i}, String value${i}
 
 						<#if i_has_next>
@@ -187,7 +190,7 @@ public class ${actionSimpleClassName} extends
 
 					, Map<String,String> environmentScopeVariables) throws Exception {
 
-					<#list 1..seleniumBuilderContext.getFunctionLocatorCount(functionName) as i>
+					<#list 1..functionLocatorCount as i>
 						locator${i} = getLocator(locator${i}, locatorKey${i}, environmentScopeVariables);
 						value${i} = HtmlUtil.escape(value${i});
 					</#list>
@@ -202,7 +205,7 @@ public class ${actionSimpleClassName} extends
 
 							String description = "${seleniumBuilderFileUtil.escapeJava(message)}";
 
-							<#list 1..seleniumBuilderContext.getFunctionLocatorCount(functionName) as i>
+							<#list 1..functionLocatorCount as i>
 								description = getDescription(description, "${i}", locator${i}, locatorKey${i}, value${i}, environmentScopeVariables);
 							</#list>
 

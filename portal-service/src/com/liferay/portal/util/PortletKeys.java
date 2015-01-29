@@ -31,8 +31,6 @@ public class PortletKeys {
 
 	public static final String ANNOUNCEMENTS = "84";
 
-	public static final String ASSET_BROWSER = "172";
-
 	public static final String ASSET_CATEGORIES_ADMIN = "147";
 
 	public static final String ASSET_PUBLISHER = "101";
@@ -237,12 +235,6 @@ public class PortletKeys {
 	public static final String USER_STATISTICS = "180";
 
 	public static final String USERS_ADMIN = "125";
-
-	public static final String WIKI = "36";
-
-	public static final String WIKI_ADMIN = "154";
-
-	public static final String WIKI_DISPLAY = "54";
 
 	public static final String WORKFLOW_CONFIGURATION = "152";
 

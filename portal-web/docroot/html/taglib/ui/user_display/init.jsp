@@ -17,6 +17,7 @@
 <%@ include file="/html/taglib/init.jsp" %>
 
 <%
+boolean author = GetterUtil.getBoolean((String)request.getAttribute("liferay-ui:user-display:author"));
 int displayStyle = GetterUtil.getInteger((String)request.getAttribute("liferay-ui:user-display:displayStyle"));
 String imageCssClass = (String)request.getAttribute("liferay-ui:user-display:imageCssClass");
 boolean showUserDetails = GetterUtil.getBoolean((String)request.getAttribute("liferay-ui:user-display:showUserDetails"));

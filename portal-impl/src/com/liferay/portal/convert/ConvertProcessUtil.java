@@ -23,7 +23,7 @@ import java.util.Collection;
 import java.util.Iterator;
 
 /**
- * @author Ivan Zaera
+ * @author Iván Zaera
  */
 public class ConvertProcessUtil {
 

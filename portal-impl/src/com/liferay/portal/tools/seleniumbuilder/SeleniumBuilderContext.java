@@ -128,12 +128,15 @@ public class SeleniumBuilderContext {
 
 			_functionClassNames.put(functionName, _getClassName(fileName));
 
+			Element rootElement = _getRootElement(fileName);
+
+			_functionDefaultCommandNames.put(
+				functionName, _getDefaultCommandName(rootElement));
+
 			_functionFileNames.put(functionName, fileName);
 
 			_functionJavaFileNames.put(
 				functionName, _getJavaFileName(fileName));
-
-			Element rootElement = _getRootElement(fileName);
 
 			_functionLocatorCounts.put(
 				functionName, _getLocatorCount(rootElement));
@@ -279,6 +282,10 @@ public class SeleniumBuilderContext {
 
 	public String getFunctionClassName(String functionName) {
 		return _functionClassNames.get(functionName);
+	}
+
+	public String getFunctionDefaultCommandName(String functionName) {
+		return _functionDefaultCommandNames.get(functionName);
 	}
 
 	public String getFunctionFileName(String functionName) {
@@ -681,6 +688,15 @@ public class SeleniumBuilderContext {
 			}
 		}
 
+		String defaultCommandName =
+			_seleniumBuilderFileUtil.getDefaultCommandName(rootElement);
+
+		if (!commandElementNames.contains(defaultCommandName)) {
+			_seleniumBuilderFileUtil.throwValidationException(
+				1016, functionFileName, rootElement, "default",
+				defaultCommandName);
+		}
+
 		List<Element> conditionAndExecuteElements =
 			_seleniumBuilderFileUtil.getAllChildElements(
 				rootElement, "condition");
@@ -766,10 +782,16 @@ public class SeleniumBuilderContext {
 
 		for (Element conditionAndExecuteElement : conditionAndExecuteElements) {
 			String action = conditionAndExecuteElement.attributeValue("action");
+			String function = conditionAndExecuteElement.attributeValue(
+				"function");
 			String macro = conditionAndExecuteElement.attributeValue("macro");
 
 			if (action != null) {
 				_validateActionElement(
+					macroFileName, conditionAndExecuteElement);
+			}
+			else if (function != null) {
+				_validateFunctionElement(
 					macroFileName, conditionAndExecuteElement);
 			}
 			else if (macro != null) {
@@ -825,11 +847,15 @@ public class SeleniumBuilderContext {
 
 		for (Element executeElement : executeElements) {
 			String action = executeElement.attributeValue("action");
+			String function = executeElement.attributeValue("function");
 			String macro = executeElement.attributeValue("macro");
 			String testCase = executeElement.attributeValue("test-case");
 
 			if (action != null) {
 				_validateActionElement(testCaseFileName, executeElement);
+			}
+			else if (function != null) {
+				_validateFunctionElement(testCaseFileName, executeElement);
 			}
 			else if (macro != null) {
 				_validateMacroElement(testCaseFileName, executeElement);
@@ -871,6 +897,12 @@ public class SeleniumBuilderContext {
 
 	private String _getClassName(String fileName, String classSuffix) {
 		return _seleniumBuilderFileUtil.getClassName(fileName, classSuffix);
+	}
+
+	private String _getDefaultCommandName(Element rootElement)
+		throws Exception {
+
+		return _seleniumBuilderFileUtil.getDefaultCommandName(rootElement);
 	}
 
 	private String _getHTMLFileName(String fileName) {
@@ -1099,22 +1131,53 @@ public class SeleniumBuilderContext {
 		int x = function.indexOf(StringPool.POUND);
 
 		if (x == -1) {
-			_seleniumBuilderFileUtil.throwValidationException(
-				1006, fileName, element, "function");
+			if (!_isFunctionName(function)) {
+				_seleniumBuilderFileUtil.throwValidationException(
+					1011, fileName, element, "function", function);
+			}
+		}
+		else {
+			String functionName = function.substring(0, x);
+
+			if (!_isFunctionName(functionName)) {
+				_seleniumBuilderFileUtil.throwValidationException(
+					1011, fileName, element, "function", functionName);
+			}
+
+			String functionCommand = function.substring(x + 1);
+
+			if (!_isFunctionCommand(functionName, functionCommand)) {
+				_seleniumBuilderFileUtil.throwValidationException(
+					1012, fileName, element, "function", functionCommand);
+			}
 		}
 
-		String functionName = function.substring(0, x);
+		List<Attribute> attributes = element.attributes();
 
-		if (!_isFunctionName(functionName)) {
-			_seleniumBuilderFileUtil.throwValidationException(
-				1011, fileName, element, "function", functionName);
-		}
+		for (Attribute attribute : attributes) {
+			String attributeName = attribute.getName();
 
-		String functionCommand = function.substring(x + 1);
+			if (attributeName.startsWith("locator")) {
+				String attributeValue = attribute.getValue();
 
-		if (!_isFunctionCommand(functionName, functionCommand)) {
-			_seleniumBuilderFileUtil.throwValidationException(
-				1012, fileName, element, "function", functionCommand);
+				x = attributeValue.indexOf(StringPool.POUND);
+
+				if (x != -1) {
+					String pathName = attributeValue.substring(0, x);
+
+					if (!_pathNames.contains(pathName)) {
+						_seleniumBuilderFileUtil.throwValidationException(
+							1014, fileName, pathName);
+					}
+
+					String pathLocatorKey = attributeValue.substring(x + 1);
+
+					if (!_isValidLocatorKey(pathName, null, pathLocatorKey)) {
+						_seleniumBuilderFileUtil.throwValidationException(
+							1010, fileName, element, pathLocatorKey);
+					}
+				}
+			}
 		}
 	}
 
@@ -1235,6 +1298,8 @@ public class SeleniumBuilderContext {
 	private final Map<String, Element> _actionRootElements = new HashMap<>();
 	private final Map<String, String> _actionSimpleClassNames = new HashMap<>();
 	private final Map<String, String> _functionClassNames = new HashMap<>();
+	private final Map<String, String> _functionDefaultCommandNames =
+		new HashMap<>();
 	private final Map<String, String> _functionFileNames = new HashMap<>();
 	private final Map<String, String> _functionJavaFileNames = new HashMap<>();
 	private final Map<String, Integer> _functionLocatorCounts = new HashMap<>();

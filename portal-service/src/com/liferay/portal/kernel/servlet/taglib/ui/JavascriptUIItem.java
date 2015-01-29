@@ -15,7 +15,7 @@
 package com.liferay.portal.kernel.servlet.taglib.ui;
 
 /**
- * @author Ivan Zaera
+ * @author Iván Zaera
  */
 public interface JavascriptUIItem extends UIActionItem {
 

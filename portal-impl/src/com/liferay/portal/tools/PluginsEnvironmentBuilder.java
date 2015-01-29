@@ -163,6 +163,15 @@ public class PluginsEnvironmentBuilder {
 			String version)
 		throws Exception {
 
+		String string = sb.toString();
+
+		if (string.contains(dependencyName)) {
+			System.out.println(
+				"Skipping duplicate " + dependencyName + " " + version);
+
+			return;
+		}
+
 		System.out.println("Adding " + dependencyName + " " + version);
 
 		if (version.equals("latest.integration")) {
@@ -222,7 +231,7 @@ public class PluginsEnvironmentBuilder {
 					String rev = GetterUtil.getString(
 						dependencyElement.attributeValue("rev"));
 
-					String string = sb.toString();
+					string = sb.toString();
 
 					if (string.contains(name)) {
 						continue;

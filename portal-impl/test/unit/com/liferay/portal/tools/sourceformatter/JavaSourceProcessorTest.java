@@ -40,7 +40,12 @@ public class JavaSourceProcessorTest extends BaseSourceProcessorTestCase {
 
 	@Test
 	public void testExceedMaxLineLength() throws Exception {
-		test("ExceedMaxLineLength.testjava", "> 80:", 35);
+		test("ExceedMaxLineLength.testjava", "> 80:", 37);
+	}
+
+	@Test
+	public void testFormatAnnotations() throws Exception {
+		test("FormatAnnotations.testjava");
 	}
 
 	@Test
@@ -166,8 +171,13 @@ public class JavaSourceProcessorTest extends BaseSourceProcessorTestCase {
 	}
 
 	@Test
-	public void testSortAnnotations() throws Exception {
-		test("SortAnnotations.testjava");
+	public void testSortAnnotationParameters() throws Exception {
+		test(
+			"SortAnnotationParameters.testjava",
+			new String[] {
+				"sort: @Component#immediate",
+				"sort: method#@Transactional#propagation",
+			});
 	}
 
 	@Test

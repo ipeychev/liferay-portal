@@ -64,8 +64,9 @@ public class ClusterExecutorImplTest extends BaseClusterExecutorImplTestCase {
 		adviceClasses = {
 			DisableAutodetectedAddressAdvice.class,
 			EnableClusterLinkAdvice.class,
-			EnableClusterExecutorDebugAdvice.class, EnableLiveUsersAdvice.class
-		})
+			EnableClusterExecutorDebugAdvice.class
+		}
+	)
 	@Test
 	public void testClusterEventListener() throws Exception {
 		ClusterExecutorImpl clusterExecutorImpl = getClusterExecutorImpl();
@@ -74,7 +75,7 @@ public class ClusterExecutorImplTest extends BaseClusterExecutorImplTestCase {
 			List<ClusterEventListener> clusterEventListeners =
 				clusterExecutorImpl.getClusterEventListeners();
 
-			Assert.assertEquals(2, clusterEventListeners.size());
+			Assert.assertEquals(1, clusterEventListeners.size());
 
 			// Test 1, add cluster event listener
 
@@ -86,7 +87,7 @@ public class ClusterExecutorImplTest extends BaseClusterExecutorImplTestCase {
 			clusterEventListeners =
 				clusterExecutorImpl.getClusterEventListeners();
 
-			Assert.assertEquals(3, clusterEventListeners.size());
+			Assert.assertEquals(2, clusterEventListeners.size());
 
 			// Test 2, remove cluster event listener
 
@@ -96,7 +97,7 @@ public class ClusterExecutorImplTest extends BaseClusterExecutorImplTestCase {
 			clusterEventListeners =
 				clusterExecutorImpl.getClusterEventListeners();
 
-			Assert.assertEquals(2, clusterEventListeners.size());
+			Assert.assertEquals(1, clusterEventListeners.size());
 
 			// Test 3, set cluster event listener
 
@@ -109,7 +110,7 @@ public class ClusterExecutorImplTest extends BaseClusterExecutorImplTestCase {
 			clusterEventListeners =
 				clusterExecutorImpl.getClusterEventListeners();
 
-			Assert.assertEquals(3, clusterEventListeners.size());
+			Assert.assertEquals(2, clusterEventListeners.size());
 		}
 		finally {
 			clusterExecutorImpl.destroy();
@@ -120,7 +121,8 @@ public class ClusterExecutorImplTest extends BaseClusterExecutorImplTestCase {
 		adviceClasses = {
 			DisableAutodetectedAddressAdvice.class,
 			EnableClusterLinkAdvice.class
-		})
+		}
+	)
 	@Test
 	public void testClusterTopology() throws Exception {
 		ClusterExecutorImpl clusterExecutorImpl1 = getClusterExecutorImpl();
@@ -171,7 +173,8 @@ public class ClusterExecutorImplTest extends BaseClusterExecutorImplTestCase {
 			DisableAutodetectedAddressAdvice.class,
 			EnableClusterLinkAdvice.class, JChannelExceptionAdvice.class,
 			SetBadPortalInetSocketAddressAdvice.class
-		})
+		}
+	)
 	@Test
 	public void testErrorLogAndExceptions() {
 		SetBadPortalInetSocketAddressAdvice.setPort(8080);
@@ -289,7 +292,8 @@ public class ClusterExecutorImplTest extends BaseClusterExecutorImplTestCase {
 		adviceClasses = {
 			DisableAutodetectedAddressAdvice.class,
 			EnableClusterLinkAdvice.class
-		})
+		}
+	)
 	@Test
 	public void testExecuteByFireAndForget() throws Exception {
 		ClusterExecutorImpl clusterExecutorImpl1 = getClusterExecutorImpl();
@@ -359,7 +363,8 @@ public class ClusterExecutorImplTest extends BaseClusterExecutorImplTestCase {
 		adviceClasses = {
 			DisableAutodetectedAddressAdvice.class,
 			EnableClusterLinkAdvice.class
-		})
+		}
+	)
 	@Test
 	public void testExecuteByLocalMethod() throws Exception {
 		ClusterExecutorImpl clusterExecutorImpl = getClusterExecutorImpl();
@@ -432,7 +437,8 @@ public class ClusterExecutorImplTest extends BaseClusterExecutorImplTestCase {
 		adviceClasses = {
 			BaseReceiverAdvice.class, DisableAutodetectedAddressAdvice.class,
 			EnableClusterLinkAdvice.class
-		})
+		}
+	)
 	@Test
 	public void testExecuteByShortcutMethod() throws Exception {
 		BaseReceiverAdvice.reset(1);
@@ -478,7 +484,8 @@ public class ClusterExecutorImplTest extends BaseClusterExecutorImplTestCase {
 		adviceClasses = {
 			DisableAutodetectedAddressAdvice.class,
 			EnableClusterLinkAdvice.class
-		})
+		}
+	)
 	@Test
 	public void testExecuteBySkipLocal() throws Exception {
 		ClusterExecutorImpl clusterExecutorImpl = getClusterExecutorImpl();
@@ -535,7 +542,8 @@ public class ClusterExecutorImplTest extends BaseClusterExecutorImplTestCase {
 		adviceClasses = {
 			DisableAutodetectedAddressAdvice.class,
 			EnableClusterLinkAdvice.class
-		})
+		}
+	)
 	@Test
 	public void testExecuteWithCallBack() throws Exception {
 		ClusterExecutorImpl clusterExecutorImpl = getClusterExecutorImpl();
@@ -573,7 +581,8 @@ public class ClusterExecutorImplTest extends BaseClusterExecutorImplTestCase {
 		adviceClasses = {
 			DisableAutodetectedAddressAdvice.class,
 			EnableClusterLinkAdvice.class
-		})
+		}
+	)
 	@Test
 	public void testGetMethods() throws Exception {
 		ClusterExecutorImpl clusterExecutorImpl1 = getClusterExecutorImpl();
@@ -656,7 +665,8 @@ public class ClusterExecutorImplTest extends BaseClusterExecutorImplTestCase {
 		adviceClasses = {
 			DisableAutodetectedAddressAdvice.class,
 			EnableClusterLinkAdvice.class
-		})
+		}
+	)
 	@Test
 	public void testMemberRemoved() throws Exception {
 		ClusterExecutorImpl clusterExecutorImpl = getClusterExecutorImpl();

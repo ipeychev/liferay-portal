@@ -1,0 +1,5 @@
+<definition default="name">
+	<command name="name">
+		<execute function="Clicks" />
+	</command>
+</definition>

@@ -3050,6 +3050,16 @@
 		</attribute>
 	</tag>
 	<tag>
+		<name>menu</name>
+		<tag-class>com.liferay.taglib.ui.MenuTag</tag-class>
+		<body-content>JSP</body-content>
+		<attribute>
+			<name>menu</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+	<tag>
 		<name>menu-item</name>
 		<tag-class>com.liferay.taglib.ui.MenuItemTag</tag-class>
 		<body-content>JSP</body-content>
@@ -4910,6 +4920,11 @@
 		<tag-class>com.liferay.taglib.ui.UserDisplayTag</tag-class>
 		<tei-class>com.liferay.taglib.ui.UserDisplayTei</tei-class>
 		<body-content>JSP</body-content>
+		<attribute>
+			<name>author</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
 		<attribute>
 			<name>displayStyle</name>
 			<required>false</required>

@@ -348,6 +348,13 @@ public class ZipWriterImplTest {
 		file.delete();
 	}
 
+	/**
+	 * Tests that {@link ZipWriter#finish()} can execute without error on a ZIP
+	 * writer that's been created by the default constructor and that has no
+	 * entries.
+	 *
+	 * @throws Exception
+	 */
 	@Test
 	public void testFinishIfZipFileIsNotSet() throws Exception {
 		ZipWriter zipWriter = new ZipWriterImpl();
@@ -359,6 +366,13 @@ public class ZipWriterImplTest {
 		file.delete();
 	}
 
+	/**
+	 * Tests that {@link ZipWriter#finish()} can execute without error on a ZIP
+	 * writer that's been created for an existing ZIP file and that has no
+	 * entries.
+	 *
+	 * @throws Exception if an exception occurred
+	 */
 	@Test
 	public void testFinishIfZipFileIsSet() throws Exception {
 		File tempZipFile = new File(_tempZipFilePath);
