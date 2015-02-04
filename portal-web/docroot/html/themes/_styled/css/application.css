@@ -871,6 +871,30 @@ input.switch {
 	}
 }
 
+.lfr-source-editor-fullscreen {
+	display: block;
+	height: 100%;
+	width: 100%;
+
+	.content-html {
+		float: left;
+		width: 50%;
+	}
+
+	.splitter {
+		border-right: 1px solid #ccc;
+		float: left;
+		height: 100%;
+		width: 1%;
+	}
+
+	.content-preview {
+		float: left;
+		padding: 0 20px;
+		width: 49%;
+	}
+}
+
 /* ---------- Alloy editor ---------- */
 
 .alloy-editor {
@@ -907,10 +931,9 @@ input.switch {
 	}
 
 	.btn {
-		bottom: 0;
-		padding: 0 5px;
-		position: absolute;
-		right: 0;
+		bottom: 20px;
+		float: right;
+		position: relative;
 	}
 }
 

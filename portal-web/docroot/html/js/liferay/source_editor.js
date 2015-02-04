@@ -19,11 +19,19 @@ AUI.add(
 
 		var STR_DOT = '.';
 
+		var STR_VALUE = 'value';
+
 		var STR_THEMES = 'themes';
 
 		var STR_TOOLBAR = 'toolbar';
 
 		var TPL_CODE_CONTAINER = '<div class="{cssClass}"></div>';
+
+		var TPL_FULL_SCREEN = '<div class="lfr-source-editor-fullscreen">' +
+		'<div class="content-html"> <div id="{sourceCodeId}"></div> </div>' +
+		'<div class="splitter"></div>' +
+		'<div class="content-preview"> {preview} </div>'+
+		'</div>';
 
 		var TPL_THEME_BUTTON = '<li data-action="{action}"><button type="button" class="btn btn-default btn-lg"><i class="{iconCssClass}"></i></button></li>';
 
@@ -167,6 +175,97 @@ AUI.add(
 						return instance.editor;
 					},
 
+					openFullScreen: function() {
+						var instance = this;
+
+						var sourceCodeId = A.guid();
+
+						var templateContent = Lang.sub(
+							TPL_FULL_SCREEN,
+							{
+								preview: instance.get(STR_VALUE),
+								sourceCodeId: sourceCodeId
+							}
+						);
+
+						var fullScreenDialog;
+
+						Liferay.Util.openWindow(
+							{
+								dialog: {
+									after: {
+										destroy: function() {
+											instance._editorFullScreen.destroy();
+										}
+									},
+									bodyContent: templateContent,
+									constrain: true,
+									destroyOnHide: true,
+									modal: true,
+									toolbars: {
+										footer: [
+											{
+												label: Liferay.Language.get('discard'),
+												on: {
+													click: function() {
+														fullScreenDialog.hide();
+													}
+												}
+											},
+											{
+												cssClass: 'btn-primary',
+												label: Liferay.Language.get('done'),
+												on: {
+													click: function() {
+														var currentValue = instance._editorFullScreen.getValue();
+
+														instance.set(STR_VALUE, currentValue);
+
+														fullScreenDialog.hide();
+													}
+												}
+											}
+										],
+										header: [
+											{
+												cssClass: 'close',
+												label: '\u00D7',
+												on: {
+													click: function(event) {
+														fullScreenDialog.hide();
+
+														event.domEvent.stopPropagation();
+													}
+												},
+												render: true
+											}
+										]
+									}
+								}
+							},
+							function(dialog) {
+								fullScreenDialog = dialog;
+
+								var options = A.merge(
+									instance.get('aceOptions'),
+									{
+										mode: instance.get('mode').$id
+									}
+								);
+
+								var fullScreenEditor = ace.edit(A.one('#' + sourceCodeId).getDOM());
+
+								fullScreenEditor.setOptions(options);
+
+								fullScreenEditor.getSession().setValue(instance.get(STR_VALUE));
+
+								fullScreenEditor.getSession().on('change', A.debounce(A.bind(instance._refreshPreviewEntry, instance), 100));
+
+								instance._editorFullScreen = fullScreenEditor;
+							}
+						);
+					},
+
 					_getButtonsMarkup: function() {
 						var instance = this;
 
@@ -221,6 +320,14 @@ AUI.add(
 						if (action === STR_THEMES) {
 							instance._switchTheme(currentTarget);
 						}
+					},
+
+					_refreshPreviewEntry: function() {
+						var instance = this;
+
+						var fullScreenEditor = instance._editorFullScreen;
+
+						A.one('.content-preview').html(fullScreenEditor.getValue());
 					},
 
 					_switchTheme: function(themeSelector) {
