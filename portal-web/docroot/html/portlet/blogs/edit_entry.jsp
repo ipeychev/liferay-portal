@@ -143,7 +143,11 @@ boolean showHeader = ParamUtil.getBoolean(request, "showHeader", true);
 						<%
 						Map<String, Object> data = new HashMap<String, Object>();
 
+						JSONObject editorOptions = JSONFactoryUtil.createJSONObject();
+						editorOptions.put("fullScreenTitle", title);
+
 						data.put("uploadURL", uploadEditorImageURL);
+						data.put("editorOptions", editorOptions);
 						%>
 
 						<liferay-ui:input-editor contents="<%= content %>" data="<%= data %>" editorImpl="<%= EDITOR_HTML_IMPL_KEY %>" name="content" onChangeMethod="OnChangeEditor" placeholder="content" />

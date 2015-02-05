@@ -32,6 +32,8 @@ String contents = (String)request.getAttribute("liferay-ui:input-editor:contents
 String contentsLanguageId = (String)request.getAttribute("liferay-ui:input-editor:contentsLanguageId");
 String cssClass = GetterUtil.getString((String)request.getAttribute("liferay-ui:input-editor:cssClass"));
 Map<String, Object> data = (Map<String, Object>)request.getAttribute("liferay-ui:input-editor:data");
+JSONObject editorOptions = (data != null) ? (JSONObject) data.get("editorOptions") : null;
+
 String editorImpl = (String)request.getAttribute("liferay-ui:input-editor:editorImpl");
 Map<String, String> fileBrowserParamsMap = (Map<String, String>)request.getAttribute("liferay-ui:input-editor:fileBrowserParams");
 String name = namespace + GetterUtil.getString((String)request.getAttribute("liferay-ui:input-editor:name")) + "Editor";
@@ -348,6 +350,7 @@ boolean skipEditorLoading = GetterUtil.getBoolean((String)request.getAttribute("
 						var sourceEditor = new A.LiferaySourceEditor(
 							{
 								boundingBox: A.one('#<%= name %>Source'),
+								fullScreenTitle: '<%= Validator.isNotNull(editorOptions) ? editorOptions.getString("fullScreenTitle") : " " %>',
 								mode: 'html',
 								value: window['<%= name %>'].getHTML()
 							}

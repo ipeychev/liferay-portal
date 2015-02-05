@@ -57,6 +57,11 @@ AUI.add(
 						}
 					},
 
+					fullScreenTitle: {
+						validator: Lang.isString,
+						value: ' '
+					},
+
 					height: {
 						validator: function(value) {
 							return Lang.isString(value) || Lang.isNumber(value);
@@ -241,7 +246,8 @@ AUI.add(
 											}
 										]
 									}
-								}
+								},
+								title: instance.get('fullScreenTitle')
 							},
 							function(dialog) {
 								fullScreenDialog = dialog;
