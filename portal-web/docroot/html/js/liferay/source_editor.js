@@ -205,18 +205,11 @@ AUI.add(
 									},
 									bodyContent: templateContent,
 									constrain: true,
+									cssClass: 'fullscreen-dialog',
 									destroyOnHide: true,
 									modal: true,
 									toolbars: {
 										footer: [
-											{
-												label: Liferay.Language.get('discard'),
-												on: {
-													click: function() {
-														fullScreenDialog.hide();
-													}
-												}
-											},
 											{
 												cssClass: 'btn-primary',
 												label: Liferay.Language.get('done'),
@@ -226,6 +219,14 @@ AUI.add(
 
 														instance.set(STR_VALUE, currentValue);
 
+														fullScreenDialog.hide();
+													}
+												}
+											},
+											{
+												label: Liferay.Language.get('cancel'),
+												on: {
+													click: function() {
 														fullScreenDialog.hide();
 													}
 												}
