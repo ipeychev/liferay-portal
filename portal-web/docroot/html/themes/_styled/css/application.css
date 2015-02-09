@@ -886,8 +886,11 @@ input.switch {
 		float: right;
 
 		span {
-			margin: 0 5px;
+			border: 1px solid #CCC;
 			cursor: pointer;
+			font-size: 12px;
+			margin: 0 3px;
+			padding: 0 5px;
 		}
 	}
 }
@@ -899,28 +902,36 @@ input.switch {
 	padding-top: 10px;
 	width: 100%;
 
-	.content-html, .splitter, .content-preview  {
-		float: left;
-		height: 100%;
-	}
-
-	.content-html {
-		width: 50%;
-
-		.ace-editor {
-			height: 100% !important;
-		}
+	.content-html .ace-editor {
+		height: 100% !important;
 	}
 
 	.splitter {
-		border: 1px solid #ccc;
-		width: 1px;
+		border: 1px solid #CCC;
 	}
 
 	.content-preview {
-		padding: 0 20px;
-		width: 49%;
 		overflow-y: scroll;
+		padding: 0 20px;
+	}
+
+	&.vertical {
+		.content-html, .splitter, .content-preview  {
+			float: left;
+			height: 100%;
+		}
+
+		.content-html {
+			width: 50%;
+		}
+
+		.splitter {
+			width: 1px;
+		}
+
+		.content-preview {
+			width: 49%;
+		}
 	}
 
 	&.horizontal {
@@ -939,7 +950,7 @@ input.switch {
 		.content-preview {
 			height: 49%;
 		}
-	};
+	}
 
 	&.simple {
 		.content-html {

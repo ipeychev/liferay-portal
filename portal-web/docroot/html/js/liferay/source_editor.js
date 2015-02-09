@@ -7,6 +7,10 @@ AUI.add(
 
 		var CSS_ACTIVE_CELL = 'ace_gutter-active-cell';
 
+		var CSS_DIALOG = 'fullscreen-dialog';
+
+		var CSS_SOURCE_EDITOR_FULLSCREEN = 'lfr-source-editor-fullscreen';
+
 		var EVENT_FULLSCREEN_DONE = 'fullscreen-done';
 
 		var EVENT_FULLSCREEN_CANCEL = 'fullscreen-cancel';
@@ -35,7 +39,7 @@ AUI.add(
 			'<div class="header-left">HTML</div>' +
 			'<div class="header-right"><span id="vertical">V</span> <span id="horizontal">H</span> <span id="simple">S</span> </div>'+
 		'</div>' +
-		'<div class="lfr-source-editor-fullscreen">' +
+		'<div class="' + CSS_SOURCE_EDITOR_FULLSCREEN + '">' +
 			'<div class="content-html"> <div id="{sourceCodeId}"></div> </div>' +
 			'<div class="splitter"></div>' +
 			'<div class="content-preview"> {preview} </div>'+
@@ -213,7 +217,7 @@ AUI.add(
 									},
 									bodyContent: templateContent,
 									constrain: true,
-									cssClass: 'fullscreen-dialog',
+									cssClass: CSS_DIALOG,
 									destroyOnHide: true,
 									modal: true,
 									toolbars: {
@@ -281,9 +285,21 @@ AUI.add(
 								fullScreenEditor.getSession().setValue(instance.get(STR_VALUE));
 
 								fullScreenEditor.getSession().on('change', A.debounce(A.bind(instance._refreshPreviewEntry, instance), 100));
-								debugger;
 
 								instance._editorFullScreen = fullScreenEditor;
+
+								var dialogContainer = $(STR_DOT + CSS_DIALOG);
+
+								dialogContainer.find('.header-right span').on(
+									'click',
+									function(event) {
+										var alignment = event.currentTarget.id;
+
+										dialogContainer
+											.find(STR_DOT + CSS_SOURCE_EDITOR_FULLSCREEN)
+											.attr('class', CSS_SOURCE_EDITOR_FULLSCREEN + ' ' + alignment);
+									}
+								);
 							}
 						);
 					},
