@@ -161,7 +161,6 @@ boolean skipEditorLoading = GetterUtil.getBoolean((String)request.getAttribute("
 </div>
 
 <aui:script use="aui-base,alloy-editor,liferay-editor-image-uploader">
-
 	<%
 	Locale contentsLocale = LocaleUtil.fromLanguageId(contentsLanguageId);
 
@@ -356,6 +355,8 @@ boolean skipEditorLoading = GetterUtil.getBoolean((String)request.getAttribute("
 							}
 						).render();
 
+						sourceEditor.on('fullscreen-done', switchMode);
+
 						toggleEditorModeUI();
 
 						Liferay.component('<%= name %>Source', sourceEditor);
@@ -363,32 +364,32 @@ boolean skipEditorLoading = GetterUtil.getBoolean((String)request.getAttribute("
 				);
 			};
 
-			editorSwitch.on(
-				'click',
-				function(event) {
-					var editor = Liferay.component('<%= name %>Source');
+			var switchMode = function() {
+				var editor = Liferay.component('<%= name %>Source');
 
-					if (editorWrapper.hasClass(CSS_SHOW_SOURCE)) {
-						if (editor) {
-							window['<%= name %>'].setHTML(editor.get(STR_VALUE));
-						}
-
-						toggleEditorModeUI();
+				if (editorWrapper.hasClass(CSS_SHOW_SOURCE)) {
+					if (editor) {
+						window['<%= name %>'].setHTML(editor.get(STR_VALUE));
 					}
-					else if (editor) {
-						var currentContent = window['<%= name %>'].getHTML();
 
-						if (currentContent !== editor.get(STR_VALUE)) {
-							editor.set(STR_VALUE, currentContent);
-						}
-
-						toggleEditorModeUI();
-					}
-					else {
-						createSourceEditor();
-					}
+					toggleEditorModeUI();
 				}
-			);
+				else if (editor) {
+					var currentContent = window['<%= name %>'].getHTML();
+
+					if (currentContent !== editor.get(STR_VALUE)) {
+						editor.set(STR_VALUE, currentContent);
+					}
+
+					toggleEditorModeUI();
+				}
+				else {
+					createSourceEditor();
+				}
+			};
+
+			editorSwitch.on('click', switchMode);
+
 			editorFullscreen.on(
 				'click',
 				function(event) {

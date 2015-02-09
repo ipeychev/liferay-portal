@@ -7,6 +7,10 @@ AUI.add(
 
 		var CSS_ACTIVE_CELL = 'ace_gutter-active-cell';
 
+		var EVENT_FULLSCREEN_DONE = 'fullscreen-done';
+
+		var EVENT_FULLSCREEN_CANCEL = 'fullscreen-cancel';
+
 		var STR_BOUNDING_BOX = 'boundingBox';
 
 		var STR_CHANGE_CURSOR = 'changeCursor';
@@ -27,10 +31,14 @@ AUI.add(
 
 		var TPL_CODE_CONTAINER = '<div class="{cssClass}"></div>';
 
-		var TPL_FULL_SCREEN = '<div class="lfr-source-editor-fullscreen">' +
-		'<div class="content-html"> <div id="{sourceCodeId}"></div> </div>' +
-		'<div class="splitter"></div>' +
-		'<div class="content-preview"> {preview} </div>'+
+		var TPL_FULL_SCREEN = '<div class="lfr-header-fullscreen">' +
+			'<div class="header-left">HTML</div>' +
+			'<div class="header-right"><span id="vertical">V</span> <span id="horizontal">H</span> <span id="simple">S</span> </div>'+
+		'</div>' +
+		'<div class="lfr-source-editor-fullscreen">' +
+			'<div class="content-html"> <div id="{sourceCodeId}"></div> </div>' +
+			'<div class="splitter"></div>' +
+			'<div class="content-preview"> {preview} </div>'+
 		'</div>';
 
 		var TPL_THEME_BUTTON = '<li data-action="{action}"><button type="button" class="btn btn-default btn-lg"><i class="{iconCssClass}"></i></button></li>';
@@ -220,6 +228,8 @@ AUI.add(
 														instance.set(STR_VALUE, currentValue);
 
 														fullScreenDialog.hide();
+
+														instance._fire(EVENT_FULLSCREEN_DONE);
 													}
 												}
 											},
@@ -228,6 +238,8 @@ AUI.add(
 												on: {
 													click: function() {
 														fullScreenDialog.hide();
+
+														instance._fire(EVENT_FULLSCREEN_CANCEL);
 													}
 												}
 											}
@@ -241,6 +253,8 @@ AUI.add(
 														fullScreenDialog.hide();
 
 														event.domEvent.stopPropagation();
+
+														instance._fire(EVENT_FULLSCREEN_CANCEL);
 													}
 												},
 												render: true
@@ -267,9 +281,21 @@ AUI.add(
 								fullScreenEditor.getSession().setValue(instance.get(STR_VALUE));
 
 								fullScreenEditor.getSession().on('change', A.debounce(A.bind(instance._refreshPreviewEntry, instance), 100));
+								debugger;
 
 								instance._editorFullScreen = fullScreenEditor;
 							}
+						);
+					},
+
+					_fire: function(eventName) {
+						var instance = this;
+
+						A.setTimeout(
+							function() {
+								instance.fire(eventName)
+							},
+							0
 						);
 					},
 
