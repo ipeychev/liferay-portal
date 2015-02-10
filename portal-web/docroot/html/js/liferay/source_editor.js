@@ -39,7 +39,7 @@ AUI.add(
 			'<div class="header-left">HTML</div>' +
 			'<div class="header-right"><span id="vertical">V</span> <span id="horizontal">H</span> <span id="simple">S</span> </div>'+
 		'</div>' +
-		'<div class="' + CSS_SOURCE_EDITOR_FULLSCREEN + '">' +
+		'<div class="' + CSS_SOURCE_EDITOR_FULLSCREEN + ' vertical">' +
 			'<div class="content-html"> <div id="{sourceCodeId}"></div> </div>' +
 			'<div class="splitter"></div>' +
 			'<div class="content-preview"> {preview} </div>'+
@@ -288,18 +288,29 @@ AUI.add(
 
 								instance._editorFullScreen = fullScreenEditor;
 
-								var dialogContainer = $(STR_DOT + CSS_DIALOG);
+								instance._attachFullScreenEvents();
+							}
+						);
+					},
 
-								dialogContainer.find('.header-right span').on(
-									'click',
-									function(event) {
-										var alignment = event.currentTarget.id;
+					_attachFullScreenEvents: function() {
+						var dialogContainer = $(STR_DOT + CSS_DIALOG);
 
-										dialogContainer
-											.find(STR_DOT + CSS_SOURCE_EDITOR_FULLSCREEN)
-											.attr('class', CSS_SOURCE_EDITOR_FULLSCREEN + ' ' + alignment);
-									}
-								);
+						dialogContainer.find('.header-right span').bind(
+							'click',
+							function(event) {
+								var alignment = event.currentTarget.id;
+
+								dialogContainer
+									.find(STR_DOT + CSS_SOURCE_EDITOR_FULLSCREEN)
+									.attr('class', CSS_SOURCE_EDITOR_FULLSCREEN + ' ' + alignment);
+								}
+						);
+
+						dialogContainer.find('.content-preview a').bind(
+							'click',
+							function(event) {
+								$(event.currentTarget).attr('target', '_blank');
 							}
 						);
 					},
