@@ -886,11 +886,9 @@ input.switch {
 		float: right;
 
 		span {
-			border: 1px solid #CCC;
 			cursor: pointer;
 			font-size: 12px;
-			margin: 0 3px;
-			padding: 0 5px;
+			margin: 0 5px;
 		}
 	}
 }
@@ -911,7 +909,7 @@ input.switch {
 	}
 
 	.content-preview {
-		overflow-y: scroll;
+		overflow-y: auto;
 		padding: 0 20px;
 	}
 

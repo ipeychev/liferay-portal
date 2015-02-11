@@ -130,8 +130,7 @@ boolean skipEditorLoading = GetterUtil.getBoolean((String)request.getAttribute("
 	<c:choose>
 		<c:when test="<%= showSource %>">
 			<div class="alloy-editor-switch">
-				<button class="btn btn-default btn-xs hide" id="<%= name %>Fullscreen" type="button">
-					FS
+				<button class="btn btn-default btn-xs hide icon-fullscreen" id="<%= name %>Fullscreen" type="button">
 				</button>
 				<button class="btn btn-default btn-xs" id="<%= name %>Switch" type="button">
 					&lt;&#47;&gt;

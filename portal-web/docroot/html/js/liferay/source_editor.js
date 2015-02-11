@@ -39,7 +39,11 @@ AUI.add(
 
 		var TPL_FULL_SCREEN = '<div class="lfr-header-fullscreen">' +
 			'<div class="header-left">HTML</div>' +
-			'<div class="header-right"><span id="vertical">V</span> <span id="horizontal">H</span> <span id="simple">S</span> </div>'+
+			'<div class="header-right">' +
+				'<span id="vertical" class="icon-pause"></span>' +
+				'<span id="horizontal" class="icon-pause icon-rotate-90"></span>' +
+				'<span id="simple" class="icon-stop"></span>'+
+			'</div>'+
 		'</div>' +
 		'<div class="' + CSS_SOURCE_EDITOR_FULLSCREEN + ' vertical">' +
 			'<div class="content-html {cssPrefix}"> <div id="{sourceCodeId}" class="{cssCode}"></div> </div>' +
