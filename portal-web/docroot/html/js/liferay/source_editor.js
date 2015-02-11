@@ -9,6 +9,8 @@ AUI.add(
 
 		var CSS_DIALOG = 'fullscreen-dialog';
 
+		var CSS_PREFIX = 'lfr-source-editor';
+
 		var CSS_SOURCE_EDITOR_FULLSCREEN = 'lfr-source-editor-fullscreen';
 
 		var EVENT_FULLSCREEN_DONE = 'fullscreen-done';
@@ -40,7 +42,7 @@ AUI.add(
 			'<div class="header-right"><span id="vertical">V</span> <span id="horizontal">H</span> <span id="simple">S</span> </div>'+
 		'</div>' +
 		'<div class="' + CSS_SOURCE_EDITOR_FULLSCREEN + ' vertical">' +
-			'<div class="content-html"> <div id="{sourceCodeId}"></div> </div>' +
+			'<div class="content-html {cssPrefix}"> <div id="{sourceCodeId}" class="{cssCode}"></div> </div>' +
 			'<div class="splitter"></div>' +
 			'<div class="content-preview"> {preview} </div>'+
 		'</div>';
@@ -103,7 +105,7 @@ AUI.add(
 					}
 				},
 
-				CSS_PREFIX: 'lfr-source-editor',
+				CSS_PREFIX: CSS_PREFIX,
 
 				EXTENDS: A.AceEditor,
 
@@ -119,6 +121,8 @@ AUI.add(
 
 						aceEditor.setOptions(instance.get('aceOptions'));
 
+						instance._currentEditor = instance.getEditor();
+
 						instance._initializeThemes();
 						instance._highlightActiveGutterLine(0);
 					},
@@ -126,18 +130,11 @@ AUI.add(
 					bindUI: function() {
 						var instance = this;
 
-						var updateActiveLineFn = A.bind('_updateActiveLine', instance);
-
 						var aceEditor = instance.getEditor();
-
-						aceEditor.selection.on(STR_CHANGE_CURSOR, updateActiveLineFn);
-						aceEditor.session.on(STR_CHANGE_FOLD, updateActiveLineFn);
+						instance._bindAceEditorEvents(aceEditor);
 
 						var toolbar = instance.get(STR_BOUNDING_BOX).one(STR_DOT + instance.getClassName(STR_TOOLBAR));
-
-						instance._eventHandles = [
-							toolbar.delegate('click', A.bind('_onToolbarClick', instance), 'li[data-action]')
-						];
+						instance._bindToolbarEvents(toolbar);
 					},
 
 					destructor: function() {
@@ -200,6 +197,8 @@ AUI.add(
 						var templateContent = Lang.sub(
 							TPL_FULL_SCREEN,
 							{
+								cssCode: instance.getClassName(STR_CODE),
+								cssPrefix: CSS_PREFIX,
 								preview: instance.get(STR_VALUE),
 								sourceCodeId: sourceCodeId
 							}
@@ -212,7 +211,9 @@ AUI.add(
 								dialog: {
 									after: {
 										destroy: function() {
-											instance._editorFullScreen.destroy();
+											instance._currentEditor.destroy();
+
+											instance._currentEditor = instance.getEditor();
 										}
 									},
 									bodyContent: templateContent,
@@ -227,7 +228,7 @@ AUI.add(
 												label: Liferay.Language.get('done'),
 												on: {
 													click: function() {
-														var currentValue = instance._editorFullScreen.getValue();
+														var currentValue = instance._currentEditor.getValue();
 
 														instance.set(STR_VALUE, currentValue);
 
@@ -271,30 +272,13 @@ AUI.add(
 							function(dialog) {
 								fullScreenDialog = dialog;
 
-								var options = A.merge(
-									instance.get('aceOptions'),
-									{
-										mode: instance.get('mode').$id
-									}
-								);
-
-								var fullScreenEditor = ace.edit(A.one('#' + sourceCodeId).getDOM());
-
-								fullScreenEditor.setOptions(options);
-
-								fullScreenEditor.getSession().setValue(instance.get(STR_VALUE));
-
-								fullScreenEditor.getSession().on('change', A.debounce(A.bind(instance._refreshPreviewEntry, instance), 100));
-
-								instance._editorFullScreen = fullScreenEditor;
-
-								instance._attachFullScreenEvents();
+								instance._renderFullScreenEditor(sourceCodeId);
 							}
 						);
 					},
 
 					_attachFullScreenEvents: function() {
-						var dialogContainer = $(STR_DOT + CSS_DIALOG);
+						var dialogContainer = AUI.$(STR_DOT + CSS_DIALOG);
 
 						dialogContainer.find('.header-right span').bind(
 							'click',
@@ -310,8 +294,27 @@ AUI.add(
 						dialogContainer.find('.content-preview a').bind(
 							'click',
 							function(event) {
-								$(event.currentTarget).attr('target', '_blank');
+								AUI.$(event.currentTarget).attr('target', '_blank');
 							}
+						);
+					},
+
+					_bindAceEditorEvents: function(aceEditor) {
+						var instance = this;
+
+						var updateActiveLineFn = A.bind('_updateActiveLine', instance);
+
+						aceEditor.selection.on(STR_CHANGE_CURSOR, updateActiveLineFn);
+						aceEditor.session.on(STR_CHANGE_FOLD, updateActiveLineFn);
+					},
+
+					_bindToolbarEvents: function(toolbar) {
+						var instance = this;
+
+						instance._eventHandles = instance._eventHandles || [];
+
+						instance._eventHandles.push(
+							toolbar.delegate('click', A.bind('_onToolbarClick', instance), 'li[data-action]')
 						);
 					},
 
@@ -346,18 +349,48 @@ AUI.add(
 						return toolbarButtons;
 					},
 
+					_getThemeIcon: function(themeIndex) {
+						var instance = this;
+
+						var themes = instance.get(STR_THEMES);
+
+						return themes[(themeIndex + 1) % themes.length].iconCssClass;
+					},
+
 					_highlightActiveGutterLine: function(line) {
 						var instance = this;
 
-						var session = instance.getSession();
+						var editor = instance._currentEditor;
 
-						if (instance._currentLine !== null) {
-							session.removeGutterDecoration(instance._currentLine, CSS_ACTIVE_CELL);
+						var session = editor.getSession();
+
+						if (editor._currentLine !== null) {
+							session.removeGutterDecoration(editor._currentLine, CSS_ACTIVE_CELL);
 						}
 
 						session.addGutterDecoration(line, CSS_ACTIVE_CELL);
 
-						instance._currentLine = line;
+						editor._currentLine = line;
+					},
+
+					_initializeFullScreenTheme: function() {
+						var instance = this;
+
+						var themes = instance.get(STR_THEMES);
+
+						var currentThemeIndex = instance._currentThemeIndex || 0;
+
+						var currentTheme = themes[currentThemeIndex];
+
+						if (currentTheme) {
+							var boundingBox = AUI.$(instance._currentEditor.container).parent();
+
+							boundingBox.addClass(currentTheme.cssClass);
+
+							var themeIcon = instance._getThemeIcon(currentThemeIndex);
+
+							boundingBox.find(STR_DOT + instance.getClassName(STR_TOOLBAR) + ' i').attr('class', themeIcon);
+						}
 					},
 
 					_initializeThemes: function() {
@@ -385,9 +418,51 @@ AUI.add(
 					_refreshPreviewEntry: function() {
 						var instance = this;
 
-						var fullScreenEditor = instance._editorFullScreen;
+						AUI.$('.content-preview').html(instance._currentEditor.getValue());
+					},
 
-						A.one('.content-preview').html(fullScreenEditor.getValue());
+					_renderFullScreenEditor: function(sourceCodeId) {
+						var instance = this;
+
+						var options = A.merge(
+							instance.get('aceOptions'),
+							{
+								mode: instance.get('mode').$id
+							}
+						);
+
+						var fullScreenEditor = ace.edit(A.one('#' + sourceCodeId).getDOM());
+
+						fullScreenEditor.setOptions(options);
+
+						fullScreenEditor.getSession().setValue(instance.get(STR_VALUE));
+
+						fullScreenEditor.getSession().on('change', A.debounce(A.bind(instance._refreshPreviewEntry, instance), 100));
+
+						instance._currentEditor = fullScreenEditor;
+
+						AUI.$('.content-html').append(
+							Lang.sub(
+								TPL_TOOLBAR,
+								{
+									buttons: instance._getButtonsMarkup(),
+									cssClass: instance.getClassName(STR_TOOLBAR)
+								}
+							)
+						);
+
+						instance._bindAceEditorEvents(fullScreenEditor);
+
+						var dialogContainer = A.one(STR_DOT + CSS_DIALOG);
+						var toolbar = dialogContainer.one(STR_DOT + instance.getClassName(STR_TOOLBAR));
+
+						instance._bindToolbarEvents(toolbar);
+
+						instance._attachFullScreenEvents();
+
+						instance._initializeFullScreenTheme();
+
+						instance._highlightActiveGutterLine(0);
 					},
 
 					_switchTheme: function(themeSelector) {
@@ -402,23 +477,25 @@ AUI.add(
 						var currentTheme = themes[currentThemeIndex];
 						var nextTheme = themes[nextThemeIndex];
 
-						var nextThemeIcon = themes[(currentThemeIndex + 2) % themes.length].iconCssClass;
+						var nextThemeIcon = instance._getThemeIcon(nextThemeIndex);
 
 						themeSelector.attr(STR_DATA_CURRENT_THEME, nextThemeIndex);
 
 						themeSelector.one('i').replaceClass(nextTheme.iconCssClass, nextThemeIcon);
 
-						var boundingBox = instance.get(STR_BOUNDING_BOX);
+						var boundingBox = A.one(instance._currentEditor.container).get('parentNode');
 
 						boundingBox.replaceClass(currentTheme.cssClass, nextTheme.cssClass);
+
+						instance._currentThemeIndex = nextThemeIndex;
 					},
 
 					_updateActiveLine: function() {
 						var instance = this;
 
-						var line = instance.getEditor().getCursorPosition().row;
+						var line = instance._currentEditor.getCursorPosition().row;
 
-						var session = instance.getSession();
+						var session = instance._currentEditor.getSession();
 
 						if (session.isRowFolded(line)) {
 							line = session.getRowFoldStart(line);
