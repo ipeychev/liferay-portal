@@ -900,8 +900,8 @@ input.switch {
 	padding-top: 10px;
 	width: 100%;
 
-	.content-html .ace-editor {
-		height: 100% !important;
+	.ace_editor {
+		height: 100%;
 	}
 
 	.splitter {
@@ -939,6 +939,7 @@ input.switch {
 
 		.content-html {
 			height: 50%;
+			margin-bottom: 5px;
 		}
 
 		.splitter {
@@ -952,6 +953,7 @@ input.switch {
 
 	&.simple {
 		.content-html {
+			height: 100%;
 			width: 100%;
 		}
 

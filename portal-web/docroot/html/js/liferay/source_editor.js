@@ -7,6 +7,10 @@ AUI.add(
 
 		var CSS_ACTIVE_CELL = 'ace_gutter-active-cell';
 
+		var CSS_CONTENT_HTML = 'content-html';
+
+		var CSS_CONTENT_PREVIEW = 'content-preview';
+
 		var CSS_DIALOG = 'fullscreen-dialog';
 
 		var CSS_PREFIX = 'lfr-source-editor';
@@ -46,9 +50,9 @@ AUI.add(
 			'</div>'+
 		'</div>' +
 		'<div class="' + CSS_SOURCE_EDITOR_FULLSCREEN + ' vertical">' +
-			'<div class="content-html {cssPrefix}"> <div id="{sourceCodeId}" class="{cssCode}"></div> </div>' +
+			'<div class="' + CSS_CONTENT_HTML +' {cssPrefix}"> <div id="{sourceCodeId}" class="{cssCode}"></div> </div>' +
 			'<div class="splitter"></div>' +
-			'<div class="content-preview"> {preview} </div>'+
+			'<div class="' + CSS_CONTENT_PREVIEW + '"> {preview} </div>'+
 		'</div>';
 
 		var TPL_THEME_BUTTON = '<li data-action="{action}"><button type="button" class="btn btn-default btn-lg"><i class="{iconCssClass}"></i></button></li>';
@@ -58,6 +62,21 @@ AUI.add(
 		var LiferaySourceEditor = A.Component.create(
 			{
 				ATTRS: {
+					aceFullScreenOptions: {
+						validator: Lang.isObject,
+						valueFn: function() {
+							var instance = this;
+
+							var aceEditor = instance.getEditor();
+
+							return {
+								fontSize: 13,
+								showInvisibles: false,
+								showPrintMargin: false
+							};
+						}
+					},
+
 					aceOptions: {
 						validator: Lang.isObject,
 						valueFn: function() {
@@ -85,6 +104,11 @@ AUI.add(
 							return Lang.isString(value) || Lang.isNumber(value);
 						},
 						value: 'auto'
+					},
+
+					previewDelay: {
+						validator: Lang.isNumber,
+						value: 100
 					},
 
 					themes: {
@@ -282,6 +306,8 @@ AUI.add(
 					},
 
 					_attachFullScreenEvents: function() {
+						var instance = this;
+
 						var dialogContainer = AUI.$(STR_DOT + CSS_DIALOG);
 
 						dialogContainer.find('.header-right span').bind(
@@ -292,10 +318,12 @@ AUI.add(
 								dialogContainer
 									.find(STR_DOT + CSS_SOURCE_EDITOR_FULLSCREEN)
 									.attr('class', CSS_SOURCE_EDITOR_FULLSCREEN + ' ' + alignment);
-								}
+
+								instance._currentEditor.resize();
+							}
 						);
 
-						dialogContainer.find('.content-preview a').bind(
+						dialogContainer.find(STR_DOT + CSS_CONTENT_PREVIEW + ' a').on(
 							'click',
 							function(event) {
 								AUI.$(event.currentTarget).attr('target', '_blank');
@@ -422,14 +450,14 @@ AUI.add(
 					_refreshPreviewEntry: function() {
 						var instance = this;
 
-						AUI.$('.content-preview').html(instance._currentEditor.getValue());
+						AUI.$(STR_DOT + CSS_CONTENT_PREVIEW).html(instance._currentEditor.getValue());
 					},
 
 					_renderFullScreenEditor: function(sourceCodeId) {
 						var instance = this;
 
 						var options = A.merge(
-							instance.get('aceOptions'),
+							instance.get('aceFullScreenOptions'),
 							{
 								mode: instance.get('mode').$id
 							}
@@ -441,11 +469,13 @@ AUI.add(
 
 						fullScreenEditor.getSession().setValue(instance.get(STR_VALUE));
 
-						fullScreenEditor.getSession().on('change', A.debounce(A.bind(instance._refreshPreviewEntry, instance), 100));
+						var onChangeFn = A.bind(instance._refreshPreviewEntry, instance);
 
-						instance._currentEditor = fullScreenEditor;
+						fullScreenEditor.getSession().on('change', A.debounce(onChangeFn, instance.get('previewDelay')));
 
-						AUI.$('.content-html').append(
+						instance._currentEditor = fullScreenEditor; window.fseditor = fullScreenEditor;
+
+						AUI.$(STR_DOT + CSS_CONTENT_HTML).append(
 							Lang.sub(
 								TPL_TOOLBAR,
 								{
