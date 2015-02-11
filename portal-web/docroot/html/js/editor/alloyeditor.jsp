@@ -32,6 +32,8 @@ String contents = (String)request.getAttribute("liferay-ui:input-editor:contents
 String contentsLanguageId = (String)request.getAttribute("liferay-ui:input-editor:contentsLanguageId");
 String cssClass = GetterUtil.getString((String)request.getAttribute("liferay-ui:input-editor:cssClass"));
 Map<String, Object> data = (Map<String, Object>)request.getAttribute("liferay-ui:input-editor:data");
+JSONObject editorOptions = (data != null) ? (JSONObject) data.get("editorOptions") : null;
+
 String editorImpl = (String)request.getAttribute("liferay-ui:input-editor:editorImpl");
 Map<String, String> fileBrowserParamsMap = (Map<String, String>)request.getAttribute("liferay-ui:input-editor:fileBrowserParams");
 String name = namespace + GetterUtil.getString((String)request.getAttribute("liferay-ui:input-editor:name")) + "Editor";
@@ -128,6 +130,8 @@ boolean skipEditorLoading = GetterUtil.getBoolean((String)request.getAttribute("
 	<c:choose>
 		<c:when test="<%= showSource %>">
 			<div class="alloy-editor-switch">
+				<button class="btn btn-default btn-xs hide icon-fullscreen" id="<%= name %>Fullscreen" type="button">
+				</button>
 				<button class="btn btn-default btn-xs" id="<%= name %>Switch" type="button">
 					&lt;&#47;&gt;
 				</button>
@@ -156,7 +160,6 @@ boolean skipEditorLoading = GetterUtil.getBoolean((String)request.getAttribute("
 </div>
 
 <aui:script use="aui-base,alloy-editor,liferay-editor-image-uploader">
-
 	<%
 	Locale contentsLocale = LocaleUtil.fromLanguageId(contentsLanguageId);
 
@@ -327,12 +330,13 @@ boolean skipEditorLoading = GetterUtil.getBoolean((String)request.getAttribute("
 
 			var editorWrapper = A.one('#<%= name %>Wrapper');
 			var editorSwitch = A.one('#<%= name %>Switch');
-
 			var editorSwitchContainer = editorSwitch.ancestor();
+			var editorFullscreen = A.one('#<%= name %>Fullscreen');
 
 			var toggleEditorModeUI = function() {
 				editorWrapper.toggleClass(CSS_SHOW_SOURCE);
 				editorSwitchContainer.toggleClass(CSS_SHOW_SOURCE);
+				editorFullscreen.toggleClass('hide');
 
 				editorSwitch.setHTML(editorWrapper.hasClass(CSS_SHOW_SOURCE) ? 'abc' : '&lt;/&gt;');
 			};
@@ -344,10 +348,13 @@ boolean skipEditorLoading = GetterUtil.getBoolean((String)request.getAttribute("
 						var sourceEditor = new A.LiferaySourceEditor(
 							{
 								boundingBox: A.one('#<%= name %>Source'),
+								fullScreenTitle: '<%= Validator.isNotNull(editorOptions) ? editorOptions.getString("fullScreenTitle") : " " %>',
 								mode: 'html',
 								value: window['<%= name %>'].getHTML()
 							}
 						).render();
+
+						sourceEditor.on('fullscreen-done', switchMode);
 
 						toggleEditorModeUI();
 
@@ -356,30 +363,44 @@ boolean skipEditorLoading = GetterUtil.getBoolean((String)request.getAttribute("
 				);
 			};
 
-			editorSwitch.on(
+			var switchMode = function() {
+				var editor = Liferay.component('<%= name %>Source');
+
+				if (editorWrapper.hasClass(CSS_SHOW_SOURCE)) {
+					if (editor) {
+						window['<%= name %>'].setHTML(editor.get(STR_VALUE));
+					}
+
+					toggleEditorModeUI();
+				}
+				else if (editor) {
+					var currentContent = window['<%= name %>'].getHTML();
+
+					if (currentContent !== editor.get(STR_VALUE)) {
+						editor.set(STR_VALUE, currentContent);
+					}
+
+					toggleEditorModeUI();
+				}
+				else {
+					createSourceEditor();
+				}
+			};
+
+			editorSwitch.on('click', switchMode);
+
+			editorFullscreen.on(
 				'click',
 				function(event) {
 					var editor = Liferay.component('<%= name %>Source');
 
-					if (editorWrapper.hasClass(CSS_SHOW_SOURCE)) {
-						if (editor) {
-							window['<%= name %>'].setHTML(editor.get(STR_VALUE));
-						}
+					var currentContent = window['<%= name %>'].getHTML();
 
-						toggleEditorModeUI();
+					if (currentContent !== editor.get(STR_VALUE)) {
+						editor.set(STR_VALUE, currentContent);
 					}
-					else if (editor) {
-						var currentContent = window['<%= name %>'].getHTML();
 
-						if (currentContent !== editor.get(STR_VALUE)) {
-							editor.set(STR_VALUE, currentContent);
-						}
-
-						toggleEditorModeUI();
-					}
-					else {
-						createSourceEditor();
-					}
+					editor.openFullScreen();
 				}
 			);
 		</c:if>
