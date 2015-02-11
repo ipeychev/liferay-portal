@@ -17,9 +17,9 @@ AUI.add(
 
 		var CSS_SOURCE_EDITOR_FULLSCREEN = 'lfr-source-editor-fullscreen';
 
-		var EVENT_FULLSCREEN_DONE = 'fullscreen-done';
-
 		var EVENT_FULLSCREEN_CANCEL = 'fullscreen-cancel';
+
+		var EVENT_FULLSCREEN_DONE = 'fullscreen-done';
 
 		var STR_BOUNDING_BOX = 'boundingBox';
 
@@ -33,11 +33,11 @@ AUI.add(
 
 		var STR_DOT = '.';
 
-		var STR_VALUE = 'value';
-
 		var STR_THEMES = 'themes';
 
 		var STR_TOOLBAR = 'toolbar';
+
+		var STR_VALUE = 'value';
 
 		var TPL_CODE_CONTAINER = '<div class="{cssClass}"></div>';
 
@@ -159,9 +159,11 @@ AUI.add(
 						var instance = this;
 
 						var aceEditor = instance.getEditor();
+
 						instance._bindAceEditorEvents(aceEditor);
 
 						var toolbar = instance.get(STR_BOUNDING_BOX).one(STR_DOT + instance.getClassName(STR_TOOLBAR));
+
 						instance._bindToolbarEvents(toolbar);
 					},
 
@@ -355,7 +357,7 @@ AUI.add(
 
 						A.setTimeout(
 							function() {
-								instance.fire(eventName)
+								instance.fire(eventName);
 							},
 							0
 						);
