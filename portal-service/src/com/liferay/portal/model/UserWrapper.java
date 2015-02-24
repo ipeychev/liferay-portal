@@ -367,6 +367,11 @@ public class UserWrapper implements User, ModelWrapper<User> {
 		return _user.compareTo(user);
 	}
 
+	@Override
+	public com.liferay.portal.model.Contact fetchContact() {
+		return _user.fetchContact();
+	}
+
 	/**
 	* Returns the user's addresses.
 	*
@@ -1293,6 +1298,18 @@ public class UserWrapper implements User, ModelWrapper<User> {
 	@Override
 	public java.lang.String getTimeZoneId() {
 		return _user.getTimeZoneId();
+	}
+
+	@Override
+	public java.util.Date getUnlockDate()
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return _user.getUnlockDate();
+	}
+
+	@Override
+	public java.util.Date getUnlockDate(
+		com.liferay.portal.model.PasswordPolicy passwordPolicy) {
+		return _user.getUnlockDate(passwordPolicy);
 	}
 
 	@Override

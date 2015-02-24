@@ -124,6 +124,24 @@
 		</sequential>
 	</macrodef>
 
+	<macrodef name="get-auto-deploy-dir">
+		<sequential>
+			<var name="auto.deploy.dir" unset="true" />
+
+			<get-testcase-property property.name="plugins.deployment.type" />
+
+			<if>
+				<equals arg1="${plugins.deployment.type}" arg2="osgi" />
+				<then>
+					<var name="auto.deploy.dir" value="${liferay.home}/osgi/modules" />
+				</then>
+				<else>
+					<var name="auto.deploy.dir" value="${liferay.home}/deploy" />
+				</else>
+			</if>
+		</sequential>
+	</macrodef>
+
 	<macrodef name="get-database-property">
 		<attribute name="property.name" />
 
@@ -149,6 +167,455 @@
 					propertyValue = project.getProperty(sb.toString());
 
 					project.setProperty(propertyName, propertyValue);
+				]]>
+			</script>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="get-env-app-server">
+		<sequential>
+			<propertyregex
+				input="${app.server.version}"
+				override="true"
+				property="app.server.major.version"
+				regexp="(\d+\.\d+).*"
+				replace="\1"
+			/>
+
+			<propertyregex
+				defaultValue="${app.server.major.version}"
+				global="true"
+				input="${app.server.major.version}"
+				override="true"
+				property="app.server.major.version.build"
+				regexp="\."
+				replace=""
+			/>
+
+			<propertycopy
+				from="env.option.app.server.${app.server.type}${app.server.major.version.build}"
+				name="env.option.app.server"
+				override="true"
+			/>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="get-env-browser">
+		<sequential>
+			<propertyregex
+				input="${browser.version}"
+				override="true"
+				property="browser.major.version"
+				regexp="(\d+\.\d+).*"
+				replace="\1"
+			/>
+
+			<propertyregex
+				defaultValue="${browser.major.version}"
+				global="true"
+				input="${browser.major.version}"
+				override="true"
+				property="browser.major.version.build"
+				regexp="\."
+				replace=""
+			/>
+
+			<propertycopy
+				from="env.option.browser.${browser.type}${browser.major.version.build}"
+				name="env.option.browser"
+				override="true"
+			/>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="get-env-database">
+		<sequential>
+			<get-database-property property.name="database.version" />
+
+			<propertyregex
+				input="${database.version}"
+				override="true"
+				property="database.major.version"
+				regexp="(\d+\.?\d+?).*"
+				replace="\1"
+			/>
+
+			<propertyregex
+				defaultValue="${database.major.version}"
+				global="true"
+				input="${database.major.version}"
+				override="true"
+				property="database.major.version.build"
+				regexp="\."
+				replace=""
+			/>
+
+			<propertycopy
+				from="env.option.database.${database.type}${database.major.version.build}"
+				name="env.option.database"
+				override="true"
+			/>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="get-env-java-jdk">
+		<sequential>
+			<propertycopy
+				from="env.option.java.jdk.${java.jdk.type}.${java.jdk.version}"
+				name="env.option.java.jdk"
+				override="true"
+			/>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="get-env-liferay-portal">
+		<sequential>
+			<loadfile
+				property="liferay.plugins.git.id"
+				srcfile="git-commit-plugins"
+			/>
+
+			<loadfile
+				property="liferay.portal.git.id"
+				srcfile="git-commit-portal"
+			/>
+
+			<if>
+				<or>
+					<not>
+						<isset property="env.SOURCE_JOB_BUILD_NUMBER" />
+					</not>
+					<equals arg1="${env.SOURCE_JOB_BUILD_NUMBER}" arg2="1" />
+				</or>
+				<then>
+					<property name="liferay.previous.plugins.git.id" value="${liferay.plugins.git.id}" />
+					<property name="liferay.previous.portal.git.id" value="${liferay.portal.git.id}" />
+				</then>
+				<else>
+					<math
+						datatype="int"
+						operand1="${env.SOURCE_JOB_BUILD_NUMBER}"
+						operand2="1"
+						operation="-"
+						result="previous.build.number"
+					/>
+
+					<property name="previous.commit.id.dir" value="${jenkins.shared.user.content.dir}/jobs/${env.SOURCE_JOB_NAME}/builds/${previous.build.number}" />
+
+					<loadfile failonerror="false" property="liferay.previous.plugins.git.id" srcfile="${previous.commit.id.dir}/git-commit-plugins">
+						<filterchain>
+							<striplinebreaks/>
+						</filterchain>
+					</loadfile>
+
+					<loadfile failonerror="false" property="liferay.previous.portal.git.id" srcfile="${previous.commit.id.dir}/git-commit-portal">
+						<filterchain>
+							<striplinebreaks/>
+						</filterchain>
+					</loadfile>
+				</else>
+			</if>
+
+			<property name="liferay.compare.urls" value="https://github.com/liferay/liferay-plugins-ee/compare/${liferay.previous.plugins.git.id}...${liferay.plugins.git.id},https://github.com/liferay/liferay-portal-ee/compare/${liferay.previous.portal.git.id}...${liferay.portal.git.id}" />
+		</sequential>
+	</macrodef>
+
+	<macrodef name="get-env-operating-system">
+		<sequential>
+			<propertyregex
+				defaultValue="${operating.system.version}"
+				global="true"
+				input="${operating.system.version}"
+				override="true"
+				property="operating.system.version.build"
+				regexp="\."
+				replace=""
+			/>
+
+			<propertycopy
+				from="env.option.operating.system.${operating.system.type}${operating.system.version.build}"
+				name="env.option.operating.system"
+				override="true"
+			/>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="get-test-class-name">
+		<sequential>
+			<fail message="Please set the property ${test.class}" unless="test.class" />
+
+			<var name="test.class.name" unset="true" />
+
+			<get-test-name />
+
+			<script classpathref="project.classpath" language="beanshell">
+				<![CDATA[
+					import org.apache.tools.ant.DirectoryScanner;
+
+					String testName = project.getProperty("test.name");
+
+					try {
+						DirectoryScanner directoryScanner = new DirectoryScanner();
+
+						if (project.getProperty("test.basedir") != null) {
+							directoryScanner.setBasedir(project.getProperty("test.basedir"));
+						}
+						else {
+							directoryScanner.setBasedir(project.getBaseDir());
+						}
+
+						directoryScanner.setIncludes(new String[] {"**/test/functional/**/" + testName + ".testcase"});
+
+						directoryScanner.scan();
+
+						String[] fileNames = directoryScanner.getIncludedFiles();
+
+						String fileName = fileNames[0];
+
+						int x = fileName.indexOf("/test/functional/") + 17;
+
+						String className = fileName.substring(x);
+
+						className = className.replaceAll("/", ".");
+						className = className.replaceAll(".testcase", "TestCase");
+
+						project.setProperty("test.class.name", className);
+					}
+					catch (Exception e) {
+					}
+				]]>
+			</script>
+
+			<fail message="${test.name}.testcase does not exist." unless="test.class.name" />
+		</sequential>
+	</macrodef>
+
+	<macrodef name="get-test-method-name">
+		<sequential>
+			<fail message="Please set the property ${test.class}" unless="test.class" />
+
+			<var name="test.method.name" unset="true" />
+
+			<script classpathref="project.classpath" language="beanshell">
+				<![CDATA[
+					String testClass = project.getProperty("test.class");
+
+					int x = testClass.indexOf("#");
+
+					if (x != -1) {
+						String testMethodName = testClass.substring(x + 1);
+
+						if (!testMethodName.startsWith("test")) {
+							testMethodName = "test" + testMethodName;
+						}
+
+						project.setProperty("test.method.name", testMethodName);
+					}
+				]]>
+			</script>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="get-test-name">
+		<sequential>
+			<fail message="Please set the property ${test.class}" unless="test.class" />
+
+			<var name="test.name" unset="true" />
+
+			<get-test-simple-class-name />
+
+			<script classpathref="project.classpath" language="beanshell">
+				<![CDATA[
+					String testSimpleClassName = project.getProperty("test.simple.class.name");
+
+					String testName = testSimpleClassName.substring(0, testSimpleClassName.length() - 8);
+
+					project.setProperty("test.name", testName);
+				]]>
+			</script>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="get-testcase-property">
+		<attribute name="property.name" />
+
+		<sequential>
+			<fail message="Please set the property ${test.class}" unless="test.class" />
+
+			<property file="${project.dir}/test.generated.properties" />
+
+			<var name="property.name" unset="true" />
+			<var name="@{property.name}" unset="true" />
+
+			<property name="property.name" value="@{property.name}" />
+
+			<get-test-method-name />
+			<get-test-simple-class-name />
+
+			<script classpathref="project.classpath" language="beanshell">
+				<![CDATA[
+					String propertyName = project.getProperty("property.name");
+					String testMethodName = project.getProperty("test.method.name");
+					String testSimpleClassName = project.getProperty("test.simple.class.name");
+
+					StringBuilder sb = new StringBuilder();
+
+					sb.append(testSimpleClassName);
+					sb.append(".");
+					sb.append(testMethodName);
+					sb.append(".");
+					sb.append(propertyName);
+
+					String propertyValue = project.getProperty(sb.toString());
+
+					if (propertyValue == null) {
+						sb = new StringBuilder();
+
+						sb.append(testSimpleClassName);
+						sb.append(".");
+						sb.append("all");
+						sb.append(".");
+						sb.append(propertyName);
+
+						propertyValue = project.getProperty(sb.toString());
+					}
+
+					project.setProperty(propertyName, propertyValue);
+				]]>
+			</script>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="get-testray-components">
+		<sequential>
+			<property file="${basedir}/test.run.properties" />
+
+			<if>
+				<not>
+					<isset property="testray.main.component.name" />
+				</not>
+				<then>
+					<property name="testray.main.component.name" value="" />
+				</then>
+			</if>
+
+			<if>
+				<not>
+					<isset property="testray.component.names" />
+				</not>
+				<then>
+					<property name="testray.component.names" value="${testray.main.component.name}" />
+				</then>
+			</if>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="get-testray-logs">
+		<sequential>
+			<if>
+				<isset property="jenkins.testray.results.dir" />
+				<then>
+					<antelope:stringutil property="job.name" string="${env.JOB_NAME}">
+						<antelope:replace regex="," replacement="_" />
+					</antelope:stringutil>
+
+					<property name="testray.logs.dir" value="${jenkins.testray.results.dir}/logs/${job.name}/builds/${env.TOP_LEVEL_BUILD_NUMBER}" />
+
+					<property name="testray.logs.console" value="${testray.logs.dir}/console.txt" />
+					<property name="testray.logs.report" value="${testray.logs.dir}/report.html" />
+				</then>
+				<else>
+					<property name="testray.logs.console" value="" />
+					<property name="testray.logs.report" value="" />
+				</else>
+			</if>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="get-testray-project-name">
+		<sequential>
+			<propertyregex
+				input="${testray.product.version}"
+				override="true"
+				property="testray.product.major.version"
+				regexp="(\d+\.?\d+?).*"
+				replace="\1"
+			/>
+
+			<propertyregex
+				defaultValue="${testray.product.major.version}"
+				global="true"
+				input="${testray.product.major.version}"
+				override="true"
+				property="testray.product.major.version.build"
+				regexp="\."
+				replace=""
+			/>
+
+			<propertycopy
+				from="testray.project.${testray.product.type}${testray.product.major.version.build}.name"
+				name="testray.project.name"
+				override="true"
+			/>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="get-testray-team-name">
+		<sequential>
+			<script classpathref="project.classpath" language="beanshell">
+				<![CDATA[
+					import org.apache.commons.lang.WordUtils;
+
+					String testrayMainComponentName = project.getProperty("testray.main.component.name");
+					String testrayTeamNamesString = project.getProperty("testray.team.names");
+
+					String[] testrayTeamNames = testrayTeamNamesString.split(",");
+
+					for (String testrayTeamName : testrayTeamNames) {
+						StringBuilder sb = new StringBuilder();
+
+						sb.append("testray.team.");
+						sb.append(testrayTeamName);
+						sb.append(".component.names");
+
+						String testrayTeamComponentNamesString = project.getProperty(sb.toString());
+
+						Set testrayTeamComponentNames = new HashSet(Arrays.asList(testrayTeamComponentNamesString.split(",")));
+
+						if (testrayTeamComponentNames.contains(testrayMainComponentName)) {
+							project.setProperty("testray.team.name", WordUtils.capitalize(testrayTeamName.replace('-', ' ')));
+
+							break;
+						}
+					}
+				]]>
+			</script>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="get-test-simple-class-name">
+		<sequential>
+			<fail message="Please set the property ${test.class}" unless="test.class" />
+
+			<var name="test.simple.class.name" unset="true" />
+
+			<script classpathref="project.classpath" language="beanshell">
+				<![CDATA[
+					String testClass = project.getProperty("test.class");
+
+					String testSimpleClassName = testClass;
+
+					if (testClass.contains("#")) {
+						int x = testClass.indexOf("#");
+
+						testSimpleClassName =  testClass.substring(0, x);
+					}
+
+					if (!testSimpleClassName.endsWith("TestCase")) {
+						testSimpleClassName = testSimpleClassName + "TestCase";
+					}
+
+					project.setProperty("test.simple.class.name", testSimpleClassName);
 				]]>
 			</script>
 		</sequential>
@@ -454,281 +921,6 @@
 					<var name="app.server.bundle.index" unset="true" />
 				</then>
 			</if>
-		</sequential>
-	</macrodef>
-
-	<macrodef name="record-env-app-server">
-		<sequential>
-			<propertyregex
-				input="${app.server.version}"
-				override="true"
-				property="app.server.major.version"
-				regexp="(\d+\.\d+).*"
-				replace="\1"
-			/>
-
-			<propertyregex
-				defaultValue="${app.server.major.version}"
-				global="true"
-				input="${app.server.major.version}"
-				override="true"
-				property="app.server.major.version.build"
-				regexp="\."
-				replace=""
-			/>
-
-			<propertycopy
-				from="env.option.app.server.${app.server.type}${app.server.major.version.build}"
-				name="env.option.app.server"
-				override="true"
-			/>
-		</sequential>
-	</macrodef>
-
-	<macrodef name="record-env-browser">
-		<sequential>
-			<propertyregex
-				input="${browser.version}"
-				override="true"
-				property="browser.major.version"
-				regexp="(\d+\.\d+).*"
-				replace="\1"
-			/>
-
-			<propertyregex
-				defaultValue="${browser.major.version}"
-				global="true"
-				input="${browser.major.version}"
-				override="true"
-				property="browser.major.version.build"
-				regexp="\."
-				replace=""
-			/>
-
-			<propertycopy
-				from="env.option.browser.${browser.type}${browser.major.version.build}"
-				name="env.option.browser"
-				override="true"
-			/>
-		</sequential>
-	</macrodef>
-
-	<macrodef name="record-env-database">
-		<sequential>
-			<get-database-property property.name="database.version" />
-
-			<propertyregex
-				input="${database.version}"
-				override="true"
-				property="database.major.version"
-				regexp="(\d+\.?\d+?).*"
-				replace="\1"
-			/>
-
-			<propertyregex
-				defaultValue="${database.major.version}"
-				global="true"
-				input="${database.major.version}"
-				override="true"
-				property="database.major.version.build"
-				regexp="\."
-				replace=""
-			/>
-
-			<propertycopy
-				from="env.option.database.${database.type}${database.major.version.build}"
-				name="env.option.database"
-				override="true"
-			/>
-		</sequential>
-	</macrodef>
-
-	<macrodef name="record-env-java-jdk">
-		<sequential>
-			<propertycopy
-				from="env.option.java.jdk.${java.jdk.type}.${java.jdk.version}"
-				name="env.option.java.jdk"
-				override="true"
-			/>
-		</sequential>
-	</macrodef>
-
-	<macrodef name="record-env-liferay-portal">
-		<sequential>
-			<loadfile
-				property="liferay.plugins.git.id"
-				srcfile="git-commit-plugins"
-			/>
-
-			<loadfile
-				property="liferay.portal.git.id"
-				srcfile="git-commit-portal"
-			/>
-
-			<if>
-				<or>
-					<not>
-						<isset property="env.SOURCE_JOB_BUILD_NUMBER" />
-					</not>
-					<equals arg1="${env.SOURCE_JOB_BUILD_NUMBER}" arg2="1" />
-				</or>
-				<then>
-					<property name="liferay.previous.plugins.git.id" value="${liferay.plugins.git.id}" />
-					<property name="liferay.previous.portal.git.id" value="${liferay.portal.git.id}" />
-				</then>
-				<else>
-					<math
-						datatype="int"
-						operand1="${env.SOURCE_JOB_BUILD_NUMBER}"
-						operand2="1"
-						operation="-"
-						result="previous.build.number"
-					/>
-
-					<property name="previous.commit.id.dir" value="${jenkins.shared.user.content.dir}/jobs/${env.SOURCE_JOB_NAME}/builds/${previous.build.number}" />
-
-					<loadfile failonerror="false" property="liferay.previous.plugins.git.id" srcfile="${previous.commit.id.dir}/git-commit-plugins">
-						<filterchain>
-							<striplinebreaks/>
-						</filterchain>
-					</loadfile>
-
-					<loadfile failonerror="false" property="liferay.previous.portal.git.id" srcfile="${previous.commit.id.dir}/git-commit-portal">
-						<filterchain>
-							<striplinebreaks/>
-						</filterchain>
-					</loadfile>
-				</else>
-			</if>
-
-			<property name="liferay.compare.urls" value="https://github.com/liferay/liferay-plugins-ee/compare/${liferay.previous.plugins.git.id}...${liferay.plugins.git.id},https://github.com/liferay/liferay-portal-ee/compare/${liferay.previous.portal.git.id}...${liferay.portal.git.id}" />
-		</sequential>
-	</macrodef>
-
-	<macrodef name="record-env-operating-system">
-		<sequential>
-			<propertyregex
-				defaultValue="${operating.system.version}"
-				global="true"
-				input="${operating.system.version}"
-				override="true"
-				property="operating.system.version.build"
-				regexp="\."
-				replace=""
-			/>
-
-			<propertycopy
-				from="env.option.operating.system.${operating.system.type}${operating.system.version.build}"
-				name="env.option.operating.system"
-				override="true"
-			/>
-		</sequential>
-	</macrodef>
-
-	<macrodef name="record-testray-components">
-		<sequential>
-			<property file="${basedir}/test.run.properties" />
-
-			<if>
-				<not>
-					<isset property="testray.main.component.name" />
-				</not>
-				<then>
-					<property name="testray.main.component.name" value="" />
-				</then>
-			</if>
-
-			<if>
-				<not>
-					<isset property="testray.component.names" />
-				</not>
-				<then>
-					<property name="testray.component.names" value="${testray.main.component.name}" />
-				</then>
-			</if>
-		</sequential>
-	</macrodef>
-
-	<macrodef name="record-testray-logs">
-		<sequential>
-			<if>
-				<isset property="jenkins.testray.results.dir" />
-				<then>
-					<antelope:stringutil property="job.name" string="${env.JOB_NAME}">
-						<antelope:replace regex="," replacement="_" />
-					</antelope:stringutil>
-
-					<property name="testray.logs.dir" value="${jenkins.testray.results.dir}/logs/${job.name}/builds/${env.TOP_LEVEL_BUILD_NUMBER}" />
-
-					<property name="testray.logs.console" value="${testray.logs.dir}/console.txt" />
-					<property name="testray.logs.report" value="${testray.logs.dir}/report.html" />
-				</then>
-				<else>
-					<property name="testray.logs.console" value="" />
-					<property name="testray.logs.report" value="" />
-				</else>
-			</if>
-		</sequential>
-	</macrodef>
-
-	<macrodef name="record-testray-project-name">
-		<sequential>
-			<propertyregex
-				input="${testray.product.version}"
-				override="true"
-				property="testray.product.major.version"
-				regexp="(\d+\.?\d+?).*"
-				replace="\1"
-			/>
-
-			<propertyregex
-				defaultValue="${testray.product.major.version}"
-				global="true"
-				input="${testray.product.major.version}"
-				override="true"
-				property="testray.product.major.version.build"
-				regexp="\."
-				replace=""
-			/>
-
-			<propertycopy
-				from="testray.project.${testray.product.type}${testray.product.major.version.build}.name"
-				name="testray.project.name"
-				override="true"
-			/>
-		</sequential>
-	</macrodef>
-
-	<macrodef name="record-testray-team-name">
-		<sequential>
-			<script classpathref="project.classpath" language="beanshell">
-				<![CDATA[
-					import org.apache.commons.lang.WordUtils;
-
-					String testrayMainComponentName = project.getProperty("testray.main.component.name");
-					String testrayTeamNamesString = project.getProperty("testray.team.names");
-
-					String[] testrayTeamNames = testrayTeamNamesString.split(",");
-
-					for (String testrayTeamName : testrayTeamNames) {
-						StringBuilder sb = new StringBuilder();
-
-						sb.append("testray.team.");
-						sb.append(testrayTeamName);
-						sb.append(".component.names");
-
-						String testrayTeamComponentNamesString = project.getProperty(sb.toString());
-
-						Set testrayTeamComponentNames = new HashSet(Arrays.asList(testrayTeamComponentNamesString.split(",")));
-
-						if (testrayTeamComponentNames.contains(testrayMainComponentName)) {
-							project.setProperty("testray.team.name", WordUtils.capitalize(testrayTeamName.replace('-', ' ')));
-
-							break;
-						}
-					}
-				]]>
-			</script>
 		</sequential>
 	</macrodef>
 
@@ -1221,47 +1413,56 @@ create database lportal${database.index} character set utf8;</echo>
 					</else>
 				</if>
 
+				<get-database-property property.name="database.device.name" />
+
 				<if>
-					<not>
-						<equals arg1="${database.sql-replacement.drop-schema.token}" arg2="" />
-					</not>
+					<equals arg1="${database.type}" arg2="db2" />
 					<then>
 						<replace file="create.sql">
-							<replacefilter token="${database.sql-replacement.drop-schema.token}" value="${database.sql-replacement.drop-schema.value}" />
+							<replacetoken>create database lportal;</replacetoken>
+							<replacevalue>create database lportal pagesize 8192;</replacevalue>
 						</replace>
 					</then>
+					<elseif>
+						<equals arg1="${database.type}" arg2="sybase" />
+						<then>
+							<replace file="create.sql">
+								<replacefilter>
+									<replacetoken>use master</replacetoken>
+									<replacevalue expandProperties="true"><![CDATA[use master
+dump transaction master with no_log
+go
+if exists (select * from master.dbo.sysdatabases where name = "lportal")
+begin
+drop database lportal
+end
+go
+create database lportal on ${database.device.name} = "250m"
+go]]></replacevalue>
+								</replacefilter>
+								<replacefilter>
+									<replacetoken>use lportal</replacetoken>
+									<replacevalue><![CDATA[use lportal
+go]]></replacevalue>
+								</replacefilter>
+							</replace>
+						</then>
+					</elseif>
 				</if>
+
+				<get-database-property property.name="database.schema" />
 
 				<if>
 					<not>
-						<equals arg1="${database.sql-replacement.create-schema.token}" arg2="" />
+						<equals arg1="${database.schema}" arg2="lportal" />
 					</not>
 					<then>
-						<replace file="create.sql">
-							<replacefilter token="${database.sql-replacement.create-schema.token}" value="${database.sql-replacement.create-schema.value}" />
-						</replace>
-					</then>
-				</if>
-
-				<if>
-					<not>
-						<equals arg1="${database.sql-replacement.use-schema.token}" arg2="" />
-					</not>
-					<then>
-						<replace file="create.sql">
-							<replacefilter token="${database.sql-replacement.use-schema.token}" value="${database.sql-replacement.use-schema.value}" />
-						</replace>
-					</then>
-				</if>
-
-				<if>
-					<not>
-						<equals arg1="${database.sql-replacement.create-schema-secondary.token}" arg2="" />
-					</not>
-					<then>
-						<replace file="create.sql">
-							<replacefilter token="${database.sql-replacement.create-schema-secondary.token}" value="${database.sql-replacement.create-schema-secondary.value}" />
-						</replace>
+						<replaceregexp
+							file="create.sql"
+							flags="g"
+							match="lportal"
+							replace="${database.schema}"
+						/>
 					</then>
 				</if>
 			</then>
@@ -1269,16 +1470,16 @@ create database lportal${database.index} character set utf8;</echo>
 	</target>
 
 	<target name="build-test-results-xml" depends="generate-test-properties">
-		<record-env-app-server />
-		<record-env-browser />
-		<record-env-database />
-		<record-env-java-jdk />
-		<record-env-liferay-portal />
-		<record-env-operating-system />
-		<record-testray-components />
-		<record-testray-logs />
-		<record-testray-project-name />
-		<record-testray-team-name />
+		<get-env-app-server />
+		<get-env-browser />
+		<get-env-database />
+		<get-env-java-jdk />
+		<get-env-liferay-portal />
+		<get-env-operating-system />
+		<get-testray-components />
+		<get-testray-logs />
+		<get-testray-project-name />
+		<get-testray-team-name />
 
 		<property name="test.case.properties">
 			<![CDATA[
@@ -1746,7 +1947,7 @@ ${marketplace.portlet.properties}</echo>
 		<antcall target="clean-up-logs" />
 	</target>
 
-	<target name="generate-backup-results-xml" depends="generate-test-properties">
+	<target name="generate-backup-results-xml">
 		<if>
 			<and>
 				<isset property="env.JENKINS_HOME" />
@@ -1754,12 +1955,20 @@ ${marketplace.portlet.properties}</echo>
 			</and>
 			<then>
 				<if>
-					<not>
-						<isset property="test.method.name" />
-					</not>
+					<contains string="${test.class}" substring="#" />
 					<then>
-						<property name="test.method.name" value="" />
+						<get-test-class-name />
+
+						<get-test-method-name />
 					</then>
+					<elseif>
+						<isset property="test.class" />
+						<then>
+							<get-test-class-name />
+
+							<property name="test.method.name" value="" />
+						</then>
+					</elseif>
 				</if>
 
 				<property name="results.xml.file" value="portal-web/test-results/functional/TEST-${env.BUILD_FLOW_JOB_NAME}_${env.BUILD_FLOW_BUILD_NUMBER}_${test.class}.xml" />
@@ -1773,8 +1982,6 @@ ${marketplace.portlet.properties}</echo>
 	<system-out></system-out>
 	<system-err></system-err>
 </testsuite>]]></echo>
-
-				<record-testray-components />
 
 				<antcall target="build-test-results-xml" />
 
@@ -2038,14 +2245,16 @@ ${marketplace.portlet.properties}</echo>
 		<if>
 			<contains string="${test.class}" substring="#" />
 			<then>
-				<antcallback return="test.class.name,test.method.name,test.simple.class.name" target="parse-test-class" />
+				<get-test-method-name />
+
+				<get-test-simple-class-name />
 			</then>
 			<elseif>
 				<isset property="test.class" />
 				<then>
-					<antcallback return="test.class.name,test.simple.class.name" target="parse-test-class" />
-
 					<property name="test.method.name" value="[A-Za-z]*" />
+
+					<get-test-simple-class-name />
 				</then>
 			</elseif>
 		</if>
@@ -2244,83 +2453,6 @@ ${marketplace.portlet.properties}</echo>
 			<else>
 				<echo message="File ${file} does not exist." />
 			</else>
-		</if>
-	</target>
-
-	<target name="parse-test-class">
-		<script classpathref="project.classpath" language="beanshell">
-			<![CDATA[
-				import org.apache.tools.ant.DirectoryScanner;
-
-				String testClass = project.getProperty("test.class");
-
-				String testSimpleClassName = testClass;
-
-				if (testClass.contains("#")) {
-					int x = testClass.indexOf("#");
-
-					String testMethodName = testClass.substring(x + 1);
-
-					if (!testMethodName.startsWith("test")) {
-						testMethodName = "test" + testMethodName;
-					}
-
-					project.setProperty("test.method.name", testMethodName);
-
-					testSimpleClassName =  testClass.substring(0, x);
-				}
-
-				if (!testSimpleClassName.endsWith("TestCase")) {
-					testSimpleClassName = testSimpleClassName + "TestCase";
-				}
-
-				project.setProperty("test.simple.class.name", testSimpleClassName);
-
-				String testName = testSimpleClassName.substring(0, testSimpleClassName.length() - 8);
-
-				project.setProperty("test.name", testName);
-
-				try {
-					DirectoryScanner directoryScanner = new DirectoryScanner();
-
-					if (project.getProperty("test.basedir") != null) {
-						directoryScanner.setBasedir(project.getProperty("test.basedir"));
-					}
-					else {
-						directoryScanner.setBasedir(project.getBaseDir());
-					}
-
-					directoryScanner.setIncludes(new String[] {"**/test/functional/**/" + testName + ".testcase"});
-
-					directoryScanner.scan();
-
-					String[] fileNames = directoryScanner.getIncludedFiles();
-
-					String fileName = fileNames[0];
-
-					int x = fileName.indexOf("/test/functional/") + 17;
-
-					String className = fileName.substring(x);
-
-					className = className.replaceAll("/", ".");
-					className = className.replaceAll(".testcase", "TestCase");
-
-					project.setProperty("test.class.name", className);
-				}
-				catch (Exception e) {
-				}
-			]]>
-		</script>
-
-		<fail message="${test.name}.testcase does not exist." unless="test.class.name" />
-
-		<if>
-			<not>
-				<isset property="test.basedir" />
-			</not>
-			<then>
-				<property name="test.basedir" value="${basedir.unix}/portal-web" />
-			</then>
 		</if>
 	</target>
 
@@ -3114,6 +3246,10 @@ module.framework.properties.osgi.console=11312</echo>
 			</else>
 		</if>
 
+		<echo file="portal-web/test/test-portal-web-ext.properties" append="true">
+			test.class.command.name=${test.class}
+		</echo>
+
 		<if>
 			<equals arg1="${browser.type}" arg2="firefox" />
 			<then>
@@ -3310,7 +3446,7 @@ app.server.tomcat.dir=${app.server.parent.dir}/tomcat-7.0.27</echo>
 		<if>
 			<and>
 				<equals arg1="${test.build.bundle.jbosseap6.1}" arg2="true" />
-				<isset property="test.build.portal.war.url" />
+				<matches pattern="http" string="${test.build.portal.war.url}" />
 			</and>
 			<then>
 				<property name="test.app.server.jboss.eap.version" value="6.1" />
@@ -3395,7 +3531,7 @@ app.server.tomcat.dir=${app.server.parent.dir}/tomcat-7.0.27</echo>
 		<if>
 			<and>
 				<equals arg1="${test.build.bundle.tcserver}" arg2="true" />
-				<isset property="test.build.portal.war.url" />
+				<matches pattern="http" string="${test.build.portal.war.url}" />
 			</and>
 			<then>
 				<antcall target="prepare-test-bundle">
@@ -3420,6 +3556,11 @@ app.server.tomcat.dir=${app.server.parent.dir}/tomcat-7.0.27</echo>
 					<param name="test.app.server.bin.dir" value="${app.server.tomcat.bin.dir}" />
 					<param name="test.build.bundle.zip.url" value="${test.build.bundle.tomcat.zip.url}" />
 				</antcall>
+
+				<replace file="${app.server.tomcat.bin.dir}/setenv${file.suffix.bat}">
+					<replacetoken><![CDATA[-Xmx1024m -XX:MaxPermSize=256m]]></replacetoken>
+					<replacevalue><![CDATA[-Xmx2048m -XX:MaxPermSize=512m]]></replacevalue>
+				</replace>
 			</then>
 			<else>
 				<ant antfile="build-dist.xml" target="build-dist-tomcat" inheritAll="false" />
@@ -3427,6 +3568,11 @@ app.server.tomcat.dir=${app.server.parent.dir}/tomcat-7.0.27</echo>
 				<setup-testable-tomcat />
 
 				<antcall target="prepare-portal-ext-properties" />
+
+				<replace file="${app.server.tomcat.bin.dir}/setenv${file.suffix.bat}">
+					<replacetoken><![CDATA[-Xmx1024m -XX:MaxPermSize=256m]]></replacetoken>
+					<replacevalue><![CDATA[-Xmx2048m -XX:MaxPermSize=512m]]></replacevalue>
+				</replace>
 			</else>
 		</if>
 
@@ -3435,7 +3581,7 @@ app.server.tomcat.dir=${app.server.parent.dir}/tomcat-7.0.27</echo>
 		<if>
 			<and>
 				<equals arg1="${test.build.bundle.weblogic}" arg2="true" />
-				<isset property="test.build.portal.war.url" />
+				<matches pattern="http" string="${test.build.portal.war.url}" />
 			</and>
 			<then>
 				<antcall target="prepare-test-bundle">
@@ -3501,6 +3647,8 @@ app.server.tomcat.dir=${app.server.parent.dir}/tomcat-7.0.27</echo>
 		<antcall target="compile-test" inheritAll="false" />
 
 		<antcall target="record-test-class-file-names" inheritAll="false" />
+
+		<antcall target="record-test-plugin-names" inheritAll="false" />
 	</target>
 
 	<target name="prepare-test-build-tomcat-dependents">
@@ -3512,7 +3660,7 @@ app.server.tomcat.dir=${app.server.parent.dir}/tomcat-7.0.27</echo>
 plugins.includes=marketplace-portlet</echo>
 
 				<if>
-					<isset property="test.build.portal.war.url" />
+					<matches pattern="http" string="${test.build.portal.war.url}" />
 					<then>
 						<mkdir dir="dist" />
 
@@ -3904,23 +4052,6 @@ cluster.link.bind.addr["cluster-link-udp"]=127.0.0.1</echo>
 							</exec>
 						</then>
 					</elseif>
-					<else>
-						<exec executable="${plink.executable}">
-							<arg line="-pw ${vm.password} ${vm.username}@${database.host} cmd.exe /c mkdir C:\temporary" />
-						</exec>
-
-						<exec executable="${pscp.executable}">
-							<arg line="-pw ${vm.password} create.sql ${vm.username}@${database.host}:\temporary" />
-						</exec>
-
-						<exec executable="${plink.executable}">
-							<arg line="-pw ${vm.password} ${vm.username}@${database.host} ${database.remote-schema-command}" />
-						</exec>
-
-						<exec executable="${plink.executable}">
-							<arg line="-pw ${vm.password} ${vm.username}@${database.host} cmd.exe /c rmdir /q /s C:\temporary" />
-						</exec>
-					</else>
 				</if>
 			</then>
 		</if>
@@ -4208,6 +4339,58 @@ if (ppstate.equals("normal")) {
 		<echo file="test.plugin.names.properties">${test.plugin.names.properties.content}</echo>
 	</target>
 
+	<target name="record-testray-logs">
+		<if>
+			<isset property="jenkins.testray.results.dir" />
+			<then>
+				<antelope:stringutil property="job.name" string="${env.JOB_NAME}">
+					<antelope:replace regex="," replacement="_" />
+				</antelope:stringutil>
+
+				<property name="testray.logs.dir" value="${jenkins.testray.results.dir}/logs/${job.name}/builds/${env.TOP_LEVEL_BUILD_NUMBER}" />
+
+				<mkdir dir="${testray.logs.dir}" />
+
+				<copy
+					failonerror="false"
+					file="portal-web/test-results/functional/report.html"
+					tofile="${testray.logs.dir}/report.html"
+				/>
+
+				<copy failonerror="false" todir="${testray.logs.dir}/screenshots">
+					<fileset
+						dir="portal-web/test-results/functional/screenshots"
+					/>
+				</copy>
+
+				<propertyregex
+					input="${env.BUILD_URL}"
+					property="jenkins.build.url"
+					regexp="https:\/\/([^\.]+)\.[^\/]+"
+					replace="http://\1"
+				/>
+
+				<propertyregex
+					input="${jenkins.build.url}"
+					override="true"
+					property="jenkins.build.url"
+					regexp="http:\/\/([^\/]+)\/(\d+)"
+					replace="http://\1-\2/\2"
+				/>
+
+				<get dest="${testray.logs.dir}/console.txt" ignoreerrors="true" src="${jenkins.build.url}/consoleText" />
+			</then>
+		</if>
+	</target>
+
+	<target name="remove-plugin">
+		<get-auto-deploy-dir />
+
+		<delete>
+			<fileset dir="${auto.deploy.dir}" includes="${plugin.name}-*.war" />
+		</delete>
+	</target>
+
 	<target name="replace-file">
 		<fail message="Please set the property ${file}." unless="file" />
 		<fail message="Please set the property ${token}." unless="token" />
@@ -4285,7 +4468,9 @@ if (ppstate.equals("normal")) {
 		<if>
 			<contains string="${test.class}" substring="#" />
 			<then>
-				<antcallback return="test.method.name,test.simple.class.name" target="parse-test-class" />
+				<get-test-method-name />
+
+				<get-test-simple-class-name />
 
 				<var name="test.class" unset="true" />
 				<var name="test.methods" unset="true" />
@@ -4297,7 +4482,7 @@ if (ppstate.equals("normal")) {
 				</ant>
 			</then>
 			<else>
-				<antcallback return="test.simple.class.name" target="parse-test-class" />
+				<get-test-simple-class-name />
 
 				<var name="test.class" unset="true" />
 
@@ -4376,44 +4561,6 @@ if (ppstate.equals("normal")) {
 							file="${jenkins.results.xml.file}"
 							tofile="${jenkins.shared.results.dir}/${env.BUILD_FLOW_JOB_NAME}/builds/${env.BUILD_FLOW_BUILD_NUMBER}/test-results/TEST-${env.BUILD_FLOW_JOB_NAME}_${env.BUILD_FLOW_BUILD_NUMBER}_${test.class}.xml"
 						/>
-					</then>
-				</if>
-
-				<if>
-					<isset property="jenkins.testray.results.dir" />
-					<then>
-						<property name="testray.logs.dir" value="${jenkins.testray.results.dir}/logs/${job.name}/builds/${env.TOP_LEVEL_BUILD_NUMBER}" />
-
-						<mkdir dir="${testray.logs.dir}" />
-
-						<copy
-							failonerror="false"
-							file="portal-web/test-results/functional/report.html"
-							tofile="${testray.logs.dir}/report.html"
-						/>
-
-						<copy failonerror="false" todir="${testray.logs.dir}/screenshots">
-							<fileset
-								dir="portal-web/test-results/functional/screenshots"
-							/>
-						</copy>
-
-						<propertyregex
-							input="${env.BUILD_URL}"
-							property="jenkins.build.url"
-							regexp="https:\/\/([^\.]+)\.[^\/]+"
-							replace="http://\1"
-						/>
-
-						<propertyregex
-							input="${jenkins.build.url}"
-							override="true"
-							property="jenkins.build.url"
-							regexp="http:\/\/([^\/]+)\/(\d+)"
-							replace="http://\1-\2/\2"
-						/>
-
-						<get dest="${testray.logs.dir}/console.txt" ignoreerrors="true" src="${jenkins.build.url}/consoleText" />
 					</then>
 				</if>
 			</then>

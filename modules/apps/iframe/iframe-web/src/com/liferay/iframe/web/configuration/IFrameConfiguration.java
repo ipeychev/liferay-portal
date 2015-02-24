@@ -19,11 +19,11 @@ import aQute.bnd.annotation.metatype.Meta;
 /**
  * @author Peter Fellwock
  */
-@Meta.OCD(id = "com.liferay.iframe.web")
+@Meta.OCD(id = "com.liferay.iframe.web.configuration.IFrameConfiguration")
 public interface IFrameConfiguration {
 
 	@Meta.AD(deflt = "false", required = false)
-	public String auth();
+	public boolean auth();
 
 	@Meta.AD(deflt = "basic", required = false)
 	public String authType();
@@ -32,8 +32,8 @@ public interface IFrameConfiguration {
 	public String formMethod();
 
 	@Meta.AD(
-		deflt = "var1=hello;var2=world", required = false
+		deflt = "var1=hello|var2=world", required = false
 	)
-	public String hiddenVariables();
+	public String[] hiddenVariables();
 
 }

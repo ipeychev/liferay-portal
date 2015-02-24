@@ -385,7 +385,9 @@ else {
 								try {
 									DLFileEntryMetadata fileEntryMetadata = DLFileEntryMetadataLocalServiceUtil.getFileEntryMetadata(ddmStructure.getStructureId(), fileVersionId);
 
-									fields = StorageEngineUtil.getFields(fileEntryMetadata.getDDMStorageId());
+									DDMFormValues ddmFormValues = StorageEngineUtil.getDDMFormValues(fileEntryMetadata.getDDMStorageId());
+
+									fields = DDMFormValuesToFieldsConverterUtil.convert(ddmStructure, ddmFormValues);
 								}
 								catch (Exception e) {
 								}
@@ -457,7 +459,7 @@ else {
 
 		<c:if test="<%= approved && dlEditFileEntryDisplayContext.isVersionInfoVisible() %>">
 			<div class="alert alert-info">
-				<liferay-ui:message key="a-new-version-will-be-created-automatically-if-this-content-is-modified" />
+				<liferay-ui:message key="a-new-version-is-created-automatically-if-this-content-is-modified" />
 			</div>
 		</c:if>
 

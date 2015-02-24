@@ -76,9 +76,6 @@ import com.liferay.portal.template.TemplateContextHelper;
 import com.liferay.portal.template.TemplateControlContext;
 import com.liferay.portal.util.ClassLoaderUtil;
 import com.liferay.portal.util.PropsValues;
-import com.liferay.portal.velocity.LiferayResourceManager;
-import com.liferay.portal.velocity.VelocityTemplate;
-import com.liferay.portal.xsl.XSLTemplate;
 import com.liferay.portlet.PortletRequestImpl;
 import com.liferay.portlet.PortletResponseImpl;
 import com.liferay.portlet.PortletURLImpl;
@@ -400,7 +397,6 @@ public class PortalSecurityManagerImpl extends SecurityManager
 		initClass(GeneratingPACLPolicy.class);
 		initClass(InactivePACLPolicy.class);
 		initClass(LenientPermissionCollection.class);
-		initClass(LiferayResourceManager.class);
 		initClass(PACLAdvice.class);
 		initClass(PACLBeanHandler.class);
 		initClass(PACLClassLoaderUtil.class);
@@ -430,10 +426,8 @@ public class PortalSecurityManagerImpl extends SecurityManager
 		initClass(SchemeAwareContextWrapper.class);
 		initClass(TemplateContextHelper.class);
 		initClass(URLWrapper.class);
-		initClass(VelocityTemplate.class);
 		initClass(
 			com.liferay.portal.kernel.util.WeakValueConcurrentHashMap.class);
-		initClass(XSLTemplate.class);
 	}
 
 	protected void initInitialContextFactoryBuilder() throws Exception {

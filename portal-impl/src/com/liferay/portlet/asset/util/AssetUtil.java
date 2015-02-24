@@ -76,7 +76,7 @@ import com.liferay.portlet.documentlibrary.model.DLFolderConstants;
 import com.liferay.portlet.dynamicdatalists.model.DDLRecord;
 import com.liferay.portlet.dynamicdatamapping.model.DDMStructure;
 import com.liferay.portlet.dynamicdatamapping.service.DDMStructureLocalServiceUtil;
-import com.liferay.portlet.dynamicdatamapping.util.DDMIndexerImpl;
+import com.liferay.portlet.dynamicdatamapping.util.DDMIndexer;
 import com.liferay.portlet.journal.model.JournalArticle;
 
 import java.io.Serializable;
@@ -92,7 +92,6 @@ import java.util.Set;
 import java.util.TreeMap;
 
 import javax.portlet.PortletMode;
-import javax.portlet.PortletRequest;
 import javax.portlet.PortletURL;
 
 import javax.servlet.http.HttpServletRequest;
@@ -102,6 +101,8 @@ import javax.servlet.http.HttpServletRequest;
  * @author Jorge Ferrer
  */
 public class AssetUtil {
+
+	public static final int ASSET_ENTRY_ABSTRACT_LENGTH = 200;
 
 	public static final String CLASSNAME_SEPARATOR = "_CLASSNAME_";
 
@@ -457,23 +458,6 @@ public class AssetUtil {
 
 		Map<String, PortletURL> addPortletURLs = new TreeMap<>(
 			new ModelResourceComparator(themeDisplay.getLocale()));
-
-		if (Validator.isNull(redirect)) {
-			PortletDisplay portletDisplay = themeDisplay.getPortletDisplay();
-
-			PortletURL redirectURL =
-				liferayPortletResponse.createLiferayPortletURL(
-					themeDisplay.getPlid(), portletDisplay.getId(),
-					PortletRequest.RENDER_PHASE, false);
-
-			redirectURL.setParameter(
-				"mvcPath",
-				"/html/portlet/asset_publisher/add_asset_redirect.jsp");
-			redirectURL.setParameter("redirect", themeDisplay.getURLCurrent());
-			redirectURL.setWindowState(LiferayWindowState.POP_UP);
-
-			redirect = redirectURL.toString();
-		}
 
 		for (long classNameId : classNameIds) {
 			String className = PortalUtil.getClassName(classNameId);
@@ -836,11 +820,9 @@ public class AssetUtil {
 
 		int sortType = getSortType(sortField);
 
-		if (sortField.startsWith(
-				DDMIndexerImpl.DDM_FIELD_NAMESPACE +
-					StringPool.DOUBLE_UNDERLINE)) {
-
-			String[] sortFields = sortField.split(StringPool.DOUBLE_UNDERLINE);
+		if (sortField.startsWith(DDMIndexer.DDM_FIELD_PREFIX)) {
+			String[] sortFields = sortField.split(
+				DDMIndexer.DDM_FIELD_SEPARATOR);
 
 			long ddmStructureId = GetterUtil.getLong(sortFields[1]);
 			String fieldName = sortFields[2];

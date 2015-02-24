@@ -38,7 +38,8 @@ import org.osgi.service.component.annotations.Reference;
  * @author Raymond Augé
  */
 @Component(
-	configurationPid = "com.liferay.xsl.content.web", immediate = true,
+	configurationPid = "com.liferay.xsl.content.web.configuration.XSLContentConfiguration",
+	immediate = true,
 	property = {
 		"com.liferay.portlet.css-class-wrapper=portlet-xsl-content",
 		"com.liferay.portlet.display-category=category.cms",
@@ -48,7 +49,6 @@ import org.osgi.service.component.annotations.Reference;
 		"com.liferay.portlet.private-request-attributes=false",
 		"com.liferay.portlet.private-session-attributes=false",
 		"com.liferay.portlet.render-weight=50",
-		"com.liferay.portlet.struts-path=xsl_content",
 		"javax.portlet.display-name=XSL Content",
 		"javax.portlet.expiration-cache=0",
 		"javax.portlet.init-param.config-template=/configuration.jsp",

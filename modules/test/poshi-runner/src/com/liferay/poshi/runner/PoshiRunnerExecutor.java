@@ -16,6 +16,7 @@ package com.liferay.poshi.runner;
 
 import com.liferay.poshi.runner.selenium.LiferaySelenium;
 import com.liferay.poshi.runner.selenium.SeleniumUtil;
+import com.liferay.poshi.runner.util.GetterUtil;
 
 import java.lang.reflect.Method;
 
@@ -45,6 +46,23 @@ public class PoshiRunnerExecutor {
 			}
 
 			return true;
+		}
+		else if (elementName.equals("condition")) {
+			if (element.attributeValue("action") != null) {
+				runActionElement(element);
+
+				return (boolean)_returnObject;
+			}
+			else if (element.attributeValue("function") != null) {
+				runFunctionElement(element);
+
+				return (boolean)_returnObject;
+			}
+			else if (element.attributeValue("selenium") != null) {
+				runSeleniumElement(element);
+
+				return (boolean)_returnObject;
+			}
 		}
 		else if (elementName.equals("contains")) {
 			String string = PoshiRunnerVariablesUtil.replaceCommandVars(
@@ -129,6 +147,9 @@ public class PoshiRunnerExecutor {
 					runSeleniumElement(childElement);
 				}
 			}
+			else if (childElementName.equals("if")) {
+				runIfElement(childElement);
+			}
 			else if (childElementName.equals("fail")) {
 				String message = childElement.attributeValue("message");
 
@@ -138,6 +159,15 @@ public class PoshiRunnerExecutor {
 				}
 
 				throw new Exception();
+			}
+			else if (childElementName.equals("for")) {
+				runForElement(childElement);
+			}
+			else if (childElementName.equals("var")) {
+				runVarElement(childElement);
+			}
+			else if (childElementName.equals("while")) {
+				runWhileElement(childElement);
 			}
 		}
 	}
@@ -260,14 +290,42 @@ public class PoshiRunnerExecutor {
 		}
 	}
 
+	public static void runForElement(Element element) throws Exception {
+		String list = PoshiRunnerVariablesUtil.replaceCommandVars(
+			element.attributeValue("list"));
+
+		String[] paramValues = list.split(",");
+
+		String paramName = PoshiRunnerVariablesUtil.replaceCommandVars(
+			element.attributeValue("param"));
+
+		for (String paramValue : paramValues) {
+			PoshiRunnerVariablesUtil.putIntoCommandMap(paramName, paramValue);
+
+			parseElement(element);
+		}
+	}
+
 	public static void runFunctionElement(Element executeElement)
 		throws Exception {
 
+		List<Element> executeVarElements = executeElement.elements("var");
+
+		for (Element executeVarElement : executeVarElements) {
+			String name = executeVarElement.attributeValue("name");
+			String value = executeVarElement.attributeValue("value");
+
+			PoshiRunnerVariablesUtil.putIntoExecuteMap(name, value);
+		}
+
 		String classCommandName = executeElement.attributeValue("function");
 
-		String className =
-			PoshiRunnerGetterUtil.getClassNameFromClassCommandName(
+		String className = classCommandName;
+
+		if (classCommandName.contains("#")) {
+			className = PoshiRunnerGetterUtil.getClassNameFromClassCommandName(
 				classCommandName);
+		}
 
 		int locatorCount = PoshiRunnerContext.getFunctionLocatorCount(
 			className);
@@ -321,6 +379,45 @@ public class PoshiRunnerExecutor {
 		PoshiRunnerVariablesUtil.popCommandMap();
 	}
 
+	public static void runIfElement(Element element) throws Exception {
+		List<Element> ifChildElements = element.elements();
+
+		Element ifConditionElement = ifChildElements.get(0);
+
+		boolean condition = evaluateConditionalElement(ifConditionElement);
+
+		if (condition) {
+			Element ifThenElement = element.element("then");
+
+			parseElement(ifThenElement);
+		}
+		else if (element.element("elseif") != null) {
+			List<Element> elseIfElements = element.elements("elseif");
+
+			for (Element elseIfElement : elseIfElements) {
+				List<Element> elseIfChildElements = elseIfElement.elements();
+
+				Element elseIfConditionElement = elseIfChildElements.get(0);
+
+				condition = evaluateConditionalElement(elseIfConditionElement);
+
+				if (condition) {
+					Element elseIfThenElement = elseIfElement.element("then");
+
+					parseElement(elseIfThenElement);
+
+					break;
+				}
+			}
+		}
+
+		if ((element.element("else") != null) && !condition) {
+			Element elseElement = element.element("else");
+
+			parseElement(elseElement);
+		}
+	}
+
 	public static void runMacroElement(Element executeElement)
 		throws Exception {
 
@@ -364,7 +461,7 @@ public class PoshiRunnerExecutor {
 		throws Exception {
 
 		List<String> arguments = new ArrayList<>();
-		List<Class> parameterClasses = new ArrayList<>();
+		List<Class<?>> parameterClasses = new ArrayList<>();
 
 		String selenium = executeElement.attributeValue("selenium");
 
@@ -412,17 +509,59 @@ public class PoshiRunnerExecutor {
 			parameterClasses.add(String.class);
 		}
 
-		Class clazz = _liferaySelenium.getClass();
+		LiferaySelenium liferaySelenium = SeleniumUtil.getSelenium();
+
+		Class<?> clazz = liferaySelenium.getClass();
 
 		Method method = clazz.getMethod(
 			selenium,
 			parameterClasses.toArray(new Class[parameterClasses.size()]));
 
-		method.invoke(
-			_liferaySelenium, arguments.toArray(new String[arguments.size()]));
+		_returnObject = method.invoke(
+			liferaySelenium,
+			(Object[])arguments.toArray(new String[arguments.size()]));
 	}
 
-	private static final LiferaySelenium _liferaySelenium =
-		SeleniumUtil.getSelenium();
+	public static void runVarElement(Element element) throws Exception {
+		String varName = element.attributeValue("name");
+		String varValue = element.attributeValue("value");
+
+		if (varValue == null) {
+			if (element.attributeValue("method") != null) {
+				varValue = PoshiRunnerGetterUtil.getVarMethodValue(element);
+			}
+			else {
+				varValue = element.elementText("var");
+			}
+		}
+
+		varValue = PoshiRunnerVariablesUtil.replaceCommandVars(varValue);
+
+		PoshiRunnerVariablesUtil.putIntoCommandMap(varName, varValue);
+	}
+
+	public static void runWhileElement(Element element) throws Exception {
+		int maxIterations = 15;
+
+		if (element.attributeValue("max-iterations") != null) {
+			maxIterations = GetterUtil.getInteger(
+				element.attributeValue("max-iterations"));
+		}
+
+		List<Element> whileChildElements = element.elements();
+
+		Element conditionElement = whileChildElements.get(0);
+		Element thenElement = element.element("then");
+
+		for (int i = 0; i < maxIterations; i++) {
+			if (!evaluateConditionalElement(conditionElement)) {
+				break;
+			}
+
+			parseElement(thenElement);
+		}
+	}
+
+	private static Object _returnObject;
 
 }

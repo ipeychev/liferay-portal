@@ -15,6 +15,9 @@
 package com.liferay.poshi.runner;
 
 import com.liferay.poshi.runner.selenium.SeleniumUtil;
+import com.liferay.poshi.runner.util.PropsValues;
+
+import java.util.List;
 
 import junit.framework.TestCase;
 
@@ -30,20 +33,53 @@ public class PoshiRunner extends TestCase {
 	@Override
 	public void setUp() throws Exception {
 		SeleniumUtil.startSelenium();
+
+		Element testcaseRootElement = PoshiRunnerContext.getTestcaseRootElement(
+			_TEST_CLASS_NAME);
+
+		List<Element> rootVarElements = testcaseRootElement.elements("var");
+
+		for (Element rootVarElement : rootVarElements) {
+			String name = rootVarElement.attributeValue("name");
+			String value = rootVarElement.attributeValue("value");
+
+			PoshiRunnerVariablesUtil.putIntoExecuteMap(name, value);
+		}
+
+		PoshiRunnerVariablesUtil.pushCommandMap();
+
+		Element setUpElement = PoshiRunnerContext.getTestcaseCommandElement(
+			_TEST_CLASS_NAME + "#set-up");
+
+		if (setUpElement != null) {
+			PoshiRunnerExecutor.parseElement(setUpElement);
+		}
 	}
 
 	@Override
 	public void tearDown() throws Exception {
+		Element tearDownElement = PoshiRunnerContext.getTestcaseCommandElement(
+			_TEST_CLASS_NAME + "#tear-down");
+
+		if (tearDownElement != null) {
+			PoshiRunnerExecutor.parseElement(tearDownElement);
+		}
+
 		SeleniumUtil.stopSelenium();
 	}
 
 	public void testPoshiRunner() throws Exception {
-		String classCommandName = System.getProperty("test.case.name");
+		Element commandElement = PoshiRunnerContext.getTestcaseCommandElement(
+			_TEST_CLASS_COMMAND_NAME);
 
-		Element element = PoshiRunnerContext.getTestcaseCommandElement(
-			classCommandName);
-
-		PoshiRunnerExecutor.parseElement(element);
+		PoshiRunnerExecutor.parseElement(commandElement);
 	}
+
+	private static final String _TEST_CLASS_COMMAND_NAME =
+		PropsValues.TEST_CLASS_COMMAND_NAME;
+
+	private static final String _TEST_CLASS_NAME =
+		PoshiRunnerGetterUtil.getClassNameFromClassCommandName(
+			_TEST_CLASS_COMMAND_NAME);
 
 }

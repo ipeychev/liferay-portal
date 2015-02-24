@@ -354,6 +354,13 @@ public class VerifyProperties extends VerifyProcess {
 			"com.liferay.bookmarks.service"
 		},
 
+		// Breadcrumb
+
+		new String[] {
+			"breadcrumb.display.templates.config", "display.templates.config",
+			"com.liferay.breadcrumb.web"
+		},
+
 		// CAS
 
 		new String[] {
@@ -454,6 +461,13 @@ public class VerifyProperties extends VerifyProcess {
 			"publish.to.live.by.default", "com.liferay.journal.content.web"
 		},
 
+		// Language
+
+		new String[] {
+			"language.display.templates.config", "display.templates.config",
+			"com.liferay.language.web"
+		},
+
 		// LDAP
 
 		new String[] {
@@ -523,6 +537,21 @@ public class VerifyProperties extends VerifyProcess {
 		new String[] {
 			"ldap.user.ignore.attributes", "user.ignore.attributes",
 			"com.liferay.portal.ldap"
+		},
+
+		// Navigation
+
+		new String[] {
+			"navigation.display.style", "display.style",
+			"com.liferay.navigation.web"
+		},
+		new String[] {
+			"navigation.display.style.default", "display.style.default",
+			"com.liferay.navigation.web"
+		},
+		new String[] {
+			"navigation.display.style.options", "display.style.options",
+			"com.liferay.navigation.web"
 		},
 
 		// Nested Portlets
@@ -596,7 +625,48 @@ public class VerifyProperties extends VerifyProcess {
 			"translator.languages", "language.ids", "com.liferay.translator.web"
 		},
 
-		// XSL content
+		// Velocity Engine
+
+		new String[] {
+			"velocity.engine.directive.if.to.string.null.check",
+			"directive.if.to.string.null.check",
+			"com.liferay.portal.template.velocity"
+		},
+		new String[] {
+			"velocity.engine.resource.parsers", "resource.parsers",
+			"com.liferay.portal.template.velocity"
+		},
+		new String[] {
+			"velocity.engine.resource.modification.check.interval",
+			"resource.modification.check.interval",
+			"com.liferay.portal.template.velocity"
+		},
+		new String[] {
+			"velocity.engine.restricted.classes", "restricted.classes",
+			"com.liferay.portal.template.velocity"
+		},
+		new String[] {
+			"velocity.engine.restricted.packages", "restricted.packages",
+			"com.liferay.portal.template.velocity"
+		},
+		new String[] {
+			"velocity.engine.restricted.variables", "restricted.variables",
+			"com.liferay.portal.template.velocity"
+		},
+		new String[] {
+			"velocity.engine.velocimacro.library", "macro.library",
+			"com.liferay.portal.template.velocity"
+		},
+		new String[] {
+			"velocity.engine.logger", "logger",
+			"com.liferay.portal.template.velocity"
+		},
+		new String[] {
+			"velocity.engine.logger.category", "logger.category",
+			"com.liferay.portal.template.velocity"
+		},
+
+		// XSL Content
 
 		new String[] {
 			"xsl.content.xml.doctype.declaration.allowed",
@@ -615,6 +685,13 @@ public class VerifyProperties extends VerifyProcess {
 		new String[] {
 			"xsl.content.xsl.secure.processing.enabled",
 			"xsl.secure.processing.enabled", "com.liferay.xsl.content.web"
+		},
+
+		// XSL Engine
+
+		new String[] {
+			"xsl.template.secure.processing.enabled",
+			"secure.processing.enabled", "com.liferay.portal.template.xsl"
 		}
 	};
 
@@ -692,9 +769,7 @@ public class VerifyProperties extends VerifyProcess {
 		"permissions.thread.local.cache.max.size",
 		"permissions.user.check.algorithm", "persistence.provider",
 		"ratings.max.score", "ratings.min.score", "scheduler.classes",
-		"schema.run.minimal", "shard.available.names",
-		"velocity.engine.resource.manager",
-		"velocity.engine.resource.manager.cache.enabled",
+		"schema.run.minimal", "shard.available.names", "staging.lock.enabled",
 		"webdav.storage.class", "webdav.storage.show.edit.url",
 		"webdav.storage.show.view.url", "webdav.storage.tokens",
 		"wiki.email.page.added.signature", "wiki.email.page.updated.signature",

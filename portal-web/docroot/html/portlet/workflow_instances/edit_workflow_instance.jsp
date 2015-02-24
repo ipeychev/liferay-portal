@@ -42,22 +42,6 @@ String headerTitle = LanguageUtil.get(request, workflowInstance.getWorkflowDefin
 if (assetEntry != null) {
 	headerTitle = headerTitle.concat(StringPool.COLON + StringPool.SPACE + assetRenderer.getTitle(locale));
 }
-
-PortletURL viewFullContentURL = renderResponse.createRenderURL();
-
-viewFullContentURL.setParameter("struts_action", "/workflow_tasks/view_content");
-viewFullContentURL.setParameter("redirect", currentURL);
-
-if (assetEntry != null) {
-	viewFullContentURL.setParameter("assetEntryId", String.valueOf(assetEntry.getEntryId()));
-	viewFullContentURL.setParameter("assetEntryVersionId", String.valueOf(classPK));
-}
-
-viewFullContentURL.setParameter("type", assetRendererFactory.getType());
-viewFullContentURL.setParameter("showEditURL", Boolean.FALSE.toString());
-viewFullContentURL.setParameter("workflowAssetPreview", Boolean.TRUE.toString());
-
-request.setAttribute(WebKeys.WORKFLOW_ASSET_PREVIEW, Boolean.TRUE);
 %>
 
 <portlet:renderURL var="backURL">
@@ -89,7 +73,20 @@ request.setAttribute(WebKeys.WORKFLOW_ASSET_PREVIEW, Boolean.TRUE);
 					<div class="task-content-actions">
 						<liferay-ui:icon-list>
 							<c:if test="<%= assetRenderer.hasViewPermission(permissionChecker) %>">
-								<liferay-ui:icon iconCssClass="icon-search" message="view[action]" method="get" url="<%= viewFullContentURL.toString() %>" />
+								<portlet:renderURL var="viewFullContentURL">
+									<portlet:param name="struts_action" value="/workflow_instances/view_content" />
+									<portlet:param name="redirect" value="<%= currentURL %>" />
+
+									<c:if test="<%= assetEntry != null %>">
+										<portlet:param name="assetEntryId" value="<%= String.valueOf(assetEntry.getEntryId()) %>" />
+										<portlet:param name="assetEntryVersionId" value="<%= String.valueOf(classPK) %>" />
+									</c:if>
+
+									<portlet:param name="type" value="<%= assetRendererFactory.getType() %>" />
+									<portlet:param name="showEditURL" value="<%= Boolean.FALSE.toString() %>" />
+								</portlet:renderURL>
+
+								<liferay-ui:icon iconCssClass="icon-search" message="view[action]" method="get" url="<%= assetRenderer.isPreviewInContext() ? assetRenderer.getURLViewInContext((LiferayPortletRequest)renderRequest, (LiferayPortletResponse)renderResponse, null) : viewFullContentURL.toString() %>" />
 							</c:if>
 						</liferay-ui:icon-list>
 					</div>
@@ -102,29 +99,18 @@ request.setAttribute(WebKeys.WORKFLOW_ASSET_PREVIEW, Boolean.TRUE);
 						/>
 					</h3>
 
-					<%
-					String path = workflowHandler.render(classPK, renderRequest, renderResponse, AssetRenderer.TEMPLATE_ABSTRACT);
-
-					request.setAttribute(WebKeys.ASSET_RENDERER, assetRenderer);
-					request.setAttribute(WebKeys.ASSET_PUBLISHER_ABSTRACT_LENGTH, 200);
-					%>
-
-					<c:choose>
-						<c:when test="<%= path == null %>">
-							<%= HtmlUtil.escape(workflowHandler.getSummary(classPK, renderRequest, renderResponse)) %>
-						</c:when>
-						<c:otherwise>
-							<liferay-util:include page="<%= path %>" portletId="<%= assetRendererFactory.getPortletId() %>" />
-						</c:otherwise>
-					</c:choose>
+					<liferay-ui:asset-display
+						assetRenderer="<%= assetRenderer %>"
+						template="<%= AssetRenderer.TEMPLATE_ABSTRACT %>"
+					/>
 
 					<%
 					String[] metadataFields = new String[] {"author", "categories", "tags"};
 					%>
 
 					<liferay-ui:asset-metadata
-						className="<%= className %>"
-						classPK="<%= classPK %>"
+						className="<%= assetEntry.getClassName() %>"
+						classPK="<%= assetEntry.getClassPK() %>"
 						metadataFields="<%= metadataFields %>"
 					/>
 				</liferay-ui:panel>
