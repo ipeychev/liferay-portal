@@ -128,10 +128,10 @@
 			var instance = this;
 
 			if (!instance._bbcodeConverter) {
-				var converterConfig ={
-					emoticonSymbols : emoticonSymbols,
-					emoticonImages : emoticonImages,
-					emoticonPath : emoticonPath
+				var converterConfig = {
+					emoticonSymbols: emoticonSymbols,
+					emoticonImages: emoticonImages,
+					emoticonPath: emoticonPath
 				};
 
 				instance._bbcodeConverter = new CKEDITOR.BBCode2HTML(converterConfig);
