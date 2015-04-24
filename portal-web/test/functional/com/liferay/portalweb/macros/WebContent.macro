@@ -1387,7 +1387,7 @@
 		</execute>
 
 		<for list="${documentTypes}" param="documentType">
-			<var method="StringUtil#upperCase(${documentType})" name="documentTypeUppercase" />
+			<var method="StringUtil#upperCase('${documentType}')" name="documentTypeUppercase" />
 
 			<execute function="AssertTextEquals#assertPartialText" locator1="PGAssetpublisherAsset#DOCUMENT_CONVERSION_${documentTypeUppercase}" value1="${documentTypeUppercase}" />
 			<execute function="AssertElementPresent" locator1="PGAssetpublisherAsset#DOCUMENT_CONVERSION_${documentTypeUppercase}_ICON" />
@@ -1608,7 +1608,7 @@
 		</execute>
 
 		<for list="${documentTypes}" param="documentType">
-			<var method="StringUtil#upperCase(${documentType})" name="documentTypeUppercase" />
+			<var method="StringUtil#upperCase('${documentType}')" name="documentTypeUppercase" />
 
 			<execute function="AssertElementNotPresent" locator1="PGAssetpublisherAsset#DOCUMENT_CONVERSION_${documentTypeUppercase}" />
 		</for>
@@ -1790,7 +1790,7 @@
 				<if>
 					<isset var="localizedText" />
 					<then>
-						<var name="key_fieldName" value="${localizedText}" />
+						<var name="key_fieldName" value="${fieldName}" />
 
 						<execute function="AssertTextEquals" locator1="PGWebcontentdisplayEditwebcontent#TEXT_FIELD" value1="${localizedText}" />
 					</then>

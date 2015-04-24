@@ -91,6 +91,13 @@ public interface Language {
 		ResourceBundle resourceBundle, String pattern, Object[] arguments,
 		boolean translateArguments);
 
+	public String get(
+		HttpServletRequest request, ResourceBundle resourceBundle, String key);
+
+	public String get(
+		HttpServletRequest request, ResourceBundle resourceBundle, String key,
+		String defaultValue);
+
 	public String get(HttpServletRequest request, String key);
 
 	public String get(
@@ -114,8 +121,6 @@ public interface Language {
 	public String getBCP47LanguageId(Locale locale);
 
 	public String getBCP47LanguageId(PortletRequest portletRequest);
-
-	public String getCharset(Locale locale);
 
 	public String getLanguageId(HttpServletRequest request);
 

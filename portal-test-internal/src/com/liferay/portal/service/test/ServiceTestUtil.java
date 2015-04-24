@@ -37,7 +37,6 @@ import com.liferay.portal.model.User;
 import com.liferay.portal.model.impl.PortletImpl;
 import com.liferay.portal.repository.liferayrepository.LiferayRepository;
 import com.liferay.portal.security.auth.PrincipalThreadLocal;
-import com.liferay.portal.security.lang.DoPrivilegedUtil;
 import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.security.permission.PermissionCheckerFactoryUtil;
 import com.liferay.portal.security.permission.PermissionThreadLocal;
@@ -145,15 +144,18 @@ public class ServiceTestUtil {
 
 		// Messaging
 
+		MessageBusUtil messageBusUtil = new MessageBusUtil();
+
 		MessageBus messageBus = (MessageBus)PortalBeanLocatorUtil.locate(
 			MessageBus.class.getName());
+
+		messageBusUtil.setMessageBus(messageBus);
+
 		SynchronousMessageSender synchronousMessageSender =
 			(SynchronousMessageSender)PortalBeanLocatorUtil.locate(
 				SynchronousMessageSender.class.getName());
 
-		MessageBusUtil.init(
-			DoPrivilegedUtil.wrap(messageBus),
-			DoPrivilegedUtil.wrap(synchronousMessageSender));
+		messageBusUtil.setSynchronousMessageSender(synchronousMessageSender);
 
 		// Scheduler
 
