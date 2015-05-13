@@ -171,7 +171,7 @@ Format dateFormatDateTime = FastDateFormatFactoryUtil.getDateTime(locale, timeZo
 
 						<aui:script>
 							window['<%= namespace + randomNamespace + index %>EditOnChange'] = function(html) {
-								Liferay.Util.toggleDisabled('#<%= namespace + randomNamespace %>editReplyButton<%= index %>', (html === ''));
+								Liferay.Util.toggleDisabled('#<%= namespace + randomNamespace %>editReplyButton<%= index %>', html.trim() == '');
 							};
 						</aui:script>
 					</div>
@@ -284,7 +284,7 @@ Format dateFormatDateTime = FastDateFormatFactoryUtil.getDateTime(locale, timeZo
 
 					<aui:script>
 						window['<%= namespace + randomNamespace + index %>ReplyOnChange'] = function(html) {
-							Liferay.Util.toggleDisabled('#<%= namespace + randomNamespace %>postReplyButton<%= index %>', (html === ''));
+							Liferay.Util.toggleDisabled('#<%= namespace + randomNamespace %>postReplyButton<%= index %>', html.trim() == '');
 						};
 					</aui:script>
 				</div>
