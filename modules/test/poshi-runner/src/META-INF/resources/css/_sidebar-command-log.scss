@@ -22,6 +22,18 @@
 			color: $scoped-command-hover-text-color;
 		}
 
+		.child-container {
+			color: $scoped-child-container-text-color;
+
+			.command-name {
+				color: $scoped-child-container-command-name-color;
+			}
+
+			.param-value {
+				color: $scoped-child-container-param-value-color;
+			}
+		}
+
 		.expand-toggle {
 			color: $scoped-command-expand-toggle-color;
 		}
@@ -107,8 +119,12 @@
 	.failed {
 		background-color: $failed-command-bg-color;
 
-		&.current-scope {
+		&.current-scope.linkable {
 			background-color: $failed-command-scoped-bg-color;
+
+			&:hover {
+				background-color: $failed-command-scoped-hover-bg-color;
+			}
 		}
 
 		&:hover {

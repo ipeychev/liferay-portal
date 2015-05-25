@@ -14,11 +14,16 @@
 
 package com.liferay.portal.sso.ntlm;
 
-import aQute.bnd.annotation.metatype.Configurable;
-
 import com.liferay.portal.kernel.io.BigEndianCodec;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.security.SecureRandomUtil;
+import com.liferay.portal.kernel.settings.CompanyServiceSettingsLocator;
+import com.liferay.portal.kernel.settings.SettingsException;
+import com.liferay.portal.kernel.settings.SettingsFactory;
+import com.liferay.portal.security.auth.CompanyThreadLocal;
 import com.liferay.portal.sso.ntlm.configuration.NtlmConfiguration;
+import com.liferay.portal.sso.ntlm.constants.NtlmConstants;
 import com.liferay.portal.sso.ntlm.msrpc.NetrServerAuthenticate3;
 import com.liferay.portal.sso.ntlm.msrpc.NetrServerReqChallenge;
 
@@ -28,7 +33,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 import java.util.Arrays;
-import java.util.Map;
 
 import jcifs.dcerpc.DcerpcHandle;
 
@@ -37,9 +41,8 @@ import jcifs.smb.NtlmPasswordAuthentication;
 import jcifs.util.HMACT64;
 import jcifs.util.MD4;
 
-import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Modified;
+import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Michael C. Han
@@ -96,7 +99,7 @@ public class NetlogonConnectionManagerImpl
 			new NetrServerAuthenticate3(
 				domainControllerName, ntlmServiceAccount.getAccountName(), 2,
 				ntlmServiceAccount.getComputerName(), clientCredential,
-				new byte[8], _negotiateFlags);
+				new byte[8], getNegotiateFlags());
 
 		dcerpcHandle.sendrecv(netrServerAuthenticate3);
 
@@ -119,22 +122,6 @@ public class NetlogonConnectionManagerImpl
 		return netLogonConnection;
 	}
 
-	@Activate
-	@Modified
-	protected void activate(Map<String, Object> properties) {
-		_ntlmConfiguration = Configurable.createConfigurable(
-			NtlmConfiguration.class, properties);
-
-		String negotiateFlags = _ntlmConfiguration.negotiateFlags();
-
-		if (negotiateFlags.startsWith("0x")) {
-			_negotiateFlags = Integer.valueOf(negotiateFlags.substring(2), 16);
-		}
-		else {
-			_negotiateFlags = 0x600FFFFF;
-		}
-	}
-
 	protected byte[] computeSessionKey(
 			byte[] sharedSecret, byte[] clientChallenge, byte[] serverChallenge)
 		throws NoSuchAlgorithmException {
@@ -154,7 +141,38 @@ public class NetlogonConnectionManagerImpl
 		return hmact64.digest();
 	}
 
-	private volatile int _negotiateFlags;
-	private volatile NtlmConfiguration _ntlmConfiguration;
+	protected int getNegotiateFlags() {
+		int negotiateFlags = 0x600FFFFF;
+
+		try {
+			NtlmConfiguration ntlmConfiguration = _settingsFactory.getSettings(
+				NtlmConfiguration.class,
+				new CompanyServiceSettingsLocator(
+					CompanyThreadLocal.getCompanyId(),
+					NtlmConstants.SERVICE_NAME));
+
+			String negotiateFlagsString = ntlmConfiguration.negotiateFlags();
+
+			if (negotiateFlagsString.startsWith("0x")) {
+				negotiateFlags = Integer.valueOf(
+					negotiateFlagsString.substring(2), 16);
+			}
+		}
+		catch (SettingsException se) {
+			_log.error("Unable to get NTLM configuration", se);
+		}
+
+		return negotiateFlags;
+	}
+
+	@Reference
+	protected void setSettingsFactory(SettingsFactory settingsFactory) {
+		_settingsFactory = settingsFactory;
+	}
+
+	private static final Log _log = LogFactoryUtil.getLog(
+		NetlogonConnectionManagerImpl.class);
+
+	private volatile SettingsFactory _settingsFactory;
 
 }

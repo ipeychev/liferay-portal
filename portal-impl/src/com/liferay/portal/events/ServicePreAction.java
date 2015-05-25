@@ -24,6 +24,8 @@ import com.liferay.portal.kernel.events.ActionException;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.image.ImageToolUtil;
 import com.liferay.portal.kernel.lar.PortletDataHandlerKeys;
+import com.liferay.portal.kernel.lar.exportimportconfiguration.ExportImportConfigurationConstants;
+import com.liferay.portal.kernel.lar.exportimportconfiguration.ExportImportConfigurationSettingsMapFactory;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.portlet.LiferayPortletURL;
@@ -34,6 +36,7 @@ import com.liferay.portal.kernel.servlet.PortalWebResourceConstants;
 import com.liferay.portal.kernel.servlet.PortalWebResourcesUtil;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.util.ColorSchemeFactoryUtil;
+import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.CookieKeys;
 import com.liferay.portal.kernel.util.FriendlyURLNormalizerUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
@@ -48,8 +51,10 @@ import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.model.ColorScheme;
 import com.liferay.portal.model.Company;
+import com.liferay.portal.model.ExportImportConfiguration;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.GroupConstants;
 import com.liferay.portal.model.Image;
@@ -71,6 +76,8 @@ import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.security.permission.PermissionCheckerFactoryUtil;
 import com.liferay.portal.security.permission.PermissionThreadLocal;
+import com.liferay.portal.service.ExportImportConfigurationLocalServiceUtil;
+import com.liferay.portal.service.ExportImportLocalServiceUtil;
 import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.ImageLocalServiceUtil;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
@@ -101,14 +108,10 @@ import com.liferay.portal.webserver.WebServerServletTokenUtil;
 import com.liferay.portlet.PortalPreferences;
 import com.liferay.portlet.PortletPreferencesFactoryUtil;
 import com.liferay.portlet.PortletURLImpl;
-import com.liferay.portlet.asset.model.AssetEntry;
-import com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil;
-import com.liferay.portlet.journal.NoSuchArticleException;
-import com.liferay.portlet.journal.model.JournalArticle;
-import com.liferay.portlet.journal.service.JournalArticleServiceUtil;
 import com.liferay.portlet.sites.util.SitesUtil;
 
 import java.io.File;
+import java.io.Serializable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -1121,11 +1124,11 @@ public class ServicePreAction extends Action {
 
 				if (hasPublishStagingPermission) {
 					PortletURL publishToLiveURL = new PortletURLImpl(
-						request, PortletKeys.LAYOUTS_ADMIN, plid,
+						request, PortletKeys.EXPORT_IMPORT, plid,
 						PortletRequest.RENDER_PHASE);
 
 					publishToLiveURL.setParameter(
-						"struts_action", "/layouts_admin/publish_layouts");
+						"struts_action", "/export_import/publish_layouts");
 
 					if (layout.isPrivateLayout()) {
 						publishToLiveURL.setParameter("tabs1", "private-pages");
@@ -1244,6 +1247,8 @@ public class ServicePreAction extends Action {
 			long userId, long groupId, boolean privateLayout, File larFile)
 		throws PortalException {
 
+		User user = UserLocalServiceUtil.getUser(userId);
+
 		Map<String, String[]> parameterMap = new HashMap<>();
 
 		parameterMap.put(
@@ -1277,8 +1282,23 @@ public class ServicePreAction extends Action {
 			PortletDataHandlerKeys.THEME_REFERENCE,
 			new String[] {Boolean.TRUE.toString()});
 
-		LayoutLocalServiceUtil.importLayouts(
-			userId, groupId, privateLayout, parameterMap, larFile);
+		Map<String, Serializable> importSettingsMap =
+			ExportImportConfigurationSettingsMapFactory.buildImportSettingsMap(
+				user.getUserId(), groupId, privateLayout, null, parameterMap,
+				Constants.IMPORT, user.getLocale(), user.getTimeZone(),
+				larFile.getName());
+
+		ExportImportConfiguration exportImportConfiguration =
+			ExportImportConfigurationLocalServiceUtil.
+				addExportImportConfiguration(
+					user.getUserId(), groupId, StringPool.BLANK,
+					StringPool.BLANK,
+					ExportImportConfigurationConstants.TYPE_IMPORT_LAYOUT,
+					importSettingsMap, WorkflowConstants.STATUS_DRAFT,
+					new ServiceContext());
+
+		ExportImportLocalServiceUtil.importLayouts(
+			exportImportConfiguration, larFile);
 	}
 
 	protected void addDefaultUserPrivateLayoutByProperties(
@@ -2139,35 +2159,6 @@ public class ServicePreAction extends Action {
 
 			request.setAttribute(
 				WebKeys.PORTLET_PARALLEL_RENDER, portletParallelRender);
-		}
-
-		// Main Journal article
-
-		String strutsAction = PortalUtil.getStrutsAction(request);
-
-		if (strutsAction.equals(_PATH_PORTAL_LAYOUT)) {
-			long mainJournalArticleId = ParamUtil.getLong(request, "p_j_a_id");
-
-			if (mainJournalArticleId > 0) {
-				try {
-					JournalArticle mainJournalArticle =
-						JournalArticleServiceUtil.getArticle(
-							mainJournalArticleId);
-
-					AssetEntry layoutAssetEntry =
-						AssetEntryLocalServiceUtil.getEntry(
-							JournalArticle.class.getName(),
-							mainJournalArticle.getResourcePrimKey());
-
-					request.setAttribute(
-						WebKeys.LAYOUT_ASSET_ENTRY, layoutAssetEntry);
-				}
-				catch (NoSuchArticleException nsae) {
-					if (_log.isWarnEnabled()) {
-						_log.warn(nsae.getMessage());
-					}
-				}
-			}
 		}
 	}
 

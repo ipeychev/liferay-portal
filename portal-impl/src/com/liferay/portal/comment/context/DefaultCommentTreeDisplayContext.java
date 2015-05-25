@@ -16,8 +16,8 @@ package com.liferay.portal.comment.context;
 
 import com.liferay.portal.comment.context.util.DiscussionRequestHelper;
 import com.liferay.portal.comment.context.util.DiscussionTaglibHelper;
-import com.liferay.portal.kernel.comment.Comment;
 import com.liferay.portal.kernel.comment.CommentConstants;
+import com.liferay.portal.kernel.comment.DiscussionComment;
 import com.liferay.portal.kernel.comment.DiscussionPermission;
 import com.liferay.portal.kernel.comment.WorkflowableComment;
 import com.liferay.portal.kernel.comment.context.CommentTreeDisplayContext;
@@ -41,12 +41,13 @@ public class DefaultCommentTreeDisplayContext
 	public DefaultCommentTreeDisplayContext(
 		DiscussionRequestHelper discussionRequestHelper,
 		DiscussionTaglibHelper discussionTaglibHelper,
-		DiscussionPermission discussionPermission, Comment comment) {
+		DiscussionPermission discussionPermission,
+		DiscussionComment discussionComment) {
 
 		_discussionRequestHelper = discussionRequestHelper;
 		_discussionTaglibHelper = discussionTaglibHelper;
 		_discussionPermission = discussionPermission;
-		_comment = comment;
+		_discussionComment = discussionComment;
 	}
 
 	@Override
@@ -79,17 +80,16 @@ public class DefaultCommentTreeDisplayContext
 		}
 
 		return !TrashUtil.isInTrash(
-			_comment.getModelClassName(), _comment.getCommentId());
+			_discussionComment.getModelClassName(),
+			_discussionComment.getCommentId());
 	}
 
 	@Override
 	public boolean isDeleteActionControlVisible() throws PortalException {
 		return _discussionPermission.hasDeletePermission(
-			_discussionRequestHelper.getCompanyId(),
-			_discussionRequestHelper.getScopeGroupId(),
 			_discussionTaglibHelper.getPermissionClassName(),
 			_discussionTaglibHelper.getPermissionClassPK(),
-			_comment.getCommentId(), _comment.getUserId());
+			_discussionComment.getCommentId(), _discussionComment.getUserId());
 	}
 
 	@Override
@@ -104,11 +104,9 @@ public class DefaultCommentTreeDisplayContext
 	@Override
 	public boolean isEditActionControlVisible() throws PortalException {
 		return _discussionPermission.hasUpdatePermission(
-			_discussionRequestHelper.getCompanyId(),
-			_discussionRequestHelper.getScopeGroupId(),
 			_discussionTaglibHelper.getPermissionClassName(),
 			_discussionTaglibHelper.getPermissionClassPK(),
-			_comment.getCommentId(), _comment.getUserId());
+			_discussionComment.getCommentId(), _discussionComment.getUserId());
 	}
 
 	@Override
@@ -127,7 +125,8 @@ public class DefaultCommentTreeDisplayContext
 		}
 
 		return !TrashUtil.isInTrash(
-			_comment.getModelClassName(), _comment.getCommentId());
+			_discussionComment.getModelClassName(),
+			_discussionComment.getCommentId());
 	}
 
 	@Override
@@ -142,7 +141,7 @@ public class DefaultCommentTreeDisplayContext
 
 	@Override
 	public boolean isWorkflowStatusVisible() {
-		if ((_comment != null) && !isCommentApproved()) {
+		if ((_discussionComment != null) && !isCommentApproved()) {
 			return true;
 		}
 
@@ -162,11 +161,9 @@ public class DefaultCommentTreeDisplayContext
 
 	protected boolean hasUpdatePermission() throws PortalException {
 		return _discussionPermission.hasUpdatePermission(
-			_discussionRequestHelper.getCompanyId(),
-			_discussionRequestHelper.getScopeGroupId(),
 			_discussionTaglibHelper.getPermissionClassName(),
 			_discussionTaglibHelper.getPermissionClassPK(),
-			_comment.getCommentId(), _comment.getUserId());
+			_discussionComment.getCommentId(), _discussionComment.getUserId());
 	}
 
 	protected boolean hasViewPermission() throws PortalException {
@@ -181,9 +178,9 @@ public class DefaultCommentTreeDisplayContext
 	protected boolean isCommentApproved() {
 		boolean approved = true;
 
-		if (_comment instanceof WorkflowableComment) {
+		if (_discussionComment instanceof WorkflowableComment) {
 			WorkflowableComment workflowableComment =
-				(WorkflowableComment)_comment;
+				(WorkflowableComment) _discussionComment;
 
 			if (workflowableComment.getStatus() ==
 					WorkflowConstants.STATUS_APPROVED) {
@@ -201,7 +198,7 @@ public class DefaultCommentTreeDisplayContext
 	protected boolean isCommentAuthor() {
 		User user = getUser();
 
-		if ((_comment.getUserId() == user.getUserId()) &&
+		if ((_discussionComment.getUserId() == user.getUserId()) &&
 			!user.isDefaultUser()) {
 
 			return true;
@@ -213,9 +210,9 @@ public class DefaultCommentTreeDisplayContext
 	protected boolean isCommentPending() {
 		boolean pending = false;
 
-		if (_comment instanceof WorkflowableComment) {
+		if (_discussionComment instanceof WorkflowableComment) {
 			WorkflowableComment workflowableComment =
-				(WorkflowableComment)_comment;
+				(WorkflowableComment) _discussionComment;
 
 			if (workflowableComment.getStatus() ==
 					WorkflowConstants.STATUS_PENDING) {
@@ -238,7 +235,7 @@ public class DefaultCommentTreeDisplayContext
 			_discussionRequestHelper.getScopeGroupId());
 	}
 
-	private final Comment _comment;
+	private final DiscussionComment _discussionComment;
 	private final DiscussionPermission _discussionPermission;
 	private final DiscussionRequestHelper _discussionRequestHelper;
 	private final DiscussionTaglibHelper _discussionTaglibHelper;

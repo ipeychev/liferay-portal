@@ -20,7 +20,7 @@ feature or API will be dropped in an upcoming version.
 replaces an old API, in spite of the old API being kept in Liferay Portal for
 backwards compatibility.
 
-*This document has been reviewed through commit `ef6867d`.*
+*This document has been reviewed through commit `291214b`.*
 
 ## Breaking Changes Contribution Guidelines
 
@@ -1433,6 +1433,15 @@ The following portal properties (and the equivalent `PropsKeys` and
 - `sites.form.update.main`
 - `sites.form.update.miscellaneous`
 - `sites.form.update.seo`
+- `users.form.add.identification`
+- `users.form.add.main`
+- `users.form.add.miscellaneous`
+- `users.form.my.account.identification`
+- `users.form.my.account.main`
+- `users.form.my.account.miscellaneous`
+- `users.form.update.identification`
+- `users.form.update.main`
+- `users.form.update.miscellaneous`
 
 The sections and categories of form navigators are now OSGi components.
 
@@ -1521,7 +1530,7 @@ change is used for the blog abstract field.
 ---------------------------------------
 
 ### Moved the Contact Name Exception Classes to Inner classes of ContactNameException
-- **Date:** 2015-May-5
+- **Date:** 2015-May-05
 - **JIRA Ticket:** LPS-55364
 
 #### What changed?
@@ -1550,24 +1559,98 @@ feature to be thoroughly covered by exceptions for different configurations.
 
 ---------------------------------------
 
-### Removed USERS_LAST_NAME_REQUIRED from portal.properties in favor of language.properties configurations
+### Removed USERS_LAST_NAME_REQUIRED from portal.properties in Favor of language.properties Configurations
 - **Date:** 2015-May-07
 - **JIRA Ticket:** LPS-54956
 
 #### What changed?
 
-The USERS_LAST_NAME_REQUIRED property has been removed from the portal.properties and the corresponding UI.  Required names are now handled on a per-language basis via the language.properties files.  It has also been removed as an option from the Portal Settings section of the control panel.
+The `USERS_LAST_NAME_REQUIRED` property has been removed from
+`portal.properties` and the corresponding UI. Required names are now handled on
+a per-language basis via the `language.properties` files. It has also been
+removed as an option from the Portal Settings section of the Control Panel.
 
 #### Who is affected?
 
-This affects anyone who uses the USERS_LAST_NAME_REQUIRED portal property.
+This affects anyone who uses the `USERS_LAST_NAME_REQUIRED` portal property.
 
 #### How should I update my code?
 
-If you need to require the last name, list it on the `lang.user.name.required.field.names` line of the appropriate language.properties files like so: `lang.user.name.required.field.names=last-name`.
+If you need to require the user's last name, list it on the
+`lang.user.name.required.field.names` line of the appropriate
+`language.properties` files:
+
+    lang.user.name.required.field.names=last-name
 
 #### Why was this change made?
 
-This change was made to account for different languages allowing for different user name fields, along with which of those fields are required (introduced as part of LPS-48406). That change was in conflict with the current USERS_LAST_NAME_REQUIRED property, so all control has been relegated to the language.properties files (with the exception of first-name, which is still always present and always required).
+Portal property `USERS_LAST_NAME_REQUIRED` didn't support the multicultural user
+name configurations introduced in LPS-48406. Language property files (e.g.,
+`language.properties`) now support these configurations. Control of all user
+name configuration, except with regards to first name, is relegated to language
+property files. First name is required and always present. 
+
+---------------------------------------
+
+### Removed methods getGroupLocalRepositoryImpl() and getLocalRepositoryImpl() from RepositoryLocalService and RepositoryService
+- **Date:** 2015-May-14
+- **JIRA Ticket:** LPS-55566
+
+#### What changed?
+
+The methods getGroupLocalRepositoryImpl() and getLocalRepositoryImpl() have been removed from RepositoryLocalService and RepositoryService because, although they are related to that service, they should be placed in a different level of abstraction.
+
+#### Who is affected?
+
+This affects anyone who uses those methods.
+
+#### How should I update my code?
+
+The removed methods where generic and had a long signature with optional parameters, now they have on specialized version per parameter and are placed in the RepositoryProvider service. For instance, if you called:
+
+```
+    RepositoryLocalServiceUtil.getRepositoryImpl(0, fileEntryId, 0)
+```
+
+now you must call:
+
+```
+    RepositoryProviderUtil.getLocalRepositoryByFileEntryId(fileEntryId)
+```
+
+#### Why was this change made?
+
+This change was made to enhance the Repository API and make decoupling from Document Library easier when modularizing the portal.
+
+---------------------------------------
+
+### Removed addFileEntry method from DLAppHelperLocalService
+- **Date:** 2015-May-20
+- **JIRA Ticket:** LPS-47645
+
+#### What changed?
+
+The `addFileEntry` method has been removed from the
+`DLAppHelperLocalService` service.
+
+#### Who is affected?
+
+This affects anyone who calls the `addFileEntry` method.
+
+#### How should I update my code?
+
+If you need to invoke the `addFileEntry` method as part of a custom
+repository implementation, use the provided repository capabilities
+instead. See `LiferayRepositoryDefiner` for examples on their use.
+
+For other use cases, you may need to invoke explicitly each of the
+service methods used by `addFileEntry`.
+
+#### Why was this change made?
+
+The logic inside the `addFileEntry` method was moved out from
+`DLAppHelperLocalService` and into repository capabilities to further
+decouple core repository implementations from additional (optional)
+functionality.
 
 ---------------------------------------

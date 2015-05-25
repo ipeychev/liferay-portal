@@ -33,6 +33,7 @@
 	<classpathentry kind="lib" path="lib/development/catalina.jar"/>
 	<classpathentry kind="lib" path="lib/development/cobertura.jar"/>
 	<classpathentry kind="lib" path="lib/development/com.liferay.ant.bnd.jar"/>
+	<classpathentry kind="lib" path="lib/development/com.liferay.ant.build.logger.jar"/>
 	<classpathentry kind="lib" path="lib/development/com.liferay.tld.formatter.jar"/>
 	<classpathentry kind="lib" path="lib/development/com.liferay.whip.jar"/>
 	<classpathentry kind="lib" path="lib/development/deployment.jar"/>
@@ -166,7 +167,6 @@
 	<classpathentry kind="lib" path="lib/portal/easyconf.jar"/>
 	<classpathentry kind="lib" path="lib/portal/eclipse-core-runtime.jar"/>
 	<classpathentry kind="lib" path="lib/portal/ecs.jar"/>
-	<classpathentry kind="lib" path="lib/portal/ehcache.jar"/>
 	<classpathentry kind="lib" path="lib/portal/fastutil.jar"/>
 	<classpathentry kind="lib" path="lib/portal/fontbox.jar"/>
 	<classpathentry kind="lib" path="lib/portal/freshcookies-security.jar"/>
@@ -253,9 +253,7 @@
 	<classpathentry kind="lib" path="lib/portal/poi-scratchpad.jar"/>
 	<classpathentry kind="lib" path="lib/portal/portal-client.jar"/>
 	<classpathentry kind="lib" path="lib/portal/portals-bridges.jar"/>
-	<classpathentry kind="lib" path="lib/portal/quartz.jar"/>
 	<classpathentry kind="lib" path="lib/portal/rdffilter.jar"/>
-	<classpathentry kind="lib" path="lib/portal/rhino.jar"/>
 	<classpathentry kind="lib" path="lib/portal/ridl.jar"/>
 	<classpathentry kind="lib" path="lib/portal/rome.jar"/>
 	<classpathentry kind="lib" path="lib/portal/saaj-api.jar"/>

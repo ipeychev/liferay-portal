@@ -74,6 +74,11 @@
 	<td></td>
 </tr>
 <tr>
+	<td>ENABLE_PAGE_RATINGS</td>
+	<td>//label[contains(.,'Enable Page Ratings')]//input[@type='checkbox']</td>
+	<td></td>
+</tr>
+<tr>
 	<td>ENABLE_PRINT</td>
 	<td>//label[contains(.,'Enable Print')]/input[@type='checkbox']</td>
 	<td></td>
@@ -111,6 +116,11 @@
 <tr>
 	<td>HIDE_FROM_NAVIGATION_MENU</td>
 	<td>//label[contains(.,'Hide from Navigation Menu')]/input[@type='checkbox']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>MERGE_WITH_PARENT_FOLDER</td>
+	<td>//input[contains(@id,'mergeWithParentFolder')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -166,6 +176,11 @@
 <tr>
 	<td>SITE_OWNER</td>
 	<td>xpath=(//input[contains(@name,'rowIds')])[2]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>THIS_IS_A_MINOR_EDIT</td>
+	<td>//label[contains(.,'This is a minor edit.')]/input[@type='checkbox']</td>
 	<td></td>
 </tr>
 </tbody>

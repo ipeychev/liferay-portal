@@ -156,6 +156,14 @@ public class UserGroupServiceImpl extends UserGroupServiceBaseImpl {
 		userGroupLocalService.deleteUserGroup(userGroupId);
 	}
 
+	@Override
+	public UserGroup fetchUserGroup(long userGroupId) throws PortalException {
+		UserGroupPermissionUtil.check(
+			getPermissionChecker(), userGroupId, ActionKeys.VIEW);
+
+		return userGroupLocalService.fetchUserGroup(userGroupId);
+	}
+
 	/**
 	 * Returns the user group with the primary key.
 	 *

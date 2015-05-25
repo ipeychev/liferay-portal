@@ -24,13 +24,13 @@
 
 				<div class="edit-menu">
 					<div class="scope-type">
-						<span class="title" />
+						<span class="title"></span>
 
-						<span class="scope-name" />
+						<span class="scope-name"></span>
 					</div>
 
 					<div class="parameter">
-						<span class="title" />
+						<span class="title"></span>
 
 						<div class="parameter-list">
 						</div>
@@ -39,35 +39,12 @@
 			</div>
 
 			<div class="xml-log" id="xmlLog">
-				<ul class="xml-log-container" id="xmlLogContainer" />
+				<div class="fullscreen-image toggle" id="fullScreenImage">
+					<img class="hide" id="image" src="" />
+				</div>
+
+				<ul class="xml-log-container" id="xmlLogContainer"></ul>
 			</div>
 		</div>
-
-		<script>
-			var loggerInterface = YUI().use(
-				'liferay-qa-poshi-logger',
-				function(Y) {
-					var logger = new Y.PoshiLogger(
-						{
-							contentBox: '.poshi-logger',
-							xmlLog: '.xml-log',
-							sidebar: '.sidebar'
-						}
-					).render();
-
-					Y.on(
-						'command-complete',
-						logger.handleCommandCompleted,
-						logger
-					);
-
-					Y.on(
-						'line-trigger',
-						logger.handleLineTrigger,
-						logger
-					);
-				}
-			);
-		</script>
 	</body>
 </html>

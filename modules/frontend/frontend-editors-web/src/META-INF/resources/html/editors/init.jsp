@@ -23,7 +23,8 @@
 <%@ taglib uri="http://liferay.com/tld/theme" prefix="liferay-theme" %>
 <%@ taglib uri="http://liferay.com/tld/util" prefix="liferay-util" %>
 
-<%@ page import="com.liferay.portal.kernel.json.JSONObject" %><%@
+<%@ page import="com.liferay.portal.kernel.editor.configuration.EditorOptions" %><%@
+page import="com.liferay.portal.kernel.json.JSONObject" %><%@
 page import="com.liferay.portal.kernel.language.LanguageUtil" %><%@
 page import="com.liferay.portal.kernel.portlet.LiferayPortletResponse" %><%@
 page import="com.liferay.portal.kernel.portlet.LiferayWindowState" %><%@
@@ -46,6 +47,7 @@ page import="com.liferay.portal.util.PortalUtil" %><%@
 page import="com.liferay.portal.util.PortletKeys" %><%@
 page import="com.liferay.portal.util.SessionClicks" %><%@
 page import="com.liferay.portlet.PortletURLUtil" %><%@
+page import="com.liferay.taglib.aui.AUIUtil" %><%@
 page import="com.liferay.util.Encryptor" %>
 
 <%@ page import="java.util.Locale" %><%@
@@ -63,13 +65,7 @@ PortletRequest portletRequest = (PortletRequest)request.getAttribute(JavaConstan
 
 PortletResponse portletResponse = (PortletResponse)request.getAttribute(JavaConstants.JAVAX_PORTLET_RESPONSE);
 
-String namespace = StringPool.BLANK;
-
-boolean auiFormUseNamespace = GetterUtil.getBoolean((String)request.getAttribute("aui:form:useNamespace"), true);
-
-if ((portletResponse != null) && auiFormUseNamespace) {
-	namespace = GetterUtil.getString(request.getAttribute("aui:form:portletNamespace"), portletResponse.getNamespace());
-}
+String namespace = AUIUtil.getNamespace(portletRequest, portletResponse);
 
 String currentURL = null;
 

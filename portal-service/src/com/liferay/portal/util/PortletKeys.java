@@ -61,9 +61,13 @@ public class PortletKeys {
 
 	public static final String DYNAMIC_DATA_LISTS = "167";
 
-	public static final String DYNAMIC_DATA_MAPPING = "166";
+	public static final String DYNAMIC_DATA_MAPPING =
+		"com_liferay_dynamic_data_mapping_web_portlet_" +
+			"DynamicDataMappingPortlet";
 
 	public static final String EXPANDO = "139";
+
+	public static final String EXPORT_IMPORT = "200";
 
 	public static final String FAST_LOGIN = "164";
 
@@ -112,9 +116,11 @@ public class PortletKeys {
 
 	public static final String MY_SITES_DIRECTORY = "188";
 
-	public static final String MY_WORKFLOW_INSTANCES = "158";
+	public static final String MY_WORKFLOW_INSTANCE =
+		"com_liferay_workflow_instance_web_portlet_MyWorkflowInstancePortlet";
 
-	public static final String MY_WORKFLOW_TASKS = "153";
+	public static final String MY_WORKFLOW_TASK =
+		"com_liferay_workflow_task_web_portlet_MyWorkflowTaskPortlet";
 
 	public static final String NESTED_PORTLETS =
 		"com_liferay_nested_portlets_web_portlet_NestedPortletsPortlet";
@@ -131,7 +137,9 @@ public class PortletKeys {
 
 	public static final String PORTLET_CONFIGURATION = "86";
 
-	public static final String PORTLET_DISPLAY_TEMPLATES = "183";
+	public static final String PORTLET_DISPLAY_TEMPLATE =
+		"com_liferay_dynamic_data_mapping_web_portlet_" +
+			"PortletDisplayTemplatePortlet";
 
 	public static final String PORTLET_SHARING = "133";
 
@@ -186,9 +194,5 @@ public class PortletKeys {
 
 	public static final String WORKFLOW_DEFINITION =
 		"com_liferay_workflow_definition_web_portlet_WorkflowDefinitionPortlet";
-
-	public static final String WORKFLOW_INSTANCES = "157";
-
-	public static final String WORKFLOW_TASKS = "150";
 
 }

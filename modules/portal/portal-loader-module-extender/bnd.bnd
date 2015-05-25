@@ -1,0 +1,6 @@
+Bundle-Name: Liferay Portal Loader Module Extender
+Bundle-SymbolicName: com.liferay.portal.loader.module.extender
+Bundle-Version: 1.0.0
+Include-Resource:\
+	classes,\
+	@lib/json.jar

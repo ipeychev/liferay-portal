@@ -21,6 +21,7 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.io.unsync.UnsyncByteArrayInputStream;
 import com.liferay.portal.kernel.repository.InvalidRepositoryIdException;
 import com.liferay.portal.kernel.repository.LocalRepository;
+import com.liferay.portal.kernel.repository.RepositoryProviderUtil;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.repository.model.FileShortcut;
 import com.liferay.portal.kernel.repository.model.FileVersion;
@@ -212,9 +213,6 @@ public class DLAppLocalServiceImpl extends DLAppLocalServiceBaseImpl {
 			userId, folderId, sourceFileName, mimeType, title, description,
 			changeLog, file, serviceContext);
 
-		dlAppHelperLocalService.addFileEntry(
-			userId, fileEntry, null, serviceContext);
-
 		return fileEntry;
 	}
 
@@ -299,9 +297,6 @@ public class DLAppLocalServiceImpl extends DLAppLocalServiceBaseImpl {
 		FileEntry fileEntry = localRepository.addFileEntry(
 			userId, folderId, sourceFileName, mimeType, title, description,
 			changeLog, is, size, serviceContext);
-
-		dlAppHelperLocalService.addFileEntry(
-			userId, fileEntry, null, serviceContext);
 
 		return fileEntry;
 	}
@@ -402,12 +397,12 @@ public class DLAppLocalServiceImpl extends DLAppLocalServiceBaseImpl {
 	@Override
 	public void deleteAllRepositories(long groupId) throws PortalException {
 		LocalRepository groupLocalRepository =
-			repositoryLocalService.getLocalRepositoryImpl(groupId);
+			RepositoryProviderUtil.getLocalRepository(groupId);
 
 		deleteRepository(groupLocalRepository);
 
 		List<LocalRepository> localRepositories =
-			repositoryLocalService.getGroupLocalRepositoryImpl(groupId);
+			RepositoryProviderUtil.getLocalRepositoriesByGroupId(groupId);
 
 		for (LocalRepository localRepository : localRepositories) {
 			if (localRepository.getRepositoryId() !=
@@ -1344,9 +1339,6 @@ public class DLAppLocalServiceImpl extends DLAppLocalServiceBaseImpl {
 			}
 		}
 
-		dlAppHelperLocalService.addFileEntry(
-			userId, destinationFileEntry, null, serviceContext);
-
 		return destinationFileEntry;
 	}
 
@@ -1392,8 +1384,8 @@ public class DLAppLocalServiceImpl extends DLAppLocalServiceBaseImpl {
 		throws PortalException {
 
 		try {
-			return repositoryLocalService.getLocalRepositoryImpl(
-				0, fileEntryId, 0, 0);
+			return RepositoryProviderUtil.getFileEntryLocalRepository(
+				fileEntryId);
 		}
 		catch (InvalidRepositoryIdException irie) {
 			StringBundler sb = new StringBundler(3);
@@ -1411,8 +1403,8 @@ public class DLAppLocalServiceImpl extends DLAppLocalServiceBaseImpl {
 		throws PortalException {
 
 		try {
-			return repositoryLocalService.getLocalRepositoryImpl(
-				0, 0, 0, fileShortcutId);
+			return RepositoryProviderUtil.getFileShortcutLocalRepository(
+				fileShortcutId);
 		}
 		catch (InvalidRepositoryIdException irie) {
 			StringBundler sb = new StringBundler(3);
@@ -1429,8 +1421,8 @@ public class DLAppLocalServiceImpl extends DLAppLocalServiceBaseImpl {
 		throws PortalException {
 
 		try {
-			return repositoryLocalService.getLocalRepositoryImpl(
-				0, 0, fileVersionId, 0);
+			return RepositoryProviderUtil.getFileVersionLocalRepository(
+				fileVersionId);
 		}
 		catch (InvalidRepositoryIdException irie) {
 			StringBundler sb = new StringBundler(3);
@@ -1447,8 +1439,7 @@ public class DLAppLocalServiceImpl extends DLAppLocalServiceBaseImpl {
 		throws PortalException {
 
 		try {
-			return repositoryLocalService.getLocalRepositoryImpl(
-				folderId, 0, 0, 0);
+			return RepositoryProviderUtil.getFolderLocalRepository(folderId);
 		}
 		catch (InvalidRepositoryIdException irie) {
 			StringBundler sb = new StringBundler(3);
@@ -1476,7 +1467,7 @@ public class DLAppLocalServiceImpl extends DLAppLocalServiceBaseImpl {
 		throws PortalException {
 
 		try {
-			return repositoryLocalService.getLocalRepositoryImpl(repositoryId);
+			return RepositoryProviderUtil.getLocalRepository(repositoryId);
 		}
 		catch (InvalidRepositoryIdException irie) {
 			StringBundler sb = new StringBundler(3);

@@ -290,41 +290,49 @@ public class PluginPackageHotDeployListener extends BaseHotDeployListener {
 			return;
 		}
 
+		String singleVMConfigurationLocation =
+			portletPropertiesConfiguration.get(
+				PropsKeys.EHCACHE_SINGLE_VM_CONFIG_LOCATION);
+		String multiVMConfigurationLocation =
+			portletPropertiesConfiguration.get(
+				PropsKeys.EHCACHE_MULTI_VM_CONFIG_LOCATION);
+
+		if (Validator.isNull(singleVMConfigurationLocation) &&
+			Validator.isNull(multiVMConfigurationLocation)) {
+
+			return;
+		}
+
 		Registry registry = RegistryUtil.getRegistry();
 
 		ServiceRegistrar<PortalCacheConfiguratorSettings> serviceRegistrar =
 			registry.getServiceRegistrar(PortalCacheConfiguratorSettings.class);
 
-		Map<String, Object> properties = new HashMap<>();
+		if (Validator.isNotNull(singleVMConfigurationLocation)) {
+			Map<String, Object> properties = new HashMap<>();
 
-		properties.put(
-			"portal.cache.manager.name", PortalCacheManagerNames.SINGLE_VM);
+			properties.put(
+				"portal.cache.manager.name", PortalCacheManagerNames.SINGLE_VM);
 
-		PortalCacheConfiguratorSettings
-			singleVMPortalCacheConfigurationSettings =
+			serviceRegistrar.registerService(
+				PortalCacheConfiguratorSettings.class,
 				new PortalCacheConfiguratorSettings(
-					classLoader,
-					portletPropertiesConfiguration.get(
-						PropsKeys.EHCACHE_SINGLE_VM_CONFIG_LOCATION));
+					classLoader, singleVMConfigurationLocation),
+				properties);
+		}
 
-		serviceRegistrar.registerService(
-			PortalCacheConfiguratorSettings.class,
-			singleVMPortalCacheConfigurationSettings, properties);
+		if (Validator.isNotNull(multiVMConfigurationLocation)) {
+			Map<String, Object> properties = new HashMap<>();
 
-		properties = new HashMap<>();
+			properties.put(
+				"portal.cache.manager.name", PortalCacheManagerNames.MULTI_VM);
 
-		properties.put(
-			"portal.cache.manager.name", PortalCacheManagerNames.MULTI_VM);
-
-		PortalCacheConfiguratorSettings multiVMPortalCacheConfiguratorSettings =
-			new PortalCacheConfiguratorSettings(
-				classLoader,
-				portletPropertiesConfiguration.get(
-					PropsKeys.EHCACHE_MULTI_VM_CONFIG_LOCATION));
-
-		serviceRegistrar.registerService(
-			PortalCacheConfiguratorSettings.class,
-			multiVMPortalCacheConfiguratorSettings, properties);
+			serviceRegistrar.registerService(
+				PortalCacheConfiguratorSettings.class,
+				new PortalCacheConfiguratorSettings(
+					classLoader, multiVMConfigurationLocation),
+				properties);
+		}
 
 		servletContext.setAttribute(
 			_PORTAL_CACHE_CONFIGURATOR_SETTINGS_SERVICE_REGISTAR,

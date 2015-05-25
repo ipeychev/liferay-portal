@@ -62,7 +62,9 @@ public interface MBMessageService extends BaseService {
 
 	public com.liferay.portlet.messageboards.model.MBMessage addMessage(
 		long groupId, long categoryId, java.lang.String subject,
-		java.lang.String body, java.lang.String fileName, java.io.File file,
+		java.lang.String body, java.lang.String format,
+		java.lang.String fileName, java.io.File file, boolean anonymous,
+		double priority, boolean allowPingbacks,
 		com.liferay.portal.service.ServiceContext serviceContext)
 		throws PortalException, java.io.FileNotFoundException;
 
@@ -97,10 +99,19 @@ public interface MBMessageService extends BaseService {
 		com.liferay.portal.service.ServiceContext serviceContext)
 		throws PortalException;
 
+	/**
+	* @deprecated As of 7.0.0, replaced by {@link #deleteDiscussionMessage(
+	String, long, long, long)}
+	*/
+	@java.lang.Deprecated
 	public void deleteDiscussionMessage(long groupId,
 		java.lang.String className, long classPK,
 		java.lang.String permissionClassName, long permissionClassPK,
 		long permissionOwnerId, long messageId) throws PortalException;
+
+	public void deleteDiscussionMessage(java.lang.String permissionClassName,
+		long permissionClassPK, long permissionOwnerId, long messageId)
+		throws PortalException;
 
 	public void deleteMessage(long messageId) throws PortalException;
 

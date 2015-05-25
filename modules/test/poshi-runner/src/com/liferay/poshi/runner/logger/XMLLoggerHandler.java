@@ -114,6 +114,10 @@ public final class XMLLoggerHandler {
 		_xmlLogLoggerElement.addChildLoggerElement(headerLoggerElement);
 	}
 
+	public static LoggerElement getXMLLoggerElement(String stackTrace) {
+		return _loggerElements.get(stackTrace);
+	}
+
 	public static String getXMLLogText() {
 		return _xmlLogLoggerElement.toString();
 	}
@@ -123,7 +127,11 @@ public final class XMLLoggerHandler {
 
 		String stackTrace = PoshiRunnerStackTraceUtil.getSimpleStackTrace();
 
-		LoggerElement loggerElement = _loggerElements.get(stackTrace);
+		if (stackTrace.contains(".function")) {
+			return;
+		}
+
+		LoggerElement loggerElement = getXMLLoggerElement(stackTrace);
 
 		loggerElement.setAttribute("data-status01", status);
 
@@ -413,6 +421,13 @@ public final class XMLLoggerHandler {
 
 		lineContainerLoggerElement.setClassName("line-container");
 		lineContainerLoggerElement.setName("div");
+
+		if (element.attributeValue("macro") != null) {
+			lineContainerLoggerElement.setAttribute(
+				"onmouseover", "macroHover(this, true)");
+			lineContainerLoggerElement.setAttribute(
+				"onmouseout", "macroHover(this, false)");
+		}
 
 		StringBuilder sb = new StringBuilder();
 

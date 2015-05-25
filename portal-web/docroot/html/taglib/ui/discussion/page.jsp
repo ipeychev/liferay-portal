@@ -23,9 +23,9 @@ DiscussionRequestHelper discussionRequestHelper = new DiscussionRequestHelper(re
 DiscussionTaglibHelper discussionTaglibHelper = new DiscussionTaglibHelper(request);
 
 DiscussionPermission discussionPermission = CommentManagerUtil.getDiscussionPermission(discussionRequestHelper.getPermissionChecker());
-Discussion discussion = CommentManagerUtil.getDiscussion(discussionTaglibHelper.getUserId(), discussionRequestHelper.getScopeGroupId(), discussionTaglibHelper.getClassName(), discussionTaglibHelper.getClassPK(), ServiceContextFactory.getInstance(request));
+Discussion discussion = CommentManagerUtil.getDiscussion(discussionTaglibHelper.getUserId(), discussionRequestHelper.getScopeGroupId(), discussionTaglibHelper.getClassName(), discussionTaglibHelper.getClassPK(), new ServiceContextFunction(renderRequest));
 
-Comment rootComment = discussion.getRootComment();
+DiscussionComment rootDiscussionComment = discussion.getRootDiscussionComment();
 
 CommentSectionDisplayContext commentSectionDisplayContext = CommentDisplayContextProviderUtil.getCommentSectionDisplayContext(request, response, discussionPermission, discussion);
 %>
@@ -52,22 +52,22 @@ CommentSectionDisplayContext commentSectionDisplayContext = CommentDisplayContex
 				<aui:input name="permissionClassName" type="hidden" value="<%= discussionTaglibHelper.getPermissionClassName() %>" />
 				<aui:input name="permissionClassPK" type="hidden" value="<%= discussionTaglibHelper.getPermissionClassPK() %>" />
 				<aui:input name="permissionOwnerId" type="hidden" value="<%= String.valueOf(discussionTaglibHelper.getUserId()) %>" />
-				<aui:input name="messageId" type="hidden" />
-				<aui:input name="parentMessageId" type="hidden" />
+				<aui:input name="commentId" type="hidden" />
+				<aui:input name="parentCommentId" type="hidden" />
 				<aui:input name="body" type="hidden" />
 				<aui:input name="workflowAction" type="hidden" value="<%= String.valueOf(WorkflowConstants.ACTION_PUBLISH) %>" />
 				<aui:input name="ajax" type="hidden" value="<%= true %>" />
 
 				<%
-				Comment comment = rootComment;
+				DiscussionComment discussionComment = rootDiscussionComment;
 				%>
 
 				<c:if test="<%= commentSectionDisplayContext.isControlsVisible() %>">
 					<aui:fieldset cssClass="add-comment" id='<%= randomNamespace + "messageScroll0" %>'>
 						<c:if test="<%= !discussion.isMaxCommentsLimitExceeded() %>">
-							<div id="<%= randomNamespace %>messageScroll<%= rootComment.getCommentId() %>">
-								<aui:input name="messageId0" type="hidden" value="<%= rootComment.getCommentId() %>" />
-								<aui:input name="parentMessageId0" type="hidden" value="<%= rootComment.getCommentId() %>" />
+							<div id="<%= randomNamespace %>messageScroll<%= rootDiscussionComment.getCommentId() %>">
+								<aui:input name="commentId0" type="hidden" value="<%= rootDiscussionComment.getCommentId() %>" />
+								<aui:input name="parentCommentId0" type="hidden" value="<%= rootDiscussionComment.getCommentId() %>" />
 							</div>
 						</c:if>
 
@@ -115,7 +115,7 @@ CommentSectionDisplayContext commentSectionDisplayContext = CommentDisplayContex
 										</div>
 
 										<div class="lfr-discussion-body">
-											<liferay-ui:input-editor configKey="commentsEditor" contents="" editorName='<%= PropsUtil.get("editor.wysiwyg.portal-web.docroot.html.taglib.ui.discussion.jsp") %>' name='<%= randomNamespace + "postReplyBody0" %>' onChangeMethod='<%= randomNamespace + "0OnChange" %>' placeholder="type-your-comment-here" showSource="<%= false %>" />
+											<liferay-ui:input-editor configKey="commentsEditor" contents="" editorName='<%= PropsUtil.get("editor.wysiwyg.portal-web.docroot.html.taglib.ui.discussion.jsp") %>' name='<%= randomNamespace + "postReplyBody0" %>' onChangeMethod='<%= randomNamespace + "0ReplyOnChange" %>' placeholder="type-your-comment-here" showSource="<%= false %>" />
 
 											<aui:input name="postReplyBody0" type="hidden" />
 
@@ -148,12 +148,12 @@ CommentSectionDisplayContext commentSectionDisplayContext = CommentDisplayContex
 						int rootIndexPage = 0;
 						boolean moreCommentsPagination = false;
 
-						CommentIterator commentIterator = rootComment.getThreadCommentsIterator();
+						DiscussionCommentIterator discussionCommentIterator = rootDiscussionComment.getThreadDiscussionCommentIterator();
 
-						while (commentIterator.hasNext()) {
+						while (discussionCommentIterator.hasNext()) {
 							index = GetterUtil.getInteger(request.getAttribute("liferay-ui:discussion:index"), 1);
 
-							rootIndexPage = commentIterator.getIndexPage();
+							rootIndexPage = discussionCommentIterator.getIndexPage();
 
 							if ((index + 1) > PropsValues.DISCUSSION_COMMENTS_DELTA_VALUE) {
 								moreCommentsPagination = true;
@@ -161,10 +161,8 @@ CommentSectionDisplayContext commentSectionDisplayContext = CommentDisplayContex
 								break;
 							}
 
-							comment = commentIterator.next();
-
-							request.setAttribute("liferay-ui:discussion:currentComment", comment);
 							request.setAttribute("liferay-ui:discussion:discussion", discussion);
+							request.setAttribute("liferay-ui:discussion:discussionComment", discussionCommentIterator.next());
 							request.setAttribute("liferay-ui:discussion:randomNamespace", randomNamespace);
 						%>
 
@@ -197,8 +195,8 @@ CommentSectionDisplayContext commentSectionDisplayContext = CommentDisplayContex
 		%>
 
 		<aui:script>
-			function <%= namespace + randomNamespace %>0OnChange(html) {
-				Liferay.Util.toggleDisabled('#<%= namespace + randomNamespace %>postReplyButton0', !html);
+			function <%= namespace + randomNamespace %>0ReplyOnChange(html) {
+				Liferay.Util.toggleDisabled('#<%= namespace + randomNamespace %>postReplyButton0', html.trim() === '');
 			}
 
 			function <%= randomNamespace %>afterLogin(emailAddress, anonymousAccount) {
@@ -212,10 +210,10 @@ CommentSectionDisplayContext commentSectionDisplayContext = CommentDisplayContex
 			function <%= randomNamespace %>deleteMessage(i) {
 				var form = AUI.$('#<%= namespace %><%= HtmlUtil.escapeJS(discussionTaglibHelper.getFormName()) %>');
 
-				var messageId = form.fm('messageId' + i).val();
+				var commentId = form.fm('commentId' + i).val();
 
 				form.fm('<%= randomNamespace %><%= Constants.CMD %>').val('<%= Constants.DELETE %>');
-				form.fm('messageId').val(messageId);
+				form.fm('commentId').val(commentId);
 
 				<portlet:namespace />sendMessage(form);
 			}
@@ -238,7 +236,7 @@ CommentSectionDisplayContext commentSectionDisplayContext = CommentDisplayContex
 					function(event) {
 						<portlet:namespace />showStatusMessage('success', '<%= UnicodeLanguageUtil.get(request, "your-request-processed-successfully") %>');
 
-						location.hash = '#' + AUI.$('#<portlet:namespace />randomNamespace').val() + 'message_' + response.messageId;
+						location.hash = '#' + AUI.$('#<portlet:namespace />randomNamespace').val() + 'message_' + response.commentId;
 					}
 				);
 
@@ -255,10 +253,10 @@ CommentSectionDisplayContext commentSectionDisplayContext = CommentDisplayContex
 
 				var editorInstance = window['<%= namespace + randomNamespace %>postReplyBody' + i];
 
-				var parentMessageId = form.fm('parentMessageId' + i).val();
+				var parentCommentId = form.fm('parentCommentId' + i).val();
 
 				form.fm('<%= randomNamespace %><%= Constants.CMD %>').val('<%= Constants.ADD %>');
-				form.fm('parentMessageId').val(parentMessageId);
+				form.fm('parentCommentId').val(parentCommentId);
 				form.fm('body').val(editorInstance.getHTML());
 
 				if (!themeDisplay.isSignedIn()) {
@@ -284,8 +282,8 @@ CommentSectionDisplayContext commentSectionDisplayContext = CommentDisplayContex
 				}
 			}
 
-			function <%= randomNamespace %>scrollIntoView(messageId) {
-				document.getElementById('<%= randomNamespace %>messageScroll' + messageId).scrollIntoView();
+			function <%= randomNamespace %>scrollIntoView(commentId) {
+				document.getElementById('<%= randomNamespace %>messageScroll' + commentId).scrollIntoView();
 			}
 
 			function <portlet:namespace />sendMessage(form, refreshPage) {
@@ -390,14 +388,14 @@ CommentSectionDisplayContext commentSectionDisplayContext = CommentDisplayContex
 
 				var editorInstance = window['<%= namespace + randomNamespace %>editReplyBody' + i];
 
-				var messageId = form.fm('messageId' + i).val();
+				var commentId = form.fm('commentId' + i).val();
 
 				if (pending) {
 					form.fm('workflowAction').val('<%= WorkflowConstants.ACTION_SAVE_DRAFT %>');
 				}
 
 				form.fm('<%= randomNamespace %><%= Constants.CMD %>').val('<%= Constants.UPDATE %>');
-				form.fm('messageId').val(messageId);
+				form.fm('commentId').val(commentId);
 				form.fm('body').val(editorInstance.getHTML());
 
 				<portlet:namespace />sendMessage(form);

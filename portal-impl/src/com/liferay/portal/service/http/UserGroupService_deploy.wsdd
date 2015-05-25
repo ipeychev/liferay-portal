@@ -33,6 +33,9 @@
 		<operation xmlns:operNS="urn:http.service.portal.liferay.com" name="deleteUserGroup" qname="operNS:deleteUserGroup" soapAction="">
 			<parameter xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="userGroupId" type="tns:long"></parameter>
 		</operation>
+		<operation xmlns:operNS="urn:http.service.portal.liferay.com" xmlns:rtns="http://model.portal.liferay.com" name="fetchUserGroup" qname="operNS:fetchUserGroup" returnQName="fetchUserGroupReturn" returnType="rtns:UserGroupSoap" soapAction="">
+			<parameter xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="userGroupId" type="tns:long"></parameter>
+		</operation>
 		<operation xmlns:operNS="urn:http.service.portal.liferay.com" xmlns:rtns="http://model.portal.liferay.com" name="getUserGroup" qname="operNS:getUserGroup" returnQName="getUserGroupReturn" returnType="rtns:UserGroupSoap" soapAction="">
 			<parameter xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="userGroupId" type="tns:long"></parameter>
 		</operation>
@@ -64,7 +67,7 @@
 			<parameter xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="description" type="tns:string"></parameter>
 			<parameter xmlns:tns="http://service.portal.liferay.com" qname="serviceContext" type="tns:ServiceContext"></parameter>
 		</operation>
-		<parameter name="allowedMethods" value="addGroupUserGroups addTeamUserGroups addUserGroup deleteUserGroup getUserGroup getUserGroups getUserUserGroups unsetGroupUserGroups unsetTeamUserGroups updateUserGroup" />
+		<parameter name="allowedMethods" value="addGroupUserGroups addTeamUserGroups addUserGroup deleteUserGroup fetchUserGroup getUserGroup getUserGroups getUserUserGroups unsetGroupUserGroups unsetTeamUserGroups updateUserGroup" />
 		<parameter name="className" value="com.liferay.portal.service.http.UserGroupServiceSoap" />
 		<parameter name="schemaUnqualified" value="http://model.portal.liferay.com,http://service.portal.liferay.com,http://theme.portal.liferay.com,http://toolbar.portlet.kernel.portal.liferay.com,http://util.kernel.portal.liferay.com,http://xml.apache.org/xml-soap,urn:http.service.portal.liferay.com" />
 		<parameter name="typeMappingVersion" value="1.2" />

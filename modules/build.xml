@@ -20,7 +20,8 @@
 		<dirset dir="apps/iframe" includes="*" />
 		<dirset dir="apps/invitation" includes="*" />
 		<dirset dir="apps/item-selector" includes="*" />
-		<dirset dir="apps/journal" includes="*" />
+		<dirset dir="apps/journal" excludes="journal-content-asset-addon-entry" includes="*" />
+		<dirset dir="apps/journal/journal-content-asset-addon-entry" includes="*" />
 		<dirset dir="apps/layout" includes="*" />
 		<dirset dir="apps/loan-calculator" includes="*" />
 		<dirset dir="apps/marketplace" includes="*" />
@@ -32,6 +33,7 @@
 		<dirset dir="apps/password-policies-admin" includes="*" />
 		<dirset dir="apps/polls" includes="*" />
 		<dirset dir="apps/portlet-css" includes="*" />
+		<dirset dir="apps/portlet-display-template" includes="*" />
 		<dirset dir="apps/productivity-center" includes="*" />
 		<dirset dir="apps/quick-note" includes="*" />
 		<dirset dir="apps/roles" includes="*" />

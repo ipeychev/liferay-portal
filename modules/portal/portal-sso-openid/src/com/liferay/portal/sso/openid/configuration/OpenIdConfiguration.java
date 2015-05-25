@@ -24,7 +24,11 @@ import aQute.bnd.annotation.metatype.Meta;
 )
 public interface OpenIdConfiguration {
 
-	@Meta.AD(deflt = "true", required = false)
+	@Meta.AD(
+		deflt = "true",
+		description = "Set this to true to enable OpenId authentication.",
+		required = false
+	)
 	public boolean enabled();
 
 }

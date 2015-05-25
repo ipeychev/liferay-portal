@@ -84,7 +84,6 @@ public class JournalFolderLocalServiceImpl
 
 		User user = userPersistence.findByPrimaryKey(userId);
 		parentFolderId = getParentFolderId(groupId, parentFolderId);
-		Date now = new Date();
 
 		validateFolder(0, groupId, parentFolderId, name);
 
@@ -97,8 +96,6 @@ public class JournalFolderLocalServiceImpl
 		folder.setCompanyId(user.getCompanyId());
 		folder.setUserId(user.getUserId());
 		folder.setUserName(user.getFullName());
-		folder.setCreateDate(serviceContext.getCreateDate(now));
-		folder.setModifiedDate(serviceContext.getModifiedDate(now));
 		folder.setParentFolderId(parentFolderId);
 		folder.setTreePath(folder.buildTreePath());
 		folder.setName(name);
@@ -518,13 +515,16 @@ public class JournalFolderLocalServiceImpl
 
 		parentFolderId = getParentFolderId(folder, parentFolderId);
 
+		if (folder.getParentFolderId() == parentFolderId) {
+			return folder;
+		}
+
 		validateFolderDDMStructures(folder.getFolderId(), parentFolderId);
 
 		validateFolder(
 			folder.getFolderId(), folder.getGroupId(), parentFolderId,
 			folder.getName());
 
-		folder.setModifiedDate(serviceContext.getModifiedDate(null));
 		folder.setParentFolderId(parentFolderId);
 		folder.setTreePath(folder.buildTreePath());
 		folder.setExpandoBridgeAttributes(serviceContext);
@@ -1017,9 +1017,13 @@ public class JournalFolderLocalServiceImpl
 
 		validateFolder(folderId, folder.getGroupId(), parentFolderId, name);
 
-		folder.setModifiedDate(serviceContext.getModifiedDate(null));
-		folder.setParentFolderId(parentFolderId);
-		folder.setTreePath(folder.buildTreePath());
+		long oldParentFolderId = folder.getParentFolderId();
+
+		if (oldParentFolderId != parentFolderId) {
+			folder.setParentFolderId(parentFolderId);
+			folder.setTreePath(folder.buildTreePath());
+		}
+
 		folder.setName(name);
 		folder.setDescription(description);
 		folder.setRestrictionType(restrictionType);
@@ -1038,6 +1042,11 @@ public class JournalFolderLocalServiceImpl
 
 		if (ddmStructureIds != null) {
 			updateFolderDDMStructures(folder, ddmStructureIds);
+		}
+
+		if (oldParentFolderId != parentFolderId) {
+			rebuildTree(
+				folder.getCompanyId(), folderId, folder.getTreePath(), true);
 		}
 
 		return folder;
@@ -1118,6 +1127,7 @@ public class JournalFolderLocalServiceImpl
 
 		for (JournalArticle article : articles) {
 			article.setFolderId(toFolderId);
+			article.setTreePath(article.buildTreePath());
 
 			journalArticlePersistence.update(article);
 

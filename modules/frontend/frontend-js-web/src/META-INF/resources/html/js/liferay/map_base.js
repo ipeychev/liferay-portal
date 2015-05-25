@@ -303,8 +303,7 @@ AUI.add(
 									var features = event.features;
 
 									if (features.length > 1) {
-										AArray.each(
-											event.features,
+										event.features.forEach(
 											function(item, index) {
 												bounds.extend(item.getGeometry().get());
 											}
@@ -590,12 +589,15 @@ AUI.add(
 
 					Liferay.component(id, map);
 
-					A.Array.each(
-						instance._pendingCallbacks[id],
-						function(item, index) {
-							item(map);
-						}
-					);
+					var pendingCallback = instance._pendingCallbacks[id];
+
+					if (pendingCallback) {
+						pendingCallback.forEach(
+							function(item, index) {
+								item(map);
+							}
+						);
+					}
 				},
 
 				_pendingCallbacks: {}

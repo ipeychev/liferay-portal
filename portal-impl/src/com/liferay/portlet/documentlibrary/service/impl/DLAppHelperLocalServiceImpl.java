@@ -23,6 +23,7 @@ import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.notifications.UserNotificationDefinition;
 import com.liferay.portal.kernel.repository.LocalRepository;
 import com.liferay.portal.kernel.repository.Repository;
+import com.liferay.portal.kernel.repository.RepositoryProviderUtil;
 import com.liferay.portal.kernel.repository.capabilities.RepositoryEventTriggerCapability;
 import com.liferay.portal.kernel.repository.event.RepositoryEventType;
 import com.liferay.portal.kernel.repository.event.TrashRepositoryEventType;
@@ -50,7 +51,6 @@ import com.liferay.portal.repository.liferayrepository.model.LiferayFolder;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.util.GroupSubscriptionCheckSubscriptionSender;
 import com.liferay.portal.util.PortletKeys;
-import com.liferay.portal.util.PropsValues;
 import com.liferay.portal.util.SubscriptionSender;
 import com.liferay.portlet.asset.model.AssetEntry;
 import com.liferay.portlet.asset.model.AssetLink;
@@ -91,24 +91,6 @@ import java.util.Map;
  */
 public class DLAppHelperLocalServiceImpl
 	extends DLAppHelperLocalServiceBaseImpl {
-
-	@Override
-	public void addFileEntry(
-			long userId, FileEntry fileEntry, FileVersion fileVersion,
-			ServiceContext serviceContext)
-		throws PortalException {
-
-		if (!DLAppHelperThreadLocal.isEnabled()) {
-			return;
-		}
-
-		if (PropsValues.DL_FILE_ENTRY_COMMENTS_ENABLED) {
-			mbMessageLocalService.addDiscussionMessage(
-				fileEntry.getUserId(), fileEntry.getUserName(),
-				fileEntry.getGroupId(), DLFileEntryConstants.getClassName(),
-				fileEntry.getFileEntryId(), WorkflowConstants.ACTION_PUBLISH);
-		}
-	}
 
 	@Override
 	public void addFolder(
@@ -232,11 +214,6 @@ public class DLAppHelperLocalServiceImpl
 		assetEntryLocalService.deleteEntry(
 			DLFileEntryConstants.getClassName(), fileEntry.getFileEntryId());
 
-		// Message boards
-
-		mbMessageLocalService.deleteDiscussionMessages(
-			DLFileEntryConstants.getClassName(), fileEntry.getFileEntryId());
-
 		// Ratings
 
 		ratingsStatsLocalService.deleteStats(
@@ -260,7 +237,7 @@ public class DLAppHelperLocalServiceImpl
 		throws PortalException {
 
 		LocalRepository localRepository =
-			repositoryLocalService.getLocalRepositoryImpl(repositoryId);
+			RepositoryProviderUtil.getLocalRepository(repositoryId);
 
 		List<FileEntry> fileEntries = localRepository.getRepositoryFileEntries(
 			UserConstants.USER_ID_DEFAULT,
@@ -1977,7 +1954,7 @@ public class DLAppHelperLocalServiceImpl
 			Class<T> modelClass, T target)
 		throws PortalException {
 
-		Repository repository = repositoryLocalService.getRepositoryImpl(
+		Repository repository = RepositoryProviderUtil.getRepository(
 			repositoryId);
 
 		if (repository.isCapabilityProvided(

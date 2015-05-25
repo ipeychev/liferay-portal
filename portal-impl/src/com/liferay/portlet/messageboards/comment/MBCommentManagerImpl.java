@@ -14,10 +14,10 @@
 
 package com.liferay.portlet.messageboards.comment;
 
-import com.liferay.portal.kernel.comment.Comment;
 import com.liferay.portal.kernel.comment.CommentConstants;
 import com.liferay.portal.kernel.comment.CommentManager;
 import com.liferay.portal.kernel.comment.Discussion;
+import com.liferay.portal.kernel.comment.DiscussionComment;
 import com.liferay.portal.kernel.comment.DiscussionPermission;
 import com.liferay.portal.kernel.comment.DuplicateCommentException;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -28,17 +28,18 @@ import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
+import com.liferay.portlet.messageboards.model.MBDiscussion;
 import com.liferay.portlet.messageboards.model.MBMessage;
 import com.liferay.portlet.messageboards.model.MBMessageDisplay;
 import com.liferay.portlet.messageboards.model.MBThread;
 import com.liferay.portlet.messageboards.model.MBTreeWalker;
+import com.liferay.portlet.messageboards.service.MBDiscussionLocalService;
 import com.liferay.portlet.messageboards.service.MBMessageLocalService;
-import com.liferay.portlet.messageboards.service.MBMessageLocalServiceUtil;
 import com.liferay.portlet.messageboards.util.comparator.MessageThreadComparator;
 import com.liferay.portlet.ratings.model.RatingsEntry;
 import com.liferay.portlet.ratings.model.RatingsStats;
-import com.liferay.portlet.ratings.service.RatingsEntryLocalServiceUtil;
-import com.liferay.portlet.ratings.service.RatingsStatsLocalServiceUtil;
+import com.liferay.portlet.ratings.service.RatingsEntryLocalService;
+import com.liferay.portlet.ratings.service.RatingsStatsLocalService;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -54,7 +55,8 @@ public class MBCommentManagerImpl implements CommentManager {
 	@Override
 	public void addComment(
 			long userId, long groupId, String className, long classPK,
-			String body, ServiceContext serviceContext)
+			String body,
+			Function<String, ServiceContext> serviceContextFunction)
 		throws PortalException {
 
 		MBMessageDisplay messageDisplay =
@@ -74,6 +76,9 @@ public class MBCommentManagerImpl implements CommentManager {
 				throw new DuplicateCommentException();
 			}
 		}
+
+		ServiceContext serviceContext = serviceContextFunction.apply(
+			MBMessage.class.getName());
 
 		_mbMessageLocalService.addDiscussionMessage(
 			userId, StringPool.BLANK, groupId, className, classPK,
@@ -101,6 +106,27 @@ public class MBCommentManagerImpl implements CommentManager {
 		MBMessage mbMessage = _mbMessageLocalService.addDiscussionMessage(
 			userId, userName, groupId, className, classPK,
 			mbThread.getThreadId(), mbThread.getRootMessageId(), subject, body,
+			serviceContext);
+
+		return mbMessage.getMessageId();
+	}
+
+	@Override
+	public long addComment(
+			long userId, String className, long classPK, String userName,
+			long parentCommentId, String subject, String body,
+			Function<String, ServiceContext> serviceContextFunction)
+		throws PortalException {
+
+		MBMessage parentMessage = _mbMessageLocalService.getMessage(
+			parentCommentId);
+
+		ServiceContext serviceContext = serviceContextFunction.apply(
+			MBMessage.class.getName());
+
+		MBMessage mbMessage = _mbMessageLocalService.addDiscussionMessage(
+			userId, userName, parentMessage.getGroupId(), className, classPK,
+			parentMessage.getThreadId(), parentCommentId, subject, body,
 			serviceContext);
 
 		return mbMessage.getMessageId();
@@ -140,11 +166,11 @@ public class MBCommentManagerImpl implements CommentManager {
 	@Override
 	public Discussion getDiscussion(
 			long userId, long groupId, String className, long classPK,
-			ServiceContext serviceContext)
+			Function<String, ServiceContext> serviceContextFunction)
 		throws PortalException {
 
 		MBMessageDisplay messageDisplay =
-			MBMessageLocalServiceUtil.getDiscussionMessageDisplay(
+			_mbMessageLocalService.getDiscussionMessageDisplay(
 				userId, groupId, className, classPK,
 				WorkflowConstants.STATUS_ANY, new MessageThreadComparator());
 
@@ -164,20 +190,23 @@ public class MBCommentManagerImpl implements CommentManager {
 				}
 			}
 
-			ratingsEntries = RatingsEntryLocalServiceUtil.getEntries(
+			ratingsEntries = _ratingsEntryLocalService.getEntries(
 				userId, CommentConstants.getDiscussionClassName(), classPKs);
-			ratingsStats = RatingsStatsLocalServiceUtil.getStats(
+			ratingsStats = _ratingsStatsLocalService.getStats(
 				CommentConstants.getDiscussionClassName(), classPKs);
 		}
 
+		ServiceContext serviceContext = serviceContextFunction.apply(
+			MBMessage.class.getName());
+
 		ThemeDisplay themeDisplay = serviceContext.getThemeDisplay();
 
-		Comment rootComment = new MBCommentImpl(
+		DiscussionComment rootDiscussionComment = new MBDiscussionCommentImpl(
 			treeWalker.getRoot(), treeWalker, ratingsEntries, ratingsStats,
 			themeDisplay.getPathThemeImages());
 
 		return new MBDiscussionImpl(
-			rootComment, messageDisplay.isDiscussionMaxComments());
+			rootDiscussionComment, messageDisplay.isDiscussionMaxComments());
 	}
 
 	@Override
@@ -187,12 +216,80 @@ public class MBCommentManagerImpl implements CommentManager {
 		return new MBDiscussionPermissionImpl(permissionChecker);
 	}
 
+	@Override
+	public boolean hasDiscussion(String className, long classPK) {
+		MBDiscussion discussion = _mbDiscussionLocalService.fetchDiscussion(
+			className, classPK);
+
+		if (discussion == null) {
+			return false;
+		}
+
+		return true;
+	}
+
+	public void setMBDiscussionLocalService(
+		MBDiscussionLocalService mbDiscussionLocalService) {
+
+		_mbDiscussionLocalService = mbDiscussionLocalService;
+	}
+
 	public void setMBMessageLocalService(
 		MBMessageLocalService mbMessageLocalService) {
 
 		_mbMessageLocalService = mbMessageLocalService;
 	}
 
+	public void setRatingsEntryLocalService(
+		RatingsEntryLocalService ratingsEntryLocalService) {
+
+		_ratingsEntryLocalService = ratingsEntryLocalService;
+	}
+
+	public void setRatingsStatsLocalService(
+		RatingsStatsLocalService ratingsStatsLocalService) {
+
+		_ratingsStatsLocalService = ratingsStatsLocalService;
+	}
+
+	@Override
+	public void subscribeDiscussion(
+			long userId, long groupId, String className, long classPK)
+		throws PortalException {
+
+		_mbDiscussionLocalService.subscribeDiscussion(
+			userId, groupId, className, classPK);
+	}
+
+	@Override
+	public void unsubscribeDiscussion(
+			long userId, String className, long classPK)
+		throws PortalException {
+
+		_mbDiscussionLocalService.unsubscribeDiscussion(
+			userId, className, classPK);
+	}
+
+	@Override
+	public long updateComment(
+			long userId, String className, long classPK, long commentId,
+			String subject, String body,
+			Function<String, ServiceContext> serviceContextFunction)
+		throws PortalException {
+
+		ServiceContext serviceContext = serviceContextFunction.apply(
+			MBMessage.class.getName());
+
+		MBMessage message = _mbMessageLocalService.updateDiscussionMessage(
+			userId, commentId, className, classPK, subject, body,
+			serviceContext);
+
+		return message.getMessageId();
+	}
+
+	private MBDiscussionLocalService _mbDiscussionLocalService;
 	private MBMessageLocalService _mbMessageLocalService;
+	private RatingsEntryLocalService _ratingsEntryLocalService;
+	private RatingsStatsLocalService _ratingsStatsLocalService;
 
 }

@@ -76,6 +76,10 @@
 	<taskdef classname="com.liferay.ant.bnd.BaselineJarTask" classpathref="lib.classpath" name="baseline-jar" />
 	<taskdef classname="com.liferay.ant.bnd.ReleaseToRepoTask" classpathref="lib.classpath" name="release-to-repo" />
 
+	<taskdef classname="com.liferay.ant.build.logger.LiferayBuildLoggerInstallerTask" classpath="${project.dir}/lib/development/com.liferay.ant.build.logger.jar" name="liferay-build-logger-installer" />
+
+	<liferay-build-logger-installer />
+
 	<taskdef classname="com.tonicsystems.jarjar.JarJarTask" classpath="${project.dir}/lib/development/jarjar.jar" name="jarjar" />
 	<taskdef classname="com.oopsconsultancy.xmltask.ant.XmlTask" classpath="${project.dir}/lib/development/xmltask.jar" name="xmltask" />
 
@@ -717,6 +721,27 @@ Please set the environment variable ANT_OPTS to the recommended value of
 		</sequential>
 	</macrodef>
 
+	<macrodef name="deploy-properties">
+		<sequential>
+			<if>
+				<and>
+					<equals arg1="${app.server.bundled}" arg2="true" />
+					<equals arg1="${app.server.type}" arg2="glassfish" />
+				</and>
+				<then>
+					<war destfile="${app.server.glassfish.portal.war.dir}" update="true">
+						<classes dir="${project.dir}/portal-impl/src" includes="portal-*.properties,system-*.properties" />
+					</war>
+				</then>
+				<else>
+					<copy todir="${app.server.classes.portal.dir}" overwrite="true">
+						<fileset dir="${project.dir}/portal-impl/src" includes="portal-*.properties,system-*.properties" />
+					</copy>
+				</else>
+			</if>
+		</sequential>
+	</macrodef>
+
 	<macrodef name="execute">
 		<attribute default="." name="dir" />
 
@@ -934,6 +959,18 @@ Please set the environment variable ANT_OPTS to the recommended value of
 				classpathref="project.classpath"
 				projectDirPropertyName="project.dir"
 			/>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="print-current-time">
+		<sequential>
+			<local name="current.time" />
+
+			<tstamp>
+				<format property="current.time" pattern="MMMM d, yyyy 'at' hh:mm aa" />
+			</tstamp>
+
+			<echo message="${current.time}" />
 		</sequential>
 	</macrodef>
 
@@ -1308,6 +1345,10 @@ rerun your task.
 		</if>
 	</target>
 
+	<target name="deploy-properties">
+		<deploy-properties />
+	</target>
+
 	<target name="format-javadoc">
 		<echo>Run "ant compile compile-test" before using format-javadoc to generate @Override tags.</echo>
 
@@ -1329,14 +1370,6 @@ rerun your task.
 			<arg value="javadoc.output.file.prefix=${output.file.prefix}" />
 			<arg value="javadoc.update=${update}" />
 		</java>
-	</target>
-
-	<target name="print-current-time">
-		<tstamp>
-			<format property="current.time" pattern="MMMM d, yyyy 'at' hh:mm aa" />
-		</tstamp>
-
-		<echo message="${current.time}" />
 	</target>
 
 	<target name="print-properties">

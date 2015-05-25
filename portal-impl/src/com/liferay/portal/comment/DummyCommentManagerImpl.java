@@ -14,9 +14,10 @@
 
 package com.liferay.portal.comment;
 
-import com.liferay.portal.kernel.comment.Comment;
+import com.liferay.portal.kernel.comment.BaseDiscussionPermission;
 import com.liferay.portal.kernel.comment.CommentManager;
 import com.liferay.portal.kernel.comment.Discussion;
+import com.liferay.portal.kernel.comment.DiscussionComment;
 import com.liferay.portal.kernel.comment.DiscussionPermission;
 import com.liferay.portal.kernel.util.Function;
 import com.liferay.portal.security.permission.PermissionChecker;
@@ -30,13 +31,22 @@ public class DummyCommentManagerImpl implements CommentManager {
 	@Override
 	public void addComment(
 		long userId, long groupId, String className, long classPK, String body,
-		ServiceContext serviceContext) {
+		Function<String, ServiceContext> serviceContextFunction) {
 	}
 
 	@Override
 	public long addComment(
 		long userId, long groupId, String className, long classPK,
 		String userName, String subject, String body,
+		Function<String, ServiceContext> serviceContextFunction) {
+
+		return 0;
+	}
+
+	@Override
+	public long addComment(
+		long userId, String className, long classPK, String userName,
+		long parentCommentId, String subject, String body,
 		Function<String, ServiceContext> serviceContextFunction) {
 
 		return 0;
@@ -64,7 +74,7 @@ public class DummyCommentManagerImpl implements CommentManager {
 	@Override
 	public Discussion getDiscussion(
 		long userId, long groupId, String className, long classPK,
-		ServiceContext serviceContext) {
+		Function<String, ServiceContext> serviceContextFunction) {
 
 		return _discussion;
 	}
@@ -76,6 +86,30 @@ public class DummyCommentManagerImpl implements CommentManager {
 		return _discussionPermission;
 	}
 
+	@Override
+	public boolean hasDiscussion(String className, long classPK) {
+		return false;
+	}
+
+	@Override
+	public void subscribeDiscussion(
+		long userId, long groupId, String className, long classPK) {
+	}
+
+	@Override
+	public void unsubscribeDiscussion(
+		long userId, String className, long classPK) {
+	}
+
+	@Override
+	public long updateComment(
+		long userId, String className, long classPK, long commentId,
+		String subject, String body,
+		Function<String, ServiceContext> serviceContextFunction) {
+
+		return 0;
+	}
+
 	private static final Discussion _discussion = new Discussion() {
 
 		@Override
@@ -84,14 +118,14 @@ public class DummyCommentManagerImpl implements CommentManager {
 		}
 
 		@Override
-		public Comment getRootComment() {
+		public DiscussionComment getRootDiscussionComment() {
 			return null;
 		}
 
 	};
 
 	private static final DiscussionPermission _discussionPermission =
-		new DiscussionPermission() {
+		new BaseDiscussionPermission() {
 
 			@Override
 			public boolean hasAddPermission(
@@ -103,16 +137,14 @@ public class DummyCommentManagerImpl implements CommentManager {
 
 			@Override
 			public boolean hasDeletePermission(
-				long companyId, long groupId, String className, long classPK,
-				long commentId, long userId) {
+				String className, long classPK, long commentId, long userId) {
 
 				return false;
 			}
 
 			@Override
 			public boolean hasUpdatePermission(
-				long companyId, long groupId, String className, long classPK,
-				long commentId, long userId) {
+				String className, long classPK, long commentId, long userId) {
 
 				return false;
 			}

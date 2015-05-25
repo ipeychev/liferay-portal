@@ -475,8 +475,6 @@ public interface PropsKeys {
 
 	public static final String CONTROL_PANEL_NAVIGATION_MAX_SITES = "control.panel.navigation.max.sites";
 
-	public static final String COOKIE_HTTP_ONLY_NAMES_EXCLUDES = "cookie.http.only.names.excludes";
-
 	public static final String COUNTER_DATA_CENTER_COUNT = "counter.data.center.count";
 
 	public static final String COUNTER_DATA_CENTER_DEPLOYMENT_ID = "counter.data.center.deployment.id";
@@ -1112,6 +1110,8 @@ public interface PropsKeys {
 	public static final String JOURNAL_ARTICLE_CUSTOM_TOKEN_VALUE = "journal.article.custom.token.value";
 
 	public static final String JOURNAL_ARTICLE_CUSTOM_TOKENS = "journal.article.custom.tokens";
+
+	public static final String JOURNAL_ARTICLE_DATABASE_KEYWORD_SEARCH_CONTENT = "journal.article.database.keyword.search.content";
 
 	public static final String JOURNAL_ARTICLE_EXPIRE_ALL_VERSIONS = "journal.article.expire.all.versions";
 
@@ -2150,8 +2150,6 @@ public interface PropsKeys {
 	public static final String SCHEDULER_JOB_NAME_MAX_LENGTH = "scheduler.job.name.max.length";
 
 	public static final String SCHEMA_RUN_ENABLED = "schema.run.enabled";
-
-	public static final String SCRIPTING_FORBIDDEN_CLASSES = "scripting.forbidden.classes";
 
 	public static final String SCRIPTING_JRUBY_COMPILE_MODE = "scripting.jruby.compile.mode";
 

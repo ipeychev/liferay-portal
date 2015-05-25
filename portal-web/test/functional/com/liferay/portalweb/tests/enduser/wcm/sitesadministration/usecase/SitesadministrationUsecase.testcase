@@ -1261,6 +1261,7 @@
 		</execute>
 
 		<execute macro="Team#assignMembersCP">
+			<var name="teamName" value="Site Team Name" />
 			<var name="userScreenName" value="usersn1" />
 		</execute>
 
@@ -1270,6 +1271,7 @@
 		</execute>
 
 		<execute macro="Team#assignMembersCP">
+			<var name="teamName" value="Site Team Name" />
 			<var name="userNameIsNotFound" value="true" />
 			<var name="userScreenName" value="usersn2" />
 		</execute>
@@ -1383,6 +1385,7 @@
 		</execute>
 
 		<execute macro="Team#assignMembersCP">
+			<var name="teamName" value="Site Team Name" />
 			<var name="userScreenName" value="usersn1" />
 		</execute>
 
