@@ -23,13 +23,12 @@ import com.liferay.item.selector.ItemSelectorViewRenderer;
 import com.liferay.item.selector.web.constants.ItemSelectorPortletKeys;
 import com.liferay.item.selector.web.util.ItemSelectorCriterionSerializer;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
+import com.liferay.portal.kernel.portlet.LiferayPortletURL;
 import com.liferay.portal.kernel.portlet.LiferayWindowState;
 import com.liferay.portal.kernel.util.Accessor;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.StringPool;
-import com.liferay.portal.kernel.util.WebKeys;
-import com.liferay.portal.theme.ThemeDisplay;
-import com.liferay.portlet.PortletURLFactoryUtil;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -38,14 +37,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-import javax.portlet.ActionRequest;
 import javax.portlet.PortletMode;
 import javax.portlet.PortletModeException;
 import javax.portlet.PortletRequest;
+import javax.portlet.PortletResponse;
 import javax.portlet.PortletURL;
 import javax.portlet.WindowStateException;
 
@@ -62,19 +60,19 @@ public class ItemSelectorImpl implements ItemSelector {
 
 	public static final String PARAMETER_CRITERIA = "criteria";
 
-	public static final String PARAMETER_ITEM_SELECTED_CALLBACK =
-		"itemSelectedCallback";
+	public static final String PARAMETER_ITEM_SELECTED_EVENT_NAME =
+		"itemSelectedEventName";
 
 	public static final String PARAMETER_SELECTED_TAB = "selectedTab";
 
 	@Override
 	public ItemSelectorRendering getItemSelectorRendering(
-		PortletRequest portletRequest) {
+		PortletRequest portletRequest, PortletResponse portletResponse) {
 
 		Map<String, String[]> parameters = portletRequest.getParameterMap();
 
-		String itemSelectedCallback = getValue(
-			parameters, PARAMETER_ITEM_SELECTED_CALLBACK);
+		String itemSelectedEventName = getValue(
+			parameters, PARAMETER_ITEM_SELECTED_EVENT_NAME);
 
 		List<ItemSelectorViewRenderer> itemSelectorViewRenderers =
 			new ArrayList<>();
@@ -106,7 +104,7 @@ public class ItemSelectorImpl implements ItemSelector {
 					itemSelectorViews) {
 
 				PortletURL portletURL = getItemSelectorURL(
-					portletRequest, itemSelectedCallback,
+					portletResponse, itemSelectedEventName,
 					itemSelectorCriteriaArray);
 
 				portletURL.setParameter(
@@ -116,29 +114,25 @@ public class ItemSelectorImpl implements ItemSelector {
 				itemSelectorViewRenderers.add(
 					new ItemSelectorViewRendererImpl(
 						itemSelectorView, itemSelectorCriterion, portletURL,
-						itemSelectedCallback));
+						itemSelectedEventName));
 			}
 		}
 
 		return new ItemSelectorRenderingImpl(
-			itemSelectedCallback, getValue(parameters, PARAMETER_SELECTED_TAB),
+			itemSelectedEventName, getValue(parameters, PARAMETER_SELECTED_TAB),
 			itemSelectorViewRenderers);
 	}
 
 	@Override
 	public PortletURL getItemSelectorURL(
-		PortletRequest portletRequest, String itemSelectedCallback,
+		PortletResponse portletResponse, String itemSelectedEventName,
 		ItemSelectorCriterion... itemSelectorCriteria) {
 
-		Map<String, String[]> parameters = getItemSelectorParameters(
-			itemSelectedCallback, itemSelectorCriteria);
+		LiferayPortletResponse liferayPortletResponse =
+			(LiferayPortletResponse)portletResponse;
 
-		ThemeDisplay themeDisplay = (ThemeDisplay)portletRequest.getAttribute(
-			WebKeys.THEME_DISPLAY);
-
-		PortletURL portletURL = PortletURLFactoryUtil.create(
-			portletRequest, ItemSelectorPortletKeys.ITEM_SELECTOR,
-			themeDisplay.getPlid(), PortletRequest.ACTION_PHASE);
+		LiferayPortletURL portletURL = liferayPortletResponse.createRenderURL(
+			ItemSelectorPortletKeys.ITEM_SELECTOR);
 
 		try {
 			portletURL.setPortletMode(PortletMode.VIEW);
@@ -154,7 +148,8 @@ public class ItemSelectorImpl implements ItemSelector {
 			throw new SystemException(wse);
 		}
 
-		portletURL.setParameter(ActionRequest.ACTION_NAME, "showItemSelector");
+		Map<String, String[]> parameters = getItemSelectorParameters(
+			itemSelectedEventName, itemSelectorCriteria);
 
 		for (Map.Entry<String, String[]> entry : parameters.entrySet()) {
 			portletURL.setParameter(entry.getKey(), entry.getValue());
@@ -239,28 +234,17 @@ public class ItemSelectorImpl implements ItemSelector {
 	}
 
 	protected Map<String, String[]> getItemSelectorParameters(
-		String itemSelectedCallback,
+		String itemSelectedEventName,
 		ItemSelectorCriterion... itemSelectorCriteria) {
 
 		Map<String, String[]> parameters = new HashMap<>();
 
 		parameters.put(
-			PARAMETER_ITEM_SELECTED_CALLBACK,
-			new String[] {itemSelectedCallback});
+			PARAMETER_ITEM_SELECTED_EVENT_NAME,
+			new String[] {itemSelectedEventName});
 
 		populateCriteria(parameters, itemSelectorCriteria);
-
-		for (int i = 0; i < itemSelectorCriteria.length; i++) {
-			ItemSelectorCriterion itemSelectorCriterion =
-				itemSelectorCriteria[i];
-
-			String prefix = i + "_";
-
-			populateDesiredReturnTypes(
-				parameters, prefix, itemSelectorCriterion);
-			populateItemSelectorCriteria(
-				parameters, prefix, itemSelectorCriterion);
-		}
+		populateItemSelectorCriteria(parameters, itemSelectorCriteria);
 
 		return parameters;
 	}
@@ -306,60 +290,21 @@ public class ItemSelectorImpl implements ItemSelector {
 			new String[] {ArrayUtil.toString(itemSelectorCriteria, accessor)});
 	}
 
-	protected void populateDesiredReturnTypes(
-		Map<String, String[]> parameters, String prefix,
-		ItemSelectorCriterion itemSelectorCriterion) {
-
-		Set<Class<?>> desiredReturnTypes =
-			itemSelectorCriterion.getDesiredReturnTypes();
-
-		Set<Class<?>> availableReturnTypes =
-			itemSelectorCriterion.getAvailableReturnTypes();
-
-		if (desiredReturnTypes.size() == availableReturnTypes.size()) {
-			return;
-		}
-
-		Accessor<Class<?>, String> accessor = new Accessor<Class<?>, String>() {
-
-			@Override
-			public String get(Class<?> clazz) {
-				return clazz.getName();
-			}
-
-			@Override
-			public Class<String> getAttributeClass() {
-				return String.class;
-			}
-
-			@Override
-			@SuppressWarnings("rawtypes")
-			public Class<Class<?>> getTypeClass() {
-				return (Class)Class.class;
-			}
-
-		};
-
-		parameters.put(
-			prefix + "desiredReturnTypes",
-			new String[] {
-				ArrayUtil.toString(
-					desiredReturnTypes.toArray(
-						new Class<?>[desiredReturnTypes.size()]),
-					accessor)
-			});
-	}
-
 	protected void populateItemSelectorCriteria(
-		Map<String, String[]> parameters, String prefix,
-		ItemSelectorCriterion itemSelectorCriterion) {
+		Map<String, String[]> parameters,
+		ItemSelectorCriterion[] itemSelectorCriteria) {
 
-		ItemSelectorCriterionSerializer<ItemSelectorCriterion>
-			itemSelectorCriterionSerializer =
-				new ItemSelectorCriterionSerializer<>(
-					itemSelectorCriterion, prefix);
+		for (int i = 0; i < itemSelectorCriteria.length; i++) {
+			ItemSelectorCriterion itemSelectorCriterion =
+				itemSelectorCriteria[i];
 
-		parameters.putAll(itemSelectorCriterionSerializer.getProperties());
+			ItemSelectorCriterionSerializer<ItemSelectorCriterion>
+				itemSelectorCriterionSerializer =
+					new ItemSelectorCriterionSerializer<>(
+						itemSelectorCriterion, i + "_");
+
+			parameters.putAll(itemSelectorCriterionSerializer.getProperties());
+		}
 	}
 
 	@Reference(

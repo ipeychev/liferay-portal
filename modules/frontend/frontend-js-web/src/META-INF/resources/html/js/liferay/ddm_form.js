@@ -3,8 +3,6 @@ AUI.add(
 	function(A) {
 		var AArray = A.Array;
 
-		var AJSON = A.JSON;
-
 		var Lang = A.Lang;
 
 		var INSTANCE_ID_PREFIX = '_INSTANCE_';
@@ -178,7 +176,7 @@ AUI.add(
 
 				portletURL.setDoAsGroupId(instance.get('doAsGroupId'));
 				portletURL.setParameter('controlPanelCategory', 'portlet');
-				portletURL.setParameter('definition', AJSON.stringify(instance.get('definition')));
+				portletURL.setParameter('definition', JSON.stringify(instance.get('definition')));
 				portletURL.setParameter('fieldName', instance.get('name'));
 				portletURL.setParameter('javax.portlet.action', 'renderStructureField');
 				portletURL.setParameter('mode', instance.get('mode'));
@@ -799,7 +797,7 @@ AUI.add(
 								on: {
 									uploadcomplete: function(event) {
 										try {
-											var data = A.JSON.parse(event.data);
+											var data = JSON.parse(event.data);
 
 											if (data.status) {
 												instance.showNotice(data.message);
@@ -917,15 +915,40 @@ AUI.add(
 
 						var portletNamespace = instance.get('portletNamespace');
 
-						var portletURL = Liferay.PortletURL.createURL(themeDisplay.getURLControlPanel());
+						var portletURL = Liferay.PortletURL.createRenderURL();
 
-						portletURL.setDoAsGroupId(instance.get('doAsGroupId'));
-						portletURL.setParameter('eventName', portletNamespace + 'selectDocumentLibrary');
-						portletURL.setParameter('groupId', themeDisplay.getScopeGroupId());
-						portletURL.setParameter('refererPortletName', '');
-						portletURL.setParameter('mvcPath', '/view.jsp');
-						portletURL.setParameter('tabs1Names', 'documents');
+						portletURL.setParameter('javax.portlet.action', 'showItemSelector');
+						portletURL.setParameter('criteria', 'com.liferay.document.library.item.selector.web.DLItemSelectorCriterion');
+						portletURL.setParameter('itemSelectedEventName', portletNamespace + 'selectDocumentLibrary');
+
+						var criterionJSON = {
+							desiredReturnTypes:
+								[
+									'java.net.URL',
+									'com.liferay.portal.kernel.repository.model.FileEntry'
+								],
+							folderId: 0,
+							mimeTypes:
+								[
+									'image\/bmp',
+									'image\/gif',
+									'image\/jpeg',
+									'image\/pjpeg',
+									'image\/png',
+									'image\/tiff',
+									'image\/x-citrix-jpeg',
+									'image\/x-citrix-png',
+									'image\/x-ms-bmp',
+									'image\/x-png',
+									'image\/x-tiff'
+								],
+							repositoryId: Lang.toInt(themeDisplay.getScopeGroupId())
+						};
+
+						portletURL.setParameter('0_json', JSON.stringify(criterionJSON));
+
 						portletURL.setPortletId(Liferay.PortletKeys.ITEM_SELECTOR);
+						portletURL.setPortletMode('view');
 						portletURL.setWindowState('pop_up');
 
 						return portletURL.toString();
@@ -936,7 +959,7 @@ AUI.add(
 
 						if (Lang.isString(value)) {
 							if (value !== '') {
-								value = AJSON.parse(value);
+								value = JSON.parse(value);
 							}
 							else {
 								value = {};
@@ -986,7 +1009,7 @@ AUI.add(
 							value = '';
 						}
 						else {
-							value = AJSON.stringify(parsedValue);
+							value = JSON.stringify(parsedValue);
 						}
 
 						DocumentLibraryField.superclass.setValue.call(instance, value);
@@ -1124,9 +1147,7 @@ AUI.add(
 					getDocumentLibraryURL: function() {
 						var instance = this;
 
-						var portletURL = ImageField.superclass.getDocumentLibraryURL.apply(instance, arguments);
-
-						return portletURL + '&Type=image';
+						return ImageField.superclass.getDocumentLibraryURL.apply(instance, arguments);
 					},
 
 					getValue: function() {
@@ -1141,7 +1162,7 @@ AUI.add(
 
 							parsedValue.alt = altNode.val();
 
-							value = AJSON.stringify(parsedValue);
+							value = JSON.stringify(parsedValue);
 						}
 						else {
 							value = '';
@@ -1155,7 +1176,7 @@ AUI.add(
 
 						var parsedValue = instance.getParsedValue(value);
 
-						return (parsedValue.hasOwnProperty('data') && parsedValue.data !== '') || parsedValue.hasOwnProperty('uuid');
+						return parsedValue.hasOwnProperty('data') && parsedValue.data !== '' || parsedValue.hasOwnProperty('uuid');
 					},
 
 					setValue: function(value) {
@@ -1168,7 +1189,7 @@ AUI.add(
 								parsedValue.name = parsedValue.title;
 							}
 
-							value = AJSON.stringify(parsedValue);
+							value = JSON.stringify(parsedValue);
 						}
 						else {
 							value = '';
@@ -1208,7 +1229,7 @@ AUI.add(
 						var location = event.newVal.location;
 
 						instance.setValue(
-							AJSON.stringify(
+							JSON.stringify(
 								{
 									latitude: location.lat,
 									longitude: location.lng
@@ -1285,7 +1306,7 @@ AUI.add(
 							value = RadioField.superclass.getValue.apply(instance, arguments);
 						}
 
-						return AJSON.stringify([value]);
+						return JSON.stringify([value]);
 					},
 
 					setLabel: function() {
@@ -1324,7 +1345,7 @@ AUI.add(
 						radioNodes.set('checked', false);
 
 						if (Lang.isString(value)) {
-							value = AJSON.parse(value);
+							value = JSON.parse(value);
 						}
 
 						if (value.length) {
@@ -1380,7 +1401,7 @@ AUI.add(
 						var instance = this;
 
 						if (Lang.isString(value)) {
-							value = AJSON.parse(value);
+							value = JSON.parse(value);
 						}
 
 						instance.getInputNode().all('option').each(
@@ -1404,6 +1425,14 @@ AUI.add(
 
 					displayLocale: {
 						valueFn: '_valueDisplayLocale'
+					},
+
+					formNode: {
+						valueFn: '_valueFormNode'
+					},
+
+					liferayForm: {
+						valueFn: '_valueLiferayForm'
 					},
 
 					repeatable: {
@@ -1443,11 +1472,9 @@ AUI.add(
 					bindUI: function() {
 						var instance = this;
 
-						var container = instance.get('container');
+						var formNode = instance.get('formNode');
 
-						instance.formNode = container.ancestor('form', true);
-
-						if (instance.formNode) {
+						if (formNode) {
 							instance.eventHandlers.push(
 								instance.after('liferay-ddm-field:render', instance._afterRenderField, instance),
 								instance.after(
@@ -1455,7 +1482,7 @@ AUI.add(
 									instance._afterUpdateRepeatableFields,
 									instance
 								),
-								instance.formNode.on('submit', instance._onSubmitForm, instance),
+								formNode.on('submit', instance._onSubmitForm, instance),
 								Liferay.after('form:registered', instance._afterFormRegistered, instance),
 								Liferay.on('submitForm', instance._onLiferaySubmitForm, instance)
 							);
@@ -1468,15 +1495,15 @@ AUI.add(
 						AArray.invoke(instance.eventHandlers, 'detach');
 
 						instance.eventHandlers = null;
-
-						instance.formNode = null;
 					},
 
 					_afterFormRegistered: function(event) {
 						var instance = this;
 
-						if (event.formName === instance.formNode.attr('name')) {
-							instance.liferayForm = event.form;
+						var formNode = instance.get('formNode');
+
+						if (event.formName === formNode.attr('name')) {
+							instance.set('liferayForm', event.form);
 						}
 					},
 
@@ -1497,8 +1524,7 @@ AUI.add(
 
 						var oldIndex = -1;
 
-						AArray.some(
-							parentField.get('fields'),
+						parentField.get('fields').some(
 							function(item, index) {
 								oldIndex = index;
 
@@ -1516,7 +1542,7 @@ AUI.add(
 
 						var field = event.field;
 
-						var liferayForm = instance.liferayForm;
+						var liferayForm = instance.get('liferayForm');
 
 						if (liferayForm) {
 							var validatorRules = liferayForm.formValidator.get('rules');
@@ -1537,7 +1563,9 @@ AUI.add(
 
 								liferayForm.formValidator.resetField(field.getInputNode());
 
-								instance.unregisterRepeatable(field);
+								if (field.get('repeatable')) {
+									instance.unregisterRepeatable(field);
+								}
 							}
 
 							liferayForm.formValidator.set('rules', validatorRules);
@@ -1547,7 +1575,9 @@ AUI.add(
 					_onLiferaySubmitForm: function(event) {
 						var instance = this;
 
-						if (event.form.attr('name') === instance.formNode.attr('name')) {
+						var formNode = instance.get('formNode');
+
+						if (event.form.attr('name') === formNode.attr('name')) {
 							instance.updateDDMFormInputValue();
 						}
 					},
@@ -1564,6 +1594,22 @@ AUI.add(
 						var translationManager = instance.get('translationManager');
 
 						return translationManager.get('editingLocale');
+					},
+
+					_valueFormNode: function() {
+						var instance = this;
+
+						var container = instance.get('container');
+
+						return container.ancestor('form', true);
+					},
+
+					_valueLiferayForm: function() {
+						var instance = this;
+
+						var formNode = instance.get('formNode');
+
+						return Liferay.Form.get(formNode.attr('name'));
 					},
 
 					_valueTranslationManager: function() {
@@ -1646,7 +1692,7 @@ AUI.add(
 
 						var ddmFormValuesInput = instance.get('ddmFormValuesInput');
 
-						ddmFormValuesInput.val(AJSON.stringify(instance.toJSON()));
+						ddmFormValuesInput.val(JSON.stringify(instance.toJSON()));
 					}
 				}
 			}

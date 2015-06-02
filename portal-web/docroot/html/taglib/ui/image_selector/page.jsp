@@ -1,3 +1,4 @@
+<%@ page import="java.net.URL" %>
 <%--
 /**
  * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
@@ -94,16 +95,45 @@ if (fileEntryId != 0) {
 	</div>
 </div>
 
-<liferay-portlet:renderURL portletName="<%= PortletKeys.ITEM_SELECTOR %>" varImpl="itemSelectorURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
-	<portlet:param name="mvcPath" value="/view.jsp" />
-	<portlet:param name="tabs1Names" value="documents" />
-	<portlet:param name="groupId" value="<%= String.valueOf(scopeGroupId) %>" />
-	<portlet:param name="checkContentDisplayPage" value="true" />
-	<portlet:param name="type" value="image" />
-	<portlet:param name="eventName" value='<%= randomNamespace + "selectImage" %>' />
-</liferay-portlet:renderURL>
-
 <%
+PortletURL itemSelectorURL = liferayPortletResponse.createRenderURL(PortletKeys.ITEM_SELECTOR);
+
+itemSelectorURL.setParameter("criteria", "com.liferay.document.library.item.selector.web.DLItemSelectorCriterion");
+itemSelectorURL.setParameter("itemSelectedEventName", liferayPortletResponse.getNamespace() + "selectImage");
+
+JSONObject itemSelectorJSONParamJSONObject = JSONFactoryUtil.createJSONObject();
+
+JSONArray desiredReturnTypesJSONArray = JSONFactoryUtil.createJSONArray();
+
+desiredReturnTypesJSONArray.put(URL.class.getName());
+desiredReturnTypesJSONArray.put(FileEntry.class.getName());
+
+itemSelectorJSONParamJSONObject.put("desiredReturnTypes", desiredReturnTypesJSONArray);
+
+itemSelectorJSONParamJSONObject.put("folderId", DLFolderConstants.DEFAULT_PARENT_FOLDER_ID);
+
+JSONArray mimeTypesJSONArray = JSONFactoryUtil.createJSONArray();
+
+mimeTypesJSONArray.put("image/bmp");
+mimeTypesJSONArray.put("image/gif");
+mimeTypesJSONArray.put("image/jpeg");
+mimeTypesJSONArray.put("image/pjpeg");
+mimeTypesJSONArray.put("image/tiff");
+mimeTypesJSONArray.put("image/x-citrix-jpeg");
+mimeTypesJSONArray.put("image/x-citrix-png");
+mimeTypesJSONArray.put("image/x-ms-bmp");
+mimeTypesJSONArray.put("image/x-png");
+mimeTypesJSONArray.put("image/x-tiff");
+
+itemSelectorJSONParamJSONObject.put("mimeTypes", mimeTypesJSONArray);
+
+itemSelectorJSONParamJSONObject.put("repositoryId", scopeGroupId);
+
+itemSelectorURL.setParameter("0_json", itemSelectorJSONParamJSONObject.toString());
+
+itemSelectorURL.setPortletMode(PortletMode.VIEW);
+itemSelectorURL.setWindowState(LiferayWindowState.POP_UP);
+
 String modules = "liferay-image-selector";
 
 if (!draggableImage.equals("none")) {

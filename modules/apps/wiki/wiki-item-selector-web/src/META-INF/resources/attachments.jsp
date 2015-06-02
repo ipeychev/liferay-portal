@@ -33,10 +33,11 @@ wikiAttachmentsSearchContainer.setTotal(wikiPage.getAttachmentsFileEntriesCount(
 wikiAttachmentsSearchContainer.setResults(wikiPage.getAttachmentsFileEntries(wikiAttachmentsSearchContainer.getStart(), wikiAttachmentsSearchContainer.getEnd()));
 %>
 
-<liferay-ui:item-selector-browser
+<item-selector-ui:browser
 	displayStyle="<%= displayStyle %>"
 	idPrefix="wikiAttachments"
-	returnType="<%= ItemSelectorBrowserTag.ReturnType.parseFirst(wikiAttachmentItemSelectorCriterion.getDesiredReturnTypes()) %>"
+	itemSelectedEventName="<%= GetterUtil.getString(request.getAttribute(WikiAttachmentItemSelectorView.ITEM_SELECTED_EVENT_NAME)) %>"
+	returnType="<%= ReturnType.parseFirst(wikiAttachmentItemSelectorCriterion.getDesiredReturnTypes()) %>"
 	searchContainer="<%= wikiAttachmentsSearchContainer %>"
 	tabName="attachments"
 />

@@ -520,18 +520,18 @@ portletDisplay.setURLEditGuest(urlEditGuest.toString());
 
 // URL export / import
 
-PortletURLImpl urlExportImport = new PortletURLImpl(request, PortletKeys.PORTLET_CONFIGURATION, plid, PortletRequest.RENDER_PHASE);
+PortletURLImpl urlExportImport = new PortletURLImpl(request, PortletKeys.EXPORT_IMPORT, plid, PortletRequest.RENDER_PHASE);
 
 urlExportImport.setWindowState(LiferayWindowState.POP_UP);
 
-urlExportImport.setParameter("struts_action", "/portlet_configuration/export_import");
+urlExportImport.setParameter("struts_action", "/export_import/export_import");
 urlExportImport.setParameter("redirect", currentURL);
 urlExportImport.setParameter("returnToFullPageURL", currentURL);
 urlExportImport.setParameter("portletResource", portletDisplay.getId());
 
 urlExportImport.setEscapeXml(false);
 
-portletDisplay.setURLExportImport(urlExportImport.toString() + "&" + PortalUtil.getPortletNamespace(PortletKeys.PORTLET_CONFIGURATION));
+portletDisplay.setURLExportImport(urlExportImport.toString() + "&" + PortalUtil.getPortletNamespace(PortletKeys.EXPORT_IMPORT));
 
 // URL help
 
@@ -644,11 +644,11 @@ portletDisplay.setURLRefresh(urlRefresh);
 
 // URL staging
 
-PortletURLImpl urlStaging = new PortletURLImpl(request, PortletKeys.PORTLET_CONFIGURATION, plid, PortletRequest.RENDER_PHASE);
+PortletURLImpl urlStaging = new PortletURLImpl(request, PortletKeys.EXPORT_IMPORT, plid, PortletRequest.RENDER_PHASE);
 
 urlStaging.setWindowState(LiferayWindowState.POP_UP);
 
-urlStaging.setParameter("struts_action", "/portlet_configuration/staging");
+urlStaging.setParameter("struts_action", "/export_import/staging");
 urlStaging.setParameter("cmd", Constants.PUBLISH_TO_LIVE);
 urlStaging.setParameter("redirect", currentURL);
 urlStaging.setParameter("returnToFullPageURL", currentURL);
@@ -656,7 +656,7 @@ urlStaging.setParameter("portletResource", portletDisplay.getId());
 
 urlStaging.setEscapeXml(false);
 
-portletDisplay.setURLStaging(urlStaging.toString() + "&" + PortalUtil.getPortletNamespace(PortletKeys.PORTLET_CONFIGURATION));
+portletDisplay.setURLStaging(urlStaging.toString() + "&" + PortalUtil.getPortletNamespace(PortletKeys.EXPORT_IMPORT));
 
 // URL back
 
@@ -926,23 +926,21 @@ Boolean renderPortletBoundary = GetterUtil.getBoolean(request.getAttribute(WebKe
 					templatePath = StrutsUtil.TEXT_HTML_DIR + definition.getPath();
 				}
 
-				String portletContent = "/portal/portlet_error.jsp";
+				request.setAttribute(WebKeys.PORTLET_CONTENT_JSP, "/portal/portlet_error.jsp");
 		%>
 
-				<liferay-util:include page="<%= templatePath %>">
-					<liferay-util:param name="portlet_content" value="<%= portletContent %>" />
-				</liferay-util:include>
+				<liferay-util:include page="<%= templatePath %>" />
 
 		<%
 			}
 			else {
 				if (useDefaultTemplate || !portlet.isActive()) {
 					renderRequestImpl.setAttribute(WebKeys.PORTLET_CONTENT, bufferCacheServletResponse.getString());
+
+					request.setAttribute(WebKeys.PORTLET_CONTENT_JSP, StringPool.BLANK);
 		%>
 
-					<liferay-util:include page='<%= StrutsUtil.TEXT_HTML_DIR + "/common/themes/portlet.jsp" %>'>
-						<liferay-util:param name="portlet_content" value="<%= StringPool.BLANK %>" />
-					</liferay-util:include>
+					<liferay-util:include page='<%= StrutsUtil.TEXT_HTML_DIR + "/common/themes/portlet.jsp" %>' />
 
 		<%
 				}
@@ -954,26 +952,26 @@ Boolean renderPortletBoundary = GetterUtil.getBoolean(request.getAttribute(WebKe
 		else {
 			renderRequestImpl.setAttribute(WebKeys.PORTLET_CONTENT, bufferCacheServletResponse.getString());
 
-			String portletContent = StringPool.BLANK;
+			String portletContentJSP = StringPool.BLANK;
 
 			if (!portlet.isReady()) {
-				portletContent = "/portal/portlet_not_ready.jsp";
+				portletContentJSP = "/portal/portlet_not_ready.jsp";
 			}
 
 			if (portletException) {
-				portletContent = "/portal/portlet_error.jsp";
+				portletContentJSP = "/portal/portlet_error.jsp";
 			}
 
 			if (addNotAjaxablePortlet) {
-				portletContent = "/portal/portlet_not_ajaxable.jsp";
+				portletContentJSP = "/portal/portlet_not_ajaxable.jsp";
 			}
+
+			request.setAttribute(WebKeys.PORTLET_CONTENT_JSP, portletContentJSP);
 		%>
 
 			<c:choose>
 				<c:when test="<%= useDefaultTemplate || portletException || addNotAjaxablePortlet %>">
-					<liferay-util:include page='<%= StrutsUtil.TEXT_HTML_DIR + "/common/themes/portlet.jsp" %>'>
-						<liferay-util:param name="portlet_content" value="<%= portletContent %>" />
-					</liferay-util:include>
+					<liferay-util:include page='<%= StrutsUtil.TEXT_HTML_DIR + "/common/themes/portlet.jsp" %>' />
 				</c:when>
 				<c:otherwise>
 					<%= renderRequestImpl.getAttribute(WebKeys.PORTLET_CONTENT) %>

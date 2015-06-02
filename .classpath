@@ -34,6 +34,7 @@
 	<classpathentry kind="lib" path="lib/development/cobertura.jar"/>
 	<classpathentry kind="lib" path="lib/development/com.liferay.ant.bnd.jar"/>
 	<classpathentry kind="lib" path="lib/development/com.liferay.ant.build.logger.jar"/>
+	<classpathentry kind="lib" path="lib/development/com.liferay.ant.jgit.jar"/>
 	<classpathentry kind="lib" path="lib/development/com.liferay.tld.formatter.jar"/>
 	<classpathentry kind="lib" path="lib/development/com.liferay.whip.jar"/>
 	<classpathentry kind="lib" path="lib/development/deployment.jar"/>
@@ -140,7 +141,9 @@
 	<classpathentry kind="lib" path="lib/portal/closure-compiler.jar"/>
 	<classpathentry kind="lib" path="lib/portal/com.liferay.rtl.css.jar"/>
 	<classpathentry kind="lib" path="lib/portal/com.liferay.ruby.gems.jar"/>
+	<classpathentry kind="lib" path="lib/portal/com.liferay.sass.compiler.api.jar"/>
 	<classpathentry kind="lib" path="lib/portal/com.liferay.sass.compiler.jni.jar"/>
+	<classpathentry kind="lib" path="lib/portal/com.liferay.sass.compiler.ruby.jar"/>
 	<classpathentry kind="lib" path="lib/portal/commons-beanutils.jar"/>
 	<classpathentry kind="lib" path="lib/portal/commons-codec.jar"/>
 	<classpathentry kind="lib" path="lib/portal/commons-collections.jar"/>
@@ -191,7 +194,6 @@
 	<classpathentry kind="lib" path="lib/portal/jai_codec.jar"/>
 	<classpathentry kind="lib" path="lib/portal/jai_core.jar"/>
 	<classpathentry kind="lib" path="lib/portal/jakarta-regexp.jar"/>
-	<classpathentry kind="lib" path="lib/portal/jamwiki-core.jar"/>
 	<classpathentry kind="lib" path="lib/portal/java-diff.jar"/>
 	<classpathentry kind="lib" path="lib/portal/java-libpst.jar"/>
 	<classpathentry kind="lib" path="lib/portal/javassist.jar"/>
