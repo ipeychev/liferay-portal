@@ -37,7 +37,7 @@ AUI.add(
 
 						var nativeFeatures = instance._addData(data);
 
-						var features = AArray.map(nativeFeatures, instance._wrapNativeFeature, instance);
+						var features = nativeFeatures.map(instance._wrapNativeFeature, instance);
 
 						instance.fire(
 							'featuresAdded',
@@ -140,7 +140,7 @@ AUI.add(
 			{
 				ATTRS: {
 					controls: {
-						validator: Lang.isArray,
+						validator: Array.isArray,
 						value: [
 							'Base.CONTROLS.PAN',
 							'Base.CONTROLS.TYPE',
@@ -217,7 +217,7 @@ AUI.add(
 
 						var position = instance.get('position');
 
-						var location = (position && position.location) ? position.location : {};
+						var location = position && position.location ? position.location : {};
 
 						if (!location.lat || !location.lng) {
 							Liferay.Util.getGeolocation(
@@ -380,7 +380,7 @@ AUI.add(
 
 						var customControls = {};
 
-						if (AArray.indexOf(controls, Base.CONTROLS.HOME) !== -1) {
+						if (controls.indexOf(Base.CONTROLS.HOME) !== -1) {
 							var homeControl = A.Node.create(TPL_HOME_BUTTON);
 
 							customControls[Base.CONTROLS.HOME] = homeControl;
@@ -388,7 +388,7 @@ AUI.add(
 							instance.addControl(homeControl, Base.POSITION.RIGHT_BOTTOM);
 						}
 
-						if (AArray.indexOf(controls, Base.CONTROLS.SEARCH) !== -1) {
+						if (controls.indexOf(Base.CONTROLS.SEARCH) !== -1) {
 							var SearchImpl = instance.SearchImpl;
 
 							if (SearchImpl) {
@@ -423,7 +423,7 @@ AUI.add(
 						A.Object.each(
 							instance.CONTROLS_CONFIG_MAP,
 							function(item, index) {
-								var controlIndex = AArray.indexOf(availableControls, index);
+								var controlIndex = availableControls.indexOf(index);
 
 								if (controlIndex > -1) {
 									var controlConfig = controls[controlIndex];
@@ -433,7 +433,7 @@ AUI.add(
 									}
 								}
 
-								config[item] = (controlIndex !== -1);
+								config[item] = controlIndex !== -1;
 							}
 						);
 

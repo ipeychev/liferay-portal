@@ -320,12 +320,12 @@
 		<priority value="INFO" />
 	</category>
 
-	<category name="com.liferay.portal.kernel.search.BaseSpellCheckIndexWriter">
-		<priority value="INFO" />
-	</category>
-
 	<category name="com.liferay.portal.kernel.search.HitsOpenSearchImpl">
 		<priority value="WARN" />
+	</category>
+
+	<category name="com.liferay.portal.kernel.search.suggest.BaseSpellCheckIndexWriter">
+		<priority value="INFO" />
 	</category>
 
 	<category name="com.liferay.portal.kernel.servlet.PipingServletResponse">
@@ -1241,10 +1241,6 @@
 	</category>
 
 	<category name="org.jabsorb">
-		<priority value="ERROR" />
-	</category>
-
-	<category name="org.jamwiki.Environment">
 		<priority value="ERROR" />
 	</category>
 

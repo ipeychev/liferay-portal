@@ -99,7 +99,7 @@ AUI.add(
 
 						var target = event.target;
 
-						target.set('alwaysShowHitArea', (event.newVal.length > 0));
+						target.set('alwaysShowHitArea', event.newVal.length > 0);
 
 						target.eachChildren(A.bind(host.restoreSelectedNode, host));
 					},
@@ -155,7 +155,7 @@ AUI.add(
 							},
 							function(responseData) {
 								try {
-									paginationMap = A.JSON.parse(responseData);
+									paginationMap = JSON.parse(responseData);
 								}
 								catch (e) {
 								}
@@ -170,7 +170,7 @@ AUI.add(
 
 								var sessionClickData = {};
 
-								sessionClickData[key] = A.JSON.stringify(paginationMap);
+								sessionClickData[key] = JSON.stringify(paginationMap);
 
 								instance._invokeSessionClick(sessionClickData);
 							}
@@ -234,7 +234,7 @@ AUI.add(
 
 						var treeNodeTaskSuperClass = A.TreeNodeTask.superclass;
 
-						if (AArray.indexOf(instance.get(STR_CHECKED_NODES), plid) > -1) {
+						if (instance.get(STR_CHECKED_NODES).indexOf(plid) > -1) {
 							treeNodeTaskSuperClass.check.call(node, tree);
 						}
 						else {
@@ -251,7 +251,7 @@ AUI.add(
 
 						var checkedNodes = instance.get(STR_CHECKED_NODES);
 
-						var index = AArray.indexOf(checkedNodes, plid);
+						var index = checkedNodes.indexOf(plid);
 
 						if (state) {
 							if (index === -1) {

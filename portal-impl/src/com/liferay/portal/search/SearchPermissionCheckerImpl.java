@@ -113,6 +113,9 @@ public class SearchPermissionCheckerImpl implements SearchPermissionChecker {
 				companyId, groupId, className, classPK, document);
 		}
 		catch (NoSuchResourceException nsre) {
+			if (_log.isDebugEnabled()) {
+				_log.debug(nsre, nsre);
+			}
 		}
 		catch (Exception e) {
 			_log.error(e, e);
@@ -466,7 +469,10 @@ public class SearchPermissionCheckerImpl implements SearchPermissionChecker {
 
 		BooleanQuery fullQuery = BooleanQueryFactoryUtil.create(searchContext);
 
-		fullQuery.add(query, BooleanClauseOccur.MUST);
+		if (query != null) {
+			fullQuery.add(query, BooleanClauseOccur.MUST);
+		}
+
 		fullQuery.add(permissionQuery, BooleanClauseOccur.MUST);
 
 		return fullQuery;

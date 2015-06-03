@@ -81,8 +81,8 @@ AUI.add(
 			'</ul>';
 
 		var TPL_ICON_NODE = '<li class="' + CSS_TRANSLATION_ITEM + '">' +
-				'<a href="javascript:;" class="taglib-icon" lang="{0}">' +
-					'<img src="' + themeDisplay.getPathThemeImages() + '/language/{0}.png" class="icon">{1}' +
+				'<a class="taglib-icon" href="javascript:;" lang="{0}">' +
+					'<img class="icon" src="' + themeDisplay.getPathThemeImages() + '/language/{0}.png">{1}' +
 				'</a>' +
 			'</li>';
 
@@ -92,7 +92,7 @@ AUI.add(
 			{
 				ATTRS: {
 					availableLocales: {
-						validator: Lang.isArray,
+						validator: Array.isArray,
 						valueFn: '_valueAvailableLocales'
 					},
 
@@ -172,11 +172,11 @@ AUI.add(
 					renderUI: function() {
 						var instance = this;
 
-						var availableTranslationsNode = instance.get('availableTranslationsNode');
 						var availableTranslationsLinksNode = instance.get('availableTranslationsLinksNode');
+						var availableTranslationsNode = instance.get('availableTranslationsNode');
 						var changeDefaultLocaleNode = instance.get('changeDefaultLocaleNode');
-						var defaultLocaleNode = instance.get('defaultLocaleNode');
 						var defaultLocaleLabelNode = instance.get('defaultLocaleLabelNode');
+						var defaultLocaleNode = instance.get('defaultLocaleNode');
 						var defaultLocaleTextNode = instance.get('defaultLocaleTextNode');
 						var iconMenuNode = instance.get('iconMenuNode');
 
@@ -229,7 +229,7 @@ AUI.add(
 
 						var availableLocales = instance.get('availableLocales');
 
-						if (AArray.indexOf(availableLocales, locale) === -1) {
+						if (availableLocales.indexOf(locale) === -1) {
 							availableLocales.push(locale);
 
 							instance.set('availableLocales', availableLocales);
@@ -409,7 +409,7 @@ AUI.add(
 						val.forEach(
 							function(item, index) {
 								if (defaultLocale !== item) {
-									tplBuffer.cssClass = (editingLocale === item) ? CSS_TRANSLATION_EDITING : STR_BLANK;
+									tplBuffer.cssClass = editingLocale === item ? CSS_TRANSLATION_EDITING : STR_BLANK;
 
 									tplBuffer.displayName = localesMap[item];
 									tplBuffer.locale = item;
@@ -451,6 +451,7 @@ AUI.add(
 						var instance = this;
 
 						var availableTranslationsLinksNode = instance._availableTranslationsLinksNode;
+
 						var availableTranslationsLinksItems = availableTranslationsLinksNode.all(STR_DOT + CSS_TRANSLATION);
 
 						var defaultLocaleTextNode = instance._defaultLocaleTextNode;

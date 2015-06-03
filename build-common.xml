@@ -12,6 +12,8 @@
 		<path location="${project.dir.native}" />
 	</pathconvert>
 
+	<property name="sdk.dir" value="${project.dir}/tools/sdk" />
+
 	<property name="test.properties" value="com/liferay/portal/tools/dependencies/portal-tools.properties" />
 
 	<property environment="env" />
@@ -512,7 +514,7 @@ Please set the environment variable ANT_OPTS to the recommended value of
 		<sequential>
 			<delete file="app.server.${user.name}.properties" />
 
-			<delete file="${project.dir}/tools/sdk/build.${user.name}.properties" />
+			<delete file="${sdk.dir}/build.${user.name}.properties" />
 		</sequential>
 	</macrodef>
 
@@ -522,7 +524,7 @@ Please set the environment variable ANT_OPTS to the recommended value of
 		<sequential>
 			<echo file="app.server.${user.name}.properties">@{properties.content}</echo>
 
-			<echo file="${project.dir}/tools/sdk/build.${user.name}.properties">@{properties.content}</echo>
+			<echo file="${sdk.dir}/build.${user.name}.properties">@{properties.content}</echo>
 		</sequential>
 	</macrodef>
 
@@ -895,6 +897,31 @@ Please set the environment variable ANT_OPTS to the recommended value of
 		</sequential>
 	</macrodef>
 
+	<macrodef name="gradle-execute">
+		<attribute default="true" name="failonerror" />
+		<attribute name="task" />
+		<element implicit="true" name="args" optional="true" />
+
+		<sequential>
+			<if>
+				<os family="unix" />
+				<then>
+					<property name="gradlew.suffix" value="" />
+
+					<chmod file="${sdk.dir}/tools/gradle/gradlew${gradlew.suffix}" perm="a+x" />
+				</then>
+				<else>
+					<property name="gradlew.suffix" value=".bat" />
+				</else>
+			</if>
+
+			<exec executable="${sdk.dir}/tools/gradle/gradlew${gradlew.suffix}" failonerror="@{failonerror}">
+				<args />
+				<arg value="@{task}" />
+			</exec>
+		</sequential>
+	</macrodef>
+
 	<macrodef name="junit-cmd">
 		<attribute name="forkmode" />
 		<attribute name="test.type" />
@@ -1122,8 +1149,8 @@ Please set the environment variable ANT_OPTS to the recommended value of
 		<attribute name="test.type" />
 
 		<sequential>
-			<ivy:resolve log="download-only">
-				<dependency name="arquillian-junit-container" org="org.jboss.arquillian.junit" rev="1.1.6.Final" />
+			<ivy:resolve log="${ivy.log.level}">
+				<dependency name="arquillian-junit-container" org="org.jboss.arquillian.junit" rev="1.1.8.Final" />
 				<dependency name="com.liferay.arquillian.extension" org="com.liferay" rev="1.0.0-SNAPSHOT" />
 				<exclude org="junit" />
 			</ivy:resolve>
@@ -1353,7 +1380,7 @@ rerun your task.
 		<echo>Run "ant compile compile-test" before using format-javadoc to generate @Override tags.</echo>
 
 		<path id="javadoc.formatter.classpath">
-			<fileset dir="${project.dir}/tools/sdk/dependencies/com.liferay.javadoc.formatter/lib" includes="*.jar" />
+			<fileset dir="${sdk.dir}/dependencies/com.liferay.javadoc.formatter/lib" includes="*.jar" />
 			<path refid="project.classpath" />
 		</path>
 
@@ -1377,13 +1404,13 @@ rerun your task.
 	</target>
 
 	<target name="run-cpd">
-		<ant antfile="build-common.xml" dir="${project.dir}/tools/sdk" inheritRefs="true" target="run-cpd">
+		<ant antfile="build-common.xml" dir="${sdk.dir}" inheritRefs="true" target="run-cpd">
 			<property name="cpd.basedir" value="${basedir}" />
 		</ant>
 	</target>
 
 	<target name="run-pmd">
-		<ant antfile="build-common.xml" dir="${project.dir}/tools/sdk" inheritRefs="true" target="run-pmd">
+		<ant antfile="build-common.xml" dir="${sdk.dir}" inheritRefs="true" target="run-pmd">
 			<property name="pmd.basedir" value="${basedir}" />
 		</ant>
 	</target>
@@ -1459,7 +1486,7 @@ rerun your task.
 			</sequential>
 		</for>
 
-		<ivy:resolve log="quiet">
+		<ivy:resolve log="${ivy.log.level}">
 			<dependency conf="default" name="sonar-ant-task" org="org.codehaus.sonar-plugins" rev="2.1" />
 		</ivy:resolve>
 

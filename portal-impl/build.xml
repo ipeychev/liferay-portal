@@ -59,44 +59,6 @@
 			<copy file="${project.dir}/classes/log4j.properties" todir="${portal-impl.classes.dir}" preservelastmodified="true" />
 			<copy file="${project.dir}/classes/logging.properties" todir="${portal-impl.classes.dir}" preservelastmodified="true" />
 
-			<if>
-				<not>
-					<available file="${portal-impl.classes.dir}/jamwiki.properties" />
-				</not>
-				<then>
-					<unzip
-						dest="${portal-impl.classes.dir}"
-						src="${project.dir}/tools/jamwiki-0.9.3-src.zip"
-					>
-						<patternset
-							includes="**/main/resources/ApplicationResources.properties,**/main/resources/jamwiki-configuration.xml,**/main/resources/logging.properties,**/main/resources/interwiki.properties"
-						/>
-					</unzip>
-
-					<move todir="${portal-impl.classes.dir}">
-						<fileset
-							dir="${portal-impl.classes.dir}/jamwiki-0.9.3/main/resources"
-							excludes="logging.properties"
-						/>
-					</move>
-
-					<concat destfile="${portal-impl.classes.dir}/logging.properties.new">
-						<fileset file="${portal-impl.classes.dir}/logging.properties" />
-						<fileset file="${portal-impl.classes.dir}/jamwiki-0.9.3/main/resources/logging.properties" />
-					</concat>
-
-					<move file="${portal-impl.classes.dir}/logging.properties.new" tofile="${portal-impl.classes.dir}/logging.properties" />
-
-					<delete dir="${portal-impl.classes.dir}/jamwiki-0.9.3" />
-
-					<echo file="${portal-impl.classes.dir}/jamwiki.properties">
-						database-type=com.liferay.wiki.engine.mediawiki.LiferayDataHandler
-						props-initialized=true
-						search-engine=com.liferay.wiki.engine.mediawiki.LiferaySearchEngine
-					</echo>
-				</then>
-			</if>
-
 			<copy todir="${portal-impl.classes.dir}" preservelastmodified="true">
 				<fileset dir="src" excludes="**/*.java,**/META-INF/javadocs-all*.xml" />
 			</copy>
@@ -301,7 +263,7 @@ svn://svn.liferay.com/repos/public/alloy/trunk/sandbox/taglibs.
 
 	<target name="build-lang-cmd">
 		<path id="lang.builder.classpath">
-			<fileset dir="${project.dir}/tools/sdk/dependencies/com.liferay.lang.builder/lib" includes="*.jar" />
+			<fileset dir="${sdk.dir}/dependencies/com.liferay.lang.builder/lib" includes="*.jar" />
 		</path>
 
 		<java
@@ -699,7 +661,7 @@ svn://svn.liferay.com/repos/public/alloy/trunk/sandbox/taglibs.
 
 	<target name="build-service">
 		<path id="service.builder.classpath">
-			<fileset dir="${project.dir}/tools/sdk/dependencies/com.liferay.portal.tools.service.builder/lib" includes="*.jar" />
+			<fileset dir="${sdk.dir}/dependencies/com.liferay.portal.tools.service.builder/lib" includes="*.jar" />
 		</path>
 
 		<java
@@ -904,12 +866,12 @@ svn://svn.liferay.com/repos/public/alloy/trunk/sandbox/taglibs.
 				<equals arg1="${upgrade.table.dir}" arg2="" />
 			</not>
 			<then>
-				<ant antfile="build-common.xml" dir="${project.dir}/tools/sdk" inheritAll="false" target="prepare-upgrade-table">
+				<ant antfile="build-common.xml" dir="${sdk.dir}" inheritAll="false" target="prepare-upgrade-table">
 					<property name="upgrade.table.dir" value="${upgrade.table.dir}" />
 				</ant>
 
 				<path id="upgrade.table.builder.classpath">
-					<fileset dir="${project.dir}/tools/sdk/dependencies/com.liferay.portal.tools.upgrade.table.builder/lib" includes="*.jar" />
+					<fileset dir="${sdk.dir}/dependencies/com.liferay.portal.tools.upgrade.table.builder/lib" includes="*.jar" />
 				</path>
 
 				<java
@@ -928,7 +890,7 @@ svn://svn.liferay.com/repos/public/alloy/trunk/sandbox/taglibs.
 
 	<target name="build-wsdd" depends="compile">
 		<path id="wsdd.builder.classpath">
-			<fileset dir="${project.dir}/tools/sdk/dependencies/com.liferay.portal.tools.wsdd.builder/lib" includes="*.jar" />
+			<fileset dir="${sdk.dir}/dependencies/com.liferay.portal.tools.wsdd.builder/lib" includes="*.jar" />
 			<path refid="project.classpath" />
 		</path>
 
@@ -1120,7 +1082,7 @@ svn://svn.liferay.com/repos/public/alloy/trunk/sandbox/taglibs.
 
 	<target name="format-source">
 		<path id="source.formatter.classpath">
-			<fileset dir="${project.dir}/tools/sdk/dependencies/com.liferay.source.formatter/lib" includes="*.jar" />
+			<fileset dir="${sdk.dir}/dependencies/com.liferay.source.formatter/lib" includes="*.jar" />
 			<path refid="project.classpath" />
 		</path>
 

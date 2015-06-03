@@ -27,7 +27,7 @@
 		</execute>
 	</tear-down>
 
-	<command name="AddPageAndChildPageTranslations" priority="5">
+	<command known-issues="LPS-55978" name="AddPageAndChildPageTranslations" priority="5">
 		<execute macro="Page#gotoCP">
 			<var name="portletName" value="Sites" />
 		</execute>
@@ -102,7 +102,7 @@
 		</execute>
 	</command>
 
-	<command known-issues="LPS-55465" name="AddWebContentWithGlobalScopeViaCPToLiferayAP" priority="4">
+	<command name="AddWebContentWithGlobalScopeViaCPToLiferayAP" priority="4">
 		<execute macro="Page#gotoContentCP">
 			<var name="portletName" value="Web Content" />
 			<var name="siteScopeName" value="Global" />
@@ -340,7 +340,7 @@
 		<execute function="AssertTextNotPresent" locator1="PGAssetpublisher#ASSET_ABSTRACT_READ_MORE" value1="Read More" />
 	</command>
 
-	<command known-issues="LPS-55465" name="AddWebContentWithStructureAndGlobalScopeViaCPToLiferayAP" priority="4">
+	<command name="AddWebContentWithStructureAndGlobalScopeViaCPToLiferayAP" priority="4">
 		<execute macro="Page#gotoContentCP">
 			<var name="portletName" value="Web Content" />
 			<var name="siteScopeName" value="Global" />
@@ -554,7 +554,7 @@
 		<execute function="AssertTextEquals#assertPartialText" locator1="PGAssetpublisher#ASSET_ABSTRACT_DESCRIPTION" value1="WC WebContent Text" />
 	</command>
 
-	<command name="ViewDefaultGlobalScopeLandingPage" priority="4">
+	<command known-issues="LPS-55978" name="ViewDefaultGlobalScopeLandingPage" priority="4">
 		<execute macro="Page#gotoCP">
 			<var name="portletName" value="Sites" />
 		</execute>

@@ -19,15 +19,19 @@ import com.liferay.portal.NoSuchGroupException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.servlet.SessionMessages;
+import com.liferay.portal.kernel.staging.StagingUtil;
 import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.security.auth.PrincipalException;
 import com.liferay.portal.service.LayoutBranchServiceUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceContextFactory;
+import com.liferay.portal.struts.PortletAction;
+import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.PortletKeys;
-import com.liferay.portlet.layoutsadmin.action.EditLayoutsAction;
+import com.liferay.portal.util.WebKeys;
+import com.liferay.portlet.sites.action.ActionUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -38,6 +42,8 @@ import javax.portlet.PortletConfig;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -46,7 +52,7 @@ import org.apache.struts.action.ActionMapping;
  * @author Brian Wing Shun Chan
  * @author Julio Camarero
  */
-public class EditLayoutBranchAction extends EditLayoutsAction {
+public class EditLayoutBranchAction extends PortletAction {
 
 	@Override
 	public void processAction(
@@ -54,13 +60,6 @@ public class EditLayoutBranchAction extends EditLayoutsAction {
 			PortletConfig portletConfig, ActionRequest actionRequest,
 			ActionResponse actionResponse)
 		throws Exception {
-
-		try {
-			checkPermissions(actionRequest);
-		}
-		catch (PrincipalException pe) {
-			return;
-		}
 
 		String cmd = ParamUtil.getString(actionRequest, Constants.CMD);
 
@@ -70,6 +69,9 @@ public class EditLayoutBranchAction extends EditLayoutsAction {
 			}
 			else if (cmd.equals(Constants.DELETE)) {
 				deleteLayoutBranch(actionRequest);
+			}
+			else if (cmd.equals("select_layout_branch")) {
+				selectLayoutBranch(actionRequest);
 			}
 
 			if (SessionErrors.isEmpty(actionRequest)) {
@@ -119,17 +121,7 @@ public class EditLayoutBranchAction extends EditLayoutsAction {
 		throws Exception {
 
 		try {
-			checkPermissions(renderRequest);
-		}
-		catch (PrincipalException pe) {
-			SessionErrors.add(
-				renderRequest, PrincipalException.class.getName());
-
-			return actionMapping.findForward("portlet.staging_bar.error");
-		}
-
-		try {
-			getGroup(renderRequest);
+			ActionUtil.getGroup(renderRequest);
 		}
 		catch (Exception e) {
 			if (e instanceof NoSuchGroupException ||
@@ -168,6 +160,23 @@ public class EditLayoutBranchAction extends EditLayoutsAction {
 				PortalUtil.getPortletId(actionRequest) +
 					SessionMessages.KEY_SUFFIX_PORTLET_NOT_AJAXABLE);
 		}
+	}
+
+	protected void selectLayoutBranch(ActionRequest actionRequest) {
+		HttpServletRequest request = PortalUtil.getHttpServletRequest(
+			actionRequest);
+
+		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		long layoutSetBranchId = ParamUtil.getLong(
+			actionRequest, "layoutSetBranchId");
+
+		long layoutBranchId = ParamUtil.getLong(
+			actionRequest, "layoutBranchId");
+
+		StagingUtil.setRecentLayoutBranchId(
+			request, layoutSetBranchId, themeDisplay.getPlid(), layoutBranchId);
 	}
 
 	protected void updateLayoutBranch(ActionRequest actionRequest)

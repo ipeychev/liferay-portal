@@ -54,7 +54,7 @@ AUI.add(
 				ATTRS: {
 					assetAddonEntries: {
 						setter: '_setAssetAddonEntries',
-						validator: Lang.isArray
+						validator: Array.isArray
 					},
 
 					dialogTitle: {
@@ -63,7 +63,7 @@ AUI.add(
 					},
 
 					selectedAssetAddonEntries: {
-						validator: Lang.isArray
+						validator: Array.isArray
 					}
 				},
 
@@ -131,14 +131,13 @@ AUI.add(
 
 						var selectedAssetAddonEntries = instance.get(STR_SELECTED_ASSET_ADDON_ENTRIES);
 
-						var entriesContent = AArray.reduce(
-							instance.get(STR_ASSET_ADDON_ENTRIES),
-							STR_BLANK,
+						var entriesContent = instance.get(STR_ASSET_ADDON_ENTRIES).reduce(
 							function(previousValue, currentValue) {
 								currentValue.checked = selectedAssetAddonEntries.indexOf(currentValue.key) !== -1 ? STR_CHECKED : STR_BLANK;
 
 								return previousValue + Lang.sub(TPL_STR_SELECTED_ASSET_ADDON_ENTRY, currentValue);
-							}
+							},
+							STR_BLANK
 						);
 
 						var content = Lang.sub(

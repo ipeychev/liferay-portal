@@ -14,11 +14,32 @@
 
 package com.liferay.frontend.editors.web;
 
+import com.liferay.portal.kernel.editor.Editor;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.osgi.service.component.annotations.Component;
 
 /**
  * @author Raymond Augé
+ * @author Roberto Díaz
  */
-@Component(property = {"editor.name=alloyeditor"}, service = Object.class)
-public class AlloyEditorEditor {
+@Component(service = Editor.class)
+public class AlloyEditorEditor extends BaseEditor {
+
+	@Override
+	public String getName() {
+		return "alloyeditor";
+	}
+
+	@Override
+	@SuppressWarnings("unused")
+	public void setItemSelectorAttribute(HttpServletRequest request) {
+	}
+
+	@Override
+	protected String getJspPath() {
+		return "/editors/alloyeditor.jsp";
+	}
+
 }

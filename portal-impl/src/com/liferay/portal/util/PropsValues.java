@@ -1112,6 +1112,8 @@ public class PropsValues {
 
 	public static final String MODULE_FRAMEWORK_STATE_DIR = PropsUtil.get(PropsKeys.MODULE_FRAMEWORK_STATE_DIR);
 
+	public static final long MODULE_FRAMEWORK_STOP_WAIT_TIMEOUT = GetterUtil.getLong(PropsUtil.get(PropsKeys.MODULE_FRAMEWORK_STOP_WAIT_TIMEOUT));
+
 	public static final String[] MODULE_FRAMEWORK_SYSTEM_PACKAGES_EXTRA = PropsUtil.getArray(PropsKeys.MODULE_FRAMEWORK_SYSTEM_PACKAGES_EXTRA);
 
 	public static final String[] MODULE_FRAMEWORK_WEB_GENERATOR_DEFAULT_SERVLET_PACKAGES = PropsUtil.getArray(PropsKeys.MODULE_FRAMEWORK_WEB_GENERATOR_DEFAULT_SERVLET_PACKAGES);
@@ -1387,6 +1389,8 @@ public class PropsValues {
 	public static String[] PORTLET_ADD_DEFAULT_RESOURCE_CHECK_WHITELIST_ACTIONS = PropsUtil.getArray(PropsKeys.PORTLET_ADD_DEFAULT_RESOURCE_CHECK_WHITELIST_ACTIONS);
 
 	public static final String[] PORTLET_CONFIGS = PropsUtil.getArray(PropsKeys.PORTLET_CONFIGS);
+
+	public static final boolean PORTLET_CONFIG_SHOW_PORTLET_ID = GetterUtil.getBoolean(PropsUtil.get(PropsKeys.PORTLET_CONFIG_SHOW_PORTLET_ID));
 
 	public static final boolean PORTLET_CONTAINER_RESTRICT = GetterUtil.getBoolean(PropsUtil.get(PropsKeys.PORTLET_CONTAINER_RESTRICT));
 

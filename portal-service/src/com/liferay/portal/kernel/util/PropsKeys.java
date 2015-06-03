@@ -1669,6 +1669,8 @@ public interface PropsKeys {
 
 	public static final String MODULE_FRAMEWORK_STATE_DIR = "module.framework.state.dir";
 
+	public static final String MODULE_FRAMEWORK_STOP_WAIT_TIMEOUT = "module.framework.stop.wait.timeout";
+
 	public static final String MODULE_FRAMEWORK_SYSTEM_PACKAGES_EXTRA = "module.framework.system.packages.extra";
 
 	public static final String MODULE_FRAMEWORK_WEB_GENERATOR_DEFAULT_SERVLET_PACKAGES = "module.framework.web.generator.default.servlet.packages";
@@ -2022,6 +2024,8 @@ public interface PropsKeys {
 	public static final String PORTLET_ADD_DEFAULT_RESOURCE_CHECK_WHITELIST = "portlet.add.default.resource.check.whitelist";
 
 	public static final String PORTLET_ADD_DEFAULT_RESOURCE_CHECK_WHITELIST_ACTIONS = "portlet.add.default.resource.check.whitelist.actions";
+
+	public static final String PORTLET_CONFIG_SHOW_PORTLET_ID = "portlet.config.show.portlet.id";
 
 	public static final String PORTLET_CONFIGS = "portlet.configs";
 
@@ -2694,8 +2698,6 @@ public interface PropsKeys {
 	public static final String WIDGET_SERVLET_MAPPING = "widget.servlet.mapping";
 
 	public static final String XML_SECURITY_ENABLED = "xml.security.enabled";
-
-	public static final String XML_SECURITY_WHITELIST = "xml.security.whitelist";
 
 	public static final String XML_VALIDATION_ENABLED = "xml.validation.enabled";
 

@@ -23,12 +23,17 @@ import com.liferay.portal.kernel.search.BaseIndexer;
 import com.liferay.portal.kernel.search.BooleanClauseOccur;
 import com.liferay.portal.kernel.search.BooleanQuery;
 import com.liferay.portal.kernel.search.BooleanQueryFactoryUtil;
+import com.liferay.portal.kernel.search.DDMStructureIndexer;
 import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.search.DocumentImpl;
 import com.liferay.portal.kernel.search.Field;
+import com.liferay.portal.kernel.search.Query;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.SearchEngineUtil;
+import com.liferay.portal.kernel.search.SearchException;
 import com.liferay.portal.kernel.search.Summary;
+import com.liferay.portal.kernel.search.filter.BooleanFilter;
+import com.liferay.portal.kernel.search.filter.QueryFilter;
 import com.liferay.portal.kernel.spring.osgi.OSGiBeanProperties;
 import com.liferay.portal.kernel.util.CharPool;
 import com.liferay.portal.kernel.util.Constants;
@@ -64,9 +69,12 @@ import java.io.Serializable;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
@@ -80,7 +88,8 @@ import javax.portlet.PortletResponse;
  * @author Tibor Lipusz
  */
 @OSGiBeanProperties
-public class JournalArticleIndexer extends BaseIndexer {
+public class JournalArticleIndexer
+	extends BaseIndexer implements DDMStructureIndexer {
 
 	public static final String CLASS_NAME = JournalArticle.class.getName();
 
@@ -128,21 +137,21 @@ public class JournalArticleIndexer extends BaseIndexer {
 	}
 
 	@Override
-	public void postProcessContextQuery(
-			BooleanQuery contextQuery, SearchContext searchContext)
+	public void postProcessContextBooleanFilter(
+			BooleanFilter contextBooleanFilter, SearchContext searchContext)
 		throws Exception {
 
 		Long classNameId = (Long)searchContext.getAttribute(
 			Field.CLASS_NAME_ID);
 
-		if ((classNameId != null) && (classNameId.longValue() != 0)) {
-			contextQuery.addRequiredTerm(
+		if ((classNameId != null) && (classNameId != 0)) {
+			contextBooleanFilter.addRequiredTerm(
 				Field.CLASS_NAME_ID, classNameId.toString());
 		}
 
-		addStatus(contextQuery, searchContext);
+		addStatus(contextBooleanFilter, searchContext);
 
-		addSearchClassTypeIds(contextQuery, searchContext);
+		addSearchClassTypeIds(contextBooleanFilter, searchContext);
 
 		String ddmStructureFieldName = (String)searchContext.getAttribute(
 			"ddmStructureFieldName");
@@ -169,29 +178,36 @@ public class JournalArticleIndexer extends BaseIndexer {
 					ddmStructureFieldValue, structure.getFieldType(fieldName));
 			}
 
-			contextQuery.addRequiredTerm(
+			BooleanQuery booleanQuery = BooleanQueryFactoryUtil.create(
+				searchContext);
+
+			booleanQuery.addRequiredTerm(
 				ddmStructureFieldName,
 				StringPool.QUOTE + ddmStructureFieldValue + StringPool.QUOTE);
+
+			contextBooleanFilter.add(new QueryFilter(booleanQuery));
 		}
 
 		String articleType = (String)searchContext.getAttribute("articleType");
 
 		if (Validator.isNotNull(articleType)) {
-			contextQuery.addRequiredTerm(Field.TYPE, articleType);
+			contextBooleanFilter.addRequiredTerm(Field.TYPE, articleType);
 		}
 
 		String ddmStructureKey = (String)searchContext.getAttribute(
 			"ddmStructureKey");
 
 		if (Validator.isNotNull(ddmStructureKey)) {
-			contextQuery.addRequiredTerm("ddmStructureKey", ddmStructureKey);
+			contextBooleanFilter.addRequiredTerm(
+				"ddmStructureKey", ddmStructureKey);
 		}
 
 		String ddmTemplateKey = (String)searchContext.getAttribute(
 			"ddmTemplateKey");
 
 		if (Validator.isNotNull(ddmTemplateKey)) {
-			contextQuery.addRequiredTerm("ddmTemplateKey", ddmTemplateKey);
+			contextBooleanFilter.addRequiredTerm(
+				"ddmTemplateKey", ddmTemplateKey);
 		}
 
 		boolean head = GetterUtil.getBoolean(
@@ -200,13 +216,14 @@ public class JournalArticleIndexer extends BaseIndexer {
 			searchContext.getAttribute("relatedClassName"));
 
 		if (head && !relatedClassName) {
-			contextQuery.addRequiredTerm("head", Boolean.TRUE);
+			contextBooleanFilter.addRequiredTerm("head", Boolean.TRUE);
 		}
 	}
 
 	@Override
 	public void postProcessSearchQuery(
-			BooleanQuery searchQuery, SearchContext searchContext)
+			BooleanQuery searchQuery, BooleanFilter fullQueryBooleanFilter,
+			SearchContext searchContext)
 		throws Exception {
 
 		addSearchTerm(searchQuery, searchContext, Field.ARTICLE_ID, false);
@@ -229,6 +246,40 @@ public class JournalArticleIndexer extends BaseIndexer {
 			if (Validator.isNotNull(expandoAttributes)) {
 				addSearchExpando(searchQuery, searchContext, expandoAttributes);
 			}
+		}
+	}
+
+	@Override
+	public void reindexDDMStructures(List<Long> ddmStructureIds)
+		throws SearchException {
+
+		if (SearchEngineUtil.isIndexReadOnly() || !isIndexerEnabled()) {
+			return;
+		}
+
+		try {
+			String[] ddmStructureKeys = new String[ddmStructureIds.size()];
+
+			for (int i = 0; i < ddmStructureIds.size(); i++) {
+				long ddmStructureId = ddmStructureIds.get(i);
+
+				DDMStructure ddmStructure =
+					DDMStructureLocalServiceUtil.getDDMStructure(
+						ddmStructureId);
+
+				ddmStructureKeys[i] = ddmStructure.getStructureKey();
+			}
+
+			List<JournalArticle> articles =
+				JournalArticleLocalServiceUtil.
+					getIndexableArticlesByDDMStructureKey(ddmStructureKeys);
+
+			for (JournalArticle article : articles) {
+				doReindex(article, false);
+			}
+		}
+		catch (Exception e) {
+			throw new SearchException(e);
 		}
 	}
 
@@ -266,13 +317,13 @@ public class JournalArticleIndexer extends BaseIndexer {
 	}
 
 	@Override
-	protected void addSearchLocalizedTerm(
+	protected Map<String, Query> addSearchLocalizedTerm(
 			BooleanQuery searchQuery, SearchContext searchContext, String field,
 			boolean like)
 		throws Exception {
 
 		if (Validator.isNull(field)) {
-			return;
+			return Collections.emptyMap();
 		}
 
 		String value = String.valueOf(searchContext.getAttribute(field));
@@ -282,18 +333,26 @@ public class JournalArticleIndexer extends BaseIndexer {
 		}
 
 		if (Validator.isNull(value)) {
-			return;
+			return Collections.emptyMap();
 		}
 
 		String localizedField = DocumentImpl.getLocalizedName(
 			searchContext.getLocale(), field);
 
+		Map<String, Query> queries = new HashMap<>();
+
 		if (Validator.isNull(searchContext.getKeywords())) {
 			BooleanQuery localizedQuery = BooleanQueryFactoryUtil.create(
 				searchContext);
 
-			localizedQuery.addTerm(field, value, like);
-			localizedQuery.addTerm(localizedField, value, like);
+			Query query = localizedQuery.addTerm(field, value, like);
+
+			queries.put(field, query);
+
+			Query localizedFieldQuery = localizedQuery.addTerm(
+				localizedField, value, like);
+
+			queries.put(field, localizedFieldQuery);
 
 			BooleanClauseOccur booleanClauseOccur = BooleanClauseOccur.SHOULD;
 
@@ -304,8 +363,12 @@ public class JournalArticleIndexer extends BaseIndexer {
 			searchQuery.add(localizedQuery, booleanClauseOccur);
 		}
 		else {
-			searchQuery.addTerm(localizedField, value, like);
+			Query query = searchQuery.addTerm(localizedField, value, like);
+
+			queries.put(field, query);
 		}
+
+		return queries;
 	}
 
 	@Override
@@ -518,30 +581,6 @@ public class JournalArticleIndexer extends BaseIndexer {
 		long companyId = GetterUtil.getLong(ids[0]);
 
 		reindexArticles(companyId);
-	}
-
-	@Override
-	protected void doReindexDDMStructures(List<Long> ddmStructureIds)
-		throws Exception {
-
-		String[] ddmStructureKeys = new String[ddmStructureIds.size()];
-
-		for (int i = 0; i < ddmStructureIds.size(); i++) {
-			long ddmStructureId = ddmStructureIds.get(i);
-
-			DDMStructure ddmStructure =
-				DDMStructureLocalServiceUtil.getDDMStructure(ddmStructureId);
-
-			ddmStructureKeys[i] = ddmStructure.getStructureKey();
-		}
-
-		List<JournalArticle> articles =
-			JournalArticleLocalServiceUtil.
-				getIndexableArticlesByDDMStructureKey(ddmStructureKeys);
-
-		for (JournalArticle article : articles) {
-			doReindex(article, false);
-		}
 	}
 
 	protected String extractDDMContent(

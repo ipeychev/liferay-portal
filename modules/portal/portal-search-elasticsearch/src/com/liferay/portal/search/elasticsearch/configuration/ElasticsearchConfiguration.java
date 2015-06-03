@@ -48,4 +48,10 @@ public interface ElasticsearchConfiguration {
 	@Meta.AD(deflt = "EMBEDDED", required = false)
 	public String operationMode();
 
+	@Meta.AD(deflt = "5", required = false)
+	public int retryOnConflict();
+
+	@Meta.AD(deflt = "localhost:9300", required = false)
+	public String transportAddresses();
+
 }

@@ -69,16 +69,19 @@ long userId = user2.getUserId();
 	</c:if>
 
 	<c:if test="<%= (PropsValues.LAYOUT_USER_PRIVATE_LAYOUTS_ENABLED || PropsValues.LAYOUT_USER_PUBLIC_LAYOUTS_ENABLED) && hasUpdatePermission %>">
-		<portlet:renderURL var="managePagesURL">
-			<portlet:param name="struts_action" value="/users_admin/edit_layouts" />
-			<portlet:param name="redirect" value="<%= redirect %>" />
-			<portlet:param name="groupId" value="<%= String.valueOf(user2.getGroup().getGroupId()) %>" />
-		</portlet:renderURL>
+
+		<%
+		PortletURL managePagesURL = PortletProviderUtil.getPortletURL(request, Layout.class.getName(), PortletProvider.Action.EDIT);
+
+		managePagesURL.setParameter("redirect", redirect);
+		managePagesURL.setParameter("groupId", String.valueOf(user2.getGroup().getGroupId()));
+		%>
 
 		<liferay-ui:icon
 			iconCssClass="icon-copy"
 			message="manage-pages"
-			url="<%= managePagesURL %>"
+			url="<%= managePagesURL.toString() %>"
+			useDialog="<%= true %>"
 		/>
 	</c:if>
 
