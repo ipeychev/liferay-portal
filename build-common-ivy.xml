@@ -5,26 +5,36 @@
 	<macrodef name="mirrors-get">
 		<attribute name="dest" />
 		<attribute default="false" name="ignoreerrors" />
-		<attribute default="false" name="skipexisting" />
 		<attribute name="src" />
 		<attribute default="true" name="trylocalnetwork" />
 		<attribute default="false" name="verbose" />
 
 		<sequential>
-			<mkdir dir="${mirrors.cache.dir}" />
+			<propertyregex
+				input="@{src}"
+				override="true"
+				property="mirrors.cache.artifact.subdir"
+				regexp="https?://(.+/).+"
+				replace="\1"
+			/>
+
+			<property name="mirrors.cache.artifact.dir" value="${mirrors.cache.dir}/${mirrors.cache.artifact.subdir}" />
 
 			<propertyregex
 				input="@{src}"
-				property="mirrors.cache.file"
-				regexp="[:/]"
-				replace="_"
+				override="true"
+				property="mirrors.cache.artifact.file.name"
+				regexp=".+/(.+)"
+				replace="\1"
 			/>
 
 			<if>
 				<not>
-					<available file="${mirrors.cache.dir}/${mirrors.cache.file}" />
+					<available file="${mirrors.cache.artifact.dir}/${mirrors.cache.artifact.file.name}" />
 				</not>
 				<then>
+					<mkdir dir="${mirrors.cache.artifact.dir}" />
+
 					<propertyregex
 						input="@{src}"
 						override="true"
@@ -39,18 +49,16 @@
 							<trycatch>
 								<try>
 									<get
-										dest="${mirrors.cache.dir}/${mirrors.cache.file}"
+										dest="${mirrors.cache.artifact.dir}"
 										ignoreerrors="@{ignoreerrors}"
-										skipexisting="@{skipexisting}"
 										src="${mirrors.src}"
 										verbose="@{verbose}"
 									/>
 								</try>
 								<catch>
 									<get
-										dest="${mirrors.cache.dir}/${mirrors.cache.file}"
+										dest="${mirrors.cache.artifact.dir}"
 										ignoreerrors="@{ignoreerrors}"
-										skipexisting="@{skipexisting}"
 										src="@{src}"
 										verbose="@{verbose}"
 									/>
@@ -59,9 +67,8 @@
 						</then>
 						<else>
 							<get
-								dest="${mirrors.cache.dir}/${mirrors.cache.file}"
+								dest="${mirrors.cache.artifact.dir}"
 								ignoreerrors="@{ignoreerrors}"
-								skipexisting="@{skipexisting}"
 								src="@{src}"
 								verbose="@{verbose}"
 							/>
@@ -73,31 +80,22 @@
 			<if>
 				<available file="@{dest}" type="dir" />
 				<then>
-					<propertyregex
-						input="@{src}"
-						property="mirrors.dest.file"
-						regexp=".*/(.*)"
-						replace="\1"
-					/>
-
 					<copy
-						file="${mirrors.cache.dir}/${mirrors.cache.file}"
-						overwrite="true"
-						tofile="@{dest}/${mirrors.dest.file}"
+						file="${mirrors.cache.artifact.dir}/${mirrors.cache.artifact.file.name}"
+						tofile="@{dest}/${mirrors.cache.artifact.file.name}"
 					/>
-
-					<var name="mirrors.dest.file" unset="true" />
 				</then>
 				<else>
 					<copy
-						file="${mirrors.cache.dir}/${mirrors.cache.file}"
-						overwrite="true"
+						file="${mirrors.cache.artifact.dir}/${mirrors.cache.artifact.file.name}"
 						tofile="@{dest}"
 					/>
 				</else>
 			</if>
 
-			<var name="mirrors.cache.file" unset="true" />
+			<var name="mirrors.cache.artifact.dir" unset="true" />
+			<var name="mirrors.cache.artifact.file.name" unset="true" />
+			<var name="mirrors.cache.artifact.subdir" unset="true" />
 		</sequential>
 	</macrodef>
 

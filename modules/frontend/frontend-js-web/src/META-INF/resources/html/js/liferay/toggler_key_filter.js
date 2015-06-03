@@ -1,8 +1,6 @@
 AUI.add(
 	'liferay-toggler-key-filter',
 	function(A) {
-		var AArray = A.Array;
-
 		var KeyMap = A.Event.KeyMap;
 
 		var NAME = 'togglerkeyfilter';
@@ -11,7 +9,7 @@ AUI.add(
 			{
 				ATTRS: {
 					filter: {
-						validator: A.Lang.isArray,
+						validator: Array.isArray,
 						value: [
 							KeyMap.ESC,
 							KeyMap.LEFT,
@@ -41,10 +39,10 @@ AUI.add(
 					_headerEventHandler: function(event) {
 						var instance = this;
 
-						var validAction = (event.type === instance._toggleEvent);
+						var validAction = event.type === instance._toggleEvent;
 
 						if (!validAction) {
-							validAction = (AArray.indexOf(instance.get('filter'), event.keyCode) > -1);
+							validAction = instance.get('filter').indexOf(event.keyCode) > -1;
 						}
 
 						if (!validAction) {

@@ -890,7 +890,7 @@ Please set the property "jdk.7.home" in build.properties.
 	<target name="node-execute">
 		<ant-execute
 			ant.build.file="build-node.xml"
-			ant.dir="${project.dir}/tools/sdk"
+			ant.dir="${sdk.dir}"
 			ant.target="node-execute"
 		/>
 	</target>
@@ -898,7 +898,7 @@ Please set the property "jdk.7.home" in build.properties.
 	<target name="npm-execute">
 		<ant-execute
 			ant.build.file="build-node.xml"
-			ant.dir="${project.dir}/tools/sdk"
+			ant.dir="${sdk.dir}"
 			ant.target="npm-execute"
 		/>
 	</target>

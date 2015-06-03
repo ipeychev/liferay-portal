@@ -17,7 +17,7 @@
 <%@ include file="/init.jsp" %>
 
 <%
-String itemSelectedCallback = (String)request.getAttribute(LayoutItemSelectorView.ITEM_SELECTED_CALLBACK);
+String itemSelectedEventName = (String)request.getAttribute(LayoutItemSelectorView.ITEM_SELECTED_EVENT_NAME);
 LayoutItemSelectorCriterion layoutItemSelectorCriterion = (LayoutItemSelectorCriterion)request.getAttribute(LayoutItemSelectorView.LAYOUT_ITEM_SELECTOR_CRITERION);
 
 long groupId = layoutItemSelectorCriterion.getGroupId();
@@ -26,16 +26,6 @@ Group group = GroupLocalServiceUtil.fetchGroup(groupId);
 
 request.setAttribute(WebKeys.GROUP, group);
 
-boolean showGroupsSelector = ParamUtil.getBoolean(request, "showGroupsSelector");
-%>
-
-<c:if test="<%= showGroupsSelector %>">
-	<liferay-util:include page="/group_selector.jsp" servletContext="<%= application %>">
-		<liferay-util:param name="tabs1" value="pages" />
-	</liferay-util:include>
-</c:if>
-
-<%
 String tabs1Names = "";
 
 if (group.getPublicLayoutsPageCount() > 0) {
@@ -148,10 +138,28 @@ if (group.getPrivateLayoutsPageCount() > 0) {
 
 	button.on(
 		'click',
-		function() {
-			var url = event.target.getAttribute('data-url');
+		function(event) {
+			var currentTarget = event.currentTarget;
 
-			<%= itemSelectedCallback %>('<%= URL.class.getName() %>', url);
+			Util.getOpener().Liferay.fire(
+				'<%= itemSelectedEventName %>',
+				{
+
+					<%
+					String ckEditorFuncNum = ParamUtil.getString(request, "CKEditorFuncNum");
+					%>
+
+					<c:if test="<%= Validator.isNotNull(ckEditorFuncNum) %>">
+						ckeditorfuncnum: <%= ckEditorFuncNum %>,
+					</c:if>
+
+					layoutpath: currentTarget.attr('data-layoutpath'),
+					returnType: currentTarget.attr('data-returnType'),
+					value: currentTarget.attr('data-value')
+				}
+			);
+
+			Util.getWindow().destroy();
 		}
 	);
 
@@ -169,7 +177,6 @@ if (group.getPrivateLayoutsPageCount() > 0) {
 		var link = labelEl.one('a');
 
 		var url = link.attr('data-url');
-
 		var uuid = link.attr('data-uuid');
 
 		if (link && url) {
@@ -179,11 +186,40 @@ if (group.getPrivateLayoutsPageCount() > 0) {
 
 			messageType = 'info';
 
-			button.attr('data-url', url);
-
-			button.attr('data-uuid', uuid);
-
 			button.attr('data-layoutpath', messageText);
+
+			<%
+			String returnType = StringPool.BLANK;
+
+			for (Class<?> desiredReturnType : layoutItemSelectorCriterion.getDesiredReturnTypes()) {
+				if (desiredReturnType == URL.class) {
+					returnType = URL.class.getName();
+				}
+				else if (desiredReturnType == UUID.class) {
+					returnType = UUID.class.getName();
+				}
+				else {
+					continue;
+				}
+
+				break;
+			}
+
+			if (Validator.isNull(returnType)) {
+				throw new IllegalArgumentException("Invalid return type " + returnType);
+			}
+			%>
+
+			button.attr('data-returnType', '<%= returnType %>');
+
+			<c:choose>
+				<c:when test="<%= returnType.equals(URL.class.getName()) %>">
+					button.attr('data-value', url);
+				</c:when>
+				<c:when test="<%= returnType.equals(UUID.class.getName()) %>">
+					button.attr('data-value', uuid);
+				</c:when>
+			</c:choose>
 		}
 
 		Liferay.Util.toggleDisabled(button, disabled);

@@ -16,9 +16,9 @@
 
 <%@ taglib uri="http://java.sun.com/portlet_2_0" prefix="portlet" %>
 
-<%@ taglib uri="http://liferay.com/tld/aui" prefix="aui" %>
-<%@ taglib uri="http://liferay.com/tld/theme" prefix="liferay-theme" %>
-<%@ taglib uri="http://liferay.com/tld/ui" prefix="liferay-ui" %>
+<%@ taglib uri="http://liferay.com/tld/aui" prefix="aui" %><%@
+taglib uri="http://liferay.com/tld/theme" prefix="liferay-theme" %><%@
+taglib uri="http://liferay.com/tld/ui" prefix="liferay-ui" %>
 
 <%@ page import="com.liferay.portal.NoSuchWorkflowDefinitionLinkException" %><%@
 page import="com.liferay.portal.kernel.language.LanguageUtil" %><%@
@@ -34,8 +34,8 @@ page import="com.liferay.portal.kernel.workflow.comparator.WorkflowComparatorFac
 page import="com.liferay.portal.model.WorkflowDefinitionLink" %><%@
 page import="com.liferay.portal.security.permission.ResourceActionsUtil" %><%@
 page import="com.liferay.portal.service.WorkflowDefinitionLinkLocalServiceUtil" %><%@
-page import="com.liferay.portal.util.PortletKeys" %><%@
-page import="com.liferay.portlet.PortletURLUtil" %>
+page import="com.liferay.portlet.PortletURLUtil" %><%@
+page import="com.liferay.workflow.definition.link.web.portlet.constants.WorkflowDefinitionLinkPortletKeys" %>
 
 <%@ page import="java.util.ArrayList" %><%@
 page import="java.util.Iterator" %><%@

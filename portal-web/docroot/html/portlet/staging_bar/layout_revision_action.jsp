@@ -36,7 +36,7 @@ if (layoutRevision.getLayoutRevisionId() == layoutRevisionId) {
 	<c:if test="<%= !layoutRevision.isPending() && LayoutPermissionUtil.contains(permissionChecker, layoutRevision.getPlid(), ActionKeys.UPDATE) %>">
 		<c:if test="<%= pendingLayoutRevisions.isEmpty() && !layoutRevision.isHead() %>">
 			<portlet:actionURL var="publishURL">
-				<portlet:param name="struts_action" value="/staging_bar/edit_layouts" />
+				<portlet:param name="struts_action" value="/staging_bar/edit_layout_revision" />
 				<portlet:param name="<%= Constants.CMD %>" value="update_layout_revision" />
 				<portlet:param name="redirect" value="<%= PortalUtil.getLayoutFullURL(themeDisplay) %>" />
 				<portlet:param name="groupId" value="<%= String.valueOf(layoutRevision.getGroupId()) %>" />
@@ -56,30 +56,9 @@ if (layoutRevision.getLayoutRevisionId() == layoutRevisionId) {
 			/>
 		</c:if>
 
-		<%--<c:if test="<%= !layoutRevision.isMajor() && !layoutRevision.isHead() %>">
-			<portlet:actionURL var="saveURL">
-				<portlet:param name="struts_action" value="/staging_bar/edit_layouts" />
-				<portlet:param name="<%= Constants.CMD %>" value="update_layout_revision" />
-				<portlet:param name="redirect" value="<%= PortalUtil.getLayoutFullURL(themeDisplay) %>" />
-				<portlet:param name="layoutRevisionId" value="<%= String.valueOf(layoutRevision.getLayoutRevisionId()) %>" />
-				<portlet:param name="major" value="true" />
-				<portlet:param name="workflowAction" value="<%= String.valueOf(WorkflowConstants.ACTION_SAVE_DRAFT) %>" />
-			</portlet:actionURL>
-
-			<%
-			String taglibURL = "javascript:submitForm(document.hrefFm, '" + HttpUtil.encodeURL(saveURL) + "');";
-			%>
-
-			<liferay-ui:icon
-				iconCssClass="icon-save"
-				message="save"
-				url="<%= taglibURL %>"
-			/>
-		</c:if>--%>
-
 		<c:if test="<%= !layoutRevision.isHead() && !layoutRevision.isPending() %>">
 			<portlet:actionURL var="deleteURL">
-				<portlet:param name="struts_action" value="/staging_bar/edit_layouts" />
+				<portlet:param name="struts_action" value="/staging_bar/edit_layout_revision" />
 				<portlet:param name="<%= Constants.CMD %>" value="delete_layout_revision" />
 				<portlet:param name="redirect" value="<%= PortalUtil.getLayoutFullURL(themeDisplay) %>" />
 				<portlet:param name="layoutRevisionId" value="<%= String.valueOf(layoutRevision.getLayoutRevisionId()) %>" />

@@ -2,13 +2,13 @@ AUI.add(
 	'liferay-app-view-select',
 	function(A) {
 		var AArray = A.Array;
-		var Lang = A.Lang;
 		var History = Liferay.HistoryManager;
+		var Lang = A.Lang;
 		var Util = Liferay.Util;
 
 		var ATTR_CHECKED = 'checked';
 
-		var CSS_RESULT_ROW = 'tr.selectable';
+		var CSS_SELECTABLE = 'selectable';
 
 		var CSS_SELECTED = 'selected';
 
@@ -28,13 +28,19 @@ AUI.add(
 
 		var STR_TOGGLE_ACTIONS_BUTTON = 'toggleActionsButton';
 
+		var STR_TR = 'tr';
+
+		var SELECTOR_SELECTABLE = STR_DOT + CSS_SELECTABLE;
+
+		var SELECTOR_TR_SELECTABLE = STR_TR + STR_DOT + CSS_SELECTABLE;
+
 		var WIN = A.config.win;
 
 		var AppViewSelect = A.Component.create(
 			{
 				ATTRS: {
 					checkBoxesId: {
-						validator: Lang.isArray
+						validator: Array.isArray
 					},
 
 					displayStyle: {
@@ -111,7 +117,7 @@ AUI.add(
 						var displayStyle = History.get(currentDisplayStyle) || instance.get(STR_DISPLAY_STYLE);
 
 						if (style) {
-							displayStyle = (displayStyle == style);
+							displayStyle = displayStyle == style;
 						}
 
 						return displayStyle;
@@ -178,16 +184,25 @@ AUI.add(
 						var selectAllCheckbox = instance._selectAllCheckbox;
 
 						for (var i = 0; i < instance._checkBoxesId.length; i++) {
-							Util.checkAll(instance._portletContainer, instance._checkBoxesId[i], selectAllCheckbox, CSS_RESULT_ROW);
+							Util.checkAll(
+								instance._portletContainer,
+								instance._checkBoxesId[i],
+								selectAllCheckbox,
+								SELECTOR_TR_SELECTABLE
+							);
 						}
 
 						WIN[instance.ns(STR_TOGGLE_ACTIONS_BUTTON)]();
 
-						if (!instance._getDisplayStyle(instance._displayStyle, DISPLAY_STYLE_LIST)) {
-							var articleDisplayStyle = A.all(STR_DOT + instance._displayStyleCSSClass + '.selectable');
+						var articleDisplayStyle = STR_DOT + instance._displayStyleCSSClass + SELECTOR_SELECTABLE;
 
-							articleDisplayStyle.toggleClass(CSS_SELECTED, instance._selectAllCheckbox.attr(ATTR_CHECKED));
+						if (instance._getDisplayStyle(instance._displayStyle, DISPLAY_STYLE_LIST)) {
+							articleDisplayStyle = SELECTOR_TR_SELECTABLE + STR_DOT + instance._displayStyleCSSClass;
 						}
+
+						var articleDisplayNodes = A.all(articleDisplayStyle);
+
+						articleDisplayNodes.toggleClass(CSS_SELECTED, instance._selectAllCheckbox.attr(ATTR_CHECKED));
 					},
 
 					_toggleHovered: function(event) {
@@ -197,7 +212,7 @@ AUI.add(
 							var articleDisplayStyle = event.target.ancestor(STR_DOT + instance._displayStyleCSSClass);
 
 							if (articleDisplayStyle) {
-								articleDisplayStyle.toggleClass('hover', (event.type == STR_FOCUS));
+								articleDisplayStyle.toggleClass('hover', event.type == STR_FOCUS);
 							}
 						}
 					},
@@ -209,8 +224,10 @@ AUI.add(
 							if (!preventUpdate) {
 								var input = node.one('input') || node;
 
-								input.attr(ATTR_CHECKED, !node.attr(ATTR_CHECKED));
+								input.attr(ATTR_CHECKED, !input.attr(ATTR_CHECKED));
 							}
+
+							node = node.ancestor(SELECTOR_TR_SELECTABLE) || node;
 						}
 						else {
 							node = node.ancestor(STR_DOT + instance._displayStyleCSSClass) || node;

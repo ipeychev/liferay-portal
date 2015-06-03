@@ -8,9 +8,9 @@
 
 	var INPUT_EL = document.createElement('input');
 
-	var PATH_JAVASCRIPT = LiferayAUI.getJavaScriptRootPath();
-
 	var PATH_EDITORS = LiferayAUI.getEditorsPath();
+
+	var PATH_JAVASCRIPT = LiferayAUI.getJavaScriptRootPath();
 
 	var SUPPORTS_INPUT_SELECTION = typeof INPUT_EL.selectionStart === 'number' && typeof INPUT_EL.selectionEnd === 'number';
 
@@ -533,6 +533,12 @@
 							'liferay-portlet-base'
 						]
 					},
+					'liferay-item-selector-dialog': {
+						path: 'item_selector_dialog.js',
+						requires: [
+							'aui-component'
+						]
+					},
 					'liferay-item-viewer': {
 						path: 'item_viewer.js',
 						requires: [
@@ -851,6 +857,7 @@
 							'aui-component',
 							'aui-io-request',
 							'aui-parse-content',
+							'liferay-form',
 							'liferay-portlet-url',
 							'liferay-util-window',
 							'plugin'
