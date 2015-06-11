@@ -57,6 +57,22 @@ public class SyncFilePersistence extends BasePersistenceImpl<SyncFile, Long> {
 		return where.countOf();
 	}
 
+	public long countByS_T_U(long syncAccountId, String type, int uiEvent)
+		throws SQLException {
+
+		QueryBuilder<SyncFile, Long> queryBuilder = queryBuilder();
+
+		Where<SyncFile, Long> where = queryBuilder.where();
+
+		where.eq("syncAccountId", syncAccountId);
+		where.eq("type", type);
+		where.eq("uiEvent", uiEvent);
+
+		where.and(3);
+
+		return where.countOf();
+	}
+
 	public long countByUIEvent(int uiEvent) throws SQLException {
 		QueryBuilder<SyncFile, Long> queryBuilder = queryBuilder();
 
@@ -67,14 +83,13 @@ public class SyncFilePersistence extends BasePersistenceImpl<SyncFile, Long> {
 		return where.countOf();
 	}
 
-	public SyncFile fetchByFilePathName(String filePathName)
-		throws SQLException {
-
+	public SyncFile fetchByC_S(String checksum, int state) throws SQLException {
 		Map<String, Object> fieldValues = new HashMap<>();
 
-		fieldValues.put("filePathName", filePathName);
+		fieldValues.put("checksum", checksum);
+		fieldValues.put("state", state);
 
-		List<SyncFile> syncFiles = queryForFieldValuesArgs(fieldValues);
+		List<SyncFile> syncFiles = queryForFieldValues(fieldValues);
 
 		if ((syncFiles == null) || syncFiles.isEmpty()) {
 			return null;
@@ -98,6 +113,22 @@ public class SyncFilePersistence extends BasePersistenceImpl<SyncFile, Long> {
 		where.like("filePathName", new SelectArg(parentFilePathName + "%"));
 
 		return query(queryBuilder.prepare());
+	}
+
+	public SyncFile fetchByFilePathName(String filePathName)
+		throws SQLException {
+
+		Map<String, Object> fieldValues = new HashMap<>();
+
+		fieldValues.put("filePathName", filePathName);
+
+		List<SyncFile> syncFiles = queryForFieldValuesArgs(fieldValues);
+
+		if ((syncFiles == null) || syncFiles.isEmpty()) {
+			return null;
+		}
+
+		return syncFiles.get(0);
 	}
 
 	public SyncFile fetchByR_S_T(

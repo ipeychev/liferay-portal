@@ -262,6 +262,10 @@ public interface OrganizationService extends BaseService {
 	public void deleteOrganization(long organizationId)
 		throws PortalException;
 
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public com.liferay.portal.model.Organization fetchOrganization(
+		long organizationId) throws PortalException;
+
 	/**
 	* Returns the Spring bean ID for this bean.
 	*

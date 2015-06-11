@@ -60,6 +60,13 @@ public class EmailAddressServiceWrapper implements EmailAddressService,
 		_emailAddressService.deleteEmailAddress(emailAddressId);
 	}
 
+	@Override
+	public com.liferay.portal.model.EmailAddress fetchEmailAddress(
+		long emailAddressId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return _emailAddressService.fetchEmailAddress(emailAddressId);
+	}
+
 	/**
 	* Returns the Spring bean ID for this bean.
 	*

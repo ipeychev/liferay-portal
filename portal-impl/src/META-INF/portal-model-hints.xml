@@ -220,30 +220,6 @@
 		<field name="typeId" type="long" />
 		<field name="primary" type="boolean" />
 	</model>
-	<model name="com.liferay.portal.model.ExportImportConfiguration">
-		<field name="mvccVersion" type="long" />
-		<field name="exportImportConfigurationId" type="long" />
-		<field name="groupId" type="long" />
-		<field name="companyId" type="long" />
-		<field name="userId" type="long" />
-		<field name="userName" type="String" />
-		<field name="createDate" type="Date" />
-		<field name="modifiedDate" type="Date" />
-		<field name="name" type="String">
-			<hint name="max-length">200</hint>
-		</field>
-		<field name="description" type="String">
-			<hint-collection name="TEXTAREA" />
-		</field>
-		<field name="type" type="int" />
-		<field name="settings" type="String">
-			<hint-collection name="CLOB" />
-		</field>
-		<field name="status" type="int" />
-		<field name="statusByUserId" type="long" />
-		<field name="statusByUserName" type="String" />
-		<field name="statusDate" type="Date" />
-	</model>
 	<model name="com.liferay.portal.model.Group">
 		<field name="mvccVersion" type="long" />
 		<field name="uuid" type="String" />
@@ -527,24 +503,6 @@
 		<field name="listTypeId" type="long" />
 		<field name="name" type="String" />
 		<field name="type" type="String" />
-	</model>
-	<model name="com.liferay.portal.model.Lock">
-		<field name="mvccVersion" type="long" />
-		<field name="uuid" type="String" />
-		<field name="lockId" type="long" />
-		<field name="companyId" type="long" />
-		<field name="userId" type="long" />
-		<field name="userName" type="String" />
-		<field name="createDate" type="Date" />
-		<field name="className" type="String" />
-		<field name="key" type="String">
-			<hint name="max-length">200</hint>
-		</field>
-		<field name="owner" type="String">
-			<hint name="max-length">1024</hint>
-		</field>
-		<field name="inheritable" type="boolean" />
-		<field name="expirationDate" type="Date" />
 	</model>
 	<model name="com.liferay.portal.model.MembershipRequest">
 		<field name="mvccVersion" type="long" />
@@ -1695,6 +1653,8 @@
 		<field name="companyId" type="long" />
 		<field name="userId" type="long" />
 		<field name="userName" type="String" />
+		<field name="versionUserId" type="long" />
+		<field name="versionUserName" type="String" />
 		<field name="createDate" type="Date" />
 		<field name="modifiedDate" type="Date" />
 		<field name="parentStructureId" type="long" />
@@ -1756,6 +1716,10 @@
 		</field>
 		<field name="storageType" type="String" />
 		<field name="type" type="int" />
+		<field name="status" type="int" />
+		<field name="statusByUserId" type="long" />
+		<field name="statusByUserName" type="String" />
+		<field name="statusDate" type="Date" />
 	</model>
 	<model name="com.liferay.portlet.dynamicdatamapping.model.DDMTemplate">
 		<field name="uuid" type="String" />
@@ -1764,6 +1728,8 @@
 		<field name="companyId" type="long" />
 		<field name="userId" type="long" />
 		<field name="userName" type="String" />
+		<field name="versionUserId" type="long" />
+		<field name="versionUserName" type="String" />
 		<field name="createDate" type="Date" />
 		<field name="modifiedDate" type="Date" />
 		<field name="classNameId" type="long" />
@@ -1820,6 +1786,10 @@
 		<field name="script" type="String">
 			<hint-collection name="CLOB" />
 		</field>
+		<field name="status" type="int" />
+		<field name="statusByUserId" type="long" />
+		<field name="statusByUserName" type="String" />
+		<field name="statusDate" type="Date" />
 	</model>
 	<model name="com.liferay.portlet.expando.model.ExpandoColumn">
 		<field name="columnId" type="long" />
@@ -1860,6 +1830,30 @@
 		<field name="data" type="String">
 			<hint-collection name="CLOB" />
 		</field>
+	</model>
+	<model name="com.liferay.portlet.exportimport.model.ExportImportConfiguration">
+		<field name="mvccVersion" type="long" />
+		<field name="exportImportConfigurationId" type="long" />
+		<field name="groupId" type="long" />
+		<field name="companyId" type="long" />
+		<field name="userId" type="long" />
+		<field name="userName" type="String" />
+		<field name="createDate" type="Date" />
+		<field name="modifiedDate" type="Date" />
+		<field name="name" type="String">
+			<hint name="max-length">200</hint>
+		</field>
+		<field name="description" type="String">
+			<hint-collection name="TEXTAREA" />
+		</field>
+		<field name="type" type="int" />
+		<field name="settings" type="String">
+			<hint-collection name="CLOB" />
+		</field>
+		<field name="status" type="int" />
+		<field name="statusByUserId" type="long" />
+		<field name="statusByUserName" type="String" />
+		<field name="statusDate" type="Date" />
 	</model>
 	<model name="com.liferay.portlet.journal.model.JournalArticle">
 		<field name="uuid" type="String" />

@@ -37,7 +37,7 @@ if (fileEntryId != 0) {
 }
 %>
 
-<div class="taglib-image-selector <%= fileEntryId == 0 ? "drop-zone" : StringPool.BLANK %> <%= !draggableImage.equals("none") ? "draggable-image " + draggableImage : StringPool.BLANK %>" id="<%= randomNamespace %>taglibImageSelector">
+<div class="drop-zone <%= fileEntryId == 0 ? "drop-enabled" : StringPool.BLANK %> <%= !draggableImage.equals("none") ? "draggable-image " + draggableImage : StringPool.BLANK %> taglib-image-selector" id="<%= randomNamespace %>taglibImageSelector">
 	<aui:input name='<%= paramName + "Id" %>' type="hidden" value="<%= fileEntryId %>" />
 	<aui:input name='<%= paramName + "CropRegion" %>' type="hidden" value="<%= cropRegion %>" />
 
@@ -97,7 +97,7 @@ if (fileEntryId != 0) {
 <%
 PortletURL itemSelectorURL = liferayPortletResponse.createRenderURL(PortletKeys.ITEM_SELECTOR);
 
-itemSelectorURL.setParameter("criteria", "com.liferay.document.library.item.selector.DLItemSelectorCriterion");
+itemSelectorURL.setParameter("criteria", "com.liferay.item.selector.criteria.image.criterion.ImageItemSelectorCriterion");
 itemSelectorURL.setParameter("itemSelectedEventName", liferayPortletResponse.getNamespace() + "selectImage");
 
 JSONObject itemSelectorJSONParamJSONObject = JSONFactoryUtil.createJSONObject();
@@ -108,25 +108,6 @@ desiredReturnTypesJSONArray.put(URL.class.getName());
 desiredReturnTypesJSONArray.put(FileEntry.class.getName());
 
 itemSelectorJSONParamJSONObject.put("desiredReturnTypes", desiredReturnTypesJSONArray);
-
-itemSelectorJSONParamJSONObject.put("folderId", DLFolderConstants.DEFAULT_PARENT_FOLDER_ID);
-
-JSONArray mimeTypesJSONArray = JSONFactoryUtil.createJSONArray();
-
-mimeTypesJSONArray.put("image/bmp");
-mimeTypesJSONArray.put("image/gif");
-mimeTypesJSONArray.put("image/jpeg");
-mimeTypesJSONArray.put("image/pjpeg");
-mimeTypesJSONArray.put("image/tiff");
-mimeTypesJSONArray.put("image/x-citrix-jpeg");
-mimeTypesJSONArray.put("image/x-citrix-png");
-mimeTypesJSONArray.put("image/x-ms-bmp");
-mimeTypesJSONArray.put("image/x-png");
-mimeTypesJSONArray.put("image/x-tiff");
-
-itemSelectorJSONParamJSONObject.put("mimeTypes", mimeTypesJSONArray);
-
-itemSelectorJSONParamJSONObject.put("repositoryId", scopeGroupId);
 
 itemSelectorURL.setParameter("0_json", itemSelectorJSONParamJSONObject.toString());
 

@@ -288,6 +288,12 @@ public class OrganizationServiceUtil {
 		getService().deleteOrganization(organizationId);
 	}
 
+	public static com.liferay.portal.model.Organization fetchOrganization(
+		long organizationId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService().fetchOrganization(organizationId);
+	}
+
 	/**
 	* Returns the Spring bean ID for this bean.
 	*

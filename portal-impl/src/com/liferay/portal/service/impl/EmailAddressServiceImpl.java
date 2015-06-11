@@ -75,6 +75,22 @@ public class EmailAddressServiceImpl extends EmailAddressServiceBaseImpl {
 	}
 
 	@Override
+	public EmailAddress fetchEmailAddress(long emailAddressId)
+		throws PortalException {
+
+		EmailAddress emailAddress = emailAddressPersistence.fetchByPrimaryKey(
+			emailAddressId);
+
+		if (emailAddress != null) {
+			CommonPermissionUtil.check(
+				getPermissionChecker(), emailAddress.getClassNameId(),
+				emailAddress.getClassPK(), ActionKeys.VIEW);
+		}
+
+		return emailAddress;
+	}
+
+	@Override
 	public EmailAddress getEmailAddress(long emailAddressId)
 		throws PortalException {
 

@@ -28,11 +28,6 @@
 	<bean id="com.liferay.portal.service.EmailAddressLocalService" class="com.liferay.portal.service.impl.EmailAddressLocalServiceImpl" />
 	<bean id="com.liferay.portal.service.EmailAddressService" class="com.liferay.portal.service.impl.EmailAddressServiceImpl" />
 	<bean id="com.liferay.portal.service.persistence.EmailAddressPersistence" class="com.liferay.portal.service.persistence.impl.EmailAddressPersistenceImpl" parent="basePersistence" />
-	<bean id="com.liferay.portal.service.ExportImportLocalService" class="com.liferay.portal.service.impl.ExportImportLocalServiceImpl" />
-	<bean id="com.liferay.portal.service.ExportImportService" class="com.liferay.portal.service.impl.ExportImportServiceImpl" />
-	<bean id="com.liferay.portal.service.ExportImportConfigurationLocalService" class="com.liferay.portal.service.impl.ExportImportConfigurationLocalServiceImpl" />
-	<bean id="com.liferay.portal.service.ExportImportConfigurationService" class="com.liferay.portal.service.impl.ExportImportConfigurationServiceImpl" />
-	<bean id="com.liferay.portal.service.persistence.ExportImportConfigurationPersistence" class="com.liferay.portal.service.persistence.impl.ExportImportConfigurationPersistenceImpl" parent="basePersistence" />
 	<bean id="com.liferay.portal.service.GroupLocalService" class="com.liferay.portal.service.impl.GroupLocalServiceImpl" />
 	<bean id="com.liferay.portal.service.GroupService" class="com.liferay.portal.service.impl.GroupServiceImpl" />
 	<bean id="com.liferay.portal.service.persistence.GroupPersistence" class="com.liferay.portal.service.persistence.impl.GroupPersistenceImpl" parent="basePersistence" />
@@ -68,9 +63,6 @@
 	<bean id="com.liferay.portal.service.ListTypeLocalService" class="com.liferay.portal.service.impl.ListTypeLocalServiceImpl" />
 	<bean id="com.liferay.portal.service.ListTypeService" class="com.liferay.portal.service.impl.ListTypeServiceImpl" />
 	<bean id="com.liferay.portal.service.persistence.ListTypePersistence" class="com.liferay.portal.service.persistence.impl.ListTypePersistenceImpl" parent="basePersistence" />
-	<bean id="com.liferay.portal.service.LockLocalService" class="com.liferay.portal.service.impl.LockLocalServiceImpl" />
-	<bean id="com.liferay.portal.service.persistence.LockPersistence" class="com.liferay.portal.service.persistence.impl.LockPersistenceImpl" parent="basePersistence" />
-	<bean id="com.liferay.portal.service.persistence.LockFinder" class="com.liferay.portal.service.persistence.impl.LockFinderImpl" parent="basePersistence" />
 	<bean id="com.liferay.portal.service.MembershipRequestLocalService" class="com.liferay.portal.service.impl.MembershipRequestLocalServiceImpl" />
 	<bean id="com.liferay.portal.service.MembershipRequestService" class="com.liferay.portal.service.impl.MembershipRequestServiceImpl" />
 	<bean id="com.liferay.portal.service.persistence.MembershipRequestPersistence" class="com.liferay.portal.service.persistence.impl.MembershipRequestPersistenceImpl" parent="basePersistence" />
@@ -144,8 +136,6 @@
 	<bean id="com.liferay.portal.service.persistence.ServiceComponentFinder" class="com.liferay.portal.service.persistence.impl.ServiceComponentFinderImpl" parent="basePersistence" />
 	<bean id="com.liferay.portal.service.ShardLocalService" class="com.liferay.portal.service.impl.ShardLocalServiceImpl" />
 	<bean id="com.liferay.portal.service.persistence.ShardPersistence" class="com.liferay.portal.service.persistence.impl.ShardPersistenceImpl" parent="basePersistence" />
-	<bean id="com.liferay.portal.service.StagingLocalService" class="com.liferay.portal.service.impl.StagingLocalServiceImpl" />
-	<bean id="com.liferay.portal.service.StagingService" class="com.liferay.portal.service.impl.StagingServiceImpl" />
 	<bean id="com.liferay.portal.service.SubscriptionLocalService" class="com.liferay.portal.service.impl.SubscriptionLocalServiceImpl" />
 	<bean id="com.liferay.portal.service.persistence.SubscriptionPersistence" class="com.liferay.portal.service.persistence.impl.SubscriptionPersistenceImpl" parent="basePersistence" />
 	<bean id="com.liferay.portal.service.SystemEventLocalService" class="com.liferay.portal.service.impl.SystemEventLocalServiceImpl" />
@@ -304,6 +294,13 @@
 	<bean id="com.liferay.portlet.expando.service.ExpandoValueLocalService" class="com.liferay.portlet.expando.service.impl.ExpandoValueLocalServiceImpl" />
 	<bean id="com.liferay.portlet.expando.service.ExpandoValueService" class="com.liferay.portlet.expando.service.impl.ExpandoValueServiceImpl" />
 	<bean id="com.liferay.portlet.expando.service.persistence.ExpandoValuePersistence" class="com.liferay.portlet.expando.service.persistence.impl.ExpandoValuePersistenceImpl" parent="basePersistence" />
+	<bean id="com.liferay.portlet.exportimport.service.ExportImportLocalService" class="com.liferay.portlet.exportimport.service.impl.ExportImportLocalServiceImpl" />
+	<bean id="com.liferay.portlet.exportimport.service.ExportImportService" class="com.liferay.portlet.exportimport.service.impl.ExportImportServiceImpl" />
+	<bean id="com.liferay.portlet.exportimport.service.ExportImportConfigurationLocalService" class="com.liferay.portlet.exportimport.service.impl.ExportImportConfigurationLocalServiceImpl" />
+	<bean id="com.liferay.portlet.exportimport.service.ExportImportConfigurationService" class="com.liferay.portlet.exportimport.service.impl.ExportImportConfigurationServiceImpl" />
+	<bean id="com.liferay.portlet.exportimport.service.persistence.ExportImportConfigurationPersistence" class="com.liferay.portlet.exportimport.service.persistence.impl.ExportImportConfigurationPersistenceImpl" parent="basePersistence" />
+	<bean id="com.liferay.portlet.exportimport.service.StagingLocalService" class="com.liferay.portlet.exportimport.service.impl.StagingLocalServiceImpl" />
+	<bean id="com.liferay.portlet.exportimport.service.StagingService" class="com.liferay.portlet.exportimport.service.impl.StagingServiceImpl" />
 	<bean id="com.liferay.portlet.flags.service.FlagsEntryService" class="com.liferay.portlet.flags.service.impl.FlagsEntryServiceImpl" />
 	<bean id="com.liferay.portlet.journal.service.JournalArticleLocalService" class="com.liferay.portlet.journal.service.impl.JournalArticleLocalServiceImpl" />
 	<bean id="com.liferay.portlet.journal.service.JournalArticleService" class="com.liferay.portlet.journal.service.impl.JournalArticleServiceImpl" />

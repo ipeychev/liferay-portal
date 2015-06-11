@@ -376,6 +376,21 @@ public class OrganizationServiceImpl extends OrganizationServiceBaseImpl {
 		organizationLocalService.deleteOrganization(organizationId);
 	}
 
+	@Override
+	public Organization fetchOrganization(long organizationId)
+		throws PortalException {
+
+		Organization organization = organizationLocalService.fetchOrganization(
+			organizationId);
+
+		if (organization != null) {
+			OrganizationPermissionUtil.check(
+				getPermissionChecker(), organizationId, ActionKeys.VIEW);
+		}
+
+		return organization;
+	}
+
 	/**
 	 * Returns all the organizations which the user has permission to manage.
 	 *

@@ -115,6 +115,20 @@ public class EmailAddressServiceSoap {
 		}
 	}
 
+	public static com.liferay.portal.model.EmailAddressSoap fetchEmailAddress(
+		long emailAddressId) throws RemoteException {
+		try {
+			com.liferay.portal.model.EmailAddress returnValue = EmailAddressServiceUtil.fetchEmailAddress(emailAddressId);
+
+			return com.liferay.portal.model.EmailAddressSoap.toSoapModel(returnValue);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
 	public static com.liferay.portal.model.EmailAddressSoap getEmailAddress(
 		long emailAddressId) throws RemoteException {
 		try {

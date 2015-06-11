@@ -210,6 +210,9 @@
 						clean.delete.lib=true
 						ivy.home=${ivy.home}
 						ivy.log.level=${ivy.log.level}
+						junit.java.integration.gc=${junit.java.integration.gc}
+						junit.java.unit.gc=${junit.java.unit.gc}
+						junit.java.unit.gc.logging=${junit.java.unit.gc.logging}
 						junit.test.excludes=${junit.test.excludes}
 						liferay.home=${liferay.home}
 						lp.portal.project.dir=${project.dir}
@@ -262,10 +265,7 @@
 
 				<setup-sdk />
 
-				<ant-execute
-					ant.dir="${project.dir}/modules"
-					ant.target="clean"
-				/>
+				<ant dir="${project.dir}/modules" target="clean" inheritAll="false" />
 			</sequential>
 
 			<delete dir="${doc.dir}" />
@@ -500,15 +500,9 @@
 
 		<stopwatch name="modules.stopwatch" />
 
-		<ant-execute
-			ant.dir="${project.dir}/modules/core/registry-api"
-			ant.target="deploy"
-		/>
+		<ant dir="${project.dir}/modules/core/registry-api" target="deploy" inheritAll="false" />
 
-		<ant-execute
-			ant.dir="${project.dir}/modules"
-			ant.target="deploy"
-		/>
+		<ant dir="${project.dir}/modules" target="deploy" inheritAll="false" />
 
 		<stopwatch action="elapsed" name="modules.stopwatch" />
 

@@ -52,7 +52,11 @@
 			<%
 			String defaultEmailAddress = PropsValues.DEFAULT_ADMIN_EMAIL_ADDRESS_PREFIX + StringPool.AT + company.getMx();
 
-			String emailAddress = GetterUtil.getString((String)session.getAttribute(WebKeys.EMAIL_ADDRESS), defaultEmailAddress);
+			long emailAddressId = ParamUtil.getLong(request, "emailAddressId");
+
+			EmailAddress emailAddresModel = EmailAddressServiceUtil.fetchEmailAddress(emailAddressId);
+
+			String emailAddress = (emailAddresModel == null) ? defaultEmailAddress : emailAddresModel.getAddress();
 
 			UnicodeProperties unicodeProperties = (UnicodeProperties)session.getAttribute(WebKeys.SETUP_WIZARD_PROPERTIES);
 			%>

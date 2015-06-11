@@ -389,6 +389,20 @@ public class OrganizationServiceSoap {
 		}
 	}
 
+	public static com.liferay.portal.model.OrganizationSoap fetchOrganization(
+		long organizationId) throws RemoteException {
+		try {
+			com.liferay.portal.model.Organization returnValue = OrganizationServiceUtil.fetchOrganization(organizationId);
+
+			return com.liferay.portal.model.OrganizationSoap.toSoapModel(returnValue);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
 	/**
 	* Returns all the organizations which the user has permission to manage.
 	*

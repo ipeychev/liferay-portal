@@ -69,6 +69,12 @@ public class EmailAddressServiceUtil {
 		getService().deleteEmailAddress(emailAddressId);
 	}
 
+	public static com.liferay.portal.model.EmailAddress fetchEmailAddress(
+		long emailAddressId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService().fetchEmailAddress(emailAddressId);
+	}
+
 	/**
 	* Returns the Spring bean ID for this bean.
 	*

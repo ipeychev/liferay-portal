@@ -192,15 +192,16 @@ public final class LoggerUtil {
 				"');");
 	}
 
-	public static void setID(LoggerElement loggerElement) {
+	public static void setID(String oldID, String newID) {
 		if (!isLoggerStarted()) {
 			return;
 		}
 
-		String id = StringEscapeUtils.escapeEcmaScript(loggerElement.getID());
+		String escapedOldID = StringEscapeUtils.escapeEcmaScript(oldID);
+		String escapedNewID = StringEscapeUtils.escapeEcmaScript(newID);
 
 		_javascriptExecutor.executeScript(
-			"setID(" + loggerElement.getID() + ", '" + id + "');");
+			"setID(" + escapedOldID + ", '" + escapedNewID + "');");
 	}
 
 	public static void setName(LoggerElement loggerElement) {

@@ -10,7 +10,6 @@
 				"pt_BR": "Texto"
 			},
 			"localizable": false,
-			"multiple": false,
 			"name": "ParentField",
 			"nestedFields": [
 				{
@@ -51,11 +50,10 @@
 			"required": false,
 			"showLabel": true,
 			"type": "text"
-		}, 
+		},
 		{
 			"dataType": "string",
 			"localizable": false,
-			"multiple": false,
 			"name": "BooleanField",
 			"options": [
 				{
@@ -115,7 +113,6 @@
 				"en_US": "Text"
 			},
 			"localizable": false,
-			"multiple": false,
 			"name": "TextField",
 			"predefinedValue": {
 				"en_US": "Example",
@@ -126,6 +123,30 @@
 			"required": false,
 			"showLabel": true,
 			"type": "text"
+		},
+		{
+			"dataType": "html",
+			"fieldNamespace": "ddm",
+			"indexType": "keyword",
+			"label": {
+				"en_US": "HTML",
+				"pt_BR": "HTML"
+			},
+			"localizable": true,
+			"name": "HTMLField",
+			"predefinedValue": {
+				"en_US": "",
+				"pt_BR": ""
+			},
+			"readOnly": false,
+			"repeatable": false,
+			"required": false,
+			"showLabel": true,
+			"tip": {
+				"en_US": "Tip",
+				"pt_BR": "Dica"
+			},
+			"type": "ddm-text-html"
 		}
 	]
 }

@@ -14,9 +14,6 @@
 
 package com.liferay.sync.engine.documentlibrary.handler;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import com.liferay.sync.engine.documentlibrary.event.Event;
 import com.liferay.sync.engine.documentlibrary.event.GetSyncContextEvent;
 import com.liferay.sync.engine.documentlibrary.model.SyncDLObjectUpdate;
@@ -34,6 +31,7 @@ import com.liferay.sync.engine.session.SessionManager;
 import com.liferay.sync.engine.util.FileKeyUtil;
 import com.liferay.sync.engine.util.FileUtil;
 import com.liferay.sync.engine.util.IODeltaUtil;
+import com.liferay.sync.engine.util.JSONUtil;
 import com.liferay.sync.engine.util.SyncEngineUtil;
 
 import java.io.IOException;
@@ -44,6 +42,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
+import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.BasicFileAttributes;
 
 import java.util.ArrayList;
@@ -159,17 +158,15 @@ public class GetSyncDLObjectUpdateHandler extends BaseSyncDLObjectHandler {
 
 		};
 
-		_scheduledFuture = _scheduledExecutorService.scheduleAtFixedRate(
+		_scheduledFuture = _scheduledExecutorService.scheduleWithFixedDelay(
 			getSyncContextEvent, 10, 5, TimeUnit.SECONDS);
 	}
 
 	@Override
 	public void processResponse(String response) throws Exception {
 		if (_syncDLObjectUpdate == null) {
-			ObjectMapper objectMapper = new ObjectMapper();
-
-			_syncDLObjectUpdate = objectMapper.readValue(
-				response, new TypeReference<SyncDLObjectUpdate>() {});
+			_syncDLObjectUpdate = JSONUtil.readValue(
+				response, SyncDLObjectUpdate.class);
 		}
 
 		for (SyncFile targetSyncFile : _syncDLObjectUpdate.getSyncDLObjects()) {
@@ -219,10 +216,69 @@ public class GetSyncDLObjectUpdateHandler extends BaseSyncDLObjectHandler {
 				filePath, String.valueOf(syncFile.getSyncFileId()), false);
 		}
 		else {
+			if (syncFile.getSize() <= 0) {
+				downloadFile(syncFile, null, 0, false);
+
+				return;
+			}
+
+			SyncFile sourceSyncFile = SyncFileService.fetchSyncFile(
+				syncFile.getChecksum(), SyncFile.STATE_SYNCED);
+
 			SyncFileService.update(syncFile);
 
-			downloadFile(syncFile, null, 0, false);
+			if ((sourceSyncFile != null) &&
+				Files.exists(Paths.get(sourceSyncFile.getFilePathName()))) {
+
+				copyFile(sourceSyncFile, syncFile);
+			}
+			else {
+				downloadFile(syncFile, null, 0, false);
+			}
 		}
+	}
+
+	protected void copyFile(SyncFile sourceSyncFile, SyncFile targetSyncFile)
+		throws Exception {
+
+		if (_logger.isDebugEnabled()) {
+			_logger.debug(
+				"Copying file {} to {}",
+				sourceSyncFile.getFilePathName(),
+				targetSyncFile.getFilePathName());
+		}
+
+		SyncAccount syncAccount = SyncAccountService.fetchSyncAccount(
+			sourceSyncFile.getSyncAccountId());
+
+		Path tempFilePath = FileUtil.getFilePath(
+			syncAccount.getFilePathName(), ".data",
+			String.valueOf(targetSyncFile.getSyncFileId()));
+
+		Files.copy(
+			Paths.get(sourceSyncFile.getFilePathName()), tempFilePath,
+			StandardCopyOption.REPLACE_EXISTING);
+
+		FileKeyUtil.writeFileKey(
+			tempFilePath, String.valueOf(targetSyncFile.getSyncFileId()),
+			false);
+
+		Watcher watcher = WatcherRegistry.getWatcher(getSyncAccountId());
+
+		List<String> downloadedFilePathNames =
+			watcher.getDownloadedFilePathNames();
+
+		downloadedFilePathNames.add(targetSyncFile.getFilePathName());
+
+		Files.move(
+			tempFilePath, Paths.get(targetSyncFile.getFilePathName()),
+			StandardCopyOption.ATOMIC_MOVE,
+			StandardCopyOption.REPLACE_EXISTING);
+
+		targetSyncFile.setState(SyncFile.STATE_SYNCED);
+		targetSyncFile.setUiEvent(SyncFile.UI_EVENT_DOWNLOADED_NEW);
+
+		SyncFileService.update(targetSyncFile);
 	}
 
 	protected void deleteFile(SyncFile sourceSyncFile, boolean trashed)
@@ -321,10 +377,8 @@ public class GetSyncDLObjectUpdateHandler extends BaseSyncDLObjectHandler {
 	@Override
 	protected void logResponse(String response) {
 		try {
-			ObjectMapper objectMapper = new ObjectMapper();
-
-			_syncDLObjectUpdate = objectMapper.readValue(
-				response, new TypeReference<SyncDLObjectUpdate>() {});
+			_syncDLObjectUpdate = JSONUtil.readValue(
+				response, SyncDLObjectUpdate.class);
 
 			List<SyncFile> syncFiles = _syncDLObjectUpdate.getSyncDLObjects();
 
@@ -575,7 +629,10 @@ public class GetSyncDLObjectUpdateHandler extends BaseSyncDLObjectHandler {
 		}
 		else {
 			sourceSyncFile.setState(SyncFile.STATE_SYNCED);
-			sourceSyncFile.setUiEvent(SyncFile.UI_EVENT_RENAMED_REMOTE);
+
+			if (filePathChanged) {
+				sourceSyncFile.setUiEvent(SyncFile.UI_EVENT_RENAMED_REMOTE);
+			}
 
 			SyncFileService.update(sourceSyncFile);
 		}

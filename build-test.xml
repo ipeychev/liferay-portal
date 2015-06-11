@@ -1123,9 +1123,12 @@
 	<macrodef name="setup-testable-tomcat-logging">
 		<sequential>
 			<if>
-				<not>
-					<resourcecontains resource="${app.server.tomcat.dir}/conf/logging.properties" substring="org.apache.catalina.level" />
-				</not>
+				<and>
+					<equals arg1="@{testable.tomcat.debug.logging}" arg2="on" />
+					<not>
+						<resourcecontains resource="${app.server.tomcat.dir}/conf/logging.properties" substring="org.apache.catalina.level" />
+					</not>
+				</and>
 				<then>
 					<echo file="${app.server.tomcat.dir}/conf/logging.properties" append="true">
 						<![CDATA[
@@ -1456,37 +1459,20 @@ org.apache.catalina.startup.ClassLoaderFactory.level=INFO]]>
 							<exec dir="${test.app.server.bin.dir}" executable="${app.server.start.executable}" resolveexecutable="true">
 								<arg line="${app.server.start.executable.arg.line}" />
 							</exec>
+
+							<wait-for-app-server app.server.bin.dir="@{app.server.bin.dir}" />
 						</then>
 						<else>
 							<parallel>
+								<sequential>
+									<wait-for-app-server app.server.bin.dir="@{app.server.bin.dir}" />
+								</sequential>
 								<daemons>
-									<exec dir="${test.app.server.bin.dir}" executable="${app.server.start.executable}" resolveexecutable="true">
+									<exec dir="${test.app.server.bin.dir}" executable="${app.server.start.executable}" failonerror="true" resolveexecutable="true">
 										<arg line="${app.server.start.executable.arg.line}" />
 									</exec>
 								</daemons>
 							</parallel>
-						</else>
-					</if>
-
-					<if>
-						<equals arg1="@{app.server.bin.dir}" arg2="${app.server.tcat.admin.bin.dir}" />
-						<then>
-							<waitfor maxwait="5" maxwaitunit="minute">
-								<http url="http://localhost:${test.app.server.leading.port.number}180/console" />
-							</waitfor>
-						</then>
-						<elseif>
-							<equals arg1="@{app.server.bin.dir}" arg2="${app.server.tcat.agent.bin.dir}" />
-							<then>
-								<waitfor maxwait="1" maxwaitunit="minute">
-									<http url="http://localhost:${test.app.server.leading.port.number}080" />
-								</waitfor>
-							</then>
-						</elseif>
-						<else>
-							<waitfor maxwait="5" maxwaitunit="minute">
-								<http url="http://localhost:${test.app.server.leading.port.number}080/web/guest" />
-							</waitfor>
 						</else>
 					</if>
 				</then>
@@ -1617,6 +1603,37 @@ org.apache.catalina.startup.ClassLoaderFactory.level=INFO]]>
 					<record action="stop" name="log" />
 				</then>
 			</if>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="wait-for-app-server">
+		<attribute name="app.server.bin.dir" />
+		<sequential>
+			<local name="app.server.waiting.url" />
+
+			<if>
+				<equals arg1="@{app.server.bin.dir}" arg2="${app.server.tcat.admin.bin.dir}" />
+				<then>
+					<property name="app.server.waiting.url" value="http://localhost:${test.app.server.leading.port.number}180/console" />
+				</then>
+				<elseif>
+					<equals arg1="@{app.server.bin.dir}" arg2="${app.server.tcat.agent.bin.dir}" />
+					<then>
+						<property name="app.server.waiting.url" value="http://localhost:${test.app.server.leading.port.number}080" />
+					</then>
+				</elseif>
+				<else>
+					<property name="app.server.waiting.url" value="http://localhost:${test.app.server.leading.port.number}080/web/guest" />
+				</else>
+			</if>
+
+			<local name="app.server.waiting.timeout" />
+
+			<waitfor maxwait="5" maxwaitunit="minute" timeoutproperty="app.server.waiting.timeout">
+				<http url="${app.server.waiting.url}" />
+			</waitfor>
+
+			<fail if="app.server.waiting.timeout" message="App server waiting timeout on ${app.server.waiting.url}" />
 		</sequential>
 	</macrodef>
 
@@ -2826,7 +2843,7 @@ go]]></replacevalue>
 					input="${jenkins.results.xml.suite.file.body}"
 					override="true"
 					property="jenkins.results.xml.suite.file.body"
-					regexp="&lt;/testcase&gt;\s*&lt;system[\s\S]*"
+					regexp="&lt;/testcase&gt;[\s\S]*"
 					replace="&lt;/testcase&gt;${line.separator}"
 				/>
 
@@ -4415,11 +4432,6 @@ module.framework.properties.osgi.console=11312</echo>
 					<param name="test.app.server.bin.dir" value="${app.server.tomcat.bin.dir}" />
 					<param name="test.build.bundle.zip.url" value="${test.build.bundle.tomcat.zip.url}" />
 				</antcall>
-
-				<replace file="${app.server.tomcat.bin.dir}/setenv${file.suffix.bat}">
-					<replacetoken><![CDATA[-Xmx1024m -XX:MaxPermSize=256m]]></replacetoken>
-					<replacevalue><![CDATA[-Xmx2048m -XX:MaxPermSize=512m]]></replacevalue>
-				</replace>
 			</then>
 			<else>
 				<ant antfile="build-dist.xml" target="build-dist-tomcat" inheritAll="false" />
@@ -4429,13 +4441,13 @@ module.framework.properties.osgi.console=11312</echo>
 				<antcall target="prepare-portal-ext-properties" />
 
 				<antcall target="prepare-system-ext-properties" />
-
-				<replace file="${app.server.tomcat.bin.dir}/setenv${file.suffix.bat}">
-					<replacetoken><![CDATA[-Xmx1024m -XX:MaxPermSize=256m]]></replacetoken>
-					<replacevalue><![CDATA[-Xmx2048m -XX:MaxPermSize=512m]]></replacevalue>
-				</replace>
 			</else>
 		</if>
+
+		<replace file="${app.server.tomcat.bin.dir}/setenv${file.suffix.bat}">
+			<replacetoken><![CDATA[-Xmx1024m -XX:MaxPermSize=256m]]></replacetoken>
+			<replacevalue><![CDATA[-verbose:gc -Xloggc:/tmp/tomcat-gc.log -Xms512m -Xmx512m -XX:MaxNewSize=32m -XX:MaxPermSize=200m -XX:MaxTenuringThreshold=0 -XX:NewSize=32m -XX:ParallelGCThreads=2 -XX:PermSize=200m -XX:+PrintGCCause -XX:+PrintGCDetails -XX:SurvivorRatio=65536 -XX:TargetSurvivorRatio=0 -XX:+UseParNewGC]]></replacevalue>
+		</replace>
 
 		<antcall target="prepare-test-build-tomcat-dependents" inheritAll="false" />
 
@@ -4675,52 +4687,6 @@ plugins.includes=marketplace-portlet</echo>
 
 				<delete file="liferay-portal-dependencies.zip" />
 			</else>
-		</if>
-	</target>
-
-	<target name="prepare-test-properties">
-		<get-database-property property.name="database.driver" />
-		<get-database-property property.name="database.password" />
-		<get-database-property property.name="database.url" />
-		<get-database-property property.name="database.username" />
-
-		<echo file="portal-impl/test/portal-test-ext.properties">
-jdbc.default.driverClassName=${database.driver}
-jdbc.default.url=${database.url}
-jdbc.default.username=${database.username}
-jdbc.default.password=${database.password}
-		</echo>
-
-		<if>
-			<equals arg1="${database.type}" arg2="db2" />
-			<then>
-				<echo file="portal-impl/test/portal-test-ext.properties" append="true">
-
-hibernate.dialect=com.liferay.portal.dao.orm.hibernate.DB2Dialect
-custom.sql.function.isnull=CAST(? AS VARCHAR(32672)) IS NULL
-custom.sql.function.isnotnull=CAST(? AS VARCHAR(32672)) IS NOT NULL</echo>
-			</then>
-			<elseif>
-				<equals arg1="${database.type}" arg2="oracle" />
-				<then>
-					<echo file="portal-impl/test/portal-test-ext.properties" append="true">
-
-jdbc.default.acquireIncrement=1
-jdbc.default.maxPoolSize=5
-jdbc.default.minPoolSize=1
-jdbc.default.numHelperThreads=1</echo>
-				</then>
-			</elseif>
-			<elseif>
-				<equals arg1="${database.type}" arg2="sybase" />
-				<then>
-					<echo file="portal-impl/test/portal-test-ext.properties" append="true">
-
-hibernate.dialect=org.hibernate.dialect.SybaseDialect
-custom.sql.function.isnull=CONVERT(VARCHAR,?) IS NULL
-custom.sql.function.isnotnull=CONVERT(VARCHAR,?) IS NOT NULL</echo>
-				</then>
-			</elseif>
 		</if>
 	</target>
 
@@ -5285,6 +5251,17 @@ if (ppstate.equals("normal")) {
 		</execute>
 	</target>
 
+	<target name="run-poshi-runner">
+		<get-poshi-test-name />
+
+		<gradle-execute failonerror="false" task="runPoshi">
+			<arg value="--build-file=portal-web/build-test.gradle" />
+			<arg value="-PposhiTestName=${poshi.test.name}" />
+			<arg value="-PseleniumLoggerEnabled=${test.selenium.logger.enabled}" />
+			<arg value="-PtestCaseAvailablePropertyNames=${test.case.available.property.names}" />
+		</gradle-execute>
+	</target>
+
 	<target name="run-selenium-smoke-test">
 		<antcall target="compile" />
 
@@ -5342,14 +5319,7 @@ jdbc.default.password=${database.mysql.password}</echo>
 		<if>
 			<equals arg1="${test.poshi.runner.enabled}" arg2="true" />
 			<then>
-				<get-poshi-test-name />
-
-				<gradle-execute failonerror="false" task="runPoshi">
-					<arg value="--build-file=portal-web/build-test.gradle" />
-					<arg value="-PposhiTestName=${poshi.test.name}" />
-					<arg value="-PseleniumLoggerEnabled=${test.selenium.logger.enabled}" />
-					<arg value="-PtestCaseAvailablePropertyNames=${test.case.available.property.names}" />
-				</gradle-execute>
+				<antcall target="run-poshi-runner" />
 			</then>
 			<else>
 				<if>
@@ -6028,6 +5998,36 @@ ${ant-gc-log}</echo>
 			</then>
 			<else>
 				<echo>Unable to read /tmp/ant-gc.log</echo>
+			</else>
+		</if>
+
+		<if>
+			<available file="/tmp/tomcat-gc.log" />
+			<then>
+				<loadfile property="tomcat-gc-log" srcFile="/tmp/tomcat-gc.log" />
+
+				<echo>
+Tomcat GC log:
+
+${tomcat-gc-log}</echo>
+			</then>
+			<else>
+				<echo>Unable to read /tmp/tomcat-gc.log</echo>
+			</else>
+		</if>
+
+		<if>
+			<available file="/tmp/tsant-gc.log" />
+			<then>
+				<loadfile property="tsant-gc-log" srcFile="/tmp/tsant-gc.log" />
+
+				<echo>
+Tsant GC log:
+
+${tsant-gc-log}</echo>
+			</then>
+			<else>
+				<echo>Unable to read /tmp/tsant-gc.log</echo>
 			</else>
 		</if>
 	</target>

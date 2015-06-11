@@ -65,6 +65,10 @@ public interface EmailAddressService extends BaseService {
 	public void deleteEmailAddress(long emailAddressId)
 		throws PortalException;
 
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public com.liferay.portal.model.EmailAddress fetchEmailAddress(
+		long emailAddressId) throws PortalException;
+
 	/**
 	* Returns the Spring bean ID for this bean.
 	*
