@@ -37,9 +37,7 @@
 	<classpathentry kind="lib" path="lib/elasticsearch-analysis-phonetic.jar" />
 	<classpathentry kind="lib" path="lib/elasticsearch-analysis-smartcn.jar" />
 	<classpathentry kind="lib" path="lib/elasticsearch-analysis-stempel.jar" />
-	<classpathentry kind="lib" path="lib/elasticsearch-groovy.jar" />
 	<classpathentry kind="lib" path="lib/elasticsearch.jar" />
-	<classpathentry kind="lib" path="lib/groovy-all.jar" />
 	<classpathentry kind="lib" path="lib/icu4j.jar" />
 	<classpathentry kind="lib" path="lib/jts.jar" />
 	<classpathentry kind="lib" path="lib/lucene-analyzers-common.jar" />
@@ -59,6 +57,7 @@
 	<classpathentry kind="lib" path="lib/lucene-sandbox.jar" />
 	<classpathentry kind="lib" path="lib/lucene-spatial.jar" />
 	<classpathentry kind="lib" path="lib/lucene-suggest.jar" />
+	<classpathentry kind="lib" path="lib/snakeyaml.jar" />
 	<classpathentry kind="lib" path="lib/spatial4j.jar" />
 	<classpathentry kind="output" path="bin" />
 </classpath>

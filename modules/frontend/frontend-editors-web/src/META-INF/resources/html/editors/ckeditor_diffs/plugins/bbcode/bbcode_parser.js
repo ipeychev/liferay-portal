@@ -337,7 +337,16 @@
 
 	var MAP_LIST_STYLES = {
 		1: 'list-style-type: decimal;',
-		a: 'list-style-type: lower-alpha;'
+		a: 'list-style-type: lower-alpha;',
+		i: 'list-style-type: lower-roman;',
+		A: 'list-style-type: upper-alpha;',
+		I: 'list-style-type: upper-roman;'
+	};
+
+	var MAP_LIST_BULLETED_STYLES = {
+		circle: 'list-style-type: circle;',
+		disc: 'list-style-type: disc;',
+		square: 'list-style-type: square;'
 	};
 
 	var MAP_TOKENS_EXCLUDE_NEW_LINE = {
@@ -649,7 +658,10 @@
 
 			var listAttribute = token.attribute;
 
-			if (listAttribute) {
+			if (MAP_LIST_BULLETED_STYLES[listAttribute]) {
+				styleAttr = MAP_LIST_BULLETED_STYLES[listAttribute];
+			}
+			else {
 				tag = 'ol';
 
 				styleAttr = MAP_LIST_STYLES[listAttribute];

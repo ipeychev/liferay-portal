@@ -55,6 +55,7 @@ import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.kernel.workflow.WorkflowHandlerRegistryUtil;
 import com.liferay.portal.model.Group;
+import com.liferay.portal.model.ModelHintsUtil;
 import com.liferay.portal.model.Repository;
 import com.liferay.portal.model.ResourceConstants;
 import com.liferay.portal.model.SystemEventConstants;
@@ -2207,10 +2208,27 @@ public class BlogsEntryLocalServiceImpl extends BlogsEntryLocalServiceBaseImpl {
 		throws PortalException {
 
 		if (Validator.isNull(title)) {
-			throw new EntryTitleException();
+			throw new EntryTitleException("Title is null");
 		}
-		else if (Validator.isNull(content)) {
-			throw new EntryContentException();
+
+		int titleMaxLength = ModelHintsUtil.getMaxLength(
+			BlogsEntry.class.getName(), "title");
+
+		if (title.length() > titleMaxLength) {
+			throw new EntryTitleException(
+				"Title has more than " + titleMaxLength + " characters");
+		}
+
+		if (Validator.isNull(content)) {
+			throw new EntryContentException("Content is null");
+		}
+
+		int contentMaxLength = ModelHintsUtil.getMaxLength(
+			BlogsEntry.class.getName(), "content");
+
+		if (content.length() > contentMaxLength) {
+			throw new EntryContentException(
+				"Content has more than " + contentMaxLength + " characters");
 		}
 	}
 
