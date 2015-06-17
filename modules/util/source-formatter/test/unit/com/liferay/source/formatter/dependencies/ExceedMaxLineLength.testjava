@@ -16,7 +16,7 @@ package com.liferay.source.formatter.dependencies;
 
 import aQute.bnd.annotation.metatype.Meta;
 
-import com.liferay.util.bridges.mvc.ActionCommand;
+import com.liferay.util.bridges.mvc.MVCActionCommand;
 
 import org.osgi.service.component.annotations.Component;
 
@@ -26,10 +26,10 @@ import org.osgi.service.component.annotations.Component;
 @Component(
 	immediate = true,
 	property = {
-		"action.command.name=rss",
-		"javax.portlet.name=com_liferay_social_activities_portlet_SocialActivitiesPortlet"
+		"javax.portlet.name=com_liferay_social_activities_portlet_SocialActivitiesPortlet",
+		"mvc.command.name=rss"
 	},
-	service = ActionCommand.class
+	service = MVCActionCommand.class
 )
 public class ExceedMaxLineLength {
 

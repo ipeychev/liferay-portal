@@ -2,7 +2,7 @@
 	var toHex = function(val) {
 		val = parseInt(val, 10).toString(16);
 
-		if (val.length == 1) {
+		if (val.length === 1) {
 			val = '0' + val;
 		}
 
@@ -64,7 +64,13 @@
 
 	var REGEX_LASTCHAR_NEWLINE_WHITESPACE = /(\r?\n\s*)$/;
 
-	var REGEX_LIST_ALPHA = /(upper|lower)-alpha/i;
+	var REGEX_LIST_LOWER_ALPHA = /lower-alpha/i;
+
+	var REGEX_LIST_LOWER_ROMAN = /lower-roman/i;
+
+	var REGEX_LIST_UPPER_ALPHA = /upper-alpha/i;
+
+	var REGEX_LIST_UPPER_ROMAN = /upper-roman/i;
 
 	var REGEX_NEWLINE = /\r?\n/g;
 
@@ -102,12 +108,9 @@
 
 	var TAG_TD = 'td';
 
-	var emoticonImages;
-	var emoticonPath;
-	var emoticonSymbols;
-	var newThreadURL;
-
-	var BBCodeDataProcessor = function() {};
+	var BBCodeDataProcessor = function(editor) {
+		this._editor = editor;
+	};
 
 	BBCodeDataProcessor.prototype = {
 		constructor: BBCodeDataProcessor,
@@ -126,10 +129,12 @@
 			var instance = this;
 
 			if (!instance._bbcodeConverter) {
+				var editorConfig = this._editor.config;
+
 				var converterConfig = {
-					emoticonImages: emoticonImages,
-					emoticonPath: emoticonPath,
-					emoticonSymbols: emoticonSymbols
+					emoticonImages: editorConfig.smiley_images,
+					emoticonPath: editorConfig.smiley_path,
+					emoticonSymbols: editorConfig.smiley_symbols
 				};
 
 				instance._bbcodeConverter = new CKEDITOR.BBCode2HTML(converterConfig);
@@ -167,8 +172,8 @@
 					if (parentTagName) {
 						parentTagName = parentTagName.toLowerCase();
 
-						if (parentTagName == TAG_PARAGRAPH && parentNode.style.cssText ||
-							CKEDITOR.env.gecko && element.tagName && element.tagName.toLowerCase() == TAG_BR && parentTagName == TAG_TD && !element.nextSibling) {
+						if (parentTagName === TAG_PARAGRAPH && parentNode.style.cssText ||
+							CKEDITOR.env.gecko && element.tagName && element.tagName.toLowerCase() === TAG_BR && parentTagName === TAG_TD && !element.nextSibling) {
 
 							allowNewLine = false;
 						}
@@ -180,11 +185,9 @@
 		},
 
 		_checkParentElement: function(element, tagName) {
-			var instance = this;
-
 			var parentNode = element.parentNode;
 
-			return parentNode && parentNode.tagName && parentNode.tagName.toLowerCase() == tagName;
+			return parentNode && parentNode.tagName && parentNode.tagName.toLowerCase() === tagName;
 		},
 
 		_convert: function(data) {
@@ -207,9 +210,9 @@
 			color = color.replace(
 				REGEX_COLOR_RGB,
 				function(match, red, green, blue, offset, string) {
-					var r = toHex(red);
-					var g = toHex(green);
 					var b = toHex(blue);
+					var g = toHex(green);
+					var r = toHex(red);
 
 					color = '#' + r + g + b;
 
@@ -243,12 +246,14 @@
 			var imagePath = element.getAttribute('src');
 
 			if (imagePath) {
+				var editorConfig = this._editor.config;
+
 				var image = imagePath.substring(imagePath.lastIndexOf('/') + 1);
 
-				var imageIndex = instance._getImageIndex(emoticonImages, image);
+				var imageIndex = instance._getImageIndex(editorConfig.emoticonImages, image);
 
 				if (imageIndex >= 0) {
-					emoticonSymbol = emoticonSymbols[imageIndex];
+					emoticonSymbol = editorConfig.emoticonSymbols[imageIndex];
 				}
 			}
 
@@ -390,7 +395,7 @@
 
 			if (parentNode &&
 				parentNode.tagName &&
-				parentNode.tagName.toLowerCase() == TAG_BLOCKQUOTE &&
+				parentNode.tagName.toLowerCase() === TAG_BLOCKQUOTE &&
 				!parentNode.getAttribute(TAG_CITE)) {
 
 				var endResult = instance._endResult;
@@ -435,12 +440,12 @@
 			if (tagName) {
 				tagName = tagName.toLowerCase();
 
-				if (tagName == TAG_LI) {
+				if (tagName === TAG_LI) {
 					if (!instance._isLastItemNewLine()) {
 						instance._endResult.push(NEW_LINE);
 					}
 				}
-				else if (tagName == TAG_PRE || tagName == TAG_CODE) {
+				else if (tagName === TAG_PRE || tagName === TAG_CODE) {
 					instance._inPRE = false;
 				}
 			}
@@ -542,10 +547,10 @@
 			var hrefAttribute = element.getAttribute('href');
 
 			if (hrefAttribute) {
-				var decodedLink = decodeURIComponent(hrefAttribute);
+				var editorConfig = this._editor.config;
 
-				if (decodedLink.indexOf(newThreadURL) >= 0) {
-					hrefAttribute = newThreadURL;
+				if (hrefAttribute.indexOf(editorConfig.newThreadURL) >= 0) {
+					hrefAttribute = editorConfig.newThreadURL;
 				}
 
 				var linkHandler = MAP_LINK_HANDLERS[hrefAttribute.indexOf(STR_MAILTO)] || 'url';
@@ -567,14 +572,21 @@
 		},
 
 		_handleOrderedList: function(element, listTagsIn, listTagsOut) {
-			var instance = this;
-
 			listTagsIn.push('[list=');
 
 			var listStyleType = element.style.listStyleType;
 
-			if (REGEX_LIST_ALPHA.test(listStyleType)) {
+			if (REGEX_LIST_LOWER_ALPHA.test(listStyleType)) {
 				listTagsIn.push('a]');
+			}
+			else if (REGEX_LIST_LOWER_ROMAN.test(listStyleType)) {
+				listTagsIn.push('i]');
+			}
+			else if (REGEX_LIST_UPPER_ALPHA.test(listStyleType)) {
+				listTagsIn.push('A]');
+			}
+			else if (REGEX_LIST_UPPER_ROMAN.test(listStyleType)) {
+				listTagsIn.push('I]');
 			}
 			else {
 				listTagsIn.push('1]');
@@ -618,7 +630,7 @@
 
 			var alignment = style.textAlign.toLowerCase();
 
-			if (alignment == 'center') {
+			if (alignment === 'center') {
 				stylesTagsIn.push('[center]');
 
 				stylesTagsOut.push('[/center]');
@@ -630,7 +642,7 @@
 
 			var alignment = style.textAlign.toLowerCase();
 
-			if (alignment == 'justify') {
+			if (alignment === 'justify') {
 				stylesTagsIn.push('[justify]');
 
 				stylesTagsOut.push('[/justify]');
@@ -642,7 +654,7 @@
 
 			var alignment = style.textAlign.toLowerCase();
 
-			if (alignment == 'left') {
+			if (alignment === 'left') {
 				stylesTagsIn.push('[left]');
 
 				stylesTagsOut.push('[/left]');
@@ -654,7 +666,7 @@
 
 			var alignment = style.textAlign.toLowerCase();
 
-			if (alignment == 'right') {
+			if (alignment === 'right') {
 				stylesTagsIn.push('[right]');
 
 				stylesTagsOut.push('[/right]');
@@ -666,7 +678,7 @@
 
 			var fontWeight = style.fontWeight;
 
-			if (fontWeight.toLowerCase() == 'bold') {
+			if (fontWeight.toLowerCase() === 'bold') {
 				stylesTagsIn.push('[b]');
 
 				stylesTagsOut.push('[/b]');
@@ -722,7 +734,7 @@
 
 			var fontStyle = style.fontStyle;
 
-			if (fontStyle.toLowerCase() == 'italic') {
+			if (fontStyle.toLowerCase() === 'italic') {
 				stylesTagsIn.push('[i]');
 
 				stylesTagsOut.push('[/i]');
@@ -734,7 +746,7 @@
 
 			var tagName = element.tagName;
 
-			if ((!tagName || tagName.toLowerCase() != TAG_LINK) && element.style) {
+			if ((!tagName || tagName.toLowerCase() !== TAG_LINK) && element.style) {
 				instance._handleStyleAlignCenter(element, stylesTagsIn, stylesTagsOut);
 				instance._handleStyleAlignJustify(element, stylesTagsIn, stylesTagsOut);
 				instance._handleStyleAlignLeft(element, stylesTagsIn, stylesTagsOut);
@@ -753,12 +765,12 @@
 
 			var textDecoration = style.textDecoration.toLowerCase();
 
-			if (textDecoration == 'line-through') {
+			if (textDecoration === 'line-through') {
 				stylesTagsIn.push('[s]');
 
 				stylesTagsOut.push('[/s]');
 			}
-			else if (textDecoration == 'underline') {
+			else if (textDecoration === 'underline') {
 				stylesTagsIn.push('[u]');
 
 				stylesTagsOut.push('[/u]');
@@ -766,8 +778,6 @@
 		},
 
 		_handleTable: function(element, listTagsIn, listTagsOut) {
-			var instance = this;
-
 			listTagsIn.push('[table]', NEW_LINE);
 
 			listTagsOut.push('[/table]');
@@ -784,40 +794,30 @@
 		},
 
 		_handleTableCell: function(element, listTagsIn, listTagsOut) {
-			var instance = this;
-
 			listTagsIn.push('[td]');
 
 			listTagsOut.push('[/td]', NEW_LINE);
 		},
 
 		_handleTableHeader: function(element, listTagsIn, listTagsOut) {
-			var instance = this;
-
 			listTagsIn.push('[th]');
 
 			listTagsOut.push('[/th]', NEW_LINE);
 		},
 
 		_handleTableRow: function(element, listTagsIn, listTagsOut) {
-			var instance = this;
-
 			listTagsIn.push('[tr]', NEW_LINE);
 
 			listTagsOut.push('[/tr]', NEW_LINE);
 		},
 
 		_handleUnderline: function(element, listTagsIn, listTagsOut) {
-			var instance = this;
-
 			listTagsIn.push('[u]');
 
 			listTagsOut.push('[/u]');
 		},
 
 		_handleUnorderedList: function(element, listTagsIn, listTagsOut) {
-			var instance = this;
-
 			listTagsIn.push('[list]');
 
 			listTagsOut.push('[/list]');
@@ -856,13 +856,6 @@
 			requires: ['htmlwriter'],
 
 			init: function(editor) {
-				var editorConfig = editor.config;
-
-				emoticonImages = editorConfig.smiley_images;
-				emoticonPath = editorConfig.smiley_path;
-				emoticonSymbols = editorConfig.smiley_symbols;
-				newThreadURL = editorConfig.newThreadURL;
-
 				editor.dataProcessor = new BBCodeDataProcessor(editor);
 
 				editor.fire('customDataProcessorLoaded');
