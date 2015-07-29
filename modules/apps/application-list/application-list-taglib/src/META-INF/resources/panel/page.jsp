@@ -17,7 +17,7 @@
 <%@ include file="/panel/init.jsp" %>
 
 <%
-PanelCategory panelCategory = (PanelCategory)request.getAttribute("application-list-ui:panel:panelCategory");
+PanelCategory panelCategory = (PanelCategory)request.getAttribute("liferay-application-list:panel:panelCategory");
 PanelCategoryRegistry panelCategoryRegistry = (PanelCategoryRegistry)request.getAttribute(ApplicationListWebKeys.PANEL_CATEGORY_REGISTRY);
 %>
 

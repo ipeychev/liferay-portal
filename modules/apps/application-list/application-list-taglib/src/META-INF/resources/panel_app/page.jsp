@@ -17,7 +17,7 @@
 <%@ include file="/panel_app/init.jsp" %>
 
 <%
-PanelApp panelApp = (PanelApp)request.getAttribute("application-list-ui:panel-app:panelApp");
+PanelApp panelApp = (PanelApp)request.getAttribute("liferay-application-list:panel-app:panelApp");
 
 PortletURL portletURL = panelApp.getPortletURL(request);
 %>

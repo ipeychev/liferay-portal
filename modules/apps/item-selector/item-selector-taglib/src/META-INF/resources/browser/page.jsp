@@ -19,15 +19,15 @@
 <%
 String randomNamespace = PortalUtil.generateRandomKey(request, "taglib_ui_browser_page") + StringPool.UNDERLINE;
 
-String displayStyle = GetterUtil.getString(request.getAttribute("liferay-ui:item-selector-browser:displayStyle"));
-ItemSelectorReturnType draggableFileReturnType = (ItemSelectorReturnType)request.getAttribute("liferay-ui:item-selector-browser:draggableFileReturnType");
-ItemSelectorReturnType existingFileEntryReturnType = (ItemSelectorReturnType)request.getAttribute("liferay-ui:item-selector-browser:existingFileEntryReturnType");
-String itemSelectedEventName = GetterUtil.getString(request.getAttribute("liferay-ui:item-selector-browser:itemSelectedEventName"));
-PortletURL portletURL = (PortletURL)request.getAttribute("liferay-ui:item-selector-browser:portletURL");
-SearchContainer searchContainer = (SearchContainer)request.getAttribute("liferay-ui:item-selector-browser:searchContainer");
-boolean showBreadcrumb = GetterUtil.getBoolean(request.getAttribute("liferay-ui:item-selector-browser:showBreadcrumb"));
-String tabName = GetterUtil.getString(request.getAttribute("liferay-ui:item-selector-browser:tabName"));
-PortletURL uploadURL = (PortletURL)request.getAttribute("liferay-ui:item-selector-browser:uploadURL");
+String displayStyle = GetterUtil.getString(request.getAttribute("liferay-item-selector:browser:displayStyle"));
+ItemSelectorReturnType draggableFileReturnType = (ItemSelectorReturnType)request.getAttribute("liferay-item-selector:browser:draggableFileReturnType");
+ItemSelectorReturnType existingFileEntryReturnType = (ItemSelectorReturnType)request.getAttribute("liferay-item-selector:browser:existingFileEntryReturnType");
+String itemSelectedEventName = GetterUtil.getString(request.getAttribute("liferay-item-selector:browser:itemSelectedEventName"));
+PortletURL portletURL = (PortletURL)request.getAttribute("liferay-item-selector:browser:portletURL");
+SearchContainer searchContainer = (SearchContainer)request.getAttribute("liferay-item-selector:browser:searchContainer");
+boolean showBreadcrumb = GetterUtil.getBoolean(request.getAttribute("liferay-item-selector:browser:showBreadcrumb"));
+String tabName = GetterUtil.getString(request.getAttribute("liferay-item-selector:browser:tabName"));
+PortletURL uploadURL = (PortletURL)request.getAttribute("liferay-item-selector:browser:uploadURL");
 %>
 
 <liferay-util:html-top>

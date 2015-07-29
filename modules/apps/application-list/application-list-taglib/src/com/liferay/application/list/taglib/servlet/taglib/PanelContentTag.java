@@ -14,36 +14,40 @@
 
 package com.liferay.application.list.taglib.servlet.taglib;
 
+import com.liferay.application.list.PanelCategory;
+
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * @author Adolfo Pérez
+ * @author Eudaldo Alonso
  */
 public class PanelContentTag extends BasePanelTag {
 
-	@Override
-	public void setPortletId(String portletId) {
-		_portletId = portletId;
+	public void setPanelCategory(PanelCategory panelCategory) {
+		_panelCategory = panelCategory;
 	}
 
 	@Override
 	protected void cleanUp() {
 		super.cleanUp();
 
-		_portletId = null;
+		_panelCategory = null;
 	}
 
 	@Override
 	protected String getPage() {
-		return "/panel_content/page.jsp";
+		return _PAGE;
 	}
 
 	@Override
 	protected void setAttributes(HttpServletRequest request) {
 		request.setAttribute(
-			"application-list-ui:panel-content:portletId", _portletId);
+			"liferay-application-list:panel-content:panelCategory",
+			_panelCategory);
 	}
 
-	private String _portletId;
+	private static final String _PAGE = "/panel_content/page.jsp";
+
+	private PanelCategory _panelCategory;
 
 }

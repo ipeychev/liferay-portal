@@ -47,7 +47,7 @@ public class PanelTag extends BasePanelTag {
 		}
 
 		request.setAttribute(
-			"application-list-ui:panel:panelCategory", _panelCategory);
+			"liferay-application-list:panel:panelCategory", _panelCategory);
 	}
 
 	private PanelCategory _panelCategory;

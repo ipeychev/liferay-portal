@@ -26,8 +26,6 @@ public interface PanelCategoryKeys {
 	public static final String CONTROL_PANEL_CONFIGURATION =
 		"control_panel.configuration";
 
-	public static final String CONTROL_PANEL_SITES = "control_panel.sites";
-
 	public static final String CONTROL_PANEL_USERS = "control_panel.users";
 
 	public static final String MY_SPACE = "my_space";
@@ -36,6 +34,8 @@ public interface PanelCategoryKeys {
 		"my_space.productivity_center";
 
 	public static final String ROOT = "root";
+
+	public static final String ROOT_SITES = "root_sites";
 
 	public static final String SITE_ADMINISTRATION = "site_administration";
 
@@ -48,7 +48,18 @@ public interface PanelCategoryKeys {
 	public static final String SITE_ADMINISTRATION_PAGES =
 		"site_administration.pages";
 
+	public static final String SITE_ADMINISTRATION_PUBLISHING_TOOLS =
+		"site_administration.publishing_tools";
+
 	public static final String SITE_ADMINISTRATION_USERS =
 		"site_administration.users";
+
+	public static final String SITES = "sites";
+
+	public static final String SITES_ADMINISTRATION_MY_SITES =
+		"sites_administration.my_sites";
+
+	public static final String SITES_ADMINISTRATION_SITES =
+		"sites_administration.sites";
 
 }

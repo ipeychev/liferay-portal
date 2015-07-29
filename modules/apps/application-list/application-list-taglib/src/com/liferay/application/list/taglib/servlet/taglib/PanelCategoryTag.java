@@ -42,7 +42,8 @@ public class PanelCategoryTag extends BasePanelTag {
 	@Override
 	protected void setAttributes(HttpServletRequest request) {
 		request.setAttribute(
-			"application-list-ui:panel-category:panelCategory", _panelCategory);
+			"liferay-application-list:panel-category:panelCategory",
+			_panelCategory);
 	}
 
 	private PanelCategory _panelCategory;

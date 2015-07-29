@@ -156,29 +156,27 @@ public class BrowserTag extends IncludeTag {
 	@Override
 	protected void setAttributes(HttpServletRequest request) {
 		request.setAttribute(
-			"liferay-ui:item-selector-browser:displayStyle", getDisplayStyle());
+			"liferay-item-selector:browser:displayStyle", getDisplayStyle());
 		request.setAttribute(
-			"liferay-ui:item-selector-browser:draggableFileReturnType",
+			"liferay-item-selector:browser:draggableFileReturnType",
 			getDraggableFileReturnType());
 		request.setAttribute(
-			"liferay-ui:item-selector-browser:existingFileEntryReturnType",
+			"liferay-item-selector:browser:existingFileEntryReturnType",
 			ItemSelectorBrowserReturnTypeUtil.
 				getFirstAvailableExistingFileEntryReturnType(
 					_desiredItemSelectorReturnTypes));
 		request.setAttribute(
-			"liferay-ui:item-selector-browser:itemSelectedEventName",
+			"liferay-item-selector:browser:itemSelectedEventName",
 			_itemSelectedEventName);
 		request.setAttribute(
-			"liferay-ui:item-selector-browser:portletURL", _portletURL);
+			"liferay-item-selector:browser:portletURL", _portletURL);
 		request.setAttribute(
-			"liferay-ui:item-selector-browser:searchContainer",
-			_searchContainer);
+			"liferay-item-selector:browser:searchContainer", _searchContainer);
 		request.setAttribute(
-			"liferay-ui:item-selector-browser:showBreadcrumb", _showBreadcrumb);
+			"liferay-item-selector:browser:showBreadcrumb", _showBreadcrumb);
+		request.setAttribute("liferay-item-selector:browser:tabName", _tabName);
 		request.setAttribute(
-			"liferay-ui:item-selector-browser:tabName", _tabName);
-		request.setAttribute(
-			"liferay-ui:item-selector-browser:uploadURL", _uploadURL);
+			"liferay-item-selector:browser:uploadURL", _uploadURL);
 	}
 
 	private List<ItemSelectorReturnType> _desiredItemSelectorReturnTypes;

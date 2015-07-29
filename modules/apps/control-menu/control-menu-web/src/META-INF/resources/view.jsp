@@ -37,12 +37,12 @@ if (user.isSetupComplete() || themeDisplay.isImpersonated()) {
 }
 %>
 
-<c:if test="<%= !group.isControlPanel() && !group.isUserPersonalPanel() && userSetupComplete %>">
+<c:if test="<%= !group.isControlPanel() && !group.isUserPersonalPanel() && !layout.isTypeControlPanel() && !layout.isTypeUserPersonalPanel() && userSetupComplete %>">
 	<ul class="control-menu" data-namespace="<portlet:namespace />" id="<portlet:namespace />controlMenu">
 		<li class="left pull-left">
 			<ul>
 				<li>
-					<a class="control-menu-icon sidenav-toggler" href="javascript:;" id="<portlet:namespace />sidenavToggle"><span class="icon-align-justify icon-monospaced"></span></a>
+					<a class="control-menu-icon sidenav-toggler" href="javascript:;" id="sidenavToggleId"><span class="icon-align-justify icon-monospaced"></span></a>
 				</li>
 			</ul>
 		</li>
@@ -113,18 +113,16 @@ if (user.isSetupComplete() || themeDisplay.isImpersonated()) {
 					</li>
 				</c:if>
 
-				<c:if test="<%= user.isSetupComplete() || themeDisplay.isImpersonated() %>">
+				<%
+				boolean customizableLayout = !(group.isLayoutPrototype() || group.isLayoutSetPrototype() || group.isStagingGroup() || group.isUserGroup()) && layoutTypePortlet.isCustomizable() && LayoutPermissionUtil.containsWithoutViewableGroup(permissionChecker, layout, false, ActionKeys.CUSTOMIZE);
+				boolean linkedLayout = ((!SitesUtil.isLayoutUpdateable(layout) && SitesUtil.isUserGroupLayout(layout)) || (layout.isLayoutPrototypeLinkActive() && !group.hasStagingGroup())) && LayoutPermissionUtil.containsWithoutViewableGroup(themeDisplay.getPermissionChecker(), layout, false, ActionKeys.UPDATE);
+				boolean modifiedLayout = (layoutSet != null) && layoutSet.isLayoutSetPrototypeLinkActive() && SitesUtil.isLayoutModifiedSinceLastMerge(layout) && hasLayoutUpdatePermission;
+				boolean hasMessages = modifiedLayout || linkedLayout || customizableLayout;
+				%>
 
-					<%
-					boolean customizableLayout = !(group.isLayoutPrototype() || group.isLayoutSetPrototype() || group.isStagingGroup() || group.isUserGroup()) && layoutTypePortlet.isCustomizable() && LayoutPermissionUtil.containsWithoutViewableGroup(permissionChecker, layout, false, ActionKeys.CUSTOMIZE);
-					boolean linkedLayout = ((!SitesUtil.isLayoutUpdateable(layout) && SitesUtil.isUserGroupLayout(layout)) || (layout.isLayoutPrototypeLinkActive() && !group.hasStagingGroup())) && LayoutPermissionUtil.containsWithoutViewableGroup(themeDisplay.getPermissionChecker(), layout, false, ActionKeys.UPDATE);
-					boolean modifiedLayout = (layoutSet != null) && layoutSet.isLayoutSetPrototypeLinkActive() && SitesUtil.isLayoutModifiedSinceLastMerge(layout) && hasLayoutUpdatePermission;
-					boolean hasMessages = modifiedLayout || linkedLayout || customizableLayout;
-					%>
-
+				<c:if test="<%= (user.isSetupComplete() || themeDisplay.isImpersonated()) && hasMessages %>">
 					<li>
 						<liferay-ui:icon
-							cssClass='<%= !hasMessages ? "no-info-messages" : StringPool.BLANK %>'
 							iconCssClass="icon-info"
 							id="infoButton"
 							linkCssClass="control-menu-icon"

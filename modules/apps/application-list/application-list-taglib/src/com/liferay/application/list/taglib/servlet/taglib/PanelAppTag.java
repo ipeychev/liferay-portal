@@ -48,9 +48,9 @@ public class PanelAppTag extends BasePanelTag {
 	@Override
 	protected void setAttributes(HttpServletRequest request) {
 		request.setAttribute(
-			"application-list-ui:panel-app:panelApp", _panelApp);
+			"liferay-application-list:panel-app:panelApp", _panelApp);
 		request.setAttribute(
-			"application-list-ui:panel-app:panelCategory", _panelCategory);
+			"liferay-application-list:panel-app:panelCategory", _panelCategory);
 	}
 
 	private PanelApp _panelApp;

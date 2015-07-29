@@ -42,7 +42,7 @@ public class PanelCategoryContentTag extends BasePanelTag {
 	@Override
 	protected void setAttributes(HttpServletRequest request) {
 		request.setAttribute(
-			"application-list-ui:panel-category-content:panelCategory",
+			"liferay-application-list:panel-category-content:panelCategory",
 			_panelCategory);
 	}
 
