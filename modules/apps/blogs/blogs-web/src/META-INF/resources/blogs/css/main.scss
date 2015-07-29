@@ -4,6 +4,16 @@
 @import url(common_main.scss);
 
 .portlet-blogs {
+
+	a.dropdown-toggle {
+		background-color: #FFF;
+		color: #869CB0;
+		padding: 5px 15px;
+		position: absolute;
+		top: 0;
+		right: 0;
+	}
+
 	.taglib-custom-attributes-list {
 		margin-bottom: 1em;
 	}
