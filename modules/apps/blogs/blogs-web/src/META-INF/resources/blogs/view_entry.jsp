@@ -85,6 +85,7 @@ request.setAttribute("view_entry_content.jsp-assetEntry", assetEntry);
 	<c:if test="<%= (previousEntry != null) || (nextEntry != null) %>">
 		<aui:container cssClass="entry-navigation">
 			<h2 class="text-uppercase"><strong><liferay-ui:message key="more-blog-entries" /></strong></h2>
+
 			<aui:row>
 				<c:if test="<%= previousEntry != null %>">
 					<aui:col cssClass='<%= "previous-entry " + ((nextEntry != null) ? "has-next-entry" : StringPool.BLANK) %>' md="6" sm="6">
