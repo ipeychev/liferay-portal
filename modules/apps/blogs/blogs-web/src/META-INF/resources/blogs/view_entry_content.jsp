@@ -165,14 +165,63 @@ AssetEntry assetEntry = (AssetEntry)request.getAttribute("view_entry_content.jsp
 				</c:choose>
 			</div>
 
-			<div class="<%= viewSingleEntry ? "border" : StringPool.BLANK %> entry-footer">
+			<c:if test="<%= viewSingleEntry %>">
+				<aui:container cssClass="entry-metadata">
+					<aui:col width="<%= 40 %>">
+						<c:if test="<%= blogsPortletInstanceConfiguration.enableRelatedAssets() %>">
+							<div class="entry-links">
+								<liferay-ui:asset-links
+									assetEntryId="<%= (assetEntry != null) ? assetEntry.getEntryId() : 0 %>"
+									className="<%= BlogsEntry.class.getName() %>"
+									classPK="<%= entry.getEntryId() %>"
+								/>
+							</div>
+						</c:if>
+
+						<liferay-ui:asset-categories-available
+							className="<%= BlogsEntry.class.getName() %>"
+							classPK="<%= entry.getEntryId() %>"
+						>
+							<p><liferay-ui:message key="categories" />:</p>
+
+							<div class="entry-categories">
+								<liferay-ui:asset-categories-summary
+									className="<%= BlogsEntry.class.getName() %>"
+									classPK="<%= entry.getEntryId() %>"
+									portletURL="<%= renderResponse.createRenderURL() %>"
+								/>
+							</div>
+						</liferay-ui:asset-categories-available>
+					</aui:col>
+
+					<aui:col width="<%= 60 %>">
+						<liferay-ui:asset-tags-available
+							className="<%= BlogsEntry.class.getName() %>"
+							classPK="<%= entry.getEntryId() %>"
+						>
+							<div class="entry-tags">
+								<p><liferay-ui:message key="tags" />:</p>
+
+								<liferay-ui:asset-tags-summary
+									className="<%= BlogsEntry.class.getName() %>"
+									classPK="<%= entry.getEntryId() %>"
+									portletURL="<%= renderResponse.createRenderURL() %>"
+								/>
+							</div>
+						</liferay-ui:asset-tags-available>
+					</aui:col>
+				</aui:container>
+			</c:if>
+
+			<div class="<%= viewSingleEntry ? "border-top" : StringPool.BLANK %> entry-footer">
 				<c:if test="<%= viewSingleEntry %>">
 					<div class="entry-author">
 						<liferay-ui:user-display
 							userId="<%= entry.getUserId() %>"
 							userName="<%= entry.getUserName() %>"
+							view="lexicon"
 						>
-							<liferay-ui:message arguments="<%= LanguageUtil.getTimeDescription(request, System.currentTimeMillis() - entry.getCreateDate().getTime(), true) %>" key="x-ago" translateArguments="<%= false %>" />
+							<%= dateFormatDateTime.format(entry.getDisplayDate()) %>
 						</liferay-ui:user-display>
 					</div>
 				</c:if>

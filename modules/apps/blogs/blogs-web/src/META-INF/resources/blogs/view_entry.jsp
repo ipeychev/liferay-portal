@@ -84,7 +84,7 @@ request.setAttribute("view_entry_content.jsp-assetEntry", assetEntry);
 
 	<c:if test="<%= (previousEntry != null) || (nextEntry != null) %>">
 		<aui:container cssClass="entry-navigation">
-			<h2 class="text-uppercase"><strong><liferay-ui:message key="more-blog-entries" /></strong></h2>
+			<h2><strong><liferay-ui:message key="more-blog-entries" /></strong></h2>
 
 			<aui:row>
 				<c:if test="<%= previousEntry != null %>">
@@ -107,12 +107,20 @@ request.setAttribute("view_entry_content.jsp-assetEntry", assetEntry);
 							</c:if>
 
 							<div class="entry-info">
-								<small>
-									<strong><%= previousEntry.getUserName() %></strong>
-									<span> - </span>
-									<span class="hide-accessible"><liferay-ui:message key="published-date" /></span>
-									<%= dateFormatDate.format(previousEntry.getDisplayDate()) %>
-								</small>
+								<liferay-ui:user-display
+									showUserName="<%= false %>"
+									userIconCssClass="user-icon-md"
+									userId="<%= previousEntry.getUserId() %>"
+									userName="<%= previousEntry.getUserName() %>"
+									view="lexicon"
+								>
+									<small>
+										<strong><%= previousEntry.getUserName() %></strong>
+										<span> - </span>
+										<span class="hide-accessible"><liferay-ui:message key="published-date" /></span>
+										<%= dateFormatDate.format(previousEntry.getDisplayDate()) %>
+									</small>
+								</liferay-ui:user-display>
 							</div>
 
 							<span class="entry-content">
@@ -148,12 +156,20 @@ request.setAttribute("view_entry_content.jsp-assetEntry", assetEntry);
 							</c:if>
 
 							<div class="entry-info">
-								<small>
-									<strong><%= nextEntry.getUserName() %></strong>
-									<span> - </span>
-									<span class="hide-accessible"><liferay-ui:message key="published-date" /></span>
-									<%= dateFormatDate.format(nextEntry.getDisplayDate()) %>
-								</small>
+								<liferay-ui:user-display
+									showUserName="<%= false %>"
+									userIconCssClass="user-icon-md"
+									userId="<%= nextEntry.getUserId() %>"
+									userName="<%= nextEntry.getUserName() %>"
+									view="lexicon"
+								>
+									<small>
+										<strong><%= nextEntry.getUserName() %></strong>
+										<span> - </span>
+										<span class="hide-accessible"><liferay-ui:message key="published-date" /></span>
+										<%= dateFormatDate.format(nextEntry.getDisplayDate()) %>
+									</small>
+								</liferay-ui:user-display>
 							</div>
 
 							<span class="entry-content">
@@ -178,7 +194,7 @@ Discussion discussion = CommentManagerUtil.getDiscussion(user.getUserId(), scope
 %>
 
 <c:if test="<%= (discussion != null) && blogsPortletInstanceConfiguration.enableComments() %>">
-	<h2 class="text-uppercase"><strong><%= LanguageUtil.format(request, "x-comments", CommentManagerUtil.getCommentsCount(BlogsEntry.class.getName(), entry.getEntryId())) %></strong></h2>
+	<h2><strong><%= LanguageUtil.format(request, "x-comments", CommentManagerUtil.getCommentsCount(BlogsEntry.class.getName(), entry.getEntryId())) %></strong></h2>
 
 	<c:if test="<%= PropsValues.BLOGS_TRACKBACK_ENABLED && entry.isAllowTrackbacks() && !portletId.equals(BlogsPortletKeys.BLOGS_ADMIN) %>">
 		<aui:input inlineLabel="left" name="trackbackURL" type="resource" value='<%= PortalUtil.getLayoutFullURL(themeDisplay) + Portal.FRIENDLY_URL_SEPARATOR + "blogs/trackback/" + entry.getUrlTitle() %>' />

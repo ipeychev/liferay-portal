@@ -49,12 +49,6 @@
 		margin-top: 15px;
 	}
 
-	.taglib-user-display {
-		color: #999;
-		display: inline;
-		padding: 0;
-	}
-
 	.edit-actions {
 		padding-left: 0;
 	}
@@ -95,14 +89,13 @@
 		}
 	}
 
+	.border-top {
+		border-top: 1px solid #EDEEF0;
+		padding-top: 20px;
+	}
+
 	.entry-footer {
 		vertical-align: middle;
-
-		&.border {
-			border-top: 1px solid #EDEEF0;
-			margin-top: 30px;
-			padding-top: 20px;
-		}
 
 		.entry-social, .flags, .social-bookmarks {
 			display: inline-block;
@@ -227,15 +220,13 @@
 		}
 	}
 
-	.entry-navigation, .entry-metadata {
-		h2 {
-			margin-bottom: 15px;
-			margin-top: 0;
-		}
+	.entry-metadata {
+		padding: 30px 0;
 	}
 
-	.entry-tags, .entry-categories, .entry-links {
-		margin-bottom: 60px;
+	.entry-navigation h2 {
+		margin-bottom: 15px;
+		margin-top: 0;
 	}
 
 	.entry-navigation {
@@ -253,6 +244,10 @@
 	.lfr-blogs-cover-image-selector {
 		margin: 0 0 10px;
 		padding-top: 10px;
+	}
+
+	.nameplate-content {
+		padding-left: 0
 	}
 
 	.search-form {
