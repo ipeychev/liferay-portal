@@ -84,10 +84,12 @@ AUI.add(
 												}
 											}
 										}
-									]
+									],
+									zIndex: 12000
 								},
 								eventName: eventName,
 								id: eventName,
+								stack: false,
 								title: Liferay.Language.get('select-image'),
 								uri: instance.get('url')
 							},
