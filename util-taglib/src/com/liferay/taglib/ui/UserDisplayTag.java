@@ -58,10 +58,6 @@ public class UserDisplayTag extends TagSupport {
 				"liferay-ui:user-display:displayStyle",
 				String.valueOf(_displayStyle));
 
-			if (Validator.isNull(_userIconCssClass)) {
-				_userIconCssClass = "user-icon-lg";
-			}
-
 			if (Validator.isNull(_imageCssClass)) {
 				_imageCssClass = "img-circle";
 			}
@@ -77,9 +73,15 @@ public class UserDisplayTag extends TagSupport {
 			request.setAttribute(
 				"liferay-ui:user-display:showUserName",
 				String.valueOf(_showUserName));
+
+			if (Validator.isNull(_userIconCssClass)) {
+				_userIconCssClass = "user-icon-lg";
+			}
+
 			request.setAttribute(
 				"liferay-ui:user-display:userIconCssClass",
 				String.valueOf(_userIconCssClass));
+
 			request.setAttribute(
 				"liferay-ui:user-display:user-id", String.valueOf(_userId));
 			request.setAttribute(
