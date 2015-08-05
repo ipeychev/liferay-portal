@@ -1,13 +1,11 @@
 @import "bourbon";
 @import "mixins";
 
-@import url(common_main.scss);
+@import "common_main";
 
 .portlet-blogs {
-	a.dropdown-toggle {
+	.entry-options {
 		background-color: #FFF;
-		color: #869CB0;
-		padding: 5px 15px;
 		position: absolute;
 		right: 0;
 		top: 0;
@@ -45,7 +43,6 @@
 	}
 
 	.entry-info {
-		color: #999;
 		margin-top: 15px;
 	}
 
@@ -233,6 +230,10 @@
 		padding: 60px 0;
 		width: 100%;
 
+		.entry-info {
+			margin-top: 0;
+		}
+
 		.small-image {
 			background-position: center;
 			background-repeat: no-repeat;
@@ -247,7 +248,9 @@
 	}
 
 	.nameplate-content {
-		padding-left: 0
+		padding-left: 0;
+
+		vertical-align: middle;
 	}
 
 	.search-form {

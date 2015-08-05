@@ -39,7 +39,7 @@ AssetEntry assetEntry = (AssetEntry)request.getAttribute("view_entry_content.jsp
 				%>
 
 				<c:if test="<%= BlogsEntryPermission.contains(permissionChecker, entry, ActionKeys.DELETE) || BlogsEntryPermission.contains(permissionChecker, entry, ActionKeys.UPDATE) %>">
-					<liferay-ui:icon-menu direction="top-right" icon="<%= StringPool.BLANK %>" message="<%= StringPool.BLANK %>" scroll="<%= false %>" showWhenSingleIcon="<%= true %>" view="lexicon">
+					<liferay-ui:icon-menu cssClass="entry-options" direction="right" icon="<%= StringPool.BLANK %>" message="<%= StringPool.BLANK %>" scroll="<%= false %>" showWhenSingleIcon="<%= true %>" triggerCssClass="text-muted" view="lexicon">
 						<c:if test="<%= BlogsEntryPermission.contains(permissionChecker, entry, ActionKeys.UPDATE) %>">
 							<portlet:renderURL var="editEntryURL">
 								<portlet:param name="mvcRenderCommandName" value="/blogs/edit_entry" />
@@ -91,7 +91,7 @@ AssetEntry assetEntry = (AssetEntry)request.getAttribute("view_entry_content.jsp
 				</c:if>
 
 				<c:if test="<%= !viewSingleEntry %>">
-					<div class="entry-info">
+					<div class="entry-info text-muted">
 						<small>
 							<strong><%= entry.getUserName() %></strong>
 							<span> - </span>
