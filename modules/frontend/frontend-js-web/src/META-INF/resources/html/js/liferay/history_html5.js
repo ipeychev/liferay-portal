@@ -1,6 +1,14 @@
 AUI.add(
 	'liferay-history-html5',
 	function(A) {
+
+		/**
+		 * The HistoryHTML5 Component.
+		 *
+		 * @module liferay-history
+		 * @submodule liferay-history-html5
+		 */
+
 		var AObject = A.Object;
 		var History = Liferay.History;
 		var Lang = A.Lang;
@@ -16,10 +24,28 @@ AUI.add(
 		var LOCATION = WIN.location;
 
 		A.mix(
+
+			/**
+			 * A base class for `A.HistoryHtml5`.
+			 *
+			 * @class A.History.Html5
+			 * @param {Object} config Object literal specifying widget configuration
+			 * properties.
+			 * @constructor
+			 */
 			History.prototype,
 			{
 				PROTECTED_HASH_KEYS: [/^liferay$/, /^tab$/, /^_\d+_tab$/],
 
+				/**
+				 * Add 'state' and 'options' to the History. 
+				 *
+				 * @method add
+				 * @param state
+				 * @param options
+				 * @return History.superclass.add.call(instance, state, options)
+				 * @protected
+				 */
 				add: function(state, options) {
 					var instance = this;
 
@@ -32,6 +58,14 @@ AUI.add(
 					return History.superclass.add.call(instance, state, options);
 				},
 
+				/**
+				 * Construction lifecycle implementation executed during 
+                                 * `HistoryHtml5` instantiation.
+				 *
+				 * @method _init
+				 * @param config	
+				 * @protected
+				 */
 				_init: function(config) {
 					var instance = this;
 
@@ -54,6 +88,12 @@ AUI.add(
 					}
 				},
 
+				/**
+				 * Update the URI data for the history.
+				 *
+				 * @method _updateURI
+				 * @param state
+				 */
 				_updateURI: function(state) {
 					var instance = this;
 
