@@ -241,12 +241,10 @@ AssetEntry assetEntry = (AssetEntry)request.getAttribute("view_entry_content.jsp
 						</portlet:renderURL>
 
 						<div class="comments">
-							<liferay-ui:icon
-								iconCssClass="icon-comment"
-								label="<%= true %>"
-								message="<%= String.valueOf(messagesCount) %>"
-								url="<%= viewEntryCommentsURL %>"
-							/>
+							<a href="<%= viewEntryCommentsURL %>">
+								<i class="icon-comment"></i>
+								<span><%= String.valueOf(messagesCount) %></span>
+							</a>
 						</div>
 					</c:if>
 
