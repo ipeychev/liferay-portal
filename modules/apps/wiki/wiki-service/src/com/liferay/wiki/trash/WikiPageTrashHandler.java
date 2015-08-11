@@ -412,8 +412,7 @@ public class WikiPageTrashHandler extends BaseWikiTrashHandler {
 	}
 
 	protected PortletURL getRestoreURL(
-			PortletRequest portletRequest, long classPK,
-			boolean isContainerModel)
+			PortletRequest portletRequest, long classPK, boolean containerModel)
 		throws PortalException {
 
 		PortletURL portletURL = null;
@@ -429,7 +428,7 @@ public class WikiPageTrashHandler extends BaseWikiTrashHandler {
 				portletRequest, WikiPortletKeys.WIKI_ADMIN, 0,
 				PortletRequest.RENDER_PHASE);
 
-			if (isContainerModel) {
+			if (containerModel) {
 				portletURL.setParameter(
 					"struts_action", "/wiki_admin/view_all_pages");
 			}
@@ -442,7 +441,7 @@ public class WikiPageTrashHandler extends BaseWikiTrashHandler {
 				portletRequest, WikiPortletKeys.WIKI, plid,
 				PortletRequest.RENDER_PHASE);
 
-			if (isContainerModel) {
+			if (containerModel) {
 				portletURL.setParameter(
 					"struts_action", "/wiki/view_all_pages");
 			}

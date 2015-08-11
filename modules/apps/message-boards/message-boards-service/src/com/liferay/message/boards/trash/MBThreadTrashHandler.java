@@ -246,8 +246,7 @@ public class MBThreadTrashHandler extends BaseTrashHandler {
 	}
 
 	protected PortletURL getRestoreURL(
-			PortletRequest portletRequest, long classPK,
-			boolean isContainerModel)
+			PortletRequest portletRequest, long classPK, boolean containerModel)
 		throws PortalException {
 
 		PortletURL portletURL = null;
@@ -271,7 +270,7 @@ public class MBThreadTrashHandler extends BaseTrashHandler {
 				portletRequest, portletId, plid, PortletRequest.RENDER_PHASE);
 		}
 
-		if (isContainerModel) {
+		if (containerModel) {
 			portletURL.setParameter(
 				"mvcRenderCommandName", "/message_boards/view");
 		}
