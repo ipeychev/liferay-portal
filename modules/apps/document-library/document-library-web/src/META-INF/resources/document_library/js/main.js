@@ -178,6 +178,6 @@ AUI.add(
 	},
 	'',
 	{
-		requires: ['document-library-upload', 'liferay-app-view-move', 'liferay-message', 'liferay-portlet-base']
+		requires: ['document-library-upload', 'liferay-app-view-move', 'liferay-message', 'liferay-portlet-base', 'liferay-portlet-dynamic-data-mapping', 'liferay-portlet-dynamic-data-mapping-custom-fields']
 	}
 );

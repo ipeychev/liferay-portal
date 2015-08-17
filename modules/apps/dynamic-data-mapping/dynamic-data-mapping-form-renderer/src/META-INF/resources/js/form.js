@@ -73,6 +73,6 @@ AUI.add(
 	},
 	'',
 	{
-		requires: ['aui-component', 'aui-tabview', 'liferay-ddm-form-renderer-definition', 'liferay-ddm-form-renderer-nested-fields']
+		requires: ['aui-component', 'aui-tabview', 'liferay-ddm-form-field-checkbox', 'liferay-ddm-form-field-options', 'liferay-ddm-form-field-radio', 'liferay-ddm-form-field-select', 'liferay-ddm-form-field-text-template', 'liferay-ddm-form-renderer-definition', 'liferay-ddm-form-renderer-field-types', 'liferay-ddm-form-renderer-nested-fields', 'liferay-ddm-form-renderer-util']
 	}
 );
