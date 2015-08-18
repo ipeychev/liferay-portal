@@ -1,0 +1,17 @@
+{
+    "js-es6-demo@1.0.0/fibonacci.es": {
+        "dependencies": ["exports", "module", "./sequence-base.es"]
+    },
+    "js-es6-demo@1.0.0/sequence-base.es": {
+        "dependencies": ["exports", "module"]
+    },
+    "js-es6-demo@1.0.0/sequences.es": {
+        "dependencies": ["exports", "./fibonacci.es", "./triangle.es", "./square.es"]
+    },
+    "js-es6-demo@1.0.0/square.es": {
+        "dependencies": ["exports", "module", "./sequence-base.es"]
+    },
+    "js-es6-demo@1.0.0/triangle.es": {
+        "dependencies": ["exports", "module", "./sequence-base.es"]
+    }
+}

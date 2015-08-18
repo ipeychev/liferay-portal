@@ -45,59 +45,25 @@
 	<div class="note-content" id="<portlet:namespace />note"><%= StringUtil.replace(HtmlUtil.escape(data), "&lt;br /&gt;", "<br />") %></div>
 </div>
 
-<c:if test="<%= portletDisplay.isShowConfigurationIcon() %>">
-	<aui:script use="aui-editable-deprecated,aui-io-request">
-		var quickNotePad = A.one('#<portlet:namespace />pad');
+<div>
+	<h1>Small Length (3) Sequences</h1>
+	<div id="<portlet:namespace />SmallSequences"></div>
 
-		if (quickNotePad) {
-			quickNotePad.all('.note-color').on(
-				'click',
-				function(event) {
-					var box = event.currentTarget;
+	<h1>Default Length (10) Sequences</h1>
+	<div id="<portlet:namespace />DefaultSequences"></div>
 
-					var bgColor = box.getStyle('backgroundColor');
+	<h1>Long Length (30) Sequences</h1>
+	<div id="<portlet:namespace />LongSequences"></div>
+</div>
 
-					quickNotePad.setStyle('backgroundColor', bgColor);
+<script src="/o/js-es6-demo-1.0.0/browser-polyfill.js" />
+<aui:script require="quick-note/js/sequencePrinter.es">
+	var smallSequencesContainer = $('#<portlet:namespace />SmallSequences')[0];
+	new quickNoteJsSequencePrinterEs(smallSequencesContainer, 3).print();
 
-					<portlet:actionURL name="save" var="saveURL" />
+	var defaultSequencesContainer = $('#<portlet:namespace />DefaultSequences')[0];
+	new quickNoteJsSequencePrinterEs(defaultSequencesContainer).print();
 
-					A.io.request(
-						'<%= saveURL %>',
-						{
-							data: {
-								<portlet:namespace />color: bgColor
-							}
-						}
-					);
-				}
-			);
-		}
-
-		new A.Editable(
-			{
-				inputType: 'textarea',
-				node: '#<portlet:namespace />note',
-				on: {
-					contentTextChange: function(event) {
-						var instance = this;
-
-						if (!event.initial) {
-							var newValue = event.newVal.replace(/\n/gi, '<br />');
-
-							event.newVal = instance._toText(event.newVal);
-
-							A.io.request(
-								'<%= saveURL %>',
-								{
-									data: {
-										<portlet:namespace />data: newValue
-									}
-								}
-							);
-						}
-					}
-				}
-			}
-		);
-	</aui:script>
-</c:if>
+	var longSequencesContainer = $('#<portlet:namespace />LongSequences')[0];
+	new quickNoteJsSequencePrinterEs(longSequencesContainer, 30).print();
+</aui:script>

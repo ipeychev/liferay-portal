@@ -3,4 +3,5 @@ Bundle-SymbolicName: com.liferay.quick.note.web
 Bundle-Version: 1.0.0
 Include-Resource:\
 	classes,\
-	META-INF/resources=src/META-INF/resources
+	META-INF/resources=src/META-INF/resources,\
+	META-INF/resources=.js-cache/META-INF/resources
