@@ -5,10 +5,27 @@
 
 .portlet-blogs {
 	.entry-options {
-		background-color: #FFF;
-		position: absolute;
-		right: 0;
-		top: 0;
+		margin-bottom: 10px;
+		min-height: 30px;
+		position: relative;
+
+		&.inline {
+			background-color: #FFF;
+			position: absolute;
+			right: 0;
+			top: 0;
+		}
+
+		& > div {
+			padding: 5px;
+			text-align: center;
+		}
+
+		& > .btn {
+			position: absolute;
+			right: 0;
+			top: 0;
+		}
 	}
 
 	.taglib-custom-attributes-list {
@@ -155,33 +172,20 @@
 	}
 
 	.edit-entry {
-		.entry-status {
-			padding-left: 30px;
-		}
-
-		.entry-title, .entry-subtitle, .entry-body {
-			margin-left: 24px;
-		}
-
 		.entry-body {
-			padding-bottom: 60px;
+			padding-bottom: 30px;
 		}
 
-		.entry-subtitle {
+		.entry-subtitle, .entry-footer {
 			margin-bottom: 30px;
 		}
 
-		.entry-cover-image-caption {
-			font-size: 12px;
-			margin-bottom: 35px;
+		.cover-image-caption .alloy-editor {
+			color: #868889;
+			padding-left: 0;
 
-			.alloy-editor {
-				color: #868889;
-				padding-left: 0;
-
-				&.alloy-editor-placeholder:empty:not(:focus) {
-					border-left-width: 0;
-				}
+			&.alloy-editor-placeholder:empty:not(:focus) {
+				border-left-width: 0;
 			}
 		}
 	}
@@ -242,11 +246,6 @@
 		}
 	}
 
-	.lfr-blogs-cover-image-selector {
-		margin: 0 0 10px;
-		padding-top: 10px;
-	}
-
 	.nameplate-content {
 		padding-left: 0;
 
@@ -285,6 +284,12 @@
 
 	#blogsCommentsPanelContainer {
 		border-width: 0;
+	}
+
+	.edit-entry-container, .view-entry-container {
+		@media screen and (min-width: 768px) and (max-width: 1280px) {
+			padding: 0 45px;
+		}
 	}
 }
 
