@@ -617,6 +617,10 @@ public class ContentPageEditorDisplayContext {
 				MultiSessionMessages.get(
 					portletRequest, "layoutConversionWarningMessages")
 			).put(
+				"layoutExternalReferenceCode",
+				GetterUtil.getString(
+					themeDisplay.getLayout().getExternalReferenceCode())
+			).put(
 				"layoutItemSelectorURL", _getLayoutItemSelectorURL()
 			).put(
 				"layoutType", String.valueOf(_getLayoutType())
@@ -721,6 +725,10 @@ public class ContentPageEditorDisplayContext {
 				_getSegmentsCompanyConfigurationURL()
 			).put(
 				"sidebarPanels", getSidebarPanels()
+			).put(
+				"siteExternalReferenceCode",
+				GetterUtil.getString(
+					themeDisplay.getScopeGroup().getExternalReferenceCode())
 			).put(
 				"siteNavigationMenuItemSelectorURL",
 				_getSiteNavigationMenuItemSelectorURL()

@@ -26,6 +26,7 @@
 		"@clayui/tabs": "^3.161.0",
 		"@clayui/toolbar": "^3.161.0",
 		"@clayui/tooltip": "^3.161.0",
+		"@liferay/ai-hub-cell-js-components-web": "*",
 		"@liferay/cookies-banner-web": "*",
 		"@liferay/frontend-icons-web": "*",
 		"@liferay/frontend-js-codemirror-web": "*",
