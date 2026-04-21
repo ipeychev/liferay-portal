@@ -10,13 +10,16 @@ import {ClayDropDownWithItems} from '@clayui/drop-down';
 import {ClayInput} from '@clayui/form';
 import ClayIcon from '@clayui/icon';
 import ClayLink from '@clayui/link';
+import {
+	AIAssistantChat,
+	ChatContext,
+} from '@liferay/ai-hub-cell-js-components-web';
 import {isCtrlOrMeta} from '@liferay/layout-js-components-web';
 import classNames from 'classnames';
 import {sessionStorage, sub} from 'frontend-js-web';
 import React, {useCallback, useEffect, useId, useRef, useState} from 'react';
 
 import Toolbar from '../../common/components/Toolbar';
-import AIAssistantChat from './AIAssistantChat/AIAssistantChat';
 import {toMomentDate} from './ScheduleField';
 import SchedulePublicationModal from './SchedulePublicationModal';
 
@@ -67,6 +70,27 @@ export default function ContentEditorToolbar({
 
 		return form as HTMLFormElement;
 	}, []);
+
+	const getChatContext = useCallback((): ChatContext => {
+		const form = getForm();
+
+		const content = (
+			form?.querySelector(
+				'[name="ObjectField_content_en_US"]'
+			) as HTMLInputElement | null
+		)?.value;
+
+		const title = (
+			form?.querySelector(
+				'[name="ObjectField_title"]'
+			) as HTMLInputElement | null
+		)?.value;
+
+		return {
+			context: {content, title},
+			instructionDefinitionScope: 'cms',
+		};
+	}, [getForm]);
 
 	const setSuccessMessage = useCallback(
 		(message: string) => {
@@ -147,7 +171,7 @@ export default function ContentEditorToolbar({
 			{Liferay.FeatureFlags['LPD-62272'] && (
 				<>
 					<Toolbar.Item>
-						<AIAssistantChat />
+						<AIAssistantChat getContext={getChatContext} />
 					</Toolbar.Item>
 
 					<div
