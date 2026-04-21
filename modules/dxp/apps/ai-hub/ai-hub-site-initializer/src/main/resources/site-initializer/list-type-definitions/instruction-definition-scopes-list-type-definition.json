@@ -18,6 +18,12 @@
 			"key": "everywhere",
 			"name": "Everywhere",
 			"system": true
+		},
+		{
+			"externalReferenceCode": "PAGE_EDITOR",
+			"key": "pageEditor",
+			"name": "Page Editor",
+			"system": true
 		}
 	],
 	"name": "AI Hub Instruction Definition Scopes",
