@@ -103,11 +103,11 @@ sitePageExternalReferenceCode: {{sitePageExternalReferenceCode}}]]>
 			<![CDATA[
 [
 	{
-		"name": "instruction",
+		"name": "currentPage",
 		"type": "string"
 	},
 	{
-		"name": "currentPage",
+		"name": "request",
 		"type": "string"
 	}
 ]
@@ -462,7 +462,7 @@ Output (PATCH with banner kept, grid appended):
 			</transition>
 		</transitions>
 		<user-message>
-			<![CDATA[Instruction: {{instruction}}
+			<![CDATA[Instruction: {{request}}
 
 current_page: {{currentPage}}]]>
 		</user-message>
