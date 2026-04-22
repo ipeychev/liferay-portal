@@ -185,7 +185,7 @@ public class LLMNodeExecutor extends BaseNodeExecutor {
 			).tools(
 				ToolsUtil.getTools(
 					kaleoInstanceToken.getCompanyId(), currentKaleoNode,
-					workflowContext)
+					workflowContext, _workflowNodeManager)
 			).userMessage(
 				userMessage
 			).vertexAiGeminiStreamingChatModel(

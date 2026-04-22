@@ -6,7 +6,10 @@
 package com.liferay.ai.hub.internal.workflow.kaleo.runtime.node.util;
 
 import com.liferay.ai.hub.internal.assistant.tool.SitePageTools;
+import com.liferay.ai.hub.internal.assistant.tool.WorkflowNodeTools;
 import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.workflow.WorkflowNodeManager;
+import com.liferay.portal.workflow.kaleo.definition.NodeType;
 import com.liferay.portal.workflow.kaleo.model.KaleoNode;
 
 import java.io.Serializable;
@@ -21,7 +24,14 @@ public class ToolsUtil {
 
 	public static Object[] getTools(
 		long companyId, KaleoNode currentKaleoNode,
-		Map<String, Serializable> workflowContext) {
+		Map<String, Serializable> workflowContext,
+		WorkflowNodeManager workflowNodeManager) {
+
+		if (Objects.equals(
+				currentKaleoNode.getType(), NodeType.AI_DECISION.name())) {
+
+			return new Object[] {new WorkflowNodeTools(workflowNodeManager)};
+		}
 
 		if (Objects.equals(currentKaleoNode.getName(), "pageBuilder")) {
 			return new Object[] {
