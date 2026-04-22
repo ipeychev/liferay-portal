@@ -24,5 +24,5 @@ export default function AIAssistantToolbarItem() {
 		};
 	}
 
-	return <AIAssistantChat getContext={getContext} />;
+	return <AIAssistantChat compact getContext={getContext} />;
 }

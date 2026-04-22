@@ -28,10 +28,14 @@ interface message {
 }
 
 interface AIAssistantChatProps {
+	compact?: boolean;
 	getContext: () => ChatContext;
 }
 
-const AIAssistantChat: React.FC<AIAssistantChatProps> = ({getContext}) => {
+const AIAssistantChat: React.FC<AIAssistantChatProps> = ({
+	compact = false,
+	getContext,
+}) => {
 	const [active, setActive] = useState<boolean>(false);
 	const [isGenerating, setIsGenerating] = useState<boolean>(false);
 	const [messages, setMessages] = useState<message[]>([]);
@@ -201,17 +205,24 @@ const AIAssistantChat: React.FC<AIAssistantChatProps> = ({getContext}) => {
 					borderless
 					className="text-primary"
 					displayType="secondary"
+					monospaced={compact}
 					ref={triggerRef}
+					size={compact ? 'sm' : undefined}
+					title={
+						compact
+							? Liferay.Language.get('ai-assistant')
+							: undefined
+					}
 				>
 					<ClayIcon
-						className="mr-2"
+						className={compact ? '' : 'mr-2'}
 						height={16}
 						spritemap={Liferay.Icons.spritemap}
 						symbol="stars"
 						width={16}
 					/>
 
-					{Liferay.Language.get('ai-assistant')}
+					{!compact && Liferay.Language.get('ai-assistant')}
 				</ClayButton>
 			}
 		>
