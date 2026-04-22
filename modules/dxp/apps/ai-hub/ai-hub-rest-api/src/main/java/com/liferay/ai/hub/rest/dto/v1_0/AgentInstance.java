@@ -399,7 +399,8 @@ public class AgentInstance implements Serializable {
 	@GraphQLName("InstructionDefinitionScope")
 	public static enum InstructionDefinitionScope {
 
-		CLICK_TO_CHAT("clickToChat"), CMS("cms"), EVERYWHERE("everywhere");
+		CLICK_TO_CHAT("clickToChat"), CMS("cms"), EVERYWHERE("everywhere"),
+		PAGE_EDITOR("pageEditor");
 
 		@JsonCreator
 		public static InstructionDefinitionScope create(String value) {
@@ -527,4 +528,4 @@ public class AgentInstance implements Serializable {
 	private Map<String, Serializable> _extendedProperties;
 
 }
-// LIFERAY-REST-BUILDER-HASH:356891339
+// LIFERAY-REST-BUILDER-HASH:780972412

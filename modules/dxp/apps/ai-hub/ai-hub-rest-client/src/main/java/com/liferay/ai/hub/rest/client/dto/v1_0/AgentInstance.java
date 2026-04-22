@@ -181,7 +181,8 @@ public class AgentInstance implements Cloneable, Serializable {
 
 	public static enum InstructionDefinitionScope {
 
-		CLICK_TO_CHAT("clickToChat"), CMS("cms"), EVERYWHERE("everywhere");
+		CLICK_TO_CHAT("clickToChat"), CMS("cms"), EVERYWHERE("everywhere"),
+		PAGE_EDITOR("pageEditor");
 
 		public static InstructionDefinitionScope create(String value) {
 			for (InstructionDefinitionScope instructionDefinitionScope :
@@ -216,4 +217,4 @@ public class AgentInstance implements Cloneable, Serializable {
 	}
 
 }
-// LIFERAY-REST-BUILDER-HASH:1848395225
+// LIFERAY-REST-BUILDER-HASH:-69272118

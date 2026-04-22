@@ -176,7 +176,8 @@ public class Message implements Cloneable, Serializable {
 
 	public static enum InstructionDefinitionScope {
 
-		CLICK_TO_CHAT("clickToChat"), CMS("cms"), EVERYWHERE("everywhere");
+		CLICK_TO_CHAT("clickToChat"), CMS("cms"), EVERYWHERE("everywhere"),
+		PAGE_EDITOR("pageEditor");
 
 		public static InstructionDefinitionScope create(String value) {
 			for (InstructionDefinitionScope instructionDefinitionScope :
@@ -211,4 +212,4 @@ public class Message implements Cloneable, Serializable {
 	}
 
 }
-// LIFERAY-REST-BUILDER-HASH:-1968572402
+// LIFERAY-REST-BUILDER-HASH:465199167
