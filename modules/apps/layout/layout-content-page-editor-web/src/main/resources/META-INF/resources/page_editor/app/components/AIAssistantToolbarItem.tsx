@@ -24,5 +24,18 @@ export default function AIAssistantToolbarItem() {
 		};
 	}
 
-	return <AIAssistantChat compact getContext={getContext} />;
+	function handleExternalEvent(type: string) {
+		if (type === 'PageUpdate') {
+			window.location.reload();
+		}
+	}
+
+	return (
+		<AIAssistantChat
+			compact
+			externalEventTypes={['PageUpdate']}
+			getContext={getContext}
+			onExternalEvent={handleExternalEvent}
+		/>
+	);
 }

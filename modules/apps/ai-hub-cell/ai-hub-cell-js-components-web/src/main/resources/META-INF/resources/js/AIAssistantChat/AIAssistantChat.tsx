@@ -29,12 +29,16 @@ interface message {
 
 interface AIAssistantChatProps {
 	compact?: boolean;
+	externalEventTypes?: string[];
 	getContext: () => ChatContext;
+	onExternalEvent?: (type: string, data: string) => void;
 }
 
 const AIAssistantChat: React.FC<AIAssistantChatProps> = ({
 	compact = false,
+	externalEventTypes,
 	getContext,
+	onExternalEvent,
 }) => {
 	const [active, setActive] = useState<boolean>(false);
 	const [isGenerating, setIsGenerating] = useState<boolean>(false);
@@ -165,6 +169,12 @@ const AIAssistantChat: React.FC<AIAssistantChatProps> = ({
 
 			eventSourceRef.current.addEventListener('Subscribe', (event) => {
 				eventSourceReference.current = event.data;
+			});
+
+			externalEventTypes?.forEach((type) => {
+				eventSourceRef.current?.addEventListener(type, (event) => {
+					onExternalEvent?.(type, event.data);
+				});
 			});
 		});
 	}
