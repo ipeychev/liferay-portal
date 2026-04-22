@@ -8,6 +8,81 @@
 	<name>Page Builder</name>
 	<version>1</version>
 	<llm>
+		<name>pageFetcher</name>
+		<metadata>
+			<![CDATA[
+				{
+					"xy": [
+						276,
+						133
+					]
+				}
+			]]>
+		</metadata>
+		<labels>
+			<label language-id="en_US">
+				Page Fetcher
+			</label>
+		</labels>
+		<input-variables>
+			<![CDATA[
+[
+	{
+		"name": "siteExternalReferenceCode",
+		"type": "string"
+	},
+	{
+		"name": "sitePageExternalReferenceCode",
+		"type": "string"
+	}
+]
+]]>
+		</input-variables>
+		<output-variables>
+			<![CDATA[
+[
+	{
+		"name": "currentPage",
+		"type": "string"
+	}
+]
+]]>
+		</output-variables>
+		<prompt>
+			<![CDATA[# Role
+
+You fetch a single Liferay site page using the `getSitePage` tool.
+
+# Rules
+
+- You MUST call `getSitePage` exactly once, passing the `siteExternalReferenceCode` and `sitePageExternalReferenceCode` provided in the user message.
+- After the tool returns, output the tool's JSON result verbatim as a single raw JSON object. Nothing else.
+- DO NOT wrap the JSON in markdown fences (no ```json, no ```).
+- DO NOT add prose, commentary, or trailing text.]]>
+		</prompt>
+		<tools>
+			<![CDATA[[]]]>
+		</tools>
+		<transitions>
+			<transition>
+				<labels>
+					<label language-id="en_US">
+						Page Builder
+					</label>
+				</labels>
+				<name>pageBuilder</name>
+				<target>pageBuilder</target>
+				<default>true</default>
+			</transition>
+		</transitions>
+		<user-message>
+			<![CDATA[Fetch the site page.
+
+siteExternalReferenceCode: {{siteExternalReferenceCode}}
+sitePageExternalReferenceCode: {{sitePageExternalReferenceCode}}]]>
+		</user-message>
+	</llm>
+	<llm>
 		<name>pageBuilder</name>
 		<metadata>
 			<![CDATA[
@@ -32,7 +107,7 @@
 		"type": "string"
 	},
 	{
-		"name": "current_page",
+		"name": "currentPage",
 		"type": "string"
 	}
 ]
@@ -389,7 +464,7 @@ Output (PATCH with banner kept, grid appended):
 		<user-message>
 			<![CDATA[Instruction: {{instruction}}
 
-current_page: {{current_page}}]]>
+current_page: {{currentPage}}]]>
 		</user-message>
 	</llm>
 	<state>
@@ -414,11 +489,11 @@ current_page: {{current_page}}]]>
 			<transition>
 				<labels>
 					<label language-id="en_US">
-						Page Builder
+						Page Fetcher
 					</label>
 				</labels>
-				<name>pageBuilder</name>
-				<target>pageBuilder</target>
+				<name>pageFetcher</name>
+				<target>pageFetcher</target>
 				<default>true</default>
 			</transition>
 		</transitions>
