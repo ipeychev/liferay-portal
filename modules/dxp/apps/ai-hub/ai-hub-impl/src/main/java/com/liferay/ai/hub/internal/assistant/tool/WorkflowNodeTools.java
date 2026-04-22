@@ -34,10 +34,8 @@ public class WorkflowNodeTools {
 	@Tool("Complete the workflow node by proceeding to the chosen transition")
 	public void completeWorkflowNode(
 			InvocationParameters invocationParameters,
-			@P(
-				"A brief, one-sentence justification for the chosen transition."
-			)
-			String reason,
+			@P("A brief, one-sentence justification for the chosen transition.")
+				String reason,
 			@P("Transition name") String transitionName)
 		throws PortalException {
 
