@@ -145,6 +145,13 @@ public class SupervisorAgentImpl implements SupervisorAgent {
 	private String _getFilterString(AgentContext agentContext)
 		throws Exception {
 
+		if ("pageEditor".equals(
+				agentContext.getInstructionDefinitionScope())) {
+
+			return "(active eq true) and " +
+				"(externalReferenceCode eq 'L_PAGE_BUILDER')";
+		}
+
 		if (Validator.isNull(agentContext.getChatbotExternalReferenceCode())) {
 			return "(active eq true)";
 		}
