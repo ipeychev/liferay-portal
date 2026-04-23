@@ -59,7 +59,26 @@ public class MessageResourceImpl extends BaseMessageResourceImpl {
 		Map<String, Object> input = new HashMap<>(
 			(message.getContext() != null) ? message.getContext() : Map.of());
 
-		input.put("message", message.getText());
+		String messageText = message.getText();
+
+		if ((message.getContext() != null) && !message.getContext().isEmpty()) {
+			StringBuilder sb = new StringBuilder(messageText);
+
+			sb.append("\n\n# Context\n");
+
+			for (Map.Entry<String, ?> entry :
+					message.getContext().entrySet()) {
+
+				sb.append(entry.getKey());
+				sb.append(": ");
+				sb.append(entry.getValue());
+				sb.append("\n");
+			}
+
+			messageText = sb.toString();
+		}
+
+		input.put("message", messageText);
 
 		_supervisorAgent.invoke(
 			AgentContext.builder(
