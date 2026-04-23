@@ -1,0 +1,29 @@
+{
+	"dependencies": {
+		"@clayui/alert": "^3.161.0",
+		"@clayui/button": "^3.161.0",
+		"@clayui/empty-state": "^3.161.0",
+		"@clayui/form": "^3.161.0",
+		"@clayui/icon": "^3.161.0",
+		"@clayui/label": "^3.161.0",
+		"@clayui/layout": "^3.161.0",
+		"@clayui/list": "^3.161.0",
+		"@clayui/multi-step-nav": "^3.161.0",
+		"@clayui/pagination": "^3.161.0",
+		"@clayui/pagination-bar": "^3.161.0",
+		"@clayui/panel": "^3.161.0",
+		"@clayui/table": "^3.161.0",
+		"frontend-js-components-web": "*",
+		"frontend-js-web": "*",
+		"react": "18.2.0"
+	},
+	"main": "js/index.ts",
+	"name": "@liferay/ai-hub-cell-web",
+	"scripts": {
+		"build": "node-scripts build",
+		"checkFormat": "node-scripts format --check",
+		"format": "node-scripts format",
+		"test": "node-scripts test"
+	},
+	"version": "1.0.0"
+}
