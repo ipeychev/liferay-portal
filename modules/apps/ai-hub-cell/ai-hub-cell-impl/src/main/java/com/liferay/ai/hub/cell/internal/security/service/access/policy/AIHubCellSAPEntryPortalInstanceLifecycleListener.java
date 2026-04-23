@@ -56,6 +56,8 @@ public class AIHubCellSAPEntryPortalInstanceLifecycleListener
 					"BaseSitePageResourceImpl#getSiteSitePage\n",
 					"com.liferay.headless.admin.site.internal.resource.v1_0.",
 					"BaseSitePageResourceImpl#getSiteSitePagePermissionsPage\n",
+					"com.liferay.headless.admin.site.internal.resource.v1_0.",
+					"BaseSitePageResourceImpl#patchSiteSitePage\n",
 					"com.liferay.portal.search.rest.internal.resource.v1_0.",
 					"SearchResultResourceImpl#getSearchPage"),
 				true, true, _SAP_ENTRY_NAME,

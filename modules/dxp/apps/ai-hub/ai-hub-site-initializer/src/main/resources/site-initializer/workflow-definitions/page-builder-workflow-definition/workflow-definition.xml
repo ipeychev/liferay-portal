@@ -453,6 +453,87 @@ Output (PATCH with banner kept, grid appended):
 			<transition>
 				<labels>
 					<label language-id="en_US">
+						Page Updater
+					</label>
+				</labels>
+				<name>pageUpdater</name>
+				<target>pageUpdater</target>
+				<default>true</default>
+			</transition>
+		</transitions>
+		<user-message>
+			<![CDATA[Instruction: {{request}}
+
+current_page: {{currentPage}}]]>
+		</user-message>
+	</llm>
+	<llm>
+		<name>pageUpdater</name>
+		<metadata>
+			<![CDATA[
+				{
+					"xy": [
+						276,
+						351
+					]
+				}
+			]]>
+		</metadata>
+		<labels>
+			<label language-id="en_US">
+				Page Updater
+			</label>
+		</labels>
+		<input-variables>
+			<![CDATA[
+[
+	{
+		"name": "response",
+		"type": "string"
+	},
+	{
+		"name": "siteExternalReferenceCode",
+		"type": "string"
+	},
+	{
+		"name": "sitePageExternalReferenceCode",
+		"type": "string"
+	}
+]
+]]>
+		</input-variables>
+		<output-variables>
+			<![CDATA[
+[
+	{
+		"name": "updatedPage",
+		"type": "string"
+	}
+]
+]]>
+		</output-variables>
+		<prompt>
+			<![CDATA[# Role
+
+You persist a generated Liferay ContentPage using the `updateSitePage` tool.
+
+# Rules
+
+- You MUST call `updateSitePage` with the provided `siteExternalReferenceCode`, `sitePageExternalReferenceCode`, and the generated page JSON as the `body` argument.
+- The generated body may contain errors. If `updateSitePage` returns a result starting with `HTTP` (for example `HTTP 400`), read the error message carefully. Typical fixes include: adding missing `type` discriminator fields (e.g. on `fragmentEditableElementValue`, `fragmentLinkTextValue`, `htmlFragmentValue`), correcting enum values, fixing required fields, or removing fields not accepted by the server. Correct the body and call `updateSitePage` again.
+- Do not give up on the first failure. Try up to 3 distinct corrections before stopping.
+- Preserve all externalReferenceCodes, page element structure, and content from the generated body — only fix what the error message indicates is wrong.
+- Once `updateSitePage` returns a successful JSON response (the updated page), output that response verbatim as a single raw JSON object. Nothing else.
+- DO NOT wrap the JSON in markdown fences (no ```json, no ```).
+- DO NOT add prose, commentary, or trailing text.]]>
+		</prompt>
+		<tools>
+			<![CDATA[[]]]>
+		</tools>
+		<transitions>
+			<transition>
+				<labels>
+					<label language-id="en_US">
 						End
 					</label>
 				</labels>
@@ -462,9 +543,13 @@ Output (PATCH with banner kept, grid appended):
 			</transition>
 		</transitions>
 		<user-message>
-			<![CDATA[Instruction: {{request}}
+			<![CDATA[Persist this generated page.
 
-current_page: {{currentPage}}]]>
+siteExternalReferenceCode: {{siteExternalReferenceCode}}
+sitePageExternalReferenceCode: {{sitePageExternalReferenceCode}}
+
+body:
+{{response}}]]>
 		</user-message>
 	</llm>
 	<state>

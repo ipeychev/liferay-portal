@@ -16,6 +16,7 @@ import java.io.Serializable;
 
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * @author Feliphe Marinho
@@ -33,7 +34,7 @@ public class ToolsUtil {
 			return new Object[] {new WorkflowNodeTools(workflowNodeManager)};
 		}
 
-		if (Objects.equals(currentKaleoNode.getName(), "pageFetcher")) {
+		if (_sitePageToolsNodeNames.contains(currentKaleoNode.getName())) {
 			return new Object[] {
 				new SitePageTools(
 					GetterUtil.getString(workflowContext.get("accessToken")),
@@ -44,5 +45,8 @@ public class ToolsUtil {
 
 		return new Object[0];
 	}
+
+	private static final Set<String> _sitePageToolsNodeNames = Set.of(
+		"pageFetcher", "pageUpdater");
 
 }
