@@ -25,7 +25,7 @@ export default function AIAssistantToolbarItem() {
 	}
 
 	function handleExternalEvent(type: string) {
-		if (type === 'PageUpdate') {
+		if (type === 'pageUpdater') {
 			window.location.reload();
 		}
 	}
@@ -33,7 +33,7 @@ export default function AIAssistantToolbarItem() {
 	return (
 		<AIAssistantChat
 			compact
-			externalEventTypes={['PageUpdate']}
+			externalEventTypes={['pageUpdater']}
 			getContext={getContext}
 			onExternalEvent={handleExternalEvent}
 		/>
