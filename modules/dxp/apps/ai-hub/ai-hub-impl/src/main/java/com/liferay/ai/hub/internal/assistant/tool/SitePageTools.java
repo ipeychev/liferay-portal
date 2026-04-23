@@ -191,12 +191,64 @@ public class SitePageTools {
 		return body.trim();
 	}
 
+	private void _alignExternalReferenceCodes(
+		Object node, String oldERC, String newERC) {
+
+		if (node instanceof JSONObject) {
+			JSONObject jsonObject = (JSONObject)node;
+
+			for (String key : new HashSet<>(jsonObject.keySet())) {
+				Object value = jsonObject.get(key);
+
+				if (key.endsWith("ExternalReferenceCode") &&
+					(value instanceof String)) {
+
+					String stringValue = (String)value;
+
+					if (stringValue.equals(oldERC)) {
+						jsonObject.put(key, newERC);
+					}
+					else if (stringValue.startsWith(oldERC + "-")) {
+						jsonObject.put(
+							key,
+							newERC +
+								stringValue.substring(oldERC.length()));
+					}
+				}
+				else {
+					_alignExternalReferenceCodes(value, oldERC, newERC);
+				}
+			}
+		}
+		else if (node instanceof JSONArray) {
+			JSONArray jsonArray = (JSONArray)node;
+
+			for (int i = 0; i < jsonArray.length(); i++) {
+				_alignExternalReferenceCodes(
+					jsonArray.get(i), oldERC, newERC);
+			}
+		}
+	}
+
 	private String _updateSitePage(
 			String body, String siteExternalReferenceCode,
 			String sitePageExternalReferenceCode)
 		throws Exception {
 
 		body = _stripMarkdownFences(body);
+
+		JSONObject bodyJSONObject = JSONFactoryUtil.createJSONObject(body);
+
+		String bodyERC = bodyJSONObject.getString("externalReferenceCode");
+
+		if (Validator.isNotNull(bodyERC) &&
+			!bodyERC.equals(sitePageExternalReferenceCode)) {
+
+			_alignExternalReferenceCodes(
+				bodyJSONObject, bodyERC, sitePageExternalReferenceCode);
+
+			body = bodyJSONObject.toString();
+		}
 
 		String location = _getSitePageLocation(
 			siteExternalReferenceCode, sitePageExternalReferenceCode);
