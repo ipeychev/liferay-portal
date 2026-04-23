@@ -25,6 +25,7 @@ import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.vulcan.dto.converter.DTOConverterRegistry;
 import com.liferay.portal.vulcan.dto.converter.DefaultDTOConverterContext;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.osgi.service.component.annotations.Component;
@@ -55,6 +56,11 @@ public class MessageResourceImpl extends BaseMessageResourceImpl {
 			message.getChatbotExternalReferenceCode(),
 			contextCompany.getCompanyId(), contextUser);
 
+		Map<String, Object> input = new HashMap<>(
+			(message.getContext() != null) ? message.getContext() : Map.of());
+
+		input.put("message", message.getText());
+
 		_supervisorAgent.invoke(
 			AgentContext.builder(
 			).accessToken(
@@ -72,7 +78,7 @@ public class MessageResourceImpl extends BaseMessageResourceImpl {
 			).groupId(
 				AccountEntryUtil.getUserAccountEntryGroupId(user.getUserId())
 			).input(
-				Map.of("message", message.getText())
+				input
 			).instructionDefinitionScope(
 				message.getInstructionDefinitionScopeAsString()
 			).serviceContext(
