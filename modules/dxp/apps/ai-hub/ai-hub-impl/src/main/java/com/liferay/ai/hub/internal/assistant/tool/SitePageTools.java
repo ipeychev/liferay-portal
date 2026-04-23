@@ -52,7 +52,52 @@ public class SitePageTools {
 		}
 	}
 
+	@Tool(
+		"Update a site page. The body must be the full ContentPage JSON " +
+			"payload; pageSpecifications is replaced wholesale."
+	)
+	public String updateSitePage(
+		@P("Site external reference code") String siteExternalReferenceCode,
+		@P("Site page external reference code") String
+			sitePageExternalReferenceCode,
+		@P("Full ContentPage JSON payload to persist") String body) {
+
+		try (SafeCloseable safeCloseable =
+				CompanyThreadLocal.setCompanyIdWithSafeCloseable(_companyId)) {
+
+			return _updateSitePage(
+				body, siteExternalReferenceCode, sitePageExternalReferenceCode);
+		}
+		catch (Exception exception) {
+			return ReflectionUtil.throwException(exception);
+		}
+	}
+
 	private String _getSitePage(
+			String siteExternalReferenceCode,
+			String sitePageExternalReferenceCode)
+		throws Exception {
+
+		String location = _getSitePageLocation(
+			siteExternalReferenceCode, sitePageExternalReferenceCode);
+
+		location = HttpComponentsUtil.addParameter(
+			location, "nestedFields", "pageSpecifications");
+		location = HttpComponentsUtil.addParameter(
+			location, "privateLayout", true);
+
+		Http.Options options = new Http.Options();
+
+		options.addHeader(
+			HttpHeaders.CONTENT_TYPE, ContentTypes.APPLICATION_JSON);
+		options.addHeader("Liferay-AI-Hub-Cell-On-Behalf-Of", _userToken);
+		options.setLocation(location);
+		options.setMethod(Http.Method.GET);
+
+		return HttpUtil.URLtoString(options);
+	}
+
+	private String _getSitePageLocation(
 			String siteExternalReferenceCode,
 			String sitePageExternalReferenceCode)
 		throws Exception {
@@ -72,26 +117,49 @@ public class SitePageTools {
 			OAuth2ApplicationLocalServiceUtil.getOAuth2Application(
 				oAuth2Authorization.getOAuth2ApplicationId());
 
-		String location = StringBundler.concat(
+		return StringBundler.concat(
 			oAuth2Application.getHomePageURL(),
 			"/o/headless-admin-site/v1.0/sites/",
 			URLCodec.encodeURL(siteExternalReferenceCode), "/site-pages/",
 			URLCodec.encodeURL(sitePageExternalReferenceCode));
+	}
+
+	private String _updateSitePage(
+			String body, String siteExternalReferenceCode,
+			String sitePageExternalReferenceCode)
+		throws Exception {
+
+		String location = _getSitePageLocation(
+			siteExternalReferenceCode, sitePageExternalReferenceCode);
 
 		location = HttpComponentsUtil.addParameter(
 			location, "nestedFields", "pageSpecifications");
 		location = HttpComponentsUtil.addParameter(
-			location, "privateLayout", true);
+			location, "privateLayout", false);
 
 		Http.Options options = new Http.Options();
 
 		options.addHeader(
 			HttpHeaders.CONTENT_TYPE, ContentTypes.APPLICATION_JSON);
 		options.addHeader("Liferay-AI-Hub-Cell-On-Behalf-Of", _userToken);
+		options.setBody(body, ContentTypes.APPLICATION_JSON, "UTF-8");
 		options.setLocation(location);
-		options.setMethod(Http.Method.GET);
+		options.setMethod(Http.Method.PATCH);
 
-		return HttpUtil.URLtoString(options);
+		String responseBody = HttpUtil.URLtoString(options);
+
+		int responseCode = options.getResponse(
+		).getResponseCode();
+
+		if ((responseCode < 200) || (responseCode >= 300)) {
+			return StringBundler.concat(
+				"HTTP ", String.valueOf(responseCode),
+				". The server rejected the request. Analyze the error ",
+				"response below, correct the body, and call updateSitePage ",
+				"again.\n\n", responseBody);
+		}
+
+		return responseBody;
 	}
 
 	private final String _accessToken;
