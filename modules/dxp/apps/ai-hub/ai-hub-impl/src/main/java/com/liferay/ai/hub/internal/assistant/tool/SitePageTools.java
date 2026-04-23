@@ -12,6 +12,11 @@ import com.liferay.oauth2.provider.service.OAuth2AuthorizationLocalServiceUtil;
 import com.liferay.petra.lang.SafeCloseable;
 import com.liferay.petra.reflect.ReflectionUtil;
 import com.liferay.petra.string.StringBundler;
+import com.liferay.portal.kernel.json.JSONArray;
+import com.liferay.portal.kernel.json.JSONFactoryUtil;
+import com.liferay.portal.kernel.json.JSONObject;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.security.auth.CompanyThreadLocal;
 import com.liferay.portal.kernel.servlet.HttpHeaders;
 import com.liferay.portal.kernel.util.ContentTypes;
@@ -23,6 +28,9 @@ import com.liferay.portal.kernel.util.Validator;
 
 import dev.langchain4j.agent.tool.P;
 import dev.langchain4j.agent.tool.Tool;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author Feliphe Marinho
@@ -94,7 +102,20 @@ public class SitePageTools {
 		options.setLocation(location);
 		options.setMethod(Http.Method.GET);
 
-		return HttpUtil.URLtoString(options);
+		String responseBody = HttpUtil.URLtoString(options);
+
+		int responseCode = options.getResponse(
+		).getResponseCode();
+
+		if ((responseCode < 200) || (responseCode >= 300)) {
+			return responseBody;
+		}
+
+		JSONObject jsonObject = JSONFactoryUtil.createJSONObject(responseBody);
+
+		_pruneReadOnlyFields(jsonObject);
+
+		return jsonObject.toString();
 	}
 
 	private String _getSitePageLocation(
@@ -124,10 +145,58 @@ public class SitePageTools {
 			URLCodec.encodeURL(sitePageExternalReferenceCode));
 	}
 
+	private void _pruneReadOnlyFields(Object value) {
+		if (value instanceof JSONObject) {
+			JSONObject jsonObject = (JSONObject)value;
+
+			for (String key : _readOnlyKeys) {
+				jsonObject.remove(key);
+			}
+
+			for (String key : new HashSet<>(jsonObject.keySet())) {
+				_pruneReadOnlyFields(jsonObject.get(key));
+			}
+		}
+		else if (value instanceof JSONArray) {
+			JSONArray jsonArray = (JSONArray)value;
+
+			for (int i = 0; i < jsonArray.length(); i++) {
+				_pruneReadOnlyFields(jsonArray.get(i));
+			}
+		}
+	}
+
+	private String _stripMarkdownFences(String body) {
+		if (body == null) {
+			return body;
+		}
+
+		body = body.trim();
+
+		if (body.startsWith("```")) {
+			int firstNewline = body.indexOf('\n');
+
+			if (firstNewline > 0) {
+				body = body.substring(firstNewline + 1);
+			}
+			else {
+				body = body.substring(3);
+			}
+		}
+
+		if (body.endsWith("```")) {
+			body = body.substring(0, body.length() - 3);
+		}
+
+		return body.trim();
+	}
+
 	private String _updateSitePage(
 			String body, String siteExternalReferenceCode,
 			String sitePageExternalReferenceCode)
 		throws Exception {
+
+		body = _stripMarkdownFences(body);
 
 		String location = _getSitePageLocation(
 			siteExternalReferenceCode, sitePageExternalReferenceCode);
@@ -152,15 +221,33 @@ public class SitePageTools {
 		).getResponseCode();
 
 		if ((responseCode < 200) || (responseCode >= 300)) {
+			_log.error(
+				StringBundler.concat(
+					"updateSitePage failed with HTTP ", responseCode,
+					" for site ", siteExternalReferenceCode, " and site page ",
+					sitePageExternalReferenceCode, ". Request body: ", body,
+					". Response body: ", responseBody));
+
 			return StringBundler.concat(
-				"HTTP ", String.valueOf(responseCode),
-				". The server rejected the request. Analyze the error ",
-				"response below, correct the body, and call updateSitePage ",
-				"again.\n\n", responseBody);
+				"HTTP ", responseCode, _RETRY_HINT_PREFIX, body,
+				"\n\nError response:\n", responseBody);
 		}
 
 		return responseBody;
 	}
+
+	private static final String _RETRY_HINT_PREFIX =
+		". The server rejected the request. Compare the body you sent with " +
+			"the error response below, correct the body, and call " +
+				"updateSitePage again.\n\nRequest body sent:\n";
+
+	private static final Log _log = LogFactoryUtil.getLog(SitePageTools.class);
+
+	private static final Set<String> _readOnlyKeys = Set.of(
+		"configuration", "css", "customFields", "datePropagated",
+		"draftFragmentInstanceExternalReferenceCode", "html", "indexed", "js",
+		"namespace", "pageSpecificationExternalReferenceCode",
+		"taxonomyCategoryBriefs", "uuid");
 
 	private final String _accessToken;
 	private final long _companyId;
