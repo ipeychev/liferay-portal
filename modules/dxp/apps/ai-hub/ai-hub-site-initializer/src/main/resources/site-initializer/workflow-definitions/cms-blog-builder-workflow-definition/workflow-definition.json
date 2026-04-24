@@ -1,0 +1,11 @@
+{
+	"active": true,
+	"externalReferenceCode": "L_CMS_BLOG_BUILDER",
+	"groupExternalReferenceCode": "[$ACCOUNT_ENTRY_GROUP_ERC:L_AI_HUB$]",
+	"name": "CMS Blog Builder",
+	"scope": "ai",
+	"title": "CMS Blog Builder",
+	"title_i18n": {
+		"en_US": "CMS Blog Builder"
+	}
+}

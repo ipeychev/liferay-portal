@@ -1,0 +1,6 @@
+Bundle-Name: Liferay Content Composer REST API
+Bundle-SymbolicName: com.liferay.content.composer.rest.api
+Bundle-Version: 1.0.0
+Export-Package:\
+	com.liferay.content.composer.rest.dto.v1_0,\
+	com.liferay.content.composer.rest.resource.v1_0

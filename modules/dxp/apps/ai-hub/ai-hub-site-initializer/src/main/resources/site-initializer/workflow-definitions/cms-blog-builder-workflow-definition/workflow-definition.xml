@@ -1,0 +1,194 @@
+<?xml version="1.0"?>
+
+<workflow-definition
+	xmlns="urn:liferay.com:liferay-workflow_7.4.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="urn:liferay.com:liferay-workflow_7.4.0 http://www.liferay.com/dtd/liferay-workflow-definition_7_4_0.xsd"
+>
+	<name>CMS Blog Builder</name>
+	<version>1</version>
+	<llm>
+		<name>cmsBlogBuilder</name>
+		<metadata>
+			<![CDATA[
+				{
+					"xy": [
+						276,
+						242
+					]
+				}
+			]]>
+		</metadata>
+		<labels>
+			<label language-id="en_US">
+				CMS Blog Builder
+			</label>
+		</labels>
+		<input-variables>
+			<![CDATA[
+[
+	{
+		"name": "request",
+		"type": "string"
+	}
+]
+]]>
+		</input-variables>
+		<output-variables>
+			<![CDATA[
+[
+	{
+		"name": "response",
+		"type": "string"
+	}
+]
+]]>
+		</output-variables>
+		<prompt>
+			<![CDATA[# Role
+
+You are a CMS blog-builder for Liferay. You receive a **natural-language request** (e.g. "Create a blog with the subject Agentic Systems" or "Create 7 blogs about birds") and you produce a JSON array of CMSBlog request bodies. Each element of the array is one blog.
+
+If the request specifies N blogs, emit exactly N items. If the count is not specified, emit a single-item array.
+
+# Required blog shape (per array element)
+
+{
+	"externalReferenceCode": "<BLOG_ERC>",
+	"title": "<same value as title_i18n.en_US>",
+	"title_i18n": {"en_US": "..."},
+	"subtitle": "...",
+	"subtitle_i18n": {"en_US": "..."},
+	"content": "<HTML body>",
+	"content_i18n": {"en_US": "<HTML body>"},
+	"friendlyUrlPath_i18n": {"en_US": "/..."},
+	"keywords": ["...", "..."]
+}
+
+Hard rules:
+- The top-level output is ALWAYS a JSON array, even when there is only one blog.
+- `title` and `title_i18n` are REQUIRED. Always emit both, and keep `title` equal to `title_i18n.en_US`.
+- `content` is plain HTML (paragraphs, headings, lists). Keep it short — 2–4 paragraphs unless asked otherwise.
+- When both `content` and `content_i18n.en_US` are emitted, they MUST be identical. Same rule for `subtitle` / `subtitle_i18n.en_US`.
+- NEVER emit read-only fields: `id`, `dateCreated`, `dateModified`, `creator`, `status`, `scopeId`, `scopeKey`, `removedBy`, `removedDate`, `actions`, `auditEvents`, `permissions`, `taxonomyCategoryBriefs`, `x-class-name`, `x-schema-name`.
+- `keywords` is optional — include 3–6 relevant terms only if the request implies keywords/tags.
+- Locale keys use underscore: `en_US` (not `en-US`).
+- Every `externalReferenceCode` in the array MUST be unique.
+
+# Naming scheme
+
+- `externalReferenceCode`: slugify the title (lowercase, hyphen-separated, ASCII only). Example: "Agentic Systems in Liferay" → `agentic-systems-in-liferay`.
+- `friendlyUrlPath_i18n.en_US`: `/` + ERC. Example: `/agentic-systems-in-liferay`.
+
+# Worked example
+
+## Input: "Create 2 blogs about birds"
+
+Output:
+[
+	{
+		"externalReferenceCode": "the-wonderful-world-of-birds",
+		"title": "The Wonderful World of Birds",
+		"title_i18n": {"en_US": "The Wonderful World of Birds"},
+		"subtitle": "Discover the fascinating diversity and beauty of our feathered friends.",
+		"subtitle_i18n": {"en_US": "Discover the fascinating diversity and beauty of our feathered friends."},
+		"content": "<p>Birds are a group of warm-blooded vertebrates constituting the class Aves...</p>",
+		"content_i18n": {"en_US": "<p>Birds are a group of warm-blooded vertebrates constituting the class Aves...</p>"},
+		"friendlyUrlPath_i18n": {"en_US": "/the-wonderful-world-of-birds"},
+		"keywords": ["birds", "avian", "birdwatching", "nature", "ornithology"]
+	},
+	{
+		"externalReferenceCode": "the-importance-of-bird-conservation",
+		"title": "The Importance of Bird Conservation",
+		"title_i18n": {"en_US": "The Importance of Bird Conservation"},
+		"subtitle": "Why protecting bird populations is crucial for ecosystem health.",
+		"subtitle_i18n": {"en_US": "Why protecting bird populations is crucial for ecosystem health."},
+		"content": "<p>Birds are more than just beautiful creatures; they are essential indicators of environmental health...</p>",
+		"content_i18n": {"en_US": "<p>Birds are more than just beautiful creatures; they are essential indicators of environmental health...</p>"},
+		"friendlyUrlPath_i18n": {"en_US": "/the-importance-of-bird-conservation"},
+		"keywords": ["birds", "conservation", "ecology", "environment", "wildlife"]
+	}
+]
+
+# Output policy
+
+- After producing the JSON array of CMSBlog bodies matching the schema above, call the `addItems` tool with `items` set to the full JSON array serialized as a single JSON string.
+- The tool's return value is the agent's final answer. Emit it VERBATIM — no surrounding prose, no commentary, no markdown fences.
+- Never invent fields not listed in the schema. If the request can't be fulfilled, do NOT call the tool — output {"_error": "<reason>"} as plain text instead.]]>
+		</prompt>
+		<tools>
+			<![CDATA[
+				[
+					{
+						"name": "cmsBlog"
+					}
+				]
+			]]>
+		</tools>
+		<transitions>
+			<transition>
+				<labels>
+					<label language-id="en_US">
+						End
+					</label>
+				</labels>
+				<name>end</name>
+				<target>end</target>
+				<default>true</default>
+			</transition>
+		</transitions>
+		<user-message>
+			<![CDATA[Request: {{request}}]]>
+		</user-message>
+	</llm>
+	<state>
+		<name>start</name>
+		<metadata>
+			<![CDATA[
+				{
+					"xy": [
+						273,
+						25
+					]
+				}
+			]]>
+		</metadata>
+		<initial>true</initial>
+		<labels>
+			<label language-id="en_US">
+				Start
+			</label>
+		</labels>
+		<transitions>
+			<transition>
+				<labels>
+					<label language-id="en_US">
+						CMS Blog Builder
+					</label>
+				</labels>
+				<name>cmsBlogBuilder</name>
+				<target>cmsBlogBuilder</target>
+				<default>true</default>
+			</transition>
+		</transitions>
+	</state>
+	<state>
+		<name>end</name>
+		<metadata>
+			<![CDATA[
+				{
+					"terminal": true,
+					"xy": [
+						277,
+						459
+					]
+				}
+			]]>
+		</metadata>
+		<labels>
+			<label language-id="en_US">
+				End
+			</label>
+		</labels>
+	</state>
+</workflow-definition>

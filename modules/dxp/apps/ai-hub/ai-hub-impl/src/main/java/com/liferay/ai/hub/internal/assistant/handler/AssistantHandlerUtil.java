@@ -53,6 +53,7 @@ public class AssistantHandlerUtil {
 				ChatMemoryAccessAssistant chatMemoryAccessAssistant) {
 
 			tokenStream = chatMemoryAccessAssistant.invoke(
+				assistantHandlerContext.getInvocationParameters(),
 				assistantHandlerContext.getMemoryId(),
 				assistantHandlerContext.getUserMessage());
 		}
@@ -81,6 +82,7 @@ public class AssistantHandlerUtil {
 		extends Assistant, ChatMemoryAccess {
 
 		public TokenStream invoke(
+			InvocationParameters invocationParameters,
 			@MemoryId String memoryId, @UserMessage String userMessage);
 
 	}

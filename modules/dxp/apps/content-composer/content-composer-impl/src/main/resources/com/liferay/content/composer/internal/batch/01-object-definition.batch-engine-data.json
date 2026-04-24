@@ -1,0 +1,139 @@
+{
+	"configuration": {
+		"className": "com.liferay.object.admin.rest.dto.v1_0.ObjectDefinition",
+		"multiCompany": true,
+		"parameters": {
+			"containsHeaders": "true",
+			"createStrategy": "UPSERT",
+			"featureFlag": "LPD-62272",
+			"importStrategy": "ON_ERROR_FAIL",
+			"updateStrategy": "UPDATE"
+		},
+		"taskItemDelegateName": "DEFAULT"
+	},
+	"items": [
+		{
+			"accountEntryRestricted": false,
+			"active": true,
+			"className": "com.liferay.object.model.ObjectDefinition#C0M1",
+			"externalReferenceCode": "L_CC_COMPOSITION",
+			"label": {
+				"en_US": "Composition"
+			},
+			"modifiable": true,
+			"name": "ContentComposerComposition",
+			"objectFields": [
+				{
+					"DBType": "Clob",
+					"businessType": "LongText",
+					"defaultValue": "null",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"indexedLanguageId": "en_US",
+					"label": {
+						"en_US": "Brief"
+					},
+					"name": "brief",
+					"required": true,
+					"system": true,
+					"type": "Clob"
+				},
+				{
+					"DBType": "String",
+					"businessType": "Text",
+					"defaultValue": "null",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"indexedLanguageId": "en_US",
+					"label": {
+						"en_US": "Chat External Reference Code"
+					},
+					"name": "chatExternalReferenceCode",
+					"required": true,
+					"system": true,
+					"type": "String"
+				}
+			],
+			"panelCategoryKey": "control_panel.object",
+			"pluralLabel": {
+				"en_US": "Compositions"
+			},
+			"scope": "company",
+			"status": {
+				"code": 0,
+				"label": "approved",
+				"label_i18n": "Approved"
+			},
+			"system": true,
+			"titleObjectFieldName": "externalReferenceCode"
+		},
+		{
+			"accountEntryRestricted": false,
+			"active": true,
+			"className": "com.liferay.object.model.ObjectDefinition#A1R2",
+			"externalReferenceCode": "L_CC_ARTIFACT",
+			"label": {
+				"en_US": "Artifact"
+			},
+			"modifiable": true,
+			"name": "ContentComposerArtifact",
+			"objectFields": [
+				{
+					"DBType": "Clob",
+					"businessType": "LongText",
+					"defaultValue": "null",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"indexedLanguageId": "en_US",
+					"label": {
+						"en_US": "JSON"
+					},
+					"name": "json",
+					"system": true,
+					"type": "Clob"
+				},
+				{
+					"DBType": "Long",
+					"businessType": "Relationship",
+					"defaultValue": "null",
+					"externalReferenceCode": "COMPOSITION_TO_ARTIFACTS",
+					"indexed": true,
+					"indexedLanguageId": "",
+					"label": {
+						"en_US": "Composition to Artifacts"
+					},
+					"name": "r_compositionToArtifacts_contentComposerCompositionId",
+					"objectDefinitionExternalReferenceCode1": "L_CC_COMPOSITION",
+					"objectFieldSettings": [
+						{
+							"name": "objectDefinition1ShortName",
+							"value": "ContentComposerComposition"
+						},
+						{
+							"name": "objectRelationshipERCObjectFieldName",
+							"value": "r_compositionToArtifacts_contentComposerCompositionERC"
+						}
+					],
+					"objectRelationshipExternalReferenceCode": "L_CC_COMPOSITION_TO_L_CC_ARTIFACTS",
+					"readOnly": "false",
+					"relationshipType": "oneToMany",
+					"required": true,
+					"system": true,
+					"type": "Long"
+				}
+			],
+			"panelCategoryKey": "control_panel.object",
+			"pluralLabel": {
+				"en_US": "Artifacts"
+			},
+			"scope": "company",
+			"status": {
+				"code": 0,
+				"label": "approved",
+				"label_i18n": "Approved"
+			},
+			"system": true,
+			"titleObjectFieldName": "externalReferenceCode"
+		}
+	]
+}

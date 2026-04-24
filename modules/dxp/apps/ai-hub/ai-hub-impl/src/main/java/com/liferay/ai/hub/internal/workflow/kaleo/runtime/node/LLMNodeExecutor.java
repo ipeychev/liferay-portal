@@ -9,11 +9,11 @@ import com.liferay.ai.hub.internal.assistant.handler.AssistantHandlerContext;
 import com.liferay.ai.hub.internal.assistant.handler.AssistantHandlerUtil;
 import com.liferay.ai.hub.internal.mcp.tool.provider.MCPToolProviderUtil;
 import com.liferay.ai.hub.internal.model.VertexAiGeminiStreamingChatModelUtil;
+import com.liferay.ai.hub.internal.tools.ToolsUtil;
 import com.liferay.ai.hub.internal.workflow.kaleo.runtime.node.util.KaleoLogUtil;
 import com.liferay.ai.hub.internal.workflow.kaleo.runtime.node.util.PromptUtil;
 import com.liferay.ai.hub.internal.workflow.kaleo.runtime.node.util.RetrievalAugmentorUtil;
-import com.liferay.ai.hub.internal.workflow.kaleo.runtime.node.util.ToolProviderUtil;
-import com.liferay.ai.hub.internal.workflow.kaleo.runtime.node.util.ToolsUtil;
+import com.liferay.ai.hub.internal.workflow.kaleo.runtime.node.util.ToolsConfigUtil;
 import com.liferay.ai.hub.internal.workflow.kaleo.runtime.node.util.VariablesUtil;
 import com.liferay.ai.hub.rest.resource.v1_0.util.SseUtil;
 import com.liferay.object.constants.ObjectDefinitionConstants;
@@ -174,18 +174,20 @@ public class LLMNodeExecutor extends BaseNodeExecutor {
 					serviceContext.getUserId(), workflowContext)
 			).systemMessageProviderFunction(
 				memoryId -> prompt
+			).tools(
+				ToolsUtil.getTools(
+					kaleoInstanceToken.getCompanyId(), currentKaleoNode,
+					_jsonFactory, kaleoNodeSettingValues, workflowContext,
+					_workflowNodeManager)
 			).toolProvider(
 				MCPToolProviderUtil.create(
 					kaleoInstanceToken.getCompanyId(), _dtoConverterRegistry,
 					kaleoInstanceToken.getGroupId(), serviceContext.getLocale(),
-					ToolProviderUtil.getMCPServerExternalReferenceCodes(
-						_jsonFactory, kaleoNodeSettingValues),
+					ToolsConfigUtil.getValues(
+						_jsonFactory, kaleoNodeSettingValues,
+						"mcpServerExternalReferenceCode"),
 					_objectEntryManager, sseEventSinkKey,
 					serviceContext.getUserId())
-			).tools(
-				ToolsUtil.getTools(
-					kaleoInstanceToken.getCompanyId(), currentKaleoNode,
-					workflowContext, _workflowNodeManager)
 			).userMessage(
 				userMessage
 			).vertexAiGeminiStreamingChatModel(

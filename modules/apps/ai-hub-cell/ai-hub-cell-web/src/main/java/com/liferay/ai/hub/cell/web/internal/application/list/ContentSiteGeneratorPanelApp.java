@@ -50,7 +50,7 @@ public class ContentSiteGeneratorPanelApp extends BasePanelApp {
 		throws PortalException {
 
 		if (!FeatureFlagManagerUtil.isEnabled(
-			group.getCompanyId(), "LPD-62272")) {
+				group.getCompanyId(), "LPD-62272")) {
 
 			return false;
 		}

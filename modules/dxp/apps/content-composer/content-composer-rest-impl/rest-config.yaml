@@ -1,0 +1,13 @@
+apiDir: ../content-composer-rest-api/src/main/java
+apiPackagePath: com.liferay.content.composer.rest
+application:
+    baseURI: /content-composer
+    className: ContentComposerRESTApplication
+    name: Liferay.Content.Composer.REST
+author: Feliphe Marinho
+clientDir: ../content-composer-rest-client/src/main/java
+compatibilityVersion: 15
+forcePredictableOperationId: true
+generateGraphQL: false
+javaEEPackage: jakarta
+testDir: ../content-composer-rest-test/src/testIntegration/java

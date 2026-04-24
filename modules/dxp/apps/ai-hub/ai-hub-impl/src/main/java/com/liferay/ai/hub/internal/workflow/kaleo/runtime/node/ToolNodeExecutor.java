@@ -5,11 +5,12 @@
 
 package com.liferay.ai.hub.internal.workflow.kaleo.runtime.node;
 
-import com.liferay.ai.hub.internal.workflow.kaleo.runtime.node.util.ToolsUtil;
+import com.liferay.ai.hub.internal.tools.ToolsUtil;
 import com.liferay.ai.hub.internal.workflow.kaleo.runtime.node.util.VariablesUtil;
 import com.liferay.ai.hub.rest.resource.v1_0.util.SseUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONArray;
+import com.liferay.portal.kernel.json.JSONFactory;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -86,7 +87,8 @@ public class ToolNodeExecutor extends BaseNodeExecutor {
 
 		Object[] tools = ToolsUtil.getTools(
 			kaleoInstanceToken.getCompanyId(), currentKaleoNode,
-			workflowContext, _workflowNodeManager);
+			_jsonFactory, kaleoNodeSettingValues, workflowContext,
+			_workflowNodeManager);
 
 		try {
 			String result = _invokeTool(
@@ -206,6 +208,9 @@ public class ToolNodeExecutor extends BaseNodeExecutor {
 
 	@Reference
 	private KaleoNodeSettingLocalService _kaleoNodeSettingLocalService;
+
+	@Reference
+	private JSONFactory _jsonFactory;
 
 	@Reference
 	private WorkflowNodeManager _workflowNodeManager;

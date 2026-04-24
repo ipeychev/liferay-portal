@@ -1,0 +1,7 @@
+Bundle-Name: Liferay Content Composer REST Test
+Bundle-SymbolicName: com.liferay.content.composer.rest.test
+Bundle-Version: 1.0.0
+-includeresource:\
+	com.liferay.content.composer.rest.client.jar=com.liferay.content.composer.rest.client-*.jar;lib:=true,\
+	com.liferay.headless.batch.engine.client.jar=com.liferay.headless.batch.engine.client-*.jar;lib:=true,\
+	@jsonassert-[0-9.]*.jar

@@ -61,13 +61,17 @@ public class MessageResourceImpl extends BaseMessageResourceImpl {
 
 		String messageText = message.getText();
 
-		if ((message.getContext() != null) && !message.getContext().isEmpty()) {
+		if ((message.getContext() != null) &&
+			!message.getContext(
+			).isEmpty()) {
+
 			StringBuilder sb = new StringBuilder(messageText);
 
 			sb.append("\n\n# Context\n");
 
 			for (Map.Entry<String, ?> entry :
-					message.getContext().entrySet()) {
+					message.getContext(
+					).entrySet()) {
 
 				sb.append(entry.getKey());
 				sb.append(": ");

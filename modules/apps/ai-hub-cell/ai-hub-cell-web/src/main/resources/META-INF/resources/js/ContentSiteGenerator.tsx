@@ -48,18 +48,11 @@ interface IProps {
 
 const RUNS_URL = '/o/content-site-generator/runs';
 
-const POLL_INTERVAL_MS = 1500;
-
-const POLL_TIMEOUT_MS = 5 * 60 * 1000;
-
 const buildRunName = (prompt: string) => {
 	const trimmed = prompt.trim().split(/\s+/).slice(0, 6).join(' ');
 
 	return trimmed.length > 60 ? `${trimmed.slice(0, 57)}...` : trimmed;
 };
-
-const sleep = (ms: number) =>
-	new Promise<void>((resolve) => setTimeout(resolve, ms));
 
 export default function ContentSiteGenerator({refineStepURL}: IProps) {
 	const [prompt, setPrompt] = useState('');
@@ -99,64 +92,13 @@ export default function ContentSiteGenerator({refineStepURL}: IProps) {
 			// TODO: upload attachments via POST /o/content-site-generator/attachments
 			// (multipart with FK r_attachments_l_contentGeneratorRunId).
 
-			const analyzeResponse = await liferayFetch(
-				`${RUNS_URL}/${runId}/object-actions/analyze`,
-				{
-					headers: {'Content-Type': 'application/json'},
-					method: 'PUT',
-				}
-			);
+			if (refineStepURL) {
+				const separator = refineStepURL.includes('?') ? '&' : '?';
 
-			if (!analyzeResponse.ok) {
-				throw new Error(
-					`Failed to start analysis (${analyzeResponse.status})`
+				Liferay.Util.navigate(
+					`${refineStepURL}${separator}runId=${runId}`
 				);
 			}
-
-			const deadline = Date.now() + POLL_TIMEOUT_MS;
-
-			while (Date.now() < deadline) {
-				await sleep(POLL_INTERVAL_MS);
-
-				const pollResponse = await liferayFetch(
-					`${RUNS_URL}/${runId}`
-				);
-
-				if (!pollResponse.ok) {
-					throw new Error(
-						`Failed to poll run (${pollResponse.status})`
-					);
-				}
-
-				const pollRun = await pollResponse.json();
-				const status = pollRun?.runStatus?.key;
-
-				if (status === 'ready') {
-					if (refineStepURL) {
-						const separator = refineStepURL.includes('?')
-							? '&'
-							: '?';
-
-						Liferay.Util.navigate(
-							`${refineStepURL}${separator}runId=${runId}`
-						);
-					}
-
-					return;
-				}
-
-				if (status === 'failed') {
-					throw new Error(
-						Liferay.Language.get(
-							'analysis-failed-please-try-again'
-						)
-					);
-				}
-			}
-
-			throw new Error(
-				Liferay.Language.get('analysis-timed-out-please-try-again')
-			);
 		}
 		catch (exception) {
 			setError(

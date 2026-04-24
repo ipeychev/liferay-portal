@@ -622,7 +622,8 @@ public class ContentPageEditorDisplayContext {
 			).put(
 				"layoutExternalReferenceCode",
 				GetterUtil.getString(
-					themeDisplay.getLayout().getExternalReferenceCode())
+					themeDisplay.getLayout(
+					).getExternalReferenceCode())
 			).put(
 				"layoutItemSelectorURL", _getLayoutItemSelectorURL()
 			).put(
@@ -731,7 +732,8 @@ public class ContentPageEditorDisplayContext {
 			).put(
 				"siteExternalReferenceCode",
 				GetterUtil.getString(
-					themeDisplay.getScopeGroup().getExternalReferenceCode())
+					themeDisplay.getScopeGroup(
+					).getExternalReferenceCode())
 			).put(
 				"siteNavigationMenuItemSelectorURL",
 				_getSiteNavigationMenuItemSelectorURL()

@@ -26,8 +26,6 @@ import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.Group;
-import com.liferay.portal.kernel.service.GroupLocalService;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.UnicodeProperties;
@@ -39,6 +37,7 @@ import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -52,8 +51,9 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
 /**
- * Standalone Object Action that commits a Content Generator Run by submitting
- * each of its artifacts to the Headless Batch Engine.
+ * Standalone Object Action that commits a Content Generator Run by merging the
+ * JSON of its artifacts into a single array and submitting it to the Headless
+ * Batch Engine through the "CMSBlog" task item delegate.
  *
  * Invoked by the auto-generated endpoint:
  *   PUT /o/content-site-generator/runs/by-external-reference-code/{erc}/object-actions/commit
@@ -97,29 +97,79 @@ public class CommitContentSiteGeneratorRunObjectActionExecutor
 		executorService.submit(() -> _runCommit(companyId, userId, runId));
 	}
 
+	private boolean _awaitTerminal(long taskId) throws InterruptedException {
+		long deadline = System.currentTimeMillis() + _TIMEOUT_MS;
+
+		while (System.currentTimeMillis() < deadline) {
+			Thread.sleep(_POLL_INTERVAL_MS);
+
+			BatchEngineImportTask batchEngineImportTask =
+				_batchEngineImportTaskLocalService.fetchBatchEngineImportTask(
+					taskId);
+
+			if (batchEngineImportTask == null) {
+				continue;
+			}
+
+			String status = batchEngineImportTask.getExecuteStatus();
+
+			if (Objects.equals(
+					BatchEngineTaskExecuteStatus.FAILED.name(), status)) {
+
+				return false;
+			}
+
+			if (Objects.equals(
+					BatchEngineTaskExecuteStatus.COMPLETED.name(), status)) {
+
+				return true;
+			}
+		}
+
+		_log.error(
+			StringBundler.concat(
+				"Batch task ", taskId, " timed out after ", _TIMEOUT_MS, "ms"));
+
+		return false;
+	}
+
+	private void _finalizeRun(
+		long userId, long runId, boolean failed, String failureReason) {
+
+		try {
+			Map<String, Serializable> updates = new HashMap<>(
+				_objectEntryLocalService.getValues(runId));
+
+			if (failed) {
+				updates.put("runStatus", _RUN_STATUS_FAILED);
+
+				if (failureReason != null) {
+					updates.put("failureReason", failureReason);
+				}
+			}
+			else {
+				updates.put("committedAt", new Date());
+				updates.put("failureReason", "");
+				updates.put("runStatus", _RUN_STATUS_COMMITTED);
+			}
+
+			_objectEntryLocalService.updateObjectEntry(
+				userId, runId, 0L, updates, new ServiceContext());
+		}
+		catch (Exception exception) {
+			_log.error(
+				StringBundler.concat(
+					"Unable to finalize run ", runId, " (failed=", failed, ")"),
+				exception);
+		}
+	}
+
 	private void _runCommit(long companyId, long userId, long runId) {
 		try {
 			ObjectEntry runObjectEntry =
 				_objectEntryLocalService.getObjectEntry(runId);
 
 			String runERC = runObjectEntry.getExternalReferenceCode();
-
-			Map<String, Serializable> runValues =
-				_objectEntryLocalService.getValues(runId);
-
-			// 1. Guard: only commit from READY or FAILED states.
-
-			String currentStatus = GetterUtil.getString(
-				runValues.get("runStatus"));
-
-			if (!_committableStates.contains(currentStatus)) {
-				throw new PortalException(
-					StringBundler.concat(
-						"Run ", runERC, " is not in a committable state: ",
-						currentStatus));
-			}
-
-			// 2. Resolve the Artifact ObjectDefinition.
 
 			ObjectDefinition artifactObjectDefinition =
 				_objectDefinitionLocalService.
@@ -132,10 +182,6 @@ public class CommitContentSiteGeneratorRunObjectActionExecutor
 					"ContentGeneratorArtifact ObjectDefinition is not " +
 						"registered");
 			}
-
-			// 3. Load all artifacts whose run FK matches this run, ordered by
-			// loadOrder. The FK column on Artifact is
-			// r_artifacts_l_contentGeneratorRunId.
 
 			List<ObjectEntry> allArtifacts =
 				_objectEntryLocalService.getObjectEntries(
@@ -161,27 +207,46 @@ public class CommitContentSiteGeneratorRunObjectActionExecutor
 			}
 
 			artifacts.sort(
-				(a, b) -> Integer.compare(
-					GetterUtil.getInteger(
-						artifactValues.get(
-							a.getObjectEntryId()
-						).get(
-							"loadOrder"
-						)),
-					GetterUtil.getInteger(
-						artifactValues.get(
-							b.getObjectEntryId()
-						).get(
-							"loadOrder"
-						))));
+				Comparator.comparingInt(a -> GetterUtil.getInteger(
+					artifactValues.get(
+						a.getObjectEntryId()
+					).get(
+						"loadOrder"
+					))));
 
 			if (artifacts.isEmpty()) {
 				throw new PortalException(
 					"Run " + runERC + " has no artifacts to commit");
 			}
 
-			// 4. Flip the Run to GENERATING. Picklist values are written as
-			// their raw key string.
+			JSONArray jsonArray = JSONFactoryUtil.createJSONArray();
+
+			for (ObjectEntry artifact : artifacts) {
+				String json = GetterUtil.getString(
+					artifactValues.get(
+						artifact.getObjectEntryId()
+					).get(
+						"json"
+					));
+
+				if (Validator.isBlank(json)) {
+					continue;
+				}
+
+				JSONArray artifactItems = JSONFactoryUtil.createJSONArray(json);
+
+				for (int i = 0; i < artifactItems.length(); i++) {
+					jsonArray.put(artifactItems.getJSONObject(i));
+				}
+			}
+
+			if (jsonArray.length() == 0) {
+				throw new PortalException(
+					"Run " + runERC + " has no items to commit");
+			}
+
+			Map<String, Serializable> runValues =
+				_objectEntryLocalService.getValues(runId);
 
 			Map<String, Serializable> updates = new HashMap<>(runValues);
 
@@ -191,99 +256,43 @@ public class CommitContentSiteGeneratorRunObjectActionExecutor
 			_objectEntryLocalService.updateObjectEntry(
 				userId, runId, 0L, updates, new ServiceContext());
 
-			// 5. Partition artifacts by envelope className: Site first so we
-			// can capture siteId / ERC, then Space (AssetLibrary +
-			// ConnectedSite) so the Space exists before any Page or CMS
-			// envelope references it, then everything else.
+			BatchEngineTaskItemDelegate<?> batchEngineTaskItemDelegate =
+				_batchEngineTaskItemDelegateRegistry.
+					getBatchEngineTaskItemDelegate(
+						companyId, _OBJECT_ENTRY_CLASS_NAME, _DELEGATE_NAME);
 
-			List<ObjectEntry> siteArtifacts = new ArrayList<>();
-			List<ObjectEntry> spaceArtifacts = new ArrayList<>();
-			List<ObjectEntry> contentArtifacts = new ArrayList<>();
-
-			for (ObjectEntry artifact : artifacts) {
-				String envelopeClassName = _envelopeClassName(
-					artifactValues.get(artifact.getObjectEntryId()));
-
-				if (_SITE_CLASS_NAME.equals(envelopeClassName)) {
-					siteArtifacts.add(artifact);
-				}
-				else if (_SPACE_PHASE_CLASS_NAMES.contains(
-							envelopeClassName)) {
-
-					spaceArtifacts.add(artifact);
-				}
-				else {
-					contentArtifacts.add(artifact);
-				}
-			}
-
-			if (siteArtifacts.isEmpty()) {
-				_finalizeRun(
-					userId, runId, true, "Run has no Site artifact", null);
-
-				return;
-			}
-
-			// 6. Site phase.
-
-			if (!_runPhase(
-					"site", companyId, userId, siteArtifacts,
-					artifactValues)) {
-
-				_finalizeRun(
-					userId, runId, true,
-					"Site phase failed; see batch engine task errors", null);
-
-				return;
-			}
-
-			// 7. Resolve the Site that was just created so we can write its
-			// ERC back to the Run on success.
-
-			String siteExternalReferenceCode = _findCreatedSiteERC(
-				companyId, siteArtifacts, artifactValues);
-
-			if (siteExternalReferenceCode == null) {
-				_finalizeRun(
-					userId, runId, true,
-					"Site phase completed but no Site found by ERC", null);
-
-				return;
-			}
-
-			if (_log.isInfoEnabled()) {
-				_log.info(
+			if (batchEngineTaskItemDelegate == null) {
+				throw new PortalException(
 					StringBundler.concat(
-						"Run ", runERC, " captured siteERC=",
-						siteExternalReferenceCode));
+						"No batch engine task item delegate registered for ",
+						_OBJECT_ENTRY_CLASS_NAME, " / ", _DELEGATE_NAME));
 			}
 
-			// 8. Space phase. AssetLibrary and ConnectedSite envelopes
-			// create the Space and connect it to the Site, in loadOrder.
+			Map<String, Serializable> parameters = new HashMap<>();
 
-			if (!_runPhase(
-					"space", companyId, userId, spaceArtifacts,
-					artifactValues)) {
+			parameters.put("createStrategy", "UPSERT");
+			parameters.put("siteExternalReferenceCode", "Space1");
+			parameters.put("updateStrategy", "UPDATE");
 
-				_finalizeRun(
-					userId, runId, true,
-					"Space phase failed; see batch engine task errors", null);
+			BatchEngineImportTask batchEngineImportTask =
+				_batchEngineImportTaskLocalService.addBatchEngineImportTask(
+					null, companyId, userId, 100, null,
+					_OBJECT_ENTRY_CLASS_NAME,
+					_zipJSON(_FILE_NAME, jsonArray.toString()), "JSON",
+					BatchEngineTaskExecuteStatus.INITIAL.name(), null,
+					BatchEngineImportTaskConstants.IMPORT_STRATEGY_ON_ERROR_FAIL,
+					"CREATE", parameters, _DELEGATE_NAME);
 
-				return;
-			}
+			_batchEngineImportTaskExecutor.execute(
+				batchEngineImportTask, batchEngineTaskItemDelegate, true);
 
-			// 9. Content phase. Pages, CMS object entries, fragments, etc.
-
-			boolean contentSucceeded = _runPhase(
-				"content", companyId, userId, contentArtifacts,
-				artifactValues);
+			boolean succeeded = _awaitTerminal(
+				batchEngineImportTask.getBatchEngineImportTaskId());
 
 			_finalizeRun(
-				userId, runId, !contentSucceeded,
-				contentSucceeded
-					? null
-					: "Content phase failed; see batch engine task errors",
-				contentSucceeded ? siteExternalReferenceCode : null);
+				userId, runId, !succeeded,
+				succeeded ? null :
+					"Batch import failed; see batch engine task errors");
 		}
 		catch (Exception exception) {
 			_log.error("Commit failed for run " + runId, exception);
@@ -291,156 +300,13 @@ public class CommitContentSiteGeneratorRunObjectActionExecutor
 			try {
 				_finalizeRun(
 					userId, runId, true,
-					"Commit failed: " + exception.getMessage(), null);
+					"Commit failed: " + exception.getMessage());
 			}
 			catch (Exception finalizeException) {
 				_log.error(
 					"Unable to mark run failed: " + runId, finalizeException);
 			}
 		}
-	}
-
-	private void _finalizeRun(
-		long userId, long runId, boolean failed, String failureReason,
-		String resultingSiteERC) {
-
-		try {
-			Map<String, Serializable> updates = new HashMap<>(
-				_objectEntryLocalService.getValues(runId));
-
-			if (failed) {
-				updates.put("runStatus", _RUN_STATUS_FAILED);
-
-				if (failureReason != null) {
-					updates.put("failureReason", failureReason);
-				}
-			}
-			else {
-				updates.put("committedAt", new Date());
-				updates.put("failureReason", "");
-				updates.put("runStatus", _RUN_STATUS_COMMITTED);
-
-				if (resultingSiteERC != null) {
-					updates.put("resultingSiteERC", resultingSiteERC);
-				}
-			}
-
-			_objectEntryLocalService.updateObjectEntry(
-				userId, runId, 0L, updates, new ServiceContext());
-		}
-		catch (Exception exception) {
-			_log.error(
-				StringBundler.concat(
-					"Unable to finalize run ", runId, " (failed=", failed, ")"),
-				exception);
-		}
-	}
-
-	private BatchEngineImportTask _submitEnvelope(
-			long companyId, long userId, String fileName, String envelopeJSON)
-		throws Exception {
-
-		JSONObject envelope = JSONFactoryUtil.createJSONObject(envelopeJSON);
-
-		JSONObject configuration = envelope.getJSONObject("configuration");
-
-		if (configuration == null) {
-			_log.warn(
-				"Skipping artifact " + fileName +
-					" because envelope has no configuration");
-
-			return null;
-		}
-
-		String className = configuration.getString("className");
-
-		if (Validator.isNull(className)) {
-			_log.warn(
-				"Skipping artifact " + fileName +
-					" because configuration has no className");
-
-			return null;
-		}
-
-		String taskItemDelegateName = GetterUtil.getString(
-			configuration.getString("taskItemDelegateName"), "DEFAULT");
-
-		Map<String, Serializable> parameters = _toSerializableMap(
-			configuration.getJSONObject("parameters"));
-
-		Map<String, String> fieldNameMappingMap = _toStringMap(
-			configuration.getJSONObject("fieldNameMappingMap"));
-
-		JSONArray items = envelope.getJSONArray("items");
-
-		if ((items == null) || (items.length() == 0)) {
-			_log.warn("Skipping artifact " + fileName + " because items is empty");
-
-			return null;
-		}
-
-		BatchEngineTaskItemDelegate<?> batchEngineTaskItemDelegate =
-			_batchEngineTaskItemDelegateRegistry.getBatchEngineTaskItemDelegate(
-				companyId, className, taskItemDelegateName);
-
-		if (batchEngineTaskItemDelegate == null) {
-			_log.warn(
-				StringBundler.concat(
-					"Skipping artifact ", fileName, " because no delegate ",
-					"registered for ", className, " / ", taskItemDelegateName));
-
-			return null;
-		}
-
-		BatchEngineImportTask batchEngineImportTask =
-			_batchEngineImportTaskLocalService.addBatchEngineImportTask(
-				null, companyId, userId, 100, null, className,
-				_zipJSON(fileName, items.toString()), "JSON",
-				BatchEngineTaskExecuteStatus.INITIAL.name(), fieldNameMappingMap,
-				BatchEngineImportTaskConstants.IMPORT_STRATEGY_ON_ERROR_FAIL,
-				"CREATE", parameters, taskItemDelegateName);
-
-		_batchEngineImportTaskExecutor.execute(
-			batchEngineImportTask, batchEngineTaskItemDelegate, true);
-
-		return batchEngineImportTask;
-	}
-
-	private Map<String, Serializable> _toSerializableMap(
-		JSONObject jsonObject) {
-
-		if (jsonObject == null) {
-			return null;
-		}
-
-		Map<String, Serializable> map = new HashMap<>();
-
-		for (String key : jsonObject.keySet()) {
-			Object value = jsonObject.get(key);
-
-			if (value instanceof Serializable) {
-				map.put(key, (Serializable)value);
-			}
-			else if (value != null) {
-				map.put(key, value.toString());
-			}
-		}
-
-		return map;
-	}
-
-	private Map<String, String> _toStringMap(JSONObject jsonObject) {
-		if (jsonObject == null) {
-			return null;
-		}
-
-		Map<String, String> map = new HashMap<>();
-
-		for (String key : jsonObject.keySet()) {
-			map.put(key, jsonObject.getString(key));
-		}
-
-		return map;
 	}
 
 	private byte[] _zipJSON(String fileName, String json) throws Exception {
@@ -458,200 +324,20 @@ public class CommitContentSiteGeneratorRunObjectActionExecutor
 		return byteArrayOutputStream.toByteArray();
 	}
 
-	private boolean _awaitTerminal(String phaseLabel, List<Long> taskIds)
-		throws InterruptedException {
-
-		if (taskIds.isEmpty()) {
-			return true;
-		}
-
-		long deadline = System.currentTimeMillis() + _TIMEOUT_MS;
-
-		while (System.currentTimeMillis() < deadline) {
-			Thread.sleep(_POLL_INTERVAL_MS);
-
-			boolean anyFailed = false;
-			boolean allTerminal = true;
-
-			for (long taskId : taskIds) {
-				BatchEngineImportTask task =
-					_batchEngineImportTaskLocalService.
-						fetchBatchEngineImportTask(taskId);
-
-				if (task == null) {
-					allTerminal = false;
-
-					continue;
-				}
-
-				String status = task.getExecuteStatus();
-
-				if (Objects.equals(
-						BatchEngineTaskExecuteStatus.FAILED.name(), status)) {
-
-					anyFailed = true;
-				}
-				else if (!Objects.equals(
-							BatchEngineTaskExecuteStatus.COMPLETED.name(),
-							status)) {
-
-					allTerminal = false;
-				}
-			}
-
-			if (allTerminal) {
-				return !anyFailed;
-			}
-		}
-
-		_log.error(
-			StringBundler.concat(
-				"Phase ", phaseLabel, " timed out after ", _TIMEOUT_MS, "ms"));
-
-		return false;
-	}
-
-	private String _findCreatedSiteERC(
-			long companyId, List<ObjectEntry> siteArtifacts,
-			Map<Long, Map<String, Serializable>> artifactValues)
-		throws Exception {
-
-		for (ObjectEntry artifact : siteArtifacts) {
-			JSONArray items = _envelopeItems(
-				artifactValues.get(artifact.getObjectEntryId()));
-
-			if (items == null) {
-				continue;
-			}
-
-			for (int i = 0; i < items.length(); i++) {
-				JSONObject item = items.getJSONObject(i);
-
-				String externalReferenceCode = item.getString(
-					"externalReferenceCode");
-
-				if (Validator.isNull(externalReferenceCode)) {
-					continue;
-				}
-
-				Group group =
-					_groupLocalService.fetchGroupByExternalReferenceCode(
-						externalReferenceCode, companyId);
-
-				if (group != null) {
-					return externalReferenceCode;
-				}
-
-				if (_log.isWarnEnabled()) {
-					_log.warn(
-						"Site phase reported success but no Group found " +
-							"for ERC " + externalReferenceCode);
-				}
-			}
-		}
-
-		return null;
-	}
-
-	private String _envelopeClassName(Map<String, Serializable> values) {
-		String json = GetterUtil.getString(values.get("json"));
-
-		if (json.isEmpty()) {
-			return null;
-		}
-
-		try {
-			JSONObject envelope = JSONFactoryUtil.createJSONObject(json);
-
-			JSONObject configuration = envelope.getJSONObject("configuration");
-
-			if (configuration == null) {
-				return null;
-			}
-
-			return configuration.getString("className");
-		}
-		catch (Exception exception) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(
-					"Unable to read envelope className: " +
-						exception.getMessage());
-			}
-
-			return null;
-		}
-	}
-
-	private JSONArray _envelopeItems(Map<String, Serializable> values)
-		throws Exception {
-
-		String json = GetterUtil.getString(values.get("json"));
-
-		if (json.isEmpty()) {
-			return null;
-		}
-
-		JSONObject envelope = JSONFactoryUtil.createJSONObject(json);
-
-		return envelope.getJSONArray("items");
-	}
-
-	private boolean _runPhase(
-			String phaseLabel, long companyId, long userId,
-			List<ObjectEntry> phaseArtifacts,
-			Map<Long, Map<String, Serializable>> artifactValues)
-		throws Exception {
-
-		if (phaseArtifacts.isEmpty()) {
-			return true;
-		}
-
-		List<Long> taskIds = new ArrayList<>(phaseArtifacts.size());
-
-		for (ObjectEntry artifact : phaseArtifacts) {
-			Map<String, Serializable> values = artifactValues.get(
-				artifact.getObjectEntryId());
-
-			String fileName = GetterUtil.getString(values.get("fileName"));
-			String json = GetterUtil.getString(values.get("json"));
-
-			if (json.isEmpty()) {
-				if (_log.isWarnEnabled()) {
-					_log.warn(
-						"Skipping artifact " + fileName +
-							" due to missing envelope");
-				}
-
-				continue;
-			}
-
-			BatchEngineImportTask batchEngineImportTask = _submitEnvelope(
-				companyId, userId, fileName, json);
-
-			if (batchEngineImportTask == null) {
-				continue;
-			}
-
-			taskIds.add(batchEngineImportTask.getBatchEngineImportTaskId());
-		}
-
-		return _awaitTerminal(phaseLabel, taskIds);
-	}
-
 	private static final String
 		_ARTIFACT_OBJECT_DEFINITION_EXTERNAL_REFERENCE_CODE = "L_CSG_ARTIFACT";
 
 	private static final String _ARTIFACT_RUN_FK_FIELD =
 		"r_artifacts_l_contentGeneratorRunId";
 
+	private static final String _DELEGATE_NAME = "CMSBlog";
+
+	private static final String _FILE_NAME = "blogs.json";
+
+	private static final String _OBJECT_ENTRY_CLASS_NAME =
+		"com.liferay.object.rest.dto.v1_0.ObjectEntry";
+
 	private static final long _POLL_INTERVAL_MS = 2_000L;
-
-	private static final String _SITE_CLASS_NAME =
-		"com.liferay.headless.admin.site.dto.v1_0.Site";
-
-	private static final List<String> _SPACE_PHASE_CLASS_NAMES = List.of(
-		"com.liferay.headless.asset.library.dto.v1_0.AssetLibrary",
-		"com.liferay.headless.asset.library.dto.v1_0.ConnectedSite");
 
 	private static final String _RUN_STATUS_COMMITTED = "committed";
 
@@ -664,9 +350,6 @@ public class CommitContentSiteGeneratorRunObjectActionExecutor
 	private static final Log _log = LogFactoryUtil.getLog(
 		CommitContentSiteGeneratorRunObjectActionExecutor.class);
 
-	private static final List<String> _committableStates = List.of(
-		"ready", "failed");
-
 	@Reference
 	private BatchEngineImportTaskExecutor _batchEngineImportTaskExecutor;
 
@@ -677,9 +360,6 @@ public class CommitContentSiteGeneratorRunObjectActionExecutor
 	@Reference
 	private BatchEngineTaskItemDelegateRegistry
 		_batchEngineTaskItemDelegateRegistry;
-
-	@Reference
-	private GroupLocalService _groupLocalService;
 
 	@Reference
 	private ObjectDefinitionLocalService _objectDefinitionLocalService;

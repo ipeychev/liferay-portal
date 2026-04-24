@@ -10,9 +10,11 @@ import ClayLabel from '@clayui/label';
 import ClayLayout from '@clayui/layout';
 import ClayList from '@clayui/list';
 import ClayPanel from '@clayui/panel';
+import {EventSource} from 'eventsource';
 import {fetch as liferayFetch, sub} from 'frontend-js-web';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 
+import {createEventSource, postChatByExternalReferenceCodeMessage} from './api';
 import ContentSampleItem from './components/ContentSampleItem';
 import MultiStepProgress from './components/MultiStepProgress';
 import StepActions from './components/StepActions';
@@ -270,13 +272,17 @@ export default function RefineStep({
 	onContinue,
 	runId,
 }: IProps) {
+	const [agentReady, setAgentReady] = useState(false);
 	const [artifacts, setArtifacts] = useState<Artifact[]>([]);
 	const [attachments, setAttachments] = useState<Attachment[]>([]);
+	const [chatERC, setChatERC] = useState<string | null>(null);
 	const [error, setError] = useState<string | null>(null);
 	const [generating, setGenerating] = useState(false);
 	const [loading, setLoading] = useState(!!runId);
 	const [run, setRun] = useState<Run | null>(null);
 	const [showTip, setShowTip] = useState(true);
+	const eventSourceRef = useRef<EventSource | null>(null);
+	const messageSentRef = useRef(false);
 
 	useEffect(() => {
 		if (!runId) {
@@ -357,6 +363,65 @@ export default function RefineStep({
 			cancelled = true;
 		};
 	}, [continueURL, runId]);
+
+	useEffect(() => {
+		createEventSource().then((eventSource) => {
+			if (!eventSource) {
+				return;
+			}
+
+			eventSourceRef.current = eventSource;
+
+			eventSource.addEventListener('Subscribe', (event) => {
+				setChatERC(event.data);
+			});
+
+			eventSource.addEventListener('Chat Message Sent', () => {
+				setAgentReady(true);
+			});
+		});
+	}, []);
+
+	useEffect(() => {
+		if (
+			!chatERC ||
+			!run?.prompt ||
+			!runId ||
+			messageSentRef.current
+		) {
+			return;
+		}
+
+		messageSentRef.current = true;
+
+		(async () => {
+			try {
+				await liferayFetch(`${RUNS_URL}/${runId}`, {
+					body: JSON.stringify({
+						externalReferenceCode: chatERC,
+					}),
+					headers: {'Content-Type': 'application/json'},
+					method: 'PATCH',
+				});
+
+				postChatByExternalReferenceCodeMessage({
+					chatContext: {
+						context: {},
+						instructionDefinitionScope: '',
+					},
+					eventSourceReference: chatERC,
+					message: run.prompt,
+				});
+			}
+			catch (exception) {
+				setError(
+					exception instanceof Error
+						? exception.message
+						: String(exception)
+				);
+			}
+		})();
+	}, [chatERC, run, runId]);
 
 	const handleBack = () => {
 		if (onBack) {
@@ -785,7 +850,7 @@ export default function RefineStep({
 								backDisabled={generating}
 								backLabel={Liferay.Language.get('back-to-prompt')}
 								cancelDisabled={generating}
-								continueDisabled={loading || !runId}
+								continueDisabled={loading || !runId || !agentReady}
 								continueLabel={Liferay.Language.get('generate')}
 								continueLoading={generating}
 								onBack={handleBack}

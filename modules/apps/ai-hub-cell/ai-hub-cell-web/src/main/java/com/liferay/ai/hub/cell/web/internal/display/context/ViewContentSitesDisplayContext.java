@@ -76,8 +76,7 @@ public class ViewContentSitesDisplayContext {
 		return HashMapBuilder.<String, Object>put(
 			"description",
 			LanguageUtil.get(
-				_httpServletRequest,
-				"create-a-new-generator-to-get-started")
+				_httpServletRequest, "create-a-new-generator-to-get-started")
 		).put(
 			"title",
 			LanguageUtil.get(_httpServletRequest, "no-content-sites-yet")
