@@ -61,7 +61,7 @@ public class AIHubCellPortlet extends MVCPortlet {
 			RenderRequest renderRequest, RenderResponse renderResponse)
 		throws IOException, PortletException {
 
-			HttpServletRequest httpServletRequest = _portal.getHttpServletRequest(
+		HttpServletRequest httpServletRequest = _portal.getHttpServletRequest(
 			renderRequest);
 
 		LiferayPortletResponse liferayPortletResponse =
@@ -75,9 +75,7 @@ public class AIHubCellPortlet extends MVCPortlet {
 			ViewContentSitesDisplayContext.class.getName(),
 			viewContentSitesDisplayContext);
 
-		if (_SITE_GENERATOR_MVC_PATH.equals(
-				renderRequest.getParameter("mvcPath"))) {
-
+		if (_isSiteGeneratorMVCPath(renderRequest)) {
 			ThemeDisplay themeDisplay =
 				(ThemeDisplay)renderRequest.getAttribute(WebKeys.THEME_DISPLAY);
 
@@ -97,15 +95,22 @@ public class AIHubCellPortlet extends MVCPortlet {
 
 	@Override
 	protected String getTitle(RenderRequest renderRequest) {
-		if (_SITE_GENERATOR_MVC_PATH.equals(
-				renderRequest.getParameter("mvcPath"))) {
-
+		if (_isSiteGeneratorMVCPath(renderRequest)) {
 			return LanguageUtil.get(
 				_portal.getHttpServletRequest(renderRequest), "site-generator");
 		}
 
 		return super.getTitle(renderRequest);
 	}
+
+	private boolean _isSiteGeneratorMVCPath(RenderRequest renderRequest) {
+		String mvcPath = renderRequest.getParameter("mvcPath");
+
+		return _SITE_GENERATOR_MVC_PATH.equals(mvcPath) ||
+			_REVIEW_STEP_MVC_PATH.equals(mvcPath);
+	}
+
+	private static final String _REVIEW_STEP_MVC_PATH = "/view_review_step.jsp";
 
 	private static final String _SITE_GENERATOR_MVC_PATH =
 		"/view_content_site_generator.jsp";
