@@ -1,0 +1,54 @@
+@import 'atlas-variables';
+
+.content-site-generator {
+	&__progress {
+		margin: 2rem 0 3rem;
+	}
+
+	&__title {
+		margin-bottom: 1.5rem;
+		text-align: center;
+
+		h2 {
+			font-weight: 600;
+			margin-bottom: 0.5rem;
+		}
+	}
+
+	&__textarea {
+		background-color: $gray-100;
+		min-height: 120px;
+		resize: vertical;
+	}
+
+	&__actions {
+		align-items: center;
+		display: flex;
+		justify-content: space-between;
+		margin-top: 1rem;
+	}
+
+	&__examples {
+		margin-top: 2rem;
+
+		.list-group {
+			background-color: transparent;
+		}
+
+		.list-group-item {
+			border: 1px solid $gray-200;
+			border-radius: 0.25rem;
+			cursor: pointer;
+			margin-bottom: 0.75rem;
+			transition: background-color 0.15s ease-in-out;
+
+			&:last-child {
+				margin-bottom: 0;
+			}
+
+			&:hover {
+				background-color: $gray-100;
+			}
+		}
+	}
+}
