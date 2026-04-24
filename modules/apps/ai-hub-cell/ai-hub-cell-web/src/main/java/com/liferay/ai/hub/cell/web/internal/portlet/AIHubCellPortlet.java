@@ -7,8 +7,13 @@ package com.liferay.ai.hub.cell.web.internal.portlet;
 
 import com.liferay.ai.hub.cell.web.internal.constants.AIHubCellPortletKeys;
 import com.liferay.ai.hub.cell.web.internal.display.context.ViewContentSitesDisplayContext;
+import com.liferay.portal.kernel.language.LanguageUtil;
+import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
+import com.liferay.portal.kernel.theme.PortletDisplay;
+import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.Portal;
+import com.liferay.portal.kernel.util.WebKeys;
 
 import jakarta.portlet.Portlet;
 import jakarta.portlet.PortletException;
@@ -56,15 +61,54 @@ public class AIHubCellPortlet extends MVCPortlet {
 			RenderRequest renderRequest, RenderResponse renderResponse)
 		throws IOException, PortletException {
 
-		HttpServletRequest httpServletRequest = _portal.getHttpServletRequest(
-		renderRequest);
+			HttpServletRequest httpServletRequest = _portal.getHttpServletRequest(
+			renderRequest);
+
+		LiferayPortletResponse liferayPortletResponse =
+			_portal.getLiferayPortletResponse(renderResponse);
+
+		ViewContentSitesDisplayContext viewContentSitesDisplayContext =
+			new ViewContentSitesDisplayContext(
+				httpServletRequest, liferayPortletResponse);
 
 		renderRequest.setAttribute(
 			ViewContentSitesDisplayContext.class.getName(),
-			new ViewContentSitesDisplayContext(httpServletRequest));
+			viewContentSitesDisplayContext);
+
+		if (_SITE_GENERATOR_MVC_PATH.equals(
+				renderRequest.getParameter("mvcPath"))) {
+
+			ThemeDisplay themeDisplay =
+				(ThemeDisplay)renderRequest.getAttribute(WebKeys.THEME_DISPLAY);
+
+			PortletDisplay portletDisplay = themeDisplay.getPortletDisplay();
+
+			portletDisplay.setShowBackIcon(true);
+			portletDisplay.setURLBack(
+				viewContentSitesDisplayContext.getBackURL());
+
+			_portal.setPageTitle(
+				LanguageUtil.get(httpServletRequest, "site-generator"),
+				httpServletRequest);
+		}
 
 		super.render(renderRequest, renderResponse);
 	}
+
+	@Override
+	protected String getTitle(RenderRequest renderRequest) {
+		if (_SITE_GENERATOR_MVC_PATH.equals(
+				renderRequest.getParameter("mvcPath"))) {
+
+			return LanguageUtil.get(
+				_portal.getHttpServletRequest(renderRequest), "site-generator");
+		}
+
+		return super.getTitle(renderRequest);
+	}
+
+	private static final String _SITE_GENERATOR_MVC_PATH =
+		"/view_content_site_generator.jsp";
 
 	@Reference
 	private Portal _portal;
