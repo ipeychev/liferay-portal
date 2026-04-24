@@ -43,8 +43,8 @@ public class SitePageTools {
 		_userToken = userToken;
 	}
 
-	@Tool("Retrieve a site page and its page specifications")
-	public String getSitePage(
+	@Tool("Retrieve the draft content page specification")
+	public String getPageSpecification(
 		@P("Site external reference code") String siteExternalReferenceCode,
 		@P("Site page external reference code") String
 			sitePageExternalReferenceCode) {
@@ -52,7 +52,7 @@ public class SitePageTools {
 		try (SafeCloseable safeCloseable =
 				CompanyThreadLocal.setCompanyIdWithSafeCloseable(_companyId)) {
 
-			return _getSitePage(
+			return _getPageSpecification(
 				siteExternalReferenceCode, sitePageExternalReferenceCode);
 		}
 		catch (Exception exception) {
@@ -60,20 +60,18 @@ public class SitePageTools {
 		}
 	}
 
-	@Tool(
-		"Update a site page. The body must be the full ContentPage JSON " +
-			"payload; pageSpecifications is replaced wholesale."
-	)
-	public String updateSitePage(
+	@Tool("Replace a draft content page specification with the provided one.")
+	public String updatePageSpecification(
 		@P("Site external reference code") String siteExternalReferenceCode,
 		@P("Site page external reference code") String
 			sitePageExternalReferenceCode,
-		@P("Full ContentPage JSON payload to persist") String body) {
+		@P("Full ContentPageSpecification JSON payload to persist")
+			String body) {
 
 		try (SafeCloseable safeCloseable =
 				CompanyThreadLocal.setCompanyIdWithSafeCloseable(_companyId)) {
 
-			return _updateSitePage(
+			return _updatePageSpecification(
 				body, siteExternalReferenceCode, sitePageExternalReferenceCode);
 		}
 		catch (Exception exception) {
@@ -81,18 +79,16 @@ public class SitePageTools {
 		}
 	}
 
-	private String _getSitePage(
+	private String _getPageSpecification(
 			String siteExternalReferenceCode,
 			String sitePageExternalReferenceCode)
 		throws Exception {
 
-		String location = _getSitePageLocation(
+		String location = _getPageSpecificationLocation(
 			siteExternalReferenceCode, sitePageExternalReferenceCode);
 
 		location = HttpComponentsUtil.addParameter(
-			location, "nestedFields", "pageSpecifications");
-		location = HttpComponentsUtil.addParameter(
-			location, "privateLayout", true);
+			location, "nestedFields", "pageExperiences,settings");
 
 		Http.Options options = new Http.Options();
 
@@ -118,7 +114,7 @@ public class SitePageTools {
 		return jsonObject.toString();
 	}
 
-	private String _getSitePageLocation(
+	private String _getPageSpecificationLocation(
 			String siteExternalReferenceCode,
 			String sitePageExternalReferenceCode)
 		throws Exception {
@@ -141,7 +137,8 @@ public class SitePageTools {
 		return StringBundler.concat(
 			oAuth2Application.getHomePageURL(),
 			"/o/headless-admin-site/v1.0/sites/",
-			URLCodec.encodeURL(siteExternalReferenceCode), "/site-pages/",
+			URLCodec.encodeURL(siteExternalReferenceCode),
+			"/page-specifications/",
 			URLCodec.encodeURL(sitePageExternalReferenceCode));
 	}
 
@@ -230,7 +227,7 @@ public class SitePageTools {
 		}
 	}
 
-	private String _updateSitePage(
+	private String _updatePageSpecification(
 			String body, String siteExternalReferenceCode,
 			String sitePageExternalReferenceCode)
 		throws Exception {
@@ -250,13 +247,8 @@ public class SitePageTools {
 			body = bodyJSONObject.toString();
 		}
 
-		String location = _getSitePageLocation(
+		String location = _getPageSpecificationLocation(
 			siteExternalReferenceCode, sitePageExternalReferenceCode);
-
-		location = HttpComponentsUtil.addParameter(
-			location, "nestedFields", "pageSpecifications");
-		location = HttpComponentsUtil.addParameter(
-			location, "privateLayout", false);
 
 		Http.Options options = new Http.Options();
 
@@ -265,7 +257,7 @@ public class SitePageTools {
 		options.addHeader("Liferay-AI-Hub-Cell-On-Behalf-Of", _userToken);
 		options.setBody(body, ContentTypes.APPLICATION_JSON, "UTF-8");
 		options.setLocation(location);
-		options.setMethod(Http.Method.PATCH);
+		options.setMethod(Http.Method.PUT);
 
 		String responseBody = HttpUtil.URLtoString(options);
 
@@ -275,10 +267,11 @@ public class SitePageTools {
 		if ((responseCode < 200) || (responseCode >= 300)) {
 			_log.error(
 				StringBundler.concat(
-					"updateSitePage failed with HTTP ", responseCode,
-					" for site ", siteExternalReferenceCode, " and site page ",
-					sitePageExternalReferenceCode, ". Request body: ", body,
-					". Response body: ", responseBody));
+					"updatePageSpecification failed with HTTP ", responseCode,
+					" for site ", siteExternalReferenceCode,
+					" and page specification ", sitePageExternalReferenceCode,
+					". Request body: ", body, ". Response body: ",
+					responseBody));
 
 			return StringBundler.concat(
 				"HTTP ", responseCode, _RETRY_HINT_PREFIX, body,
@@ -291,7 +284,7 @@ public class SitePageTools {
 	private static final String _RETRY_HINT_PREFIX =
 		". The server rejected the request. Compare the body you sent with " +
 			"the error response below, correct the body, and call " +
-				"updateSitePage again.\n\nRequest body sent:\n";
+				"updatePageSpecification again.\n\nRequest body sent:\n";
 
 	private static final Log _log = LogFactoryUtil.getLog(SitePageTools.class);
 
