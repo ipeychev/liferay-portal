@@ -7,8 +7,8 @@ import ClayLayout from '@clayui/layout';
 import React, {useState} from 'react';
 
 import GenerateStep from './GenerateStep';
-import MultiStepProgress from './MultiStepProgress';
 import ReviewAndPublishStep from './ReviewAndPublishStep';
+import MultiStepProgress from './components/MultiStepProgress';
 
 type SubStep = 'generate' | 'review-and-publish';
 

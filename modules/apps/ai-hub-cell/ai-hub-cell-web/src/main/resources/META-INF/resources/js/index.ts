@@ -5,6 +5,5 @@
 
 export {default as ContentSiteGenerator} from './ContentSiteGenerator';
 export {default as GenerateStep} from './GenerateStep';
-export {default as MultiStepProgress} from './MultiStepProgress';
 export {default as ReviewAndPublishStep} from './ReviewAndPublishStep';
 export {default as ReviewStep} from './ReviewStep';

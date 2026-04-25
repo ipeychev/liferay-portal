@@ -8,7 +8,7 @@ import ClayIcon from '@clayui/icon';
 import ClayLayout from '@clayui/layout';
 import React, {useRef, useState} from 'react';
 
-import MultiStepProgress from './MultiStepProgress';
+import MultiStepProgress from './components/MultiStepProgress';
 
 const SPRITEMAP = `${Liferay.ThemeDisplay.getPathThemeImages()}/lexicon/icons.svg`;
 
