@@ -81,6 +81,14 @@ public class ViewContentSitesDisplayContext {
 		).build();
 	}
 
+	public String getRefineStepURL() {
+		return PortletURLBuilder.createRenderURL(
+			_liferayPortletResponse
+		).setMVCPath(
+			"/view_refine_step.jsp"
+		).buildString();
+	}
+
 	public String getReviewStepURL() {
 		return PortletURLBuilder.createRenderURL(
 			_liferayPortletResponse

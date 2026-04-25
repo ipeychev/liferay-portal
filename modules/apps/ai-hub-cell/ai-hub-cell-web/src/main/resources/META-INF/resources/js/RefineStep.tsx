@@ -15,6 +15,7 @@ import {sub} from 'frontend-js-web';
 import React, {useState} from 'react';
 
 import ContentSampleItem from './components/ContentSampleItem';
+import MultiStepProgress from './components/MultiStepProgress';
 import SummaryCard from './components/SummaryCard';
 import {ContentSample} from './types/ContentSample';
 import {DetectedConfigItem} from './types/DetectedConfigItem';
@@ -24,7 +25,10 @@ import {Template} from './types/Template';
 
 interface IProps {
 	attachments?: string[];
+	backURL?: string;
+	cancelURL?: string;
 	contentSamples?: ContentSample[];
+	continueURL?: string;
 	detectedConfig?: DetectedConfigItem[];
 	generatedItems?: GeneratedItem[];
 	onBack?: () => void;
@@ -170,9 +174,12 @@ const MOCK_GENERATED_ITEMS: GeneratedItem[] = [
 	},
 ];
 
-export default function ContentSiteGeneratorRefine({
+export default function RefineStep({
 	attachments = MOCK_ATTACHMENTS,
+	backURL,
+	cancelURL,
 	contentSamples = MOCK_CONTENT_SAMPLES,
+	continueURL,
 	detectedConfig = MOCK_DETECTED_CONFIG,
 	generatedItems = MOCK_GENERATED_ITEMS,
 	onBack,
@@ -184,19 +191,63 @@ export default function ContentSiteGeneratorRefine({
 }: IProps) {
 	const [showTip, setShowTip] = useState(true);
 
-	return (
-		<div className="content-site-generator-refine">
-			<div className="content-site-generator-refine__header">
-				<h3>
-					{Liferay.Language.get('preview-content-to-be-generated')}
-				</h3>
+	const handleBack = () => {
+		if (onBack) {
+			onBack();
+		}
+		else if (backURL) {
+			Liferay.Util.navigate(backURL);
+		}
+	};
 
-				<p className="text-secondary">
-					{Liferay.Language.get(
-						'review-the-configuration-and-content-samples-before-generating'
-					)}
-				</p>
-			</div>
+	const handleCancel = () => {
+		if (onCancel) {
+			onCancel();
+		}
+		else if (cancelURL) {
+			Liferay.Util.navigate(cancelURL);
+		}
+	};
+
+	const handleContinue = () => {
+		if (onContinue) {
+			onContinue();
+		}
+		else if (continueURL) {
+			Liferay.Util.navigate(continueURL);
+		}
+	};
+
+	return (
+		<div className="content-site-generator">
+			<ClayLayout.ContainerFluid view>
+				<ClayLayout.Row justify="center">
+					<ClayLayout.Col md={10} xl={8}>
+						<div className="content-site-generator__progress">
+							<MultiStepProgress
+								activeStep={1}
+								steps={[
+									{title: Liferay.Language.get('ideate')},
+									{title: Liferay.Language.get('refine')},
+									{title: Liferay.Language.get('review')},
+								]}
+							/>
+						</div>
+
+						<div className="content-site-generator-refine">
+							<div className="content-site-generator-refine__header">
+								<h3>
+									{Liferay.Language.get(
+										'preview-content-to-be-generated'
+									)}
+								</h3>
+
+								<p className="text-secondary">
+									{Liferay.Language.get(
+										'review-the-configuration-and-content-samples-before-generating'
+									)}
+								</p>
+							</div>
 
 			{summary.length ? (
 				<ClayLayout.Row className="content-site-generator-refine__summary">
@@ -449,30 +500,40 @@ export default function ContentSiteGeneratorRefine({
 				</ClayAlert>
 			)}
 
-			<div className="content-site-generator-refine__actions">
-				<ClayButton
-					className="content-site-generator-refine__back"
-					displayType="link"
-					onClick={onBack}
-				>
-					<ClayIcon
-						className="mr-2"
-						symbol="angle-left"
-					/>
+							<div className="content-site-generator-refine__actions">
+								<ClayButton
+									className="content-site-generator-refine__back"
+									displayType="link"
+									onClick={handleBack}
+								>
+									<ClayIcon
+										className="mr-2"
+										symbol="angle-left"
+									/>
 
-					{Liferay.Language.get('back-to-prompt')}
-				</ClayButton>
+									{Liferay.Language.get('back-to-prompt')}
+								</ClayButton>
 
-				<div className="content-site-generator-refine__primary-actions">
-					<ClayButton displayType="secondary" onClick={onCancel}>
-						{Liferay.Language.get('cancel')}
-					</ClayButton>
+								<div className="content-site-generator-refine__primary-actions">
+									<ClayButton
+										displayType="secondary"
+										onClick={handleCancel}
+									>
+										{Liferay.Language.get('cancel')}
+									</ClayButton>
 
-					<ClayButton displayType="primary" onClick={onContinue}>
-						{Liferay.Language.get('continue')}
-					</ClayButton>
-				</div>
-			</div>
+									<ClayButton
+										displayType="primary"
+										onClick={handleContinue}
+									>
+										{Liferay.Language.get('continue')}
+									</ClayButton>
+								</div>
+							</div>
+						</div>
+					</ClayLayout.Col>
+				</ClayLayout.Row>
+			</ClayLayout.ContainerFluid>
 		</div>
 	);
 }

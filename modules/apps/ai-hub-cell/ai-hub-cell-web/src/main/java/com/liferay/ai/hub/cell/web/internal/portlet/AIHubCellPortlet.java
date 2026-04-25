@@ -106,9 +106,12 @@ public class AIHubCellPortlet extends MVCPortlet {
 	private boolean _isSiteGeneratorMVCPath(RenderRequest renderRequest) {
 		String mvcPath = renderRequest.getParameter("mvcPath");
 
-		return _SITE_GENERATOR_MVC_PATH.equals(mvcPath) ||
-			_REVIEW_STEP_MVC_PATH.equals(mvcPath);
+		return _REFINE_STEP_MVC_PATH.equals(mvcPath) ||
+			_REVIEW_STEP_MVC_PATH.equals(mvcPath) ||
+			_SITE_GENERATOR_MVC_PATH.equals(mvcPath);
 	}
+
+	private static final String _REFINE_STEP_MVC_PATH = "/view_refine_step.jsp";
 
 	private static final String _REVIEW_STEP_MVC_PATH = "/view_review_step.jsp";
 
