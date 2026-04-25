@@ -16,14 +16,24 @@ import React, {useState} from 'react';
 
 import ContentSampleItem from './components/ContentSampleItem';
 import SummaryCard from './components/SummaryCard';
-import {
-	ContentSample,
-	DetectedConfigItem,
-	GeneratedItem,
-	IProps,
-	SummaryItem,
-	Template,
-} from './types/ContentSiteGeneratorRefine';
+import {ContentSample} from './types/ContentSample';
+import {DetectedConfigItem} from './types/DetectedConfigItem';
+import {GeneratedItem} from './types/GeneratedItem';
+import {SummaryItem} from './types/SummaryItem';
+import {Template} from './types/Template';
+
+interface IProps {
+	attachments?: string[];
+	contentSamples?: ContentSample[];
+	detectedConfig?: DetectedConfigItem[];
+	generatedItems?: GeneratedItem[];
+	onBack?: () => void;
+	onCancel?: () => void;
+	onContinue?: () => void;
+	prompt?: string;
+	summary?: SummaryItem[];
+	templates?: Template[];
+}
 
 
 const MOCK_SUMMARY: SummaryItem[] = [

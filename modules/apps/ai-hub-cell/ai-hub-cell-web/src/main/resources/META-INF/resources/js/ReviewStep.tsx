@@ -9,8 +9,7 @@ import React, {useState} from 'react';
 import GenerateStep from './GenerateStep';
 import ReviewAndPublishStep from './ReviewAndPublishStep';
 import MultiStepProgress from './components/MultiStepProgress';
-
-type SubStep = 'generate' | 'review-and-publish';
+import {SubStep} from './types/SubStep';
 
 interface IProps {
 	backURL?: string;

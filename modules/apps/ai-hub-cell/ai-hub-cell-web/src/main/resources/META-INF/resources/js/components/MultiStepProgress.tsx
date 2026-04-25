@@ -6,10 +6,7 @@
 import {ClayMultiStepNavWithBasicItems} from '@clayui/multi-step-nav';
 import React from 'react';
 
-export interface MultiStepProgressStep {
-	subTitle?: string;
-	title: string;
-}
+import {MultiStepProgressStep} from '../types/MultiStepProgressStep';
 
 interface IProps {
 	activeStep: number;

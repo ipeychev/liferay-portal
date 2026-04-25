@@ -9,13 +9,9 @@ import ClayLayout from '@clayui/layout';
 import React, {useRef, useState} from 'react';
 
 import MultiStepProgress from './components/MultiStepProgress';
+import {Example} from './types/Example';
 
 const SPRITEMAP = `${Liferay.ThemeDisplay.getPathThemeImages()}/lexicon/icons.svg`;
-
-interface Example {
-	icon: string;
-	label: string;
-}
 
 const EXAMPLES: Example[] = [
 	{

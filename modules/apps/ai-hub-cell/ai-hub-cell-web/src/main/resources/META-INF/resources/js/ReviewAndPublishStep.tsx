@@ -12,20 +12,14 @@ import ClayPaginationBar from '@clayui/pagination-bar';
 import ClayTable from '@clayui/table';
 import React, {useState} from 'react';
 
+import {Entry} from './types/Entry';
+
 const SPRITEMAP = `${Liferay.ThemeDisplay.getPathThemeImages()}/lexicon/icons.svg`;
 
 interface Stat {
 	icon: string;
 	label: string;
 	value: React.ReactNode;
-}
-
-interface Entry {
-	icon: 'folder' | 'document';
-	items: number;
-	language: string;
-	title: string;
-	url: string;
 }
 
 const STATS: Stat[] = [

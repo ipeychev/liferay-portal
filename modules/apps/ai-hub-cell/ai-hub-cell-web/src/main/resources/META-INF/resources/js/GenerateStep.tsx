@@ -8,15 +8,9 @@ import ClayIcon from '@clayui/icon';
 import ClayLabel from '@clayui/label';
 import React from 'react';
 
+import {Task} from './types/Task';
+
 const SPRITEMAP = `${Liferay.ThemeDisplay.getPathThemeImages()}/lexicon/icons.svg`;
-
-type TaskStatus = 'completed' | 'in-progress' | 'pending';
-
-interface Task {
-	label: string;
-	progress: number;
-	status: TaskStatus;
-}
 
 interface Stat {
 	icon: string;
