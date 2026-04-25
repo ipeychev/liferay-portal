@@ -4,7 +4,6 @@
  */
 
 import ClayAlert from '@clayui/alert';
-import ClayButton from '@clayui/button';
 import ClayEmptyState from '@clayui/empty-state';
 import ClayIcon from '@clayui/icon';
 import ClayLabel from '@clayui/label';
@@ -16,6 +15,7 @@ import React, {useState} from 'react';
 
 import ContentSampleItem from './components/ContentSampleItem';
 import MultiStepProgress from './components/MultiStepProgress';
+import StepActions from './components/StepActions';
 import SummaryCard from './components/SummaryCard';
 import {ContentSample} from './types/ContentSample';
 import {DetectedConfigItem} from './types/DetectedConfigItem';
@@ -434,7 +434,11 @@ export default function RefineStep({
 
 				{contentSamples.length ? (
 					contentSamples.map((sample, index) => (
-						<ContentSampleItem key={index} sample={sample} />
+						<ContentSampleItem
+							defaultExpanded={index === 0}
+							key={index}
+							sample={sample}
+						/>
 					))
 				) : (
 					<ClayEmptyState
@@ -500,36 +504,14 @@ export default function RefineStep({
 				</ClayAlert>
 			)}
 
-							<div className="content-site-generator-refine__actions">
-								<ClayButton
-									className="content-site-generator-refine__back"
-									displayType="link"
-									onClick={handleBack}
-								>
-									<ClayIcon
-										className="mr-2"
-										symbol="angle-left"
-									/>
-
-									{Liferay.Language.get('back-to-prompt')}
-								</ClayButton>
-
-								<div className="content-site-generator-refine__primary-actions">
-									<ClayButton
-										displayType="secondary"
-										onClick={handleCancel}
-									>
-										{Liferay.Language.get('cancel')}
-									</ClayButton>
-
-									<ClayButton
-										displayType="primary"
-										onClick={handleContinue}
-									>
-										{Liferay.Language.get('continue')}
-									</ClayButton>
-								</div>
-							</div>
+							<StepActions
+								backLabel={Liferay.Language.get(
+									'back-to-prompt'
+								)}
+								onBack={handleBack}
+								onCancel={handleCancel}
+								onContinue={handleContinue}
+							/>
 						</div>
 					</ClayLayout.Col>
 				</ClayLayout.Row>

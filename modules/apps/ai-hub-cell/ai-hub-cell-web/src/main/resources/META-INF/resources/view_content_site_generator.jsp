@@ -7,6 +7,15 @@
 
 <%@ include file="/init.jsp" %>
 
+<%
+ViewContentSitesDisplayContext viewContentSitesDisplayContext = (ViewContentSitesDisplayContext)request.getAttribute(ViewContentSitesDisplayContext.class.getName());
+%>
+
 <react:component
 	module="{ContentSiteGenerator} from ai-hub-cell-web"
+	props='<%=
+		HashMapBuilder.<String, Object>put(
+			"refineStepURL", viewContentSitesDisplayContext.getRefineStepURL()
+		).build()
+	%>'
 />

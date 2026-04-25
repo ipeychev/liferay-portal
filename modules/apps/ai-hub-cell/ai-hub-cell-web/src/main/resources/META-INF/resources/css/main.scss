@@ -170,16 +170,22 @@
 		text-align: right;
 	}
 
-	&__footer {
+	&__step-actions {
 		align-items: center;
 		display: flex;
+		flex-direction: row;
+		flex-wrap: nowrap;
 		justify-content: space-between;
 		margin-top: 2rem;
+		width: 100%;
 	}
 
-	&__footer-actions {
+	&__step-actions-end {
 		display: flex;
+		flex-direction: row;
+		flex-shrink: 0;
 		gap: 0.5rem;
+		margin-left: auto;
 	}
 
 	&__toolbar {

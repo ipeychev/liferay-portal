@@ -3,11 +3,11 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
-import ClayButton from '@clayui/button';
 import ClayIcon from '@clayui/icon';
 import ClayLabel from '@clayui/label';
 import React from 'react';
 
+import StepActions from './components/StepActions';
 import {Task} from './types/Task';
 
 const SPRITEMAP = `${Liferay.ThemeDisplay.getPathThemeImages()}/lexicon/icons.svg`;
@@ -174,30 +174,15 @@ export default function GenerateStep({onBack, onCancel, onContinue}: IProps) {
 				))}
 			</ul>
 
-			<div className="content-site-generator__footer">
-				<ClayButton displayType="link" onClick={onBack}>
-					<ClayIcon
-						className="mr-1"
-						spritemap={SPRITEMAP}
-						symbol="angle-left"
-					/>
-
-					{Liferay.Util.sub(
-						Liferay.Language.get('back-to-x'),
-						Liferay.Language.get('refine')
-					)}
-				</ClayButton>
-
-				<div className="content-site-generator__footer-actions">
-					<ClayButton displayType="secondary" onClick={onCancel}>
-						{Liferay.Language.get('cancel')}
-					</ClayButton>
-
-					<ClayButton displayType="primary" onClick={onContinue}>
-						{Liferay.Language.get('continue')}
-					</ClayButton>
-				</div>
-			</div>
+			<StepActions
+				backLabel={Liferay.Util.sub(
+					Liferay.Language.get('back-to-x'),
+					Liferay.Language.get('refine')
+				)}
+				onBack={onBack}
+				onCancel={onCancel}
+				onContinue={onContinue}
+			/>
 		</div>
 	);
 }
