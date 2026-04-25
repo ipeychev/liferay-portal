@@ -1,7 +1,11 @@
 {
 	"dependencies": {
+		"@clayui/alert": "^3.161.0",
 		"@clayui/button": "^3.161.0",
 		"@clayui/form": "^3.161.0",
+		"@clayui/panel": "^3.161.0",
+		"@clayui/list": "^3.161.0",
+		"@clayui/empty-state": "^3.161.0",
 		"@clayui/icon": "^3.161.0",
 		"@clayui/label": "^3.161.0",
 		"@clayui/layout": "^3.161.0",
