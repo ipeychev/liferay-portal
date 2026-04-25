@@ -5,6 +5,8 @@
 
 package com.liferay.ai.hub.internal.workflow.kaleo.runtime.node.util;
 
+import com.liferay.ai.hub.internal.assistant.tool.IRToPageSpecTools;
+import com.liferay.ai.hub.internal.assistant.tool.PageSpecToIRTools;
 import com.liferay.ai.hub.internal.assistant.tool.SitePageTools;
 import com.liferay.ai.hub.internal.assistant.tool.WorkflowNodeTools;
 import com.liferay.portal.kernel.util.GetterUtil;
@@ -43,8 +45,22 @@ public class ToolsUtil {
 			};
 		}
 
+		if (_pageSpecToIRNodeNames.contains(currentKaleoNode.getName())) {
+			return new Object[] {new PageSpecToIRTools()};
+		}
+
+		if (_irToPageSpecNodeNames.contains(currentKaleoNode.getName())) {
+			return new Object[] {new IRToPageSpecTools()};
+		}
+
 		return new Object[0];
 	}
+
+	private static final Set<String> _irToPageSpecNodeNames = Set.of(
+		"irToPageSpec");
+
+	private static final Set<String> _pageSpecToIRNodeNames = Set.of(
+		"pageSpecToIR");
 
 	private static final Set<String> _sitePageToolsNodeNames = Set.of(
 		"pageFetcher", "pageUpdater");
