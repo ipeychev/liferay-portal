@@ -31,6 +31,8 @@ public class PageSpecToIRTools {
 			JSONObject spec = JSONFactoryUtil.createJSONObject(
 				_stripMarkdownFences(pageSpecJSON));
 
+			spec = _unwrapSpec(spec);
+
 			String erc = spec.getString("externalReferenceCode");
 
 			JSONArray pageExperiences = spec.getJSONArray("pageExperiences");
@@ -750,6 +752,61 @@ public class PageSpecToIRTools {
 		}
 
 		return JSONFactoryUtil.createJSONArray();
+	}
+
+	private JSONObject _unwrapSpec(JSONObject obj) {
+		if (obj.has("pageExperiences")) {
+			return obj;
+		}
+
+		if (obj.has("result")) {
+			Object result = obj.get("result");
+
+			if (result instanceof JSONObject) {
+				return _unwrapSpec((JSONObject)result);
+			}
+
+			if (result instanceof String) {
+				try {
+					return _unwrapSpec(
+						JSONFactoryUtil.createJSONObject((String)result));
+				}
+				catch (Exception exception) {
+				}
+			}
+		}
+
+		if (obj.has("pageSpecifications")) {
+			JSONArray specs = obj.getJSONArray("pageSpecifications");
+
+			if (specs != null) {
+				for (int i = 0; i < specs.length(); i++) {
+					JSONObject candidate = specs.getJSONObject(i);
+
+					if ("Draft".equals(candidate.getString("status"))) {
+						return candidate;
+					}
+				}
+
+				if (specs.length() > 0) {
+					return specs.getJSONObject(0);
+				}
+			}
+		}
+
+		for (String key : obj.keySet()) {
+			Object value = obj.get(key);
+
+			if (value instanceof JSONObject) {
+				JSONObject nested = (JSONObject)value;
+
+				if (nested.has("pageExperiences")) {
+					return nested;
+				}
+			}
+		}
+
+		return obj;
 	}
 
 	private String _stripMarkdownFences(String input) {

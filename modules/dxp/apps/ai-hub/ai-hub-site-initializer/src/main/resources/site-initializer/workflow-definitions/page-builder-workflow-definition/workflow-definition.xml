@@ -8,6 +8,78 @@
 	<name>Page Builder</name>
 	<version>1</version>
 	<llm>
+		<name>fragmentLoader</name>
+		<metadata>
+			<![CDATA[
+				{
+					"xy": [
+						276,
+						79
+					]
+				}
+			]]>
+		</metadata>
+		<labels>
+			<label language-id="en_US">
+				Fragment Loader
+			</label>
+		</labels>
+		<input-variables>
+			<![CDATA[
+[
+	{
+		"name": "siteExternalReferenceCode",
+		"type": "string"
+	}
+]
+]]>
+		</input-variables>
+		<output-variables>
+			<![CDATA[
+[
+	{
+		"name": "fragmentCatalog",
+		"type": "string"
+	}
+]
+]]>
+		</output-variables>
+		<prompt>
+			<![CDATA[# Role
+
+You load all custom fragments available on a Liferay site using the `getFragments` tool, then produce a catalog with a short description for each fragment.
+
+# Rules
+
+- You MUST call `getFragments` exactly once, passing the `siteExternalReferenceCode` provided in the user message.
+- The tool returns a JSON array of fragments. Each entry contains: `name`, `key`, `externalReferenceCode`, `html` (minified), and `editables` (array of `{id, type}`).
+- For each fragment, read the `html` and `editables` to understand its purpose and structure, then write a concise one-sentence `description` explaining what the fragment renders.
+- Output a single raw JSON array where each entry has: `externalReferenceCode`, `name`, `key`, `editables`, and `description`.
+- DO NOT wrap the JSON in markdown fences (no ```json, no ```).
+- DO NOT add prose, commentary, or trailing text.]]>
+		</prompt>
+		<tools>
+			<![CDATA[[]]]>
+		</tools>
+		<transitions>
+			<transition>
+				<labels>
+					<label language-id="en_US">
+						Page Fetcher
+					</label>
+				</labels>
+				<name>pageFetcher</name>
+				<target>pageFetcher</target>
+				<default>true</default>
+			</transition>
+		</transitions>
+		<user-message>
+			<![CDATA[Load all custom fragments for this site.
+
+siteExternalReferenceCode: {{siteExternalReferenceCode}}]]>
+		</user-message>
+	</llm>
+	<llm>
 		<name>pageFetcher</name>
 		<metadata>
 			<![CDATA[
@@ -183,6 +255,10 @@ currentPageSpecification: {{currentPageSpecification}}]]>
 		"type": "string"
 	},
 	{
+		"name": "fragmentCatalog",
+		"type": "string"
+	},
+	{
 		"name": "request",
 		"type": "string"
 	}
@@ -273,6 +349,20 @@ Column `size` is 1–12 (12-col grid). N equal columns → size = floor(12/N).
 | `spacer` | (none) |
 | `separator` | (none) |
 
+## Custom fragments
+
+In addition to OOTB fragments, you may use custom fragments from the `fragmentCatalog` provided in the user message. For custom fragments use:
+```json
+{
+  "type": "fragment",
+  "erc": "<unique>",
+  "source": "custom",
+  "key": "<externalReferenceCode-from-fragmentCatalog>",
+  "content": { "<editableId>": <value> }
+}
+```
+Each custom fragment entry in `fragmentCatalog` contains: `externalReferenceCode`, `name`, `key`, `editables` (array of `{id, type}` pairs), and `description` (what the fragment renders). Use the `externalReferenceCode` as the fragment key, the `editables` array for editable IDs and types, and the `description` to choose the right fragment for the task.
+
 ## Editable value shapes
 
 - **text**: plain string, e.g. `"element-text": "Hello World"`
@@ -341,6 +431,8 @@ Output: heading kept at index 0, grid added at index 1 with 3 columns each conta
 		</transitions>
 		<user-message>
 			<![CDATA[Instruction: {{request}}
+
+fragmentCatalog: {{fragmentCatalog}}
 
 current_page_ir: {{currentPageIR}}]]>
 		</user-message>
@@ -533,11 +625,11 @@ body:
 			<transition>
 				<labels>
 					<label language-id="en_US">
-						Page Fetcher
+						Fragment Loader
 					</label>
 				</labels>
-				<name>pageFetcher</name>
-				<target>pageFetcher</target>
+				<name>fragmentLoader</name>
+				<target>fragmentLoader</target>
 				<default>true</default>
 			</transition>
 		</transitions>

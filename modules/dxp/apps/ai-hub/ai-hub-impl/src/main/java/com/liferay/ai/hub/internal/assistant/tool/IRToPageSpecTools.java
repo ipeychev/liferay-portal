@@ -8,6 +8,7 @@ package com.liferay.ai.hub.internal.assistant.tool;
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
+import com.liferay.portal.kernel.util.Validator;
 
 import dev.langchain4j.agent.tool.P;
 import dev.langchain4j.agent.tool.Tool;
@@ -20,6 +21,10 @@ import java.util.Map;
  * @author Mahmoud Tayem
  */
 public class IRToPageSpecTools {
+
+	public IRToPageSpecTools(String fullFragmentsCatalog) {
+		_customEditableTypes = _parseCustomEditableTypes(fullFragmentsCatalog);
+	}
 
 	@Tool("Convert an IR JSON object into a Liferay ContentPageSpecification JSON")
 	public String convertToPageSpec(
@@ -169,7 +174,7 @@ public class IRToPageSpecTools {
 
 		JSONObject definition = JSONFactoryUtil.createJSONObject();
 
-		definition.put("indexed", true);
+
 		definition.put("layout", layout);
 		definition.put("type", "Container");
 
@@ -266,6 +271,9 @@ public class IRToPageSpecTools {
 				if (fragmentKey == null) {
 					fragmentKey = key;
 				}
+			}
+			else if ("custom".equals(source)) {
+				fragmentKey = ir.getString("key");
 			}
 
 			JSONArray editableElements = _buildEditableElements(
@@ -382,7 +390,7 @@ public class IRToPageSpecTools {
 
 		definition.put("gridViewports", gridViewports);
 		definition.put("gutters", gutters);
-		definition.put("indexed", true);
+
 		definition.put("numberOfModules", columnCount);
 		definition.put("type", "Grid");
 
@@ -432,7 +440,7 @@ public class IRToPageSpecTools {
 
 		JSONObject definition = JSONFactoryUtil.createJSONObject();
 
-		definition.put("indexed", true);
+
 		definition.put("moduleViewports", moduleViewports);
 		definition.put("type", "Module");
 
@@ -480,6 +488,10 @@ public class IRToPageSpecTools {
 
 		Map<String, String> editableTypes = _OOTB_EDITABLE_TYPES.get(
 			fragmentKey);
+
+		if (editableTypes == null) {
+			editableTypes = _customEditableTypes.get(fragmentKey);
+		}
 
 		Iterator<String> keys = content.keys();
 
@@ -792,6 +804,51 @@ public class IRToPageSpecTools {
 
 		return String.valueOf(value);
 	}
+
+	private Map<String, Map<String, String>> _parseCustomEditableTypes(
+		String fullFragmentsCatalog) {
+
+		Map<String, Map<String, String>> result = new HashMap<>();
+
+		if (Validator.isNull(fullFragmentsCatalog)) {
+			return result;
+		}
+
+		try {
+			JSONArray catalog = JSONFactoryUtil.createJSONArray(
+				fullFragmentsCatalog);
+
+			for (int i = 0; i < catalog.length(); i++) {
+				JSONObject fragment = catalog.getJSONObject(i);
+
+				String erc = fragment.getString("externalReferenceCode");
+
+				JSONArray editables = fragment.getJSONArray("editables");
+
+				if ((editables == null) || (editables.length() == 0)) {
+					continue;
+				}
+
+				Map<String, String> editableMap = new HashMap<>();
+
+				for (int j = 0; j < editables.length(); j++) {
+					JSONObject editable = editables.getJSONObject(j);
+
+					editableMap.put(
+						editable.getString("id"),
+						editable.getString("type"));
+				}
+
+				result.put(erc, editableMap);
+			}
+		}
+		catch (Exception exception) {
+		}
+
+		return result;
+	}
+
+	private final Map<String, Map<String, String>> _customEditableTypes;
 
 	private static final Map<String, String> _OOTB_NAME_TO_KEY =
 		new HashMap<String, String>() {

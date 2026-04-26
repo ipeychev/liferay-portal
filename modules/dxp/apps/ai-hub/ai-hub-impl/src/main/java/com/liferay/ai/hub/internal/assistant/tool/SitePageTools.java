@@ -250,6 +250,9 @@ public class SitePageTools {
 		String location = _getPageSpecificationLocation(
 			siteExternalReferenceCode, sitePageExternalReferenceCode);
 
+		location = HttpComponentsUtil.addParameter(
+			location, "nestedFields", "pageSpecifications");
+
 		Http.Options options = new Http.Options();
 
 		options.addHeader(

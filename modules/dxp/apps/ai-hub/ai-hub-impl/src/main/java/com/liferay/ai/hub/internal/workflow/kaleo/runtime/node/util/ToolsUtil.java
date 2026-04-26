@@ -7,6 +7,7 @@ package com.liferay.ai.hub.internal.workflow.kaleo.runtime.node.util;
 
 import com.liferay.ai.hub.internal.assistant.tool.IRToPageSpecTools;
 import com.liferay.ai.hub.internal.assistant.tool.PageSpecToIRTools;
+import com.liferay.ai.hub.internal.assistant.tool.SiteFragmentTools;
 import com.liferay.ai.hub.internal.assistant.tool.SitePageTools;
 import com.liferay.ai.hub.internal.assistant.tool.WorkflowNodeTools;
 import com.liferay.portal.kernel.util.GetterUtil;
@@ -45,16 +46,33 @@ public class ToolsUtil {
 			};
 		}
 
+		if (_fragmentLoaderNodeNames.contains(currentKaleoNode.getName())) {
+			return new Object[] {
+				new SiteFragmentTools(
+					GetterUtil.getString(workflowContext.get("accessToken")),
+					companyId,
+					GetterUtil.getString(workflowContext.get("userToken")),
+					workflowContext)
+			};
+		}
+
 		if (_pageSpecToIRNodeNames.contains(currentKaleoNode.getName())) {
 			return new Object[] {new PageSpecToIRTools()};
 		}
 
 		if (_irToPageSpecNodeNames.contains(currentKaleoNode.getName())) {
-			return new Object[] {new IRToPageSpecTools()};
+			return new Object[] {
+				new IRToPageSpecTools(
+					GetterUtil.getString(
+						workflowContext.get("fullFragmentsCatalog")))
+			};
 		}
 
 		return new Object[0];
 	}
+
+	private static final Set<String> _fragmentLoaderNodeNames = Set.of(
+		"fragmentLoader");
 
 	private static final Set<String> _irToPageSpecNodeNames = Set.of(
 		"irToPageSpec");
