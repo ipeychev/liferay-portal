@@ -33,7 +33,7 @@ public class ViewContentSitesDisplayContext {
 	}
 
 	public String getAPIURL() {
-		return "/o/ai-hub-cell/content-site-generator";
+		return "/o/content-site-generator/runs";
 	}
 
 	public String getBackURL() {

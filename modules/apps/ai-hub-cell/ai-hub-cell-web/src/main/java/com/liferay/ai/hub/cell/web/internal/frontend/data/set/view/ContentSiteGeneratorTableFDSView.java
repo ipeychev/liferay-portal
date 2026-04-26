@@ -34,15 +34,11 @@ public class ContentSiteGeneratorTableFDSView extends BaseTableFDSView {
 		return fdsTableSchemaBuilder.add(
 			"name", "name"
 		).add(
-			"items", "items"
+			"runStatus", "status"
 		).add(
-			"language", "language"
+			"dateCreated", "created"
 		).add(
-			"createdBy", "created-by"
-		).add(
-			"status", "status"
-		).add(
-			"modified", "modified"
+			"committedAt", "committed"
 		).build();
 	}
 

@@ -27,7 +27,7 @@ public class ContentSiteGeneratorCardsFDSView extends BaseCardsFDSView {
 
 	@Override
 	public String getDescription() {
-		return "status";
+		return "runStatus";
 	}
 
 	@Override

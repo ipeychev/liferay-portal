@@ -22,7 +22,7 @@ public class ContentSiteGeneratorListFDSView extends BaseListFDSView {
 
 	@Override
 	public String getDescription() {
-		return "status";
+		return "runStatus";
 	}
 
 	@Override
