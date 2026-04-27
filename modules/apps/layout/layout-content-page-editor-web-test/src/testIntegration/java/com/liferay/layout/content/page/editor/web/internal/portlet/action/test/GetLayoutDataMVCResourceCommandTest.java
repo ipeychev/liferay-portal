@@ -87,16 +87,24 @@ public class GetLayoutDataMVCResourceCommandTest {
 
 		JSONObject jsonObject = _serveResource(defaultSegmentsExperienceId);
 
-		Assert.assertTrue(jsonObject.has("items"));
-		Assert.assertTrue(jsonObject.has("rootItems"));
+		Assert.assertTrue(jsonObject.has("fragmentEntryLinks"));
+		Assert.assertTrue(jsonObject.has("layoutData"));
 
-		JSONObject rootItemsJSONObject = jsonObject.getJSONObject("rootItems");
+		JSONObject layoutDataJSONObject = jsonObject.getJSONObject(
+			"layoutData");
+
+		Assert.assertTrue(layoutDataJSONObject.has("items"));
+		Assert.assertTrue(layoutDataJSONObject.has("rootItems"));
+
+		JSONObject rootItemsJSONObject = layoutDataJSONObject.getJSONObject(
+			"rootItems");
 
 		String mainItemId = rootItemsJSONObject.getString("main");
 
 		Assert.assertNotNull(mainItemId);
 
-		JSONObject itemsJSONObject = jsonObject.getJSONObject("items");
+		JSONObject itemsJSONObject = layoutDataJSONObject.getJSONObject(
+			"items");
 
 		Assert.assertTrue(itemsJSONObject.has(mainItemId));
 	}
@@ -113,10 +121,21 @@ public class GetLayoutDataMVCResourceCommandTest {
 
 		JSONObject jsonObject = _serveResource(defaultSegmentsExperienceId);
 
-		JSONObject itemsJSONObject = jsonObject.getJSONObject("items");
+		JSONObject layoutDataJSONObject = jsonObject.getJSONObject(
+			"layoutData");
+
+		JSONObject itemsJSONObject = layoutDataJSONObject.getJSONObject(
+			"items");
 
 		Assert.assertTrue(
 			_hasFragmentEntryLink(itemsJSONObject, fragmentEntryLink));
+
+		JSONObject fragmentEntryLinksJSONObject = jsonObject.getJSONObject(
+			"fragmentEntryLinks");
+
+		Assert.assertTrue(
+			fragmentEntryLinksJSONObject.has(
+				String.valueOf(fragmentEntryLink.getFragmentEntryLinkId())));
 	}
 
 	@Test
@@ -150,8 +169,11 @@ public class GetLayoutDataMVCResourceCommandTest {
 		JSONObject defaultJSONObject = _serveResource(
 			defaultSegmentsExperienceId);
 
-		JSONObject defaultItemsJSONObject = defaultJSONObject.getJSONObject(
-			"items");
+		JSONObject defaultLayoutDataJSONObject =
+			defaultJSONObject.getJSONObject("layoutData");
+
+		JSONObject defaultItemsJSONObject =
+			defaultLayoutDataJSONObject.getJSONObject("items");
 
 		Assert.assertTrue(
 			_hasFragmentEntryLink(
@@ -160,11 +182,26 @@ public class GetLayoutDataMVCResourceCommandTest {
 			_hasFragmentEntryLink(
 				defaultItemsJSONObject, experienceFragmentEntryLink));
 
+		JSONObject defaultFragmentEntryLinksJSONObject =
+			defaultJSONObject.getJSONObject("fragmentEntryLinks");
+
+		Assert.assertTrue(
+			defaultFragmentEntryLinksJSONObject.has(
+				String.valueOf(
+					defaultFragmentEntryLink.getFragmentEntryLinkId())));
+		Assert.assertFalse(
+			defaultFragmentEntryLinksJSONObject.has(
+				String.valueOf(
+					experienceFragmentEntryLink.getFragmentEntryLinkId())));
+
 		JSONObject experienceJSONObject = _serveResource(
 			segmentsExperience.getSegmentsExperienceId());
 
+		JSONObject experienceLayoutDataJSONObject =
+			experienceJSONObject.getJSONObject("layoutData");
+
 		JSONObject experienceItemsJSONObject =
-			experienceJSONObject.getJSONObject("items");
+			experienceLayoutDataJSONObject.getJSONObject("items");
 
 		Assert.assertTrue(
 			_hasFragmentEntryLink(
@@ -172,6 +209,18 @@ public class GetLayoutDataMVCResourceCommandTest {
 		Assert.assertFalse(
 			_hasFragmentEntryLink(
 				experienceItemsJSONObject, defaultFragmentEntryLink));
+
+		JSONObject experienceFragmentEntryLinksJSONObject =
+			experienceJSONObject.getJSONObject("fragmentEntryLinks");
+
+		Assert.assertTrue(
+			experienceFragmentEntryLinksJSONObject.has(
+				String.valueOf(
+					experienceFragmentEntryLink.getFragmentEntryLinkId())));
+		Assert.assertFalse(
+			experienceFragmentEntryLinksJSONObject.has(
+				String.valueOf(
+					defaultFragmentEntryLink.getFragmentEntryLinkId())));
 	}
 
 	private MockLiferayResourceRequest _getMockLiferayResourceRequest(
