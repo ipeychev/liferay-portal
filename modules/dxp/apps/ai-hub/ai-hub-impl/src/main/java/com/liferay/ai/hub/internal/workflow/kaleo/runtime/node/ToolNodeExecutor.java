@@ -7,6 +7,7 @@ package com.liferay.ai.hub.internal.workflow.kaleo.runtime.node;
 
 import com.liferay.ai.hub.internal.workflow.kaleo.runtime.node.util.ToolsUtil;
 import com.liferay.ai.hub.internal.workflow.kaleo.runtime.node.util.VariablesUtil;
+import com.liferay.ai.hub.rest.resource.v1_0.util.SseUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONObject;
@@ -99,6 +100,12 @@ public class ToolNodeExecutor extends BaseNodeExecutor {
 
 				workflowContext.put(outputVar.getString("name"), result);
 			}
+
+			SseUtil.send(
+				result,
+				GetterUtil.getString(workflowContext.get("outBoundEventName")),
+				currentKaleoNode.getName(),
+				GetterUtil.getString(workflowContext.get("sseEventSinkKey")));
 
 			if (_log.isInfoEnabled()) {
 				_log.info(
