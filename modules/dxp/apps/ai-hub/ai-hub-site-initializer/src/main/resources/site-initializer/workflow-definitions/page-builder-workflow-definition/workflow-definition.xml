@@ -7,14 +7,14 @@
 >
 	<name>Page Builder</name>
 	<version>1</version>
-	<llm>
+	<tool>
 		<name>fragmentLoader</name>
 		<metadata>
 			<![CDATA[
 				{
 					"xy": [
-						276,
-						79
+						300,
+						200
 					]
 				}
 			]]>
@@ -24,43 +24,42 @@
 				Fragment Loader
 			</label>
 		</labels>
-		<input-variables>
+		<tool-name>getFragments</tool-name>
+		<input-variables><![CDATA[[{"name":"siteExternalReferenceCode","type":"string"}]]]></input-variables>
+		<output-variables><![CDATA[[{"name":"rawFragments","type":"string"}]]]></output-variables>
+		<transitions>
+			<transition>
+				<labels>
+					<label language-id="en_US">
+						Catalog Builder
+					</label>
+				</labels>
+				<name>catalogBuilder</name>
+				<target>catalogBuilder</target>
+				<default>true</default>
+			</transition>
+		</transitions>
+	</tool>
+	<tool>
+		<name>catalogBuilder</name>
+		<metadata>
 			<![CDATA[
-[
-	{
-		"name": "siteExternalReferenceCode",
-		"type": "string"
-	}
-]
-]]>
-		</input-variables>
-		<output-variables>
-			<![CDATA[
-[
-	{
-		"name": "fragmentCatalog",
-		"type": "string"
-	}
-]
-]]>
-		</output-variables>
-		<prompt>
-			<![CDATA[# Role
-
-You load all custom fragments available on a Liferay site using the `getFragments` tool, then produce a catalog with a short description for each fragment.
-
-# Rules
-
-- You MUST call `getFragments` exactly once, passing the `siteExternalReferenceCode` provided in the user message.
-- The tool returns a JSON array of fragments. Each entry contains: `name`, `key`, `externalReferenceCode`, `html` (minified), and `editables` (array of `{id, type}`).
-- For each fragment, read the `html` and `editables` to understand its purpose and structure, then write a concise one-sentence `description` explaining what the fragment renders.
-- Output a single raw JSON array where each entry has: `externalReferenceCode`, `name`, `key`, `editables`, and `description`.
-- DO NOT wrap the JSON in markdown fences (no ```json, no ```).
-- DO NOT add prose, commentary, or trailing text.]]>
-		</prompt>
-		<tools>
-			<![CDATA[[]]]>
-		</tools>
+				{
+					"xy": [
+						300,
+						275
+					]
+				}
+			]]>
+		</metadata>
+		<labels>
+			<label language-id="en_US">
+				Catalog Builder
+			</label>
+		</labels>
+		<tool-name>buildCatalog</tool-name>
+		<input-variables><![CDATA[[{"name":"siteExternalReferenceCode","type":"string"},{"name":"rawFragments","type":"string"}]]]></input-variables>
+		<output-variables><![CDATA[[{"name":"fragmentCatalog","type":"string"}]]]></output-variables>
 		<transitions>
 			<transition>
 				<labels>
@@ -73,20 +72,15 @@ You load all custom fragments available on a Liferay site using the `getFragment
 				<default>true</default>
 			</transition>
 		</transitions>
-		<user-message>
-			<![CDATA[Load all custom fragments for this site.
-
-siteExternalReferenceCode: {{siteExternalReferenceCode}}]]>
-		</user-message>
-	</llm>
-	<llm>
+	</tool>
+	<tool>
 		<name>pageFetcher</name>
 		<metadata>
 			<![CDATA[
 				{
 					"xy": [
-						276,
-						133
+						300,
+						350
 					]
 				}
 			]]>
@@ -96,45 +90,9 @@ siteExternalReferenceCode: {{siteExternalReferenceCode}}]]>
 				Page Fetcher
 			</label>
 		</labels>
-		<input-variables>
-			<![CDATA[
-[
-	{
-		"name": "siteExternalReferenceCode",
-		"type": "string"
-	},
-	{
-		"name": "sitePageExternalReferenceCode",
-		"type": "string"
-	}
-]
-]]>
-		</input-variables>
-		<output-variables>
-			<![CDATA[
-[
-	{
-		"name": "currentPageSpecification",
-		"type": "string"
-	}
-]
-]]>
-		</output-variables>
-		<prompt>
-			<![CDATA[# Role
-
-You fetch the draft content page specification for a Liferay site page using the `getPageSpecification` tool.
-
-# Rules
-
-- You MUST call `getPageSpecification` exactly once, passing the `siteExternalReferenceCode` and `sitePageExternalReferenceCode` provided in the user message.
-- After the tool returns, output the tool's JSON result verbatim as a single raw JSON object. Nothing else.
-- DO NOT wrap the JSON in markdown fences (no ```json, no ```).
-- DO NOT add prose, commentary, or trailing text.]]>
-		</prompt>
-		<tools>
-			<![CDATA[[]]]>
-		</tools>
+		<tool-name>getPageSpecification</tool-name>
+		<input-variables><![CDATA[[{"name":"siteExternalReferenceCode","type":"string"},{"name":"sitePageExternalReferenceCode","type":"string"}]]]></input-variables>
+		<output-variables><![CDATA[[{"name":"currentPageSpecification","type":"string"}]]]></output-variables>
 		<transitions>
 			<transition>
 				<labels>
@@ -147,21 +105,15 @@ You fetch the draft content page specification for a Liferay site page using the
 				<default>true</default>
 			</transition>
 		</transitions>
-		<user-message>
-			<![CDATA[Fetch the draft page specification.
-
-siteExternalReferenceCode: {{siteExternalReferenceCode}}
-sitePageExternalReferenceCode: {{sitePageExternalReferenceCode}}]]>
-		</user-message>
-	</llm>
-	<llm>
+	</tool>
+	<tool>
 		<name>pageSpecToIR</name>
 		<metadata>
 			<![CDATA[
 				{
 					"xy": [
-						276,
-						188
+						300,
+						500
 					]
 				}
 			]]>
@@ -171,45 +123,9 @@ sitePageExternalReferenceCode: {{sitePageExternalReferenceCode}}]]>
 				Page Spec To IR
 			</label>
 		</labels>
-		<input-variables>
-			<![CDATA[
-[
-	{
-		"name": "currentPageSpecification",
-		"type": "string"
-	},
-	{
-		"name": "pageTitle",
-		"type": "string"
-	}
-]
-]]>
-		</input-variables>
-		<output-variables>
-			<![CDATA[
-[
-	{
-		"name": "currentPageIR",
-		"type": "string"
-	}
-]
-]]>
-		</output-variables>
-		<prompt>
-			<![CDATA[# Role
-
-You convert a Liferay ContentPageSpecification JSON into an Intermediate Representation (IR) using the `convertToIR` tool.
-
-# Rules
-
-- You MUST call `convertToIR` exactly once, passing the `currentPageSpecification` JSON, the `pageTitle`, and the locale `en-US`.
-- After the tool returns, output the tool's JSON result verbatim as a single raw JSON object. Nothing else.
-- DO NOT wrap the JSON in markdown fences (no ```json, no ```).
-- DO NOT add prose, commentary, or trailing text.]]>
-		</prompt>
-		<tools>
-			<![CDATA[[]]]>
-		</tools>
+		<tool-name>convertToIR</tool-name>
+		<input-variables><![CDATA[[{"name":"currentPageSpecification","type":"string"},{"name":"pageTitle","type":"string"},{"name":"locale","type":"string"}]]]></input-variables>
+		<output-variables><![CDATA[[{"name":"currentPageIR","type":"string"}]]]></output-variables>
 		<transitions>
 			<transition>
 				<labels>
@@ -222,22 +138,15 @@ You convert a Liferay ContentPageSpecification JSON into an Intermediate Represe
 				<default>true</default>
 			</transition>
 		</transitions>
-		<user-message>
-			<![CDATA[Convert this page specification to IR.
-
-pageTitle: {{pageTitle}}
-
-currentPageSpecification: {{currentPageSpecification}}]]>
-		</user-message>
-	</llm>
+	</tool>
 	<llm>
 		<name>pageBuilder</name>
 		<metadata>
 			<![CDATA[
 				{
 					"xy": [
-						276,
-						296
+						300,
+						650
 					]
 				}
 			]]>
@@ -276,143 +185,31 @@ currentPageSpecification: {{currentPageSpecification}}]]>
 ]]>
 		</output-variables>
 		<prompt>
-			<![CDATA[# Role
+			<![CDATA[You edit a page IR JSON. Given an instruction and current IR, output the FULL updated IR JSON. No markdown, no prose — raw JSON only.
 
-You modify a Liferay page described as an Intermediate Representation (IR) JSON. You receive a **natural-language instruction** (e.g. "Add a banner", "Add 3 cards with titles X/Y/Z", "Make the heading bigger") and the **current page IR**. You produce the FULL updated IR JSON.
+IR: {"title":"…","erc":"…","locale":"en-US","elements":[Container|Grid|Fragment]}
 
-# IR schema
+Container: {"type":"container","erc":"<id>","contentDisplay?":"flex-row|flex-column","widthType?":"fixed","padding?":{"top":5,"bottom":5,"left":5,"right":5},"margin?":{"top":0,"bottom":0},"backgroundColor?":"<color>","textColor?":"<color>","textAlign?":"center|left|right","children":[…]}
+Only type+erc required. Default padding=5, contentDisplay=block.
 
-```json
-{
-  "title": "Page Title",
-  "erc": "page-erc",
-  "locale": "en-US",
-  "elements": [ /* root elements — must be Container, Grid, or Fragment */ ]
-}
-```
+Grid: {"type":"grid","erc":"<id>","gutters?":true,"modulesPerRow?":{"desktop":3,"tablet":2,"mobile":1},"columns":[{"size":4,"children":[…]}]}
+Column size 1–12. N equal cols → size=floor(12/N).
 
-## Element types
+Fragment: {"type":"fragment","erc":"<id>","source":"ootb|custom","key":"<name>","content?":{"<editableId>":<val>},"style?":{"backgroundColor":"<color>","textAlign":"center","padding":{"top":3}}}
 
-### Container
-```json
-{
-  "type": "container",
-  "erc": "<unique>",
-  "contentDisplay": "flex-row" | "flex-column",
-  "widthType": "fixed",
-  "padding": { "top": 5, "bottom": 5, "left": 5, "right": 5 },
-  "margin": { "top": 0, "bottom": 0 },
-  "backgroundColor": "primary",
-  "textColor": "white",
-  "textAlign": "center",
-  "children": [ /* Container, Grid, or Fragment */ ]
-}
-```
-All fields except `type` and `erc` are optional. Omitted padding defaults to 5 on all sides. Omitted contentDisplay defaults to block.
+OOTB fragments: heading→element-text(text), paragraph→element-text(richText), card→01-img(image)+02-title(richText)+03-content(richText)+04-link(link), image→image-square(image), button→element-text(text)+element-link(link), video→element-video(link), spacer, separator.
 
-### Grid
-```json
-{
-  "type": "grid",
-  "erc": "<unique>",
-  "gutters": true,
-  "modulesPerRow": { "desktop": 3, "tablet": 2, "mobile": 1 },
-  "columns": [
-    { "size": 4, "children": [ /* elements */ ] }
-  ]
-}
-```
-Column `size` is 1–12 (12-col grid). N equal columns → size = floor(12/N).
+Custom fragments: use externalReferenceCode from fragmentCatalog as key, source="custom", editables from catalog.
 
-### Fragment
-```json
-{
-  "type": "fragment",
-  "erc": "<unique>",
-  "source": "ootb",
-  "key": "<fragment-name>",
-  "content": { "<editableId>": <value> },
-  "style": { "backgroundColor": "dark", "textAlign": "center", "padding": { "top": 3 } }
-}
-```
+Values: text="string", richText="<p>html</p>", image={"url":"…"} or "url", link={"text":"…","url":"…","target?":"blank"} or "url".
 
-## OOTB fragment catalog
+Colors: primary,secondary,success,danger,warning,info,dark,light,white,black,gray000–gray900. Spacing: 0–10.
 
-| key | editables |
-|---|---|
-| `heading` | `element-text` (text) |
-| `paragraph` | `element-text` (richText — can contain HTML) |
-| `card` | `01-img` (image), `02-title` (richText), `03-content` (richText), `04-link` (link) |
-| `image` | `image-square` (image) |
-| `button` | `element-text` (text), `element-link` (link) |
-| `video` | `element-video` (link) |
-| `spacer` | (none) |
-| `separator` | (none) |
+ERCs: new elements get stable names (heading-1, card-1, section-1, grid-cards). Reuse existing ERCs on unchanged elements.
 
-## Custom fragments
+Rules: output FULL IR (not diff), preserve existing ERCs, only add Container/Grid when layout requested, only use listed fragment keys, error→{"_error":"reason"}.
 
-In addition to OOTB fragments, you may use custom fragments from the `fragmentCatalog` provided in the user message. For custom fragments use:
-```json
-{
-  "type": "fragment",
-  "erc": "<unique>",
-  "source": "custom",
-  "key": "<externalReferenceCode-from-fragmentCatalog>",
-  "content": { "<editableId>": <value> }
-}
-```
-Each custom fragment entry in `fragmentCatalog` contains: `externalReferenceCode`, `name`, `key`, `editables` (array of `{id, type}` pairs), and `description` (what the fragment renders). Use the `externalReferenceCode` as the fragment key, the `editables` array for editable IDs and types, and the `description` to choose the right fragment for the task.
-
-## Editable value shapes
-
-- **text**: plain string, e.g. `"element-text": "Hello World"`
-- **richText**: HTML string, e.g. `"element-text": "<p>Some content</p>"`
-- **image**: object `{"url": "https://..."}` or plain URL string
-- **link**: object `{"text": "Click here", "url": "https://...", "target": "blank"}` or plain URL string
-
-## Styling tokens
-
-- Colors (omit the `Color` suffix): `primary`, `secondary`, `success`, `danger`, `warning`, `info`, `dark`, `light`, `white`, `black`, `gray000`–`gray900`
-- Spacing values: integers `0`–`10`
-- textAlign: `center`, `left`, `right`
-
-## ERC naming
-
-Give every new element a stable ERC:
-- Containers: `banner`, `section-1`, `section-2`
-- Grids: `grid-1`, `grid-cards`
-- Fragments: `heading-1`, `card-1`, `paragraph-1`
-
-When modifying, reuse existing ERCs — do not regenerate them.
-
-# Rules
-
-- Output the FULL IR JSON, not a diff. Include all elements, not just changed ones.
-- Preserve existing ERCs for unchanged elements.
-- Only add Containers or Grids when the instruction asks for layout/sections. A simple "add a heading" means a bare Fragment at the root.
-- Do not invent fragment keys not listed above.
-- If the instruction cannot be fulfilled, output `{"_error": "<reason>"}`.
-
-# Worked examples
-
-## Input: "Add a heading saying Hello World"
-Current IR: `{"title":"My Page","erc":"my-page","locale":"en-US","elements":[]}`
-
-Output:
-```json
-{"title":"My Page","erc":"my-page","locale":"en-US","elements":[{"type":"fragment","erc":"heading-1","source":"ootb","key":"heading","content":{"element-text":"Hello World"}}]}
-```
-
-## Input: "Add 3 cards below the heading"
-Current IR has one heading element.
-
-Output: heading kept at index 0, grid added at index 1 with 3 columns each containing a card fragment.
-
-# Output policy
-
-- Output a SINGLE raw JSON object: the full IR. Nothing else.
-- DO NOT wrap in markdown fences.
-- DO NOT add prose, commentary, or trailing text.]]>
+Example: instruction="Add a heading saying Hello World", empty page → {"title":"My Page","erc":"my-page","locale":"en-US","elements":[{"type":"fragment","erc":"heading-1","source":"ootb","key":"heading","content":{"element-text":"Hello World"}}]}]]>
 		</prompt>
 		<tools>
 			<![CDATA[[]]]>
@@ -437,14 +234,14 @@ fragmentCatalog: {{fragmentCatalog}}
 current_page_ir: {{currentPageIR}}]]>
 		</user-message>
 	</llm>
-	<llm>
+	<tool>
 		<name>irToPageSpec</name>
 		<metadata>
 			<![CDATA[
 				{
 					"xy": [
-						276,
-						405
+						300,
+						800
 					]
 				}
 			]]>
@@ -454,49 +251,9 @@ current_page_ir: {{currentPageIR}}]]>
 				IR To Page Spec
 			</label>
 		</labels>
-		<input-variables>
-			<![CDATA[
-[
-	{
-		"name": "updatedPageIR",
-		"type": "string"
-	},
-	{
-		"name": "draftERC",
-		"type": "string"
-	},
-	{
-		"name": "experienceERC",
-		"type": "string"
-	}
-]
-]]>
-		</input-variables>
-		<output-variables>
-			<![CDATA[
-[
-	{
-		"name": "response",
-		"type": "string"
-	}
-]
-]]>
-		</output-variables>
-		<prompt>
-			<![CDATA[# Role
-
-You convert an IR JSON object back into a Liferay ContentPageSpecification using the `convertToPageSpec` tool.
-
-# Rules
-
-- You MUST call `convertToPageSpec` exactly once, passing the `updatedPageIR` JSON, the `draftERC`, the `experienceERC`, and the locale `en-US`.
-- After the tool returns, output the tool's JSON result verbatim as a single raw JSON object. Nothing else.
-- DO NOT wrap the JSON in markdown fences (no ```json, no ```).
-- DO NOT add prose, commentary, or trailing text.]]>
-		</prompt>
-		<tools>
-			<![CDATA[[]]]>
-		</tools>
+		<tool-name>convertToPageSpec</tool-name>
+		<input-variables><![CDATA[[{"name":"updatedPageIR","type":"string"},{"name":"draftERC","type":"string"},{"name":"experienceERC","type":"string"},{"name":"locale","type":"string"}]]]></input-variables>
+		<output-variables><![CDATA[[{"name":"response","type":"string"}]]]></output-variables>
 		<transitions>
 			<transition>
 				<labels>
@@ -509,23 +266,15 @@ You convert an IR JSON object back into a Liferay ContentPageSpecification using
 				<default>true</default>
 			</transition>
 		</transitions>
-		<user-message>
-			<![CDATA[Convert this IR back to a page specification.
-
-draftERC: {{draftERC}}
-experienceERC: {{experienceERC}}
-
-updatedPageIR: {{updatedPageIR}}]]>
-		</user-message>
-	</llm>
-	<llm>
+	</tool>
+	<tool>
 		<name>pageUpdater</name>
 		<metadata>
 			<![CDATA[
 				{
 					"xy": [
-						276,
-						351
+						300,
+						950
 					]
 				}
 			]]>
@@ -535,52 +284,9 @@ updatedPageIR: {{updatedPageIR}}]]>
 				Page Updater
 			</label>
 		</labels>
-		<input-variables>
-			<![CDATA[
-[
-	{
-		"name": "response",
-		"type": "string"
-	},
-	{
-		"name": "siteExternalReferenceCode",
-		"type": "string"
-	},
-	{
-		"name": "sitePageExternalReferenceCode",
-		"type": "string"
-	}
-]
-]]>
-		</input-variables>
-		<output-variables>
-			<![CDATA[
-[
-	{
-		"name": "updatedPageSpecification",
-		"type": "string"
-	}
-]
-]]>
-		</output-variables>
-		<prompt>
-			<![CDATA[# Role
-
-You persist a generated Liferay draft page specification using the `updatePageSpecification` tool.
-
-# Rules
-
-- You MUST call `updatePageSpecification` with the provided `siteExternalReferenceCode`, `sitePageExternalReferenceCode`, and the generated page specification JSON as the `body` argument.
-- The generated body may contain errors. If `updatePageSpecification` returns a result starting with `HTTP` (for example `HTTP 400`), read the error message carefully. Typical fixes include: adding missing `type` discriminator fields (e.g. on `fragmentEditableElementValue`, `fragmentLinkTextValue`, `htmlFragmentValue`), correcting enum values, fixing required fields, or removing fields not accepted by the server. Correct the body and call `updatePageSpecification` again.
-- Do not give up on the first failure. Try up to 3 distinct corrections before stopping.
-- Preserve all externalReferenceCodes, page element structure, and content from the generated body — only fix what the error message indicates is wrong.
-- Once `updatePageSpecification` returns a successful JSON response (the updated page specification), output that response verbatim as a single raw JSON object. Nothing else.
-- DO NOT wrap the JSON in markdown fences (no ```json, no ```).
-- DO NOT add prose, commentary, or trailing text.]]>
-		</prompt>
-		<tools>
-			<![CDATA[[]]]>
-		</tools>
+		<tool-name>updatePageSpecification</tool-name>
+		<input-variables><![CDATA[[{"name":"siteExternalReferenceCode","type":"string"},{"name":"sitePageExternalReferenceCode","type":"string"},{"name":"response","type":"string"}]]]></input-variables>
+		<output-variables><![CDATA[[{"name":"updatedPageSpecification","type":"string"}]]]></output-variables>
 		<transitions>
 			<transition>
 				<labels>
@@ -593,24 +299,15 @@ You persist a generated Liferay draft page specification using the `updatePageSp
 				<default>true</default>
 			</transition>
 		</transitions>
-		<user-message>
-			<![CDATA[Persist this generated draft page specification.
-
-siteExternalReferenceCode: {{siteExternalReferenceCode}}
-sitePageExternalReferenceCode: {{sitePageExternalReferenceCode}}
-
-body:
-{{response}}]]>
-		</user-message>
-	</llm>
+	</tool>
 	<state>
 		<name>start</name>
 		<metadata>
 			<![CDATA[
 				{
 					"xy": [
-						273,
-						25
+						300,
+						50
 					]
 				}
 			]]>
@@ -641,8 +338,8 @@ body:
 				{
 					"terminal": true,
 					"xy": [
-						277,
-						459
+						300,
+						1100
 					]
 				}
 			]]>

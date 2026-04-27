@@ -5,6 +5,7 @@
 
 package com.liferay.ai.hub.internal.workflow.kaleo.runtime.node.util;
 
+import com.liferay.ai.hub.internal.assistant.tool.CatalogBuilderTools;
 import com.liferay.ai.hub.internal.assistant.tool.IRToPageSpecTools;
 import com.liferay.ai.hub.internal.assistant.tool.PageSpecToIRTools;
 import com.liferay.ai.hub.internal.assistant.tool.SiteFragmentTools;
@@ -46,6 +47,10 @@ public class ToolsUtil {
 			};
 		}
 
+		if (_catalogBuilderNodeNames.contains(currentKaleoNode.getName())) {
+			return new Object[] {new CatalogBuilderTools(companyId)};
+		}
+
 		if (_fragmentLoaderNodeNames.contains(currentKaleoNode.getName())) {
 			return new Object[] {
 				new SiteFragmentTools(
@@ -70,6 +75,9 @@ public class ToolsUtil {
 
 		return new Object[0];
 	}
+
+	private static final Set<String> _catalogBuilderNodeNames = Set.of(
+		"catalogBuilder");
 
 	private static final Set<String> _fragmentLoaderNodeNames = Set.of(
 		"fragmentLoader");
