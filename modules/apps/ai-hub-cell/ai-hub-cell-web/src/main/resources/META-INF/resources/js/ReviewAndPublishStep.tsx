@@ -40,8 +40,6 @@ const PHASE_KEYS = [
 	'generating-contents',
 	'generating-content-pages',
 	'localizing-to-target-languages',
-	'tbd',
-	'seo-optimization',
 ];
 
 interface Artifact {
