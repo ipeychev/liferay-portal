@@ -10,9 +10,13 @@ import {
 import React from 'react';
 
 import {config} from '../config/index';
+import {useDispatch} from '../contexts/StoreContext';
+import updateLayoutData from '../thunks/updateLayoutData';
 
 export default function AIAssistantToolbarItem() {
 	const {layoutExternalReferenceCode, siteExternalReferenceCode} = config;
+
+	const dispatch = useDispatch();
 
 	function getContext(): ChatContext {
 		return {
@@ -26,7 +30,7 @@ export default function AIAssistantToolbarItem() {
 
 	function handleExternalEvent(type: string) {
 		if (type === 'pageUpdater') {
-			window.location.reload();
+			dispatch(updateLayoutData());
 		}
 	}
 
