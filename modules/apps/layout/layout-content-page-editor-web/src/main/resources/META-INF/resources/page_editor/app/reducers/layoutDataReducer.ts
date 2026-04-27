@@ -34,6 +34,7 @@ import {
 	UPDATE_FORM_ITEM_CONFIG,
 	UPDATE_FRAGMENT_ENTRY_LINK_CONFIGURATION,
 	UPDATE_ITEM_CONFIG,
+	UPDATE_LAYOUT_DATA,
 	UPDATE_PREVIEW_IMAGE,
 	UPDATE_ROW_COLUMNS,
 	UPDATE_RULE,
@@ -44,6 +45,7 @@ import updateCollectionDisplayCollection from '../actions/updateCollectionDispla
 import updateFormItemConfig from '../actions/updateFormItemConfig';
 import updateFragmentEntryLinkConfiguration from '../actions/updateFragmentEntryLinkConfiguration';
 import updateItemConfig from '../actions/updateItemConfig';
+import updateLayoutData from '../actions/updateLayoutData';
 import updatePreviewImage from '../actions/updatePreviewImage';
 import updateRowColumns from '../actions/updateRowColumns';
 import updateRule from '../actions/updateRule';
@@ -78,6 +80,7 @@ export default function layoutDataReducer(
 		| ReturnType<typeof updateFormItemConfig>
 		| ReturnType<typeof updateFragmentEntryLinkConfiguration>
 		| ReturnType<typeof updateItemConfig>
+		| ReturnType<typeof updateLayoutData>
 		| ReturnType<typeof updatePreviewImage>
 		| ReturnType<typeof updateRowColumns>
 		| ReturnType<typeof updateRule>
@@ -99,6 +102,7 @@ export default function layoutDataReducer(
 		case UPDATE_COL_SIZE:
 		case UPDATE_COLLECTION_DISPLAY_COLLECTION:
 		case UPDATE_FRAGMENT_ENTRY_LINK_CONFIGURATION:
+		case UPDATE_LAYOUT_DATA:
 		case UPDATE_ROW_COLUMNS:
 		case UPDATE_RULE:
 		case UPDATE_RULES:

@@ -42,6 +42,7 @@ import {
 	UPDATE_FRAGMENT_ENTRY_LINKS_CONTENT,
 	UPDATE_FRAGMENT_ENTRY_LINK_CONFIGURATION,
 	UPDATE_FRAGMENT_ENTRY_LINK_CONTENT,
+	UPDATE_LAYOUT_DATA,
 	UPDATE_PREVIEW_IMAGE,
 } from '../actions/types';
 import updateCollectionDisplayCollection from '../actions/updateCollectionDisplayCollection';
@@ -50,6 +51,7 @@ import updateFormItemConfig from '../actions/updateFormItemConfig';
 import updateFragmentEntryLinkConfiguration from '../actions/updateFragmentEntryLinkConfiguration';
 import updateFragmentEntryLinkContent from '../actions/updateFragmentEntryLinkContent';
 import updateFragmentEntryLinksContent from '../actions/updateFragmentEntryLinksContent';
+import updateLayoutData from '../actions/updateLayoutData';
 import updatePreviewImage from '../actions/updatePreviewImage';
 
 export const INITIAL_STATE: FragmentEntryLinkMap = {};
@@ -77,6 +79,7 @@ export default function fragmentEntryLinksReducer(
 		| typeof updateFragmentEntryLinkConfiguration
 		| typeof updateFragmentEntryLinkContent
 		| typeof updateFragmentEntryLinksContent
+		| typeof updateLayoutData
 		| typeof updatePreviewImage
 	>
 ): FragmentEntryLinkMap {
@@ -365,6 +368,12 @@ export default function fragmentEntryLinksReducer(
 				...newFragmentEntryLinks,
 			};
 		}
+
+		case UPDATE_LAYOUT_DATA:
+			return {
+				...fragmentEntryLinks,
+				...action.fragmentEntryLinks,
+			};
 
 		case UPDATE_FRAGMENT_ENTRY_LINK_CONFIGURATION:
 			return {

@@ -101,6 +101,23 @@ export default {
 		);
 	},
 
+	getLayoutData({
+		onNetworkStatus,
+		segmentsExperienceId,
+	}: {
+		onNetworkStatus: OnNetworkStatus;
+		segmentsExperienceId: string;
+	}) {
+		return draftServiceFetch<{
+			fragmentEntryLinks: FragmentEntryLinkMap;
+			layoutData: LayoutData;
+		}>(
+			config.getLayoutDataURL,
+			{body: {segmentsExperienceId}},
+			onNetworkStatus
+		);
+	},
+
 	getLayoutFriendlyURL(layout: Layout) {
 		return serviceFetch<{friendlyURL: string}>(
 			config.getLayoutFriendlyURL,
