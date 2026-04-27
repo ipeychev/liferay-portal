@@ -14,6 +14,7 @@ import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.portlet.url.builder.PortletURLBuilder;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HashMapBuilder;
+import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -92,6 +93,12 @@ public class ViewContentSitesDisplayContext {
 	}
 
 	public long getRunId() {
+		long runId = ParamUtil.getLong(_httpServletRequest, "runId");
+
+		if (runId > 0) {
+			return runId;
+		}
+
 		return GetterUtil.getLong(
 			PortalUtil.getOriginalServletRequest(
 				_httpServletRequest
@@ -111,13 +118,23 @@ public class ViewContentSitesDisplayContext {
 
 		return List.of(
 			new FDSActionDropdownItem(
-				getAPIURL() + "/{id}", "view", "view",
+				_getViewRunURL(), "view", "view",
 				LanguageUtil.get(_httpServletRequest, "view"), "get", null,
 				null),
 			new FDSActionDropdownItem(
 				getAPIURL() + "/{id}", "trash", "delete",
 				LanguageUtil.get(_httpServletRequest, "delete"), "delete",
 				"delete", "async"));
+	}
+
+	private String _getViewRunURL() {
+		return PortletURLBuilder.createRenderURL(
+			_liferayPortletResponse
+		).setMVCPath(
+			"/view_refine_step.jsp"
+		).setParameter(
+			"runId", "{id}"
+		).buildString();
 	}
 
 	private final HttpServletRequest _httpServletRequest;

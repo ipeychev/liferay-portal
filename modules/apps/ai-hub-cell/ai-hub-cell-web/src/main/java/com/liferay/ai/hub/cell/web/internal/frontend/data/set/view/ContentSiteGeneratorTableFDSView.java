@@ -6,8 +6,10 @@
 package com.liferay.ai.hub.cell.web.internal.frontend.data.set.view;
 
 import com.liferay.ai.hub.cell.web.internal.constants.AIHubCellFDSNames;
+import com.liferay.frontend.data.set.constants.FDSTimeZoneBehaviorConstants;
 import com.liferay.frontend.data.set.view.FDSView;
 import com.liferay.frontend.data.set.view.table.BaseTableFDSView;
+import com.liferay.frontend.data.set.view.table.DateTimeFDSTableSchemaField;
 import com.liferay.frontend.data.set.view.table.FDSTableSchema;
 import com.liferay.frontend.data.set.view.table.FDSTableSchemaBuilder;
 import com.liferay.frontend.data.set.view.table.FDSTableSchemaBuilderFactory;
@@ -32,14 +34,40 @@ public class ContentSiteGeneratorTableFDSView extends BaseTableFDSView {
 			_fdsTableSchemaBuilderFactory.create();
 
 		return fdsTableSchemaBuilder.add(
-			"name", "name"
+			"name", "name",
+			fdsTableSchemaField -> fdsTableSchemaField.setActionId(
+				"view"
+			).setContentRenderer(
+				"actionLink"
+			)
 		).add(
-			"runStatus", "status"
+			"runStatus.name", "status",
+			fdsTableSchemaField -> fdsTableSchemaField.setContentRenderer("label")
 		).add(
-			"dateCreated", "created"
+			_dateTimeField("dateCreated", "created")
 		).add(
-			"committedAt", "committed"
+			_dateTimeField("committedAt", "committed")
 		).build();
+	}
+
+	private DateTimeFDSTableSchemaField _dateTimeField(
+		String fieldName, String label) {
+
+		DateTimeFDSTableSchemaField dateTimeFDSTableSchemaField =
+			new DateTimeFDSTableSchemaField();
+
+		dateTimeFDSTableSchemaField.setContentRenderer(
+			"dateTime"
+		).setFieldName(
+			fieldName
+		).setLabel(
+			label
+		);
+
+		dateTimeFDSTableSchemaField.setTimeZoneBehavior(
+			FDSTimeZoneBehaviorConstants.APPLY_THEME_DISPLAY_TIME_ZONE);
+
+		return dateTimeFDSTableSchemaField;
 	}
 
 	@Override
