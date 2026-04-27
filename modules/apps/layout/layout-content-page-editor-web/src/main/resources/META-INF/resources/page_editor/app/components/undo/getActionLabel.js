@@ -30,6 +30,7 @@ import {
 	UPDATE_FRAGMENT_ENTRY_LINK_CONFIGURATION,
 	UPDATE_ITEM_CONFIG,
 	UPDATE_LANGUAGE_ID,
+	UPDATE_LAYOUT_DATA,
 	UPDATE_ROW_COLUMNS,
 	UPDATE_RULE,
 	UPDATE_RULES,
@@ -145,6 +146,8 @@ export default function getActionLabel(
 						Liferay.Language.get('select-x-language'),
 						action.languageId
 					);
+		case UPDATE_LAYOUT_DATA:
+			return Liferay.Language.get('update-page-content');
 		case UPDATE_RULE:
 			return sub(Liferay.Language.get('update-x'), action.itemName);
 		case UPDATE_RULES:

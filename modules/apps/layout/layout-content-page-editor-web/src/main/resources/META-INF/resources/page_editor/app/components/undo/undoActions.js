@@ -28,6 +28,7 @@ import {
 	UPDATE_FRAGMENT_ENTRY_LINK_CONFIGURATION,
 	UPDATE_ITEM_CONFIG,
 	UPDATE_LANGUAGE_ID,
+	UPDATE_LAYOUT_DATA,
 	UPDATE_ROW_COLUMNS,
 	UPDATE_RULE,
 	UPDATE_RULES,
@@ -56,6 +57,7 @@ import * as undoUpdateFormItemConfig from './undoUpdateFormItemConfig';
 import * as undoUpdateFragmentConfiguration from './undoUpdateFragmentConfiguration';
 import * as undoUpdateItemConfig from './undoUpdateItemConfig';
 import * as undoUpdateLanguage from './undoUpdateLanguage';
+import * as undoUpdateLayoutData from './undoUpdateLayoutData';
 import * as undoUpdateRowColumns from './undoUpdateRowColumns';
 import * as undoUpdateRule from './undoUpdateRule';
 import * as undoUpdateRules from './undoUpdateRules';
@@ -86,6 +88,7 @@ const UNDO_ACTIONS = {
 	[UPDATE_FRAGMENT_ENTRY_LINK_CONFIGURATION]: undoUpdateFragmentConfiguration,
 	[UPDATE_ITEM_CONFIG]: undoUpdateItemConfig,
 	[UPDATE_LANGUAGE_ID]: undoUpdateLanguage,
+	[UPDATE_LAYOUT_DATA]: undoUpdateLayoutData,
 	[UPDATE_ROW_COLUMNS]: undoUpdateRowColumns,
 	[UPDATE_RULE]: undoUpdateRule,
 	[UPDATE_RULES]: undoUpdateRules,
