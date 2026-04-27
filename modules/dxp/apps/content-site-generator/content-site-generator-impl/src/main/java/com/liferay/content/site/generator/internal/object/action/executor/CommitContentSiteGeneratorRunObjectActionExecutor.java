@@ -26,6 +26,8 @@ import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.model.Group;
+import com.liferay.portal.kernel.service.GroupLocalService;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.UnicodeProperties;
@@ -189,49 +191,107 @@ public class CommitContentSiteGeneratorRunObjectActionExecutor
 			_objectEntryLocalService.updateObjectEntry(
 				userId, runId, 0L, updates, new ServiceContext());
 
-			// 5. Submit each artifact to the Batch Engine. Each artifact's
-			// `json` field stores a {configuration, items} envelope: the
-			// configuration carries className / parameters / delegate name,
-			// and only the items array is shipped to the Batch Engine.
+			// 5. Partition artifacts by envelope className: Site first so we
+			// can capture siteId / ERC, then Space (AssetLibrary +
+			// ConnectedSite) so the Space exists before any Page or CMS
+			// envelope references it, then everything else.
 
-			List<Long> taskIds = new ArrayList<>(artifacts.size());
+			List<ObjectEntry> siteArtifacts = new ArrayList<>();
+			List<ObjectEntry> spaceArtifacts = new ArrayList<>();
+			List<ObjectEntry> contentArtifacts = new ArrayList<>();
 
 			for (ObjectEntry artifact : artifacts) {
-				Map<String, Serializable> values = artifactValues.get(
-					artifact.getObjectEntryId());
+				String envelopeClassName = _envelopeClassName(
+					artifactValues.get(artifact.getObjectEntryId()));
 
-				String fileName = GetterUtil.getString(values.get("fileName"));
-				String json = GetterUtil.getString(values.get("json"));
-
-				if (json.isEmpty()) {
-					if (_log.isWarnEnabled()) {
-						_log.warn(
-							"Skipping artifact " + fileName +
-								" due to missing envelope");
-					}
-
-					continue;
+				if (_SITE_CLASS_NAME.equals(envelopeClassName)) {
+					siteArtifacts.add(artifact);
 				}
+				else if (_SPACE_PHASE_CLASS_NAMES.contains(
+							envelopeClassName)) {
 
-				BatchEngineImportTask batchEngineImportTask = _submitEnvelope(
-					companyId, userId, fileName, json);
-
-				if (batchEngineImportTask == null) {
-					continue;
+					spaceArtifacts.add(artifact);
 				}
-
-				taskIds.add(batchEngineImportTask.getBatchEngineImportTaskId());
+				else {
+					contentArtifacts.add(artifact);
+				}
 			}
 
-			// 6. Monitor the batch engine and finalize when all tasks are done.
+			if (siteArtifacts.isEmpty()) {
+				_finalizeRun(
+					userId, runId, true, "Run has no Site artifact", null);
 
-			_monitorAndFinalize(userId, runId, taskIds);
+				return;
+			}
+
+			// 6. Site phase.
+
+			if (!_runPhase(
+					"site", companyId, userId, siteArtifacts,
+					artifactValues)) {
+
+				_finalizeRun(
+					userId, runId, true,
+					"Site phase failed; see batch engine task errors", null);
+
+				return;
+			}
+
+			// 7. Resolve the Site that was just created so we can write its
+			// ERC back to the Run on success.
+
+			String siteExternalReferenceCode = _findCreatedSiteERC(
+				companyId, siteArtifacts, artifactValues);
+
+			if (siteExternalReferenceCode == null) {
+				_finalizeRun(
+					userId, runId, true,
+					"Site phase completed but no Site found by ERC", null);
+
+				return;
+			}
+
+			if (_log.isInfoEnabled()) {
+				_log.info(
+					StringBundler.concat(
+						"Run ", runERC, " captured siteERC=",
+						siteExternalReferenceCode));
+			}
+
+			// 8. Space phase. AssetLibrary and ConnectedSite envelopes
+			// create the Space and connect it to the Site, in loadOrder.
+
+			if (!_runPhase(
+					"space", companyId, userId, spaceArtifacts,
+					artifactValues)) {
+
+				_finalizeRun(
+					userId, runId, true,
+					"Space phase failed; see batch engine task errors", null);
+
+				return;
+			}
+
+			// 9. Content phase. Pages, CMS object entries, fragments, etc.
+
+			boolean contentSucceeded = _runPhase(
+				"content", companyId, userId, contentArtifacts,
+				artifactValues);
+
+			_finalizeRun(
+				userId, runId, !contentSucceeded,
+				contentSucceeded
+					? null
+					: "Content phase failed; see batch engine task errors",
+				contentSucceeded ? siteExternalReferenceCode : null);
 		}
 		catch (Exception exception) {
 			_log.error("Commit failed for run " + runId, exception);
 
 			try {
-				_finalizeRun(userId, runId, true);
+				_finalizeRun(
+					userId, runId, true,
+					"Commit failed: " + exception.getMessage(), null);
 			}
 			catch (Exception finalizeException) {
 				_log.error(
@@ -240,17 +300,29 @@ public class CommitContentSiteGeneratorRunObjectActionExecutor
 		}
 	}
 
-	private void _finalizeRun(long userId, long runId, boolean failed) {
+	private void _finalizeRun(
+		long userId, long runId, boolean failed, String failureReason,
+		String resultingSiteERC) {
+
 		try {
 			Map<String, Serializable> updates = new HashMap<>(
 				_objectEntryLocalService.getValues(runId));
 
 			if (failed) {
 				updates.put("runStatus", _RUN_STATUS_FAILED);
+
+				if (failureReason != null) {
+					updates.put("failureReason", failureReason);
+				}
 			}
 			else {
 				updates.put("committedAt", new Date());
+				updates.put("failureReason", "");
 				updates.put("runStatus", _RUN_STATUS_COMMITTED);
+
+				if (resultingSiteERC != null) {
+					updates.put("resultingSiteERC", resultingSiteERC);
+				}
 			}
 
 			_objectEntryLocalService.updateObjectEntry(
@@ -386,74 +458,184 @@ public class CommitContentSiteGeneratorRunObjectActionExecutor
 		return byteArrayOutputStream.toByteArray();
 	}
 
-	private void _monitorAndFinalize(
-		long userId, long runId, List<Long> taskIds) {
+	private boolean _awaitTerminal(String phaseLabel, List<Long> taskIds)
+		throws InterruptedException {
+
+		if (taskIds.isEmpty()) {
+			return true;
+		}
 
 		long deadline = System.currentTimeMillis() + _TIMEOUT_MS;
 
-		try {
-			while (System.currentTimeMillis() < deadline) {
-				Thread.sleep(_POLL_INTERVAL_MS);
+		while (System.currentTimeMillis() < deadline) {
+			Thread.sleep(_POLL_INTERVAL_MS);
 
-				boolean anyFailed = false;
-				boolean allTerminal = true;
+			boolean anyFailed = false;
+			boolean allTerminal = true;
 
-				for (long taskId : taskIds) {
-					BatchEngineImportTask task =
-						_batchEngineImportTaskLocalService.
-							fetchBatchEngineImportTask(taskId);
+			for (long taskId : taskIds) {
+				BatchEngineImportTask task =
+					_batchEngineImportTaskLocalService.
+						fetchBatchEngineImportTask(taskId);
 
-					if (task == null) {
-						allTerminal = false;
+				if (task == null) {
+					allTerminal = false;
 
-						continue;
-					}
+					continue;
+				}
 
-					String status = task.getExecuteStatus();
+				String status = task.getExecuteStatus();
 
-					if (Objects.equals(
-							BatchEngineTaskExecuteStatus.FAILED.name(),
+				if (Objects.equals(
+						BatchEngineTaskExecuteStatus.FAILED.name(), status)) {
+
+					anyFailed = true;
+				}
+				else if (!Objects.equals(
+							BatchEngineTaskExecuteStatus.COMPLETED.name(),
 							status)) {
 
-						anyFailed = true;
-					}
-					else if (!Objects.equals(
-								BatchEngineTaskExecuteStatus.COMPLETED.name(),
-								status)) {
-
-						allTerminal = false;
-					}
-				}
-
-				if (allTerminal) {
-					_finalizeRun(userId, runId, anyFailed);
-
-					return;
+					allTerminal = false;
 				}
 			}
 
-			// Timed out — mark FAILED so the run can be retried.
-
-			_log.error(
-				StringBundler.concat(
-					"Commit monitor for run ", runId, " timed out after ",
-					_TIMEOUT_MS, "ms"));
-
-			_finalizeRun(userId, runId, true);
+			if (allTerminal) {
+				return !anyFailed;
+			}
 		}
-		catch (InterruptedException interruptedException) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(
-					"Commit monitor interrupted for run " + runId,
-					interruptedException);
+
+		_log.error(
+			StringBundler.concat(
+				"Phase ", phaseLabel, " timed out after ", _TIMEOUT_MS, "ms"));
+
+		return false;
+	}
+
+	private String _findCreatedSiteERC(
+			long companyId, List<ObjectEntry> siteArtifacts,
+			Map<Long, Map<String, Serializable>> artifactValues)
+		throws Exception {
+
+		for (ObjectEntry artifact : siteArtifacts) {
+			JSONArray items = _envelopeItems(
+				artifactValues.get(artifact.getObjectEntryId()));
+
+			if (items == null) {
+				continue;
 			}
 
-			Thread.currentThread(
-			).interrupt();
+			for (int i = 0; i < items.length(); i++) {
+				JSONObject item = items.getJSONObject(i);
+
+				String externalReferenceCode = item.getString(
+					"externalReferenceCode");
+
+				if (Validator.isNull(externalReferenceCode)) {
+					continue;
+				}
+
+				Group group =
+					_groupLocalService.fetchGroupByExternalReferenceCode(
+						externalReferenceCode, companyId);
+
+				if (group != null) {
+					return externalReferenceCode;
+				}
+
+				if (_log.isWarnEnabled()) {
+					_log.warn(
+						"Site phase reported success but no Group found " +
+							"for ERC " + externalReferenceCode);
+				}
+			}
+		}
+
+		return null;
+	}
+
+	private String _envelopeClassName(Map<String, Serializable> values) {
+		String json = GetterUtil.getString(values.get("json"));
+
+		if (json.isEmpty()) {
+			return null;
+		}
+
+		try {
+			JSONObject envelope = JSONFactoryUtil.createJSONObject(json);
+
+			JSONObject configuration = envelope.getJSONObject("configuration");
+
+			if (configuration == null) {
+				return null;
+			}
+
+			return configuration.getString("className");
 		}
 		catch (Exception exception) {
-			_log.error("Commit monitor failed for run " + runId, exception);
+			if (_log.isWarnEnabled()) {
+				_log.warn(
+					"Unable to read envelope className: " +
+						exception.getMessage());
+			}
+
+			return null;
 		}
+	}
+
+	private JSONArray _envelopeItems(Map<String, Serializable> values)
+		throws Exception {
+
+		String json = GetterUtil.getString(values.get("json"));
+
+		if (json.isEmpty()) {
+			return null;
+		}
+
+		JSONObject envelope = JSONFactoryUtil.createJSONObject(json);
+
+		return envelope.getJSONArray("items");
+	}
+
+	private boolean _runPhase(
+			String phaseLabel, long companyId, long userId,
+			List<ObjectEntry> phaseArtifacts,
+			Map<Long, Map<String, Serializable>> artifactValues)
+		throws Exception {
+
+		if (phaseArtifacts.isEmpty()) {
+			return true;
+		}
+
+		List<Long> taskIds = new ArrayList<>(phaseArtifacts.size());
+
+		for (ObjectEntry artifact : phaseArtifacts) {
+			Map<String, Serializable> values = artifactValues.get(
+				artifact.getObjectEntryId());
+
+			String fileName = GetterUtil.getString(values.get("fileName"));
+			String json = GetterUtil.getString(values.get("json"));
+
+			if (json.isEmpty()) {
+				if (_log.isWarnEnabled()) {
+					_log.warn(
+						"Skipping artifact " + fileName +
+							" due to missing envelope");
+				}
+
+				continue;
+			}
+
+			BatchEngineImportTask batchEngineImportTask = _submitEnvelope(
+				companyId, userId, fileName, json);
+
+			if (batchEngineImportTask == null) {
+				continue;
+			}
+
+			taskIds.add(batchEngineImportTask.getBatchEngineImportTaskId());
+		}
+
+		return _awaitTerminal(phaseLabel, taskIds);
 	}
 
 	private static final String
@@ -463,6 +645,13 @@ public class CommitContentSiteGeneratorRunObjectActionExecutor
 		"r_artifacts_l_contentGeneratorRunId";
 
 	private static final long _POLL_INTERVAL_MS = 2_000L;
+
+	private static final String _SITE_CLASS_NAME =
+		"com.liferay.headless.admin.site.dto.v1_0.Site";
+
+	private static final List<String> _SPACE_PHASE_CLASS_NAMES = List.of(
+		"com.liferay.headless.asset.library.dto.v1_0.AssetLibrary",
+		"com.liferay.headless.asset.library.dto.v1_0.ConnectedSite");
 
 	private static final String _RUN_STATUS_COMMITTED = "committed";
 
@@ -488,6 +677,9 @@ public class CommitContentSiteGeneratorRunObjectActionExecutor
 	@Reference
 	private BatchEngineTaskItemDelegateRegistry
 		_batchEngineTaskItemDelegateRegistry;
+
+	@Reference
+	private GroupLocalService _groupLocalService;
 
 	@Reference
 	private ObjectDefinitionLocalService _objectDefinitionLocalService;

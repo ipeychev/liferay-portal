@@ -272,6 +272,21 @@
 					"type": "Date"
 				},
 				{
+					"DBType": "Clob",
+					"businessType": "LongText",
+					"externalReferenceCode": "L_CSG_RUN_FAILURE_REASON",
+					"indexed": false,
+					"indexedAsKeyword": false,
+					"label": {
+						"en_US": "Failure Reason"
+					},
+					"name": "failureReason",
+					"required": false,
+					"state": false,
+					"system": true,
+					"type": "String"
+				},
+				{
 					"DBType": "String",
 					"businessType": "Text",
 					"externalReferenceCode": "L_CSG_RUN_RESULTING_SITE_ERC",
