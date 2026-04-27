@@ -30,7 +30,9 @@ import dev.langchain4j.agent.tool.P;
 import dev.langchain4j.agent.tool.Tool;
 
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author Feliphe Marinho
@@ -79,10 +81,81 @@ public class SitePageTools {
 		}
 	}
 
+	private void _alignExternalReferenceCodes(
+		Object node, String oldERC, String newERC) {
+
+		if (node instanceof JSONObject) {
+			JSONObject jsonObject = (JSONObject)node;
+
+			for (String key : new HashSet<>(jsonObject.keySet())) {
+				Object value = jsonObject.get(key);
+
+				if (key.endsWith("ExternalReferenceCode") &&
+					(value instanceof String)) {
+
+					String stringValue = (String)value;
+
+					if (stringValue.equals(oldERC)) {
+						jsonObject.put(key, newERC);
+					}
+					else if (stringValue.startsWith(oldERC + "-")) {
+						jsonObject.put(
+							key,
+							newERC +
+								stringValue.substring(oldERC.length()));
+					}
+				}
+				else {
+					_alignExternalReferenceCodes(value, oldERC, newERC);
+				}
+			}
+		}
+		else if (node instanceof JSONArray) {
+			JSONArray jsonArray = (JSONArray)node;
+
+			for (int i = 0; i < jsonArray.length(); i++) {
+				_alignExternalReferenceCodes(
+					jsonArray.get(i), oldERC, newERC);
+			}
+		}
+	}
+
+	private void _ensurePageExperienceERCs(
+		JSONObject bodyJSONObject, String specERC) {
+
+		JSONArray pageExperiences = bodyJSONObject.getJSONArray(
+			"pageExperiences");
+
+		if (pageExperiences == null) {
+			return;
+		}
+
+		for (int i = 0; i < pageExperiences.length(); i++) {
+			JSONObject experience = pageExperiences.getJSONObject(i);
+
+			if (experience == null) {
+				continue;
+			}
+
+			String erc = experience.getString("externalReferenceCode");
+
+			if (Validator.isNull(erc)) {
+				experience.put(
+					"externalReferenceCode", specERC + "-default");
+			}
+		}
+	}
+
 	private String _getPageSpecification(
 			String siteExternalReferenceCode,
 			String sitePageExternalReferenceCode)
 		throws Exception {
+
+		String cached = _pageSpecCache.get(sitePageExternalReferenceCode);
+
+		if (cached != null) {
+			return cached;
+		}
 
 		String location = _getPageSpecificationLocation(
 			siteExternalReferenceCode, sitePageExternalReferenceCode);
@@ -92,6 +165,7 @@ public class SitePageTools {
 
 		Http.Options options = new Http.Options();
 
+		options.addHeader("Authorization", _accessToken);
 		options.addHeader(
 			HttpHeaders.CONTENT_TYPE, ContentTypes.APPLICATION_JSON);
 		options.addHeader("Liferay-AI-Hub-Cell-On-Behalf-Of", _userToken);
@@ -111,7 +185,11 @@ public class SitePageTools {
 
 		_pruneReadOnlyFields(jsonObject);
 
-		return jsonObject.toString();
+		String result = jsonObject.toString();
+
+		_pageSpecCache.put(sitePageExternalReferenceCode, result);
+
+		return result;
 	}
 
 	private String _getPageSpecificationLocation(
@@ -188,45 +266,6 @@ public class SitePageTools {
 		return body.trim();
 	}
 
-	private void _alignExternalReferenceCodes(
-		Object node, String oldERC, String newERC) {
-
-		if (node instanceof JSONObject) {
-			JSONObject jsonObject = (JSONObject)node;
-
-			for (String key : new HashSet<>(jsonObject.keySet())) {
-				Object value = jsonObject.get(key);
-
-				if (key.endsWith("ExternalReferenceCode") &&
-					(value instanceof String)) {
-
-					String stringValue = (String)value;
-
-					if (stringValue.equals(oldERC)) {
-						jsonObject.put(key, newERC);
-					}
-					else if (stringValue.startsWith(oldERC + "-")) {
-						jsonObject.put(
-							key,
-							newERC +
-								stringValue.substring(oldERC.length()));
-					}
-				}
-				else {
-					_alignExternalReferenceCodes(value, oldERC, newERC);
-				}
-			}
-		}
-		else if (node instanceof JSONArray) {
-			JSONArray jsonArray = (JSONArray)node;
-
-			for (int i = 0; i < jsonArray.length(); i++) {
-				_alignExternalReferenceCodes(
-					jsonArray.get(i), oldERC, newERC);
-			}
-		}
-	}
-
 	private String _updatePageSpecification(
 			String body, String siteExternalReferenceCode,
 			String sitePageExternalReferenceCode)
@@ -238,29 +277,38 @@ public class SitePageTools {
 
 		String bodyERC = bodyJSONObject.getString("externalReferenceCode");
 
-		if (Validator.isNotNull(bodyERC) &&
-			!bodyERC.equals(sitePageExternalReferenceCode)) {
-
+		if (Validator.isNull(bodyERC)) {
+			bodyJSONObject.put(
+				"externalReferenceCode", sitePageExternalReferenceCode);
+		}
+		else if (!bodyERC.equals(sitePageExternalReferenceCode)) {
 			_alignExternalReferenceCodes(
 				bodyJSONObject, bodyERC, sitePageExternalReferenceCode);
-
-			body = bodyJSONObject.toString();
 		}
+
+		_ensurePageExperienceERCs(
+			bodyJSONObject, sitePageExternalReferenceCode);
+
+		body = bodyJSONObject.toString();
 
 		String location = _getPageSpecificationLocation(
 			siteExternalReferenceCode, sitePageExternalReferenceCode);
 
-		location = HttpComponentsUtil.addParameter(
-			location, "nestedFields", "pageSpecifications");
-
 		Http.Options options = new Http.Options();
 
+		options.addHeader("Authorization", _accessToken);
 		options.addHeader(
 			HttpHeaders.CONTENT_TYPE, ContentTypes.APPLICATION_JSON);
 		options.addHeader("Liferay-AI-Hub-Cell-On-Behalf-Of", _userToken);
 		options.setBody(body, ContentTypes.APPLICATION_JSON, "UTF-8");
 		options.setLocation(location);
 		options.setMethod(Http.Method.PUT);
+
+		_log.error(
+			StringBundler.concat(
+				"updatePageSpecification PUT URL: ", location,
+				"\nAuthorization: ", _accessToken,
+				"\nRequest body:\n", body));
 
 		String responseBody = HttpUtil.URLtoString(options);
 
@@ -281,6 +329,14 @@ public class SitePageTools {
 				"\n\nError response:\n", responseBody);
 		}
 
+		JSONObject responseJSON = JSONFactoryUtil.createJSONObject(
+			responseBody);
+
+		_pruneReadOnlyFields(responseJSON);
+
+		_pageSpecCache.put(
+			sitePageExternalReferenceCode, responseJSON.toString());
+
 		return responseBody;
 	}
 
@@ -290,6 +346,9 @@ public class SitePageTools {
 				"updatePageSpecification again.\n\nRequest body sent:\n";
 
 	private static final Log _log = LogFactoryUtil.getLog(SitePageTools.class);
+
+	private static final Map<String, String> _pageSpecCache =
+		new ConcurrentHashMap<>();
 
 	private static final Set<String> _readOnlyKeys = Set.of(
 		"configuration", "css", "customFields", "datePropagated",

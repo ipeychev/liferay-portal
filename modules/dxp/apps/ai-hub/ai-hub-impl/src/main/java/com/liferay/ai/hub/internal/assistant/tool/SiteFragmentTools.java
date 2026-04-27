@@ -184,7 +184,8 @@ public class SiteFragmentTools {
 				StringBundler.concat(
 					baseURL, "/o/headless-admin-fragment/v1.0/sites/",
 					encodedSiteERC, "/fragment-sets/",
-					URLCodec.encodeURL(setERC), "/fragments"));
+					URLCodec.encodeURL(setERC),
+					"/fragments?type=Component"));
 
 			for (int j = 0; j < fragments.length(); j++) {
 				JSONObject fragment = fragments.getJSONObject(j);

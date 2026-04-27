@@ -27,6 +27,10 @@ public class PageSpecToIRTools {
 		@P("Page title") String title,
 		@P("Locale code, e.g. en-US") String locale) {
 
+		if ((locale == null) || locale.isEmpty()) {
+			locale = "en-US";
+		}
+
 		try {
 			JSONObject spec = JSONFactoryUtil.createJSONObject(
 				_stripMarkdownFences(pageSpecJSON));

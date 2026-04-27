@@ -24,6 +24,8 @@ public class IRToPageSpecTools {
 
 	public IRToPageSpecTools(String fullFragmentsCatalog) {
 		_customEditableTypes = _parseCustomEditableTypes(fullFragmentsCatalog);
+		_customFragmentSources = _parseCustomFragmentSources(
+			fullFragmentsCatalog);
 	}
 
 	@Tool("Convert an IR JSON object into a Liferay ContentPageSpecification JSON")
@@ -32,6 +34,10 @@ public class IRToPageSpecTools {
 		@P("Draft page specification ERC") String draftERC,
 		@P("Draft page experience ERC") String experienceERC,
 		@P("Locale code, e.g. en-US") String locale) {
+
+		if ((locale == null) || locale.isEmpty()) {
+			locale = "en-US";
+		}
 
 		try {
 			JSONObject ir = JSONFactoryUtil.createJSONObject(
@@ -70,8 +76,10 @@ public class IRToPageSpecTools {
 
 			JSONObject spec = JSONFactoryUtil.createJSONObject();
 
+			spec.put("customFields", JSONFactoryUtil.createJSONArray());
 			spec.put("externalReferenceCode", draftERC);
 			spec.put("pageExperiences", pageExperiences);
+			spec.put("settings", JSONFactoryUtil.createJSONObject());
 			spec.put("status", "Draft");
 			spec.put("type", "ContentPageSpecification");
 
@@ -257,6 +265,7 @@ public class IRToPageSpecTools {
 		instance.put(
 			"fragmentInstanceExternalReferenceCode", erc + "-inst");
 		instance.put("fragmentReference", fragmentReference);
+		instance.put("indexed", true);
 
 		JSONObject content = ir.getJSONObject("content");
 
@@ -298,6 +307,33 @@ public class IRToPageSpecTools {
 			fragmentViewports.put(desktop);
 
 			instance.put("fragmentViewports", fragmentViewports);
+		}
+
+		if ("custom".equals(source)) {
+			String fragmentKey = ir.getString("key");
+
+			JSONObject fragmentSources = _customFragmentSources.get(
+				fragmentKey);
+
+			if (fragmentSources != null) {
+				String css = fragmentSources.getString("css");
+
+				if (Validator.isNotNull(css)) {
+					instance.put("css", css);
+				}
+
+				String html = fragmentSources.getString("html");
+
+				if (Validator.isNotNull(html)) {
+					instance.put("html", html);
+				}
+
+				String js = fragmentSources.getString("js");
+
+				if (Validator.isNotNull(js)) {
+					instance.put("js", js);
+				}
+			}
 		}
 
 		JSONObject definition = JSONFactoryUtil.createJSONObject();
@@ -390,7 +426,6 @@ public class IRToPageSpecTools {
 
 		definition.put("gridViewports", gridViewports);
 		definition.put("gutters", gutters);
-
 		definition.put("numberOfModules", columnCount);
 		definition.put("type", "Grid");
 
@@ -848,7 +883,41 @@ public class IRToPageSpecTools {
 		return result;
 	}
 
+	private Map<String, JSONObject> _parseCustomFragmentSources(
+		String fullFragmentsCatalog) {
+
+		Map<String, JSONObject> result = new HashMap<>();
+
+		if (Validator.isNull(fullFragmentsCatalog)) {
+			return result;
+		}
+
+		try {
+			JSONArray catalog = JSONFactoryUtil.createJSONArray(
+				fullFragmentsCatalog);
+
+			for (int i = 0; i < catalog.length(); i++) {
+				JSONObject fragment = catalog.getJSONObject(i);
+
+				String erc = fragment.getString("externalReferenceCode");
+
+				JSONObject sources = JSONFactoryUtil.createJSONObject();
+
+				sources.put("css", fragment.getString("css"));
+				sources.put("html", fragment.getString("html"));
+				sources.put("js", fragment.getString("js"));
+
+				result.put(erc, sources);
+			}
+		}
+		catch (Exception exception) {
+		}
+
+		return result;
+	}
+
 	private final Map<String, Map<String, String>> _customEditableTypes;
+	private final Map<String, JSONObject> _customFragmentSources;
 
 	private static final Map<String, String> _OOTB_NAME_TO_KEY =
 		new HashMap<String, String>() {
