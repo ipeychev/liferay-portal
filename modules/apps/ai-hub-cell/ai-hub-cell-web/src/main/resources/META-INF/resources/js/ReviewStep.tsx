@@ -4,32 +4,27 @@
  */
 
 import ClayLayout from '@clayui/layout';
-import React, {useState} from 'react';
+import React from 'react';
 
-import GenerateStep from './GenerateStep';
 import ReviewAndPublishStep from './ReviewAndPublishStep';
 import MultiStepProgress from './components/MultiStepProgress';
-import {SubStep} from './types/SubStep';
 
 interface IProps {
 	backURL?: string;
-	initialSubStep?: SubStep;
-	onBack?: () => void;
+	cancelURL?: string;
+	runId?: number;
 }
 
-export default function ReviewStep({
-	backURL,
-	initialSubStep = 'generate',
-	onBack,
-}: IProps) {
-	const [subStep, setSubStep] = useState<SubStep>(initialSubStep);
-
+export default function ReviewStep({backURL, cancelURL, runId}: IProps) {
 	const handleBack = () => {
-		if (onBack) {
-			onBack();
-		}
-		else if (backURL) {
-			Liferay.Util.navigate(backURL);
+		if (backURL) {
+			Liferay.Util.navigate(
+				runId
+					? `${backURL}${
+							backURL.includes('?') ? '&' : '?'
+						}runId=${runId}`
+					: backURL
+			);
 		}
 	};
 
@@ -49,17 +44,11 @@ export default function ReviewStep({
 							/>
 						</div>
 
-						{subStep === 'generate' ? (
-							<GenerateStep
-								onBack={handleBack}
-								onCancel={handleBack}
-								onContinue={() =>
-									setSubStep('review-and-publish')
-								}
-							/>
-						) : (
-							<ReviewAndPublishStep />
-						)}
+						<ReviewAndPublishStep
+							cancelURL={cancelURL}
+							onBack={handleBack}
+							runId={runId}
+						/>
 					</ClayLayout.Col>
 				</ClayLayout.Row>
 			</ClayLayout.ContainerFluid>

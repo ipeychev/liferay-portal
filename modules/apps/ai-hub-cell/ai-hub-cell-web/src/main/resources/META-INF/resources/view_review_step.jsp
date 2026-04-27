@@ -15,7 +15,11 @@ ViewContentSitesDisplayContext viewContentSitesDisplayContext = (ViewContentSite
 	module="{ReviewStep} from ai-hub-cell-web"
 	props='<%=
 		HashMapBuilder.<String, Object>put(
-			"backURL", viewContentSitesDisplayContext.getBackURL()
+			"backURL", viewContentSitesDisplayContext.getRefineStepURL()
+		).put(
+			"cancelURL", viewContentSitesDisplayContext.getBackURL()
+		).put(
+			"runId", viewContentSitesDisplayContext.getRunId()
 		).build()
 	%>'
 />
