@@ -10,9 +10,11 @@ import com.liferay.frontend.taglib.clay.servlet.taglib.util.CreationMenu;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.CreationMenuBuilder;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItem;
 import com.liferay.portal.kernel.language.LanguageUtil;
-import com.liferay.portal.kernel.util.HashMapBuilder;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.portlet.url.builder.PortletURLBuilder;
+import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.HashMapBuilder;
+import com.liferay.portal.kernel.util.PortalUtil;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -87,6 +89,13 @@ public class ViewContentSitesDisplayContext {
 		).setMVCPath(
 			"/view_refine_step.jsp"
 		).buildString();
+	}
+
+	public long getRunId() {
+		return GetterUtil.getLong(
+			PortalUtil.getOriginalServletRequest(
+				_httpServletRequest
+			).getParameter("runId"));
 	}
 
 	public String getReviewStepURL() {

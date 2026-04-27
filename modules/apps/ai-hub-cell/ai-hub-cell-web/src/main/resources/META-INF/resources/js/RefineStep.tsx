@@ -10,8 +10,8 @@ import ClayLabel from '@clayui/label';
 import ClayLayout from '@clayui/layout';
 import ClayList from '@clayui/list';
 import ClayPanel from '@clayui/panel';
-import {sub} from 'frontend-js-web';
-import React, {useState} from 'react';
+import {fetch as liferayFetch, sub} from 'frontend-js-web';
+import React, {useEffect, useState} from 'react';
 
 import ContentSampleItem from './components/ContentSampleItem';
 import MultiStepProgress from './components/MultiStepProgress';
@@ -24,187 +24,349 @@ import {SummaryItem} from './types/SummaryItem';
 import {Template} from './types/Template';
 
 interface IProps {
-	attachments?: string[];
 	backURL?: string;
 	cancelURL?: string;
-	contentSamples?: ContentSample[];
 	continueURL?: string;
-	detectedConfig?: DetectedConfigItem[];
-	generatedItems?: GeneratedItem[];
 	onBack?: () => void;
 	onCancel?: () => void;
 	onContinue?: () => void;
-	prompt?: string;
-	summary?: SummaryItem[];
-	templates?: Template[];
+	runId?: number;
 }
 
+interface Artifact {
+	className?: string;
+	fileName?: string;
+	id: number;
+	json?: string;
+	loadOrder?: number;
+}
 
-const MOCK_SUMMARY: SummaryItem[] = [
-	{
-		icon: 'document',
-		title: Liferay.Language.get('total-pages'),
-		value: 60,
-	},
-	{
-		icon: 'automatic-translate',
-		title: Liferay.Language.get('languages'),
-		value: 3,
-	},
-	{
-		icon: 'stars',
-		title: Liferay.Language.get('templates'),
-		value: 3,
-	},
-	{
-		icon: 'document',
-		title: Liferay.Language.get('total-entries'),
-		value: 180,
-	},
+interface Attachment {
+	id: number;
+	title?: string;
+}
+
+interface Run {
+	id: number;
+	name?: string;
+	prompt?: string;
+	runStatus?: {key?: string};
+	targetLanguages?: string;
+}
+
+const RUNS_URL = '/o/content-site-generator/runs';
+
+const PAGE_CLASS_NAMES = [
+	'com.liferay.headless.admin.site.dto.v1_0.SitePage',
+	'com.liferay.headless.delivery.dto.v1_0.SitePage',
 ];
 
-const MOCK_PROMPT =
-	'Generate 10 product pages with detailed specifications, also 10 blogs in spanish and english';
-
-const MOCK_ATTACHMENTS = ['image (2).png', 'image (4).png'];
-
-const MOCK_DETECTED_CONFIG: DetectedConfigItem[] = [
+const TYPE_DEFINITIONS: Array<{
+	className: string;
+	icon: string;
+	label: string;
+}> = [
 	{
-		label: Liferay.Language.get('languages'),
-		value: 'English (US), Spanish',
+		className: 'com.liferay.headless.admin.site.dto.v1_0.SitePage',
+		icon: 'home',
+		label: Liferay.Language.get('site-page'),
 	},
 	{
-		label: Liferay.Language.get('reference-documents'),
-		value: sub(Liferay.Language.get('x-files'), 2),
-	},
-];
-
-const MOCK_TEMPLATES: Template[] = [
-	{
-		entries: 60,
-		icon: 'shopping-cart',
-		labels: [
-			{text: '3 Languages', type: 'success'},
-			{text: '20 Pages', type: 'info'},
-		],
-		name: 'Product Page',
+		className: 'com.liferay.headless.delivery.dto.v1_0.SitePage',
+		icon: 'home',
+		label: Liferay.Language.get('site-page'),
 	},
 	{
-		entries: 60,
-		icon: 'polls',
-		labels: [
-			{text: '3 Languages', type: 'success'},
-			{text: '20 Pages', type: 'info'},
-		],
-		name: 'Comparison Page',
-	},
-	{
-		entries: 60,
+		className: 'com.liferay.headless.delivery.dto.v1_0.StructuredContent',
 		icon: 'document-text',
+		label: Liferay.Language.get('structured-content'),
+	},
+	{
+		className: 'com.liferay.headless.admin.fragment.dto.v1_0.FragmentSet',
+		icon: 'code',
+		label: Liferay.Language.get('fragment'),
+	},
+	{
+		className: 'com.liferay.headless.delivery.dto.v1_0.FragmentEntry',
+		icon: 'code',
+		label: Liferay.Language.get('fragment'),
+	},
+	{
+		className: 'com.liferay.headless.delivery.dto.v1_0.Document',
+		icon: 'document',
+		label: Liferay.Language.get('document'),
+	},
+];
+
+const LANGUAGE_LABELS: Record<string, string> = {
+	de: 'German',
+	en: 'English',
+	es: 'Spanish',
+	fr: 'French',
+	it: 'Italian',
+	ja: 'Japanese',
+	pt: 'Portuguese',
+};
+
+const LANGUAGE_FROM_FILENAME = /-([a-z]{2})(?:[-_][A-Z]{2})?\.json$/i;
+const LANGUAGE_FROM_I18N = /"[a-zA-Z]+_i18n"\s*:\s*\{\s*"([a-z]{2})/;
+
+const getTypeDefinition = (className: string | undefined) =>
+	TYPE_DEFINITIONS.find((definition) => definition.className === className);
+
+const getTypeLabel = (className: string | undefined) =>
+	getTypeDefinition(className)?.label ??
+	(className ? className.split('.').pop() ?? className : '');
+
+const getTypeIcon = (className: string | undefined) =>
+	getTypeDefinition(className)?.icon ?? 'document';
+
+const getLanguageLabel = (code: string) =>
+	LANGUAGE_LABELS[code.toLowerCase()] ?? code.toUpperCase();
+
+const getArtifactLanguage = (artifact: Artifact): string | null => {
+	const fromFilename = artifact.fileName?.match(LANGUAGE_FROM_FILENAME);
+
+	if (fromFilename) {
+		return fromFilename[1].toLowerCase();
+	}
+
+	const fromJson = artifact.json?.match(LANGUAGE_FROM_I18N);
+
+	return fromJson ? fromJson[1].toLowerCase() : null;
+};
+
+const buildSummary = (
+	artifacts: Artifact[],
+	languages: string[],
+	templateCount: number
+): SummaryItem[] => {
+	const pages = artifacts.filter(
+		(artifact) => PAGE_CLASS_NAMES.includes(artifact.className ?? '')
+	).length;
+
+	return [
+		{
+			icon: 'document',
+			title: Liferay.Language.get('total-pages'),
+			value: pages,
+		},
+		{
+			icon: 'automatic-translate',
+			title: Liferay.Language.get('languages'),
+			value: languages.length,
+		},
+		{
+			icon: 'stars',
+			title: Liferay.Language.get('templates'),
+			value: templateCount,
+		},
+		{
+			icon: 'document',
+			title: Liferay.Language.get('total-entries'),
+			value: artifacts.length,
+		},
+	];
+};
+
+const buildTemplates = (
+	artifacts: Artifact[],
+	languageCount: number
+): Template[] => {
+	const grouped = new Map<string, Artifact[]>();
+
+	for (const artifact of artifacts) {
+		const key = artifact.className ?? '';
+		const list = grouped.get(key) ?? [];
+
+		list.push(artifact);
+		grouped.set(key, list);
+	}
+
+	return Array.from(grouped.entries()).map(([className, list]) => ({
+		entries: list.length,
+		icon: getTypeIcon(className),
 		labels: [
-			{text: '3 Languages', type: 'success'},
-			{text: '20 Pages', type: 'info'},
+			{
+				text: sub(
+					Liferay.Language.get('x-languages'),
+					String(languageCount || 1)
+				),
+				type: 'success' as const,
+			},
+			{
+				text: sub(Liferay.Language.get('x-entries'), String(list.length)),
+				type: 'info' as const,
+			},
 		],
-		name: 'Blog Article',
-	},
-];
+		name: getTypeLabel(className),
+	}));
+};
 
-const MOCK_CONTENT_SAMPLES: ContentSample[] = [
-	{
-		fields: [
-			{
-				label: 'SEO Title',
-				value: 'Premium Your content Products | Buy Online',
-			},
-			{
-				label: 'Meta Description',
-				value: 'Shop our selection of high-quality your content products. Fast shipping, competitive prices, and excellent customer service.',
-			},
-			{label: 'URL', value: '/products/your-content'},
-			{label: 'H1 Heading', value: 'Your content Products'},
-			{
-				label: 'Excerpt',
-				value: 'Explore our curated collection of your content products designed for performance and durability.',
-			},
-		],
-		tags: [
-			'Product Name',
-			'SEO Title',
-			'Meta Description',
-			'Price',
-			'SKU',
-			'Description',
-			'Features',
-			'Specifications',
-			'Images',
-			'Stock Status',
-		],
-		title: 'Product Page - Spanish',
-	},
-	{fields: [], tags: [], title: 'Product Page - English'},
-	{fields: [], tags: [], title: 'Blog Article - Spanish'},
-	{fields: [], tags: [], title: 'Blog Article - English'},
-];
+const buildContentSamples = (artifacts: Artifact[]): ContentSample[] =>
+	artifacts.slice(0, 4).map((artifact) => {
+		const language = getArtifactLanguage(artifact);
 
-const MOCK_GENERATED_ITEMS: GeneratedItem[] = [
-	{
-		description: '(15 pages × 2 languages)',
-		title: '30 complete content entries',
-	},
-	{
-		description:
-			'including titles, descriptions, keywords, and structured data',
-		title: 'SEO-optimized metadata',
-	},
-	{
-		description: 'with content for: English (US), Spanish (SP)',
-		title: 'Multi-language support',
-	},
-	{
-		description: 'optimized for each content type',
-		title: 'Layout-specific structures',
-	},
-	{
-		description: 'and canonical URLs for each page',
-		title: 'URL structures',
-	},
-	{
-		description: 'for enhanced search engine visibility',
-		title: 'Schema.org markup',
-	},
-];
+		return {
+			fields: [
+				{label: Liferay.Language.get('file-name'), value: artifact.fileName ?? ''},
+				{label: Liferay.Language.get('class-name'), value: getTypeLabel(artifact.className)},
+				...(language
+					? [
+							{
+								label: Liferay.Language.get('language'),
+								value: getLanguageLabel(language),
+							},
+						]
+					: []),
+			],
+			tags: [],
+			title: `${getTypeLabel(artifact.className)}${
+				language ? ` - ${getLanguageLabel(language)}` : ''
+			}`,
+		};
+	});
+
+const buildGeneratedItems = (
+	artifacts: Artifact[],
+	languages: string[]
+): GeneratedItem[] => {
+	const items: GeneratedItem[] = [
+		{
+			description: sub(
+				Liferay.Language.get(
+					'across-x-content-types-and-x-languages'
+				),
+				String(
+					new Set(
+						artifacts.map((artifact) => artifact.className ?? '')
+					).size
+				),
+				String(languages.length || 1)
+			),
+			title: sub(
+				Liferay.Language.get('x-complete-content-entries'),
+				String(artifacts.length)
+			),
+		},
+	];
+
+	if (languages.length) {
+		items.push({
+			description: languages.map(getLanguageLabel).join(', '),
+			title: Liferay.Language.get('multi-language-support'),
+		});
+	}
+
+	return items;
+};
 
 export default function RefineStep({
-	attachments = MOCK_ATTACHMENTS,
 	backURL,
 	cancelURL,
-	contentSamples = MOCK_CONTENT_SAMPLES,
 	continueURL,
-	detectedConfig = MOCK_DETECTED_CONFIG,
-	generatedItems = MOCK_GENERATED_ITEMS,
 	onBack,
 	onCancel,
 	onContinue,
-	prompt = MOCK_PROMPT,
-	summary = MOCK_SUMMARY,
-	templates = MOCK_TEMPLATES,
+	runId,
 }: IProps) {
+	const [artifacts, setArtifacts] = useState<Artifact[]>([]);
+	const [attachments, setAttachments] = useState<Attachment[]>([]);
+	const [error, setError] = useState<string | null>(null);
+	const [loading, setLoading] = useState(!!runId);
+	const [run, setRun] = useState<Run | null>(null);
 	const [showTip, setShowTip] = useState(true);
+
+	useEffect(() => {
+		if (!runId) {
+			return;
+		}
+
+		let cancelled = false;
+
+		(async () => {
+			try {
+				const [runResponse, artifactsResponse, attachmentsResponse] =
+					await Promise.all([
+						liferayFetch(`${RUNS_URL}/${runId}`),
+						liferayFetch(`${RUNS_URL}/${runId}/artifacts?pageSize=100`),
+						liferayFetch(
+							`${RUNS_URL}/${runId}/attachments?pageSize=100`
+						),
+					]);
+
+				if (!runResponse.ok) {
+					throw new Error(
+						`Failed to load run ${runId} (${runResponse.status})`
+					);
+				}
+
+				const runJson = await runResponse.json();
+				const artifactsJson = artifactsResponse.ok
+					? await artifactsResponse.json()
+					: {items: []};
+				const attachmentsJson = attachmentsResponse.ok
+					? await attachmentsResponse.json()
+					: {items: []};
+
+				if (cancelled) {
+					return;
+				}
+
+				setRun(runJson);
+				setArtifacts(artifactsJson.items ?? []);
+				setAttachments(attachmentsJson.items ?? []);
+			}
+			catch (exception) {
+				if (!cancelled) {
+					setError(
+						exception instanceof Error
+							? exception.message
+							: String(exception)
+					);
+				}
+			}
+			finally {
+				if (!cancelled) {
+					setLoading(false);
+				}
+			}
+		})();
+
+		return () => {
+			cancelled = true;
+		};
+	}, [runId]);
 
 	const handleBack = () => {
 		if (onBack) {
 			onBack();
+
+			return;
 		}
-		else if (backURL) {
+
+		if (backURL) {
 			Liferay.Util.navigate(backURL);
 		}
 	};
 
-	const handleCancel = () => {
+	const handleCancel = async () => {
 		if (onCancel) {
 			onCancel();
+
+			return;
 		}
-		else if (cancelURL) {
+
+		if (runId) {
+			try {
+				await liferayFetch(`${RUNS_URL}/${runId}`, {method: 'DELETE'});
+			}
+			catch (exception) {
+				// Best effort: still navigate away.
+			}
+		}
+
+		if (cancelURL) {
 			Liferay.Util.navigate(cancelURL);
 		}
 	};
@@ -212,11 +374,49 @@ export default function RefineStep({
 	const handleContinue = () => {
 		if (onContinue) {
 			onContinue();
+
+			return;
 		}
-		else if (continueURL) {
-			Liferay.Util.navigate(continueURL);
+
+		if (continueURL) {
+			const separator = continueURL.includes('?') ? '&' : '?';
+
+			Liferay.Util.navigate(
+				runId
+					? `${continueURL}${separator}runId=${runId}`
+					: continueURL
+			);
 		}
 	};
+
+	const languages = Array.from(
+		new Set(
+			artifacts
+				.map((artifact) => getArtifactLanguage(artifact))
+				.filter((language): language is string => !!language)
+		)
+	);
+	const templates = buildTemplates(artifacts, languages.length);
+	const summary = buildSummary(artifacts, languages, templates.length);
+	const contentSamples = buildContentSamples(artifacts);
+	const generatedItems = buildGeneratedItems(artifacts, languages);
+	const detectedConfig: DetectedConfigItem[] = [
+		{
+			label: Liferay.Language.get('languages'),
+			value: languages.length
+				? languages.map(getLanguageLabel).join(', ')
+				: Liferay.Language.get('none-detected'),
+		},
+		{
+			label: Liferay.Language.get('reference-documents'),
+			value: sub(Liferay.Language.get('x-files'), attachments.length),
+		},
+	];
+	const promptText = run?.prompt ?? '';
+	const attachmentNames = attachments.map(
+		(attachment, index) =>
+			attachment.title ?? `${Liferay.Language.get('attachment')} ${index + 1}`
+	);
 
 	return (
 		<div className="content-site-generator">
@@ -249,265 +449,283 @@ export default function RefineStep({
 								</p>
 							</div>
 
-			{summary.length ? (
-				<ClayLayout.Row className="content-site-generator-refine__summary">
-					{summary.map((item, index) => (
-						<ClayLayout.Col key={index} md={3}>
-							<SummaryCard
-								icon={item?.icon}
-								title={item?.title}
-								value={item?.value}
-							/>
-						</ClayLayout.Col>
-					))}
-				</ClayLayout.Row>
-			) : (
-				<ClayEmptyState
-					description={Liferay.Language.get(
-						'configuration-summary-will-appear-here'
-					)}
-					small
-					title={Liferay.Language.get('no-summary-available')}
-				/>
-			)}
+							{error && (
+								<ClayAlert
+									className="mb-3"
+									displayType="danger"
+									onClose={() => setError(null)}
+								>
+									{error}
+								</ClayAlert>
+							)}
 
-			<ClayPanel
-				className="content-site-generator-refine__section"
-				displayType="secondary"
-			>
-				<ClayPanel.Body>
-					<h4 className="content-site-generator-refine__section-title">
-						{Liferay.Language.get('your-prompt')}
-					</h4>
-
-					{prompt && (
-						<>
-							<p className="content-site-generator-refine__prompt">
-								{`"${prompt}"`}
-							</p>
-
-							<div className="dropdown-divider" />
-
-							<p className="content-site-generator-refine__attachments-label text-secondary">
-								{attachments.length
-									? sub(
-											Liferay.Language.get(
-												'attached-files-x'
-											),
-											attachments.length
-										)
-									: Liferay.Language.get('attached-files')}
-							</p>
-
-							{attachments.length ? (
-								<div className="content-site-generator-refine__attachments">
-									{attachments.map(
-										(file: string, index: number) => (
-											<ClayLabel
-												displayType="secondary"
-												key={index}
-											>
-												{file}
-											</ClayLabel>
-										)
+							{loading ? (
+								<ClayEmptyState
+									description={Liferay.Language.get(
+										'fetching-the-generated-content'
 									)}
-								</div>
+									small
+									title={Liferay.Language.get('loading')}
+								/>
 							) : (
-								<p className="font-italic text-secondary">
-									{Liferay.Language.get('no-files-attached')}
-								</p>
-							)}
-						</>
-					)}
-				</ClayPanel.Body>
-			</ClayPanel>
-
-			<ClayPanel
-				className="content-site-generator-refine__section"
-				displayType="secondary"
-			>
-				<ClayPanel.Body>
-					<h4 className="content-site-generator-refine__section-title">
-						{Liferay.Language.get('detected-configuration')}
-					</h4>
-
-					{detectedConfig.length ? (
-						<ClayList className="border-0 content-site-generator-refine__config-list">
-							{detectedConfig.map((item, index) => (
-								<ClayList.Item className="px-0" flex key={index}>
-									<ClayList.ItemField className="p-0" expand>
-										<ClayList.ItemText>
-											{item.label}
-										</ClayList.ItemText>
-									</ClayList.ItemField>
-
-									<ClayList.ItemField>
-										<ClayList.ItemText>
-											{item.value}
-										</ClayList.ItemText>
-									</ClayList.ItemField>
-								</ClayList.Item>
-							))}
-						</ClayList>
-					) : (
-						<ClayEmptyState
-							description={Liferay.Language.get(
-								'detected-settings-will-appear-here'
-							)}
-							small
-							title={Liferay.Language.get(
-								'no-configuration-detected'
-							)}
-						/>
-					)}
-				</ClayPanel.Body>
-			</ClayPanel>
-
-			<section className="content-site-generator-refine__section">
-				<h3 className="content-site-generator-refine__section-heading">
-					{Liferay.Language.get('content-by-template-type')}
-				</h3>
-
-				{templates.length ? (
-					templates.map((template, index) => (
-						<ClayPanel
-						className="content-site-generator-refine__template"
-							displayType='secondary'
-							key={index}
-						>
-							<ClayPanel.Body>
-								<ClayLayout.ContentRow>
-									<ClayLayout.Col size={1}>
-										<ClayIcon symbol={template.icon} />
-									</ClayLayout.Col>
-
-									<ClayLayout.ContentCol expand>
-										<h5 className="content-site-generator-refine__template-name">
-											{template.name}
-										</h5>
-
-										<span className="content-site-generator-refine__template-entries text-secondary">
-											{sub(
-												Liferay.Language.get(
-													'x-entries'
-												),
-												template.entries
-											)}
-										</span>
-
-										<div className="content-site-generator-refine__template-labels">
-											{template.labels.map((label, i) => (
-												<ClayLabel
-													displayType={label.type}
-													key={i}
-												>
-													{label.text}
-												</ClayLabel>
+								<>
+									{summary.length ? (
+										<ClayLayout.Row className="content-site-generator-refine__summary">
+											{summary.map((item, index) => (
+												<ClayLayout.Col key={index} md={3}>
+													<SummaryCard
+														icon={item?.icon}
+														title={item?.title}
+														value={item?.value}
+													/>
+												</ClayLayout.Col>
 											))}
-										</div>
-									</ClayLayout.ContentCol>
-								</ClayLayout.ContentRow>
-							</ClayPanel.Body>
-						</ClayPanel>
-					))
-				) : (
-					<ClayEmptyState
-						description={Liferay.Language.get(
-							'template-breakdown-will-appear-here'
-						)}
-						small
-						title={Liferay.Language.get('no-templates-detected')}
-					/>
-				)}
-			</section>
+										</ClayLayout.Row>
+									) : (
+										<ClayEmptyState
+											description={Liferay.Language.get(
+												'configuration-summary-will-appear-here'
+											)}
+											small
+											title={Liferay.Language.get('no-summary-available')}
+										/>
+									)}
 
-			<section className="content-site-generator-refine__section">
-				<h3 className="content-site-generator-refine__section-heading">
-					{Liferay.Language.get('content-samples')}
-				</h3>
+									<ClayPanel
+										className="content-site-generator-refine__section"
+										displayType="secondary"
+									>
+										<ClayPanel.Body>
+											<h4 className="content-site-generator-refine__section-title">
+												{Liferay.Language.get('your-prompt')}
+											</h4>
 
-				<p className="text-secondary">
-					{Liferay.Language.get(
-						'preview-of-how-your-generated-content-will-be-structured'
-					)}
-				</p>
+											{promptText && (
+												<>
+													<p className="content-site-generator-refine__prompt">
+														{`"${promptText}"`}
+													</p>
 
-				{contentSamples.length ? (
-					contentSamples.map((sample, index) => (
-						<ContentSampleItem
-							defaultExpanded={index === 0}
-							key={index}
-							sample={sample}
-						/>
-					))
-				) : (
-					<ClayEmptyState
-						description={Liferay.Language.get(
-							'content-previews-will-appear-here'
-						)}
-						small
-						title={Liferay.Language.get(
-							'no-content-samples-available'
-						)}
-					/>
-				)}
-			</section>
+													<div className="dropdown-divider" />
 
-			<section>
-				<h3 className='mb-3'>
-					{Liferay.Language.get('what-will-be-generated?')}
-				</h3>
+													<p className="content-site-generator-refine__attachments-label text-secondary">
+														{attachmentNames.length
+															? sub(
+																	Liferay.Language.get(
+																		'attached-files-x'
+																	),
+																	attachmentNames.length
+																)
+															: Liferay.Language.get('attached-files')}
+													</p>
 
-				{generatedItems.length ? (
-					<ClayList className="content-site-generator-refine__generated-list">
-								{generatedItems.map((item, index) => (
-									<ClayList.Item flex key={index}>
-										<ClayList.ItemField>
-											<ClayIcon
-												symbol="check"
+													{attachmentNames.length ? (
+														<div className="content-site-generator-refine__attachments">
+															{attachmentNames.map(
+																(file: string, index: number) => (
+																	<ClayLabel
+																		displayType="secondary"
+																		key={index}
+																	>
+																		{file}
+																	</ClayLabel>
+																)
+															)}
+														</div>
+													) : (
+														<p className="font-italic text-secondary">
+															{Liferay.Language.get('no-files-attached')}
+														</p>
+													)}
+												</>
+											)}
+										</ClayPanel.Body>
+									</ClayPanel>
+
+									<ClayPanel
+										className="content-site-generator-refine__section"
+										displayType="secondary"
+									>
+										<ClayPanel.Body>
+											<h4 className="content-site-generator-refine__section-title">
+												{Liferay.Language.get('detected-configuration')}
+											</h4>
+
+											{detectedConfig.length ? (
+												<ClayList className="border-0 content-site-generator-refine__config-list">
+													{detectedConfig.map((item, index) => (
+														<ClayList.Item className="px-0" flex key={index}>
+															<ClayList.ItemField className="p-0" expand>
+																<ClayList.ItemText>
+																	{item.label}
+																</ClayList.ItemText>
+															</ClayList.ItemField>
+
+															<ClayList.ItemField>
+																<ClayList.ItemText>
+																	{item.value}
+																</ClayList.ItemText>
+															</ClayList.ItemField>
+														</ClayList.Item>
+													))}
+												</ClayList>
+											) : (
+												<ClayEmptyState
+													description={Liferay.Language.get(
+														'detected-settings-will-appear-here'
+													)}
+													small
+													title={Liferay.Language.get(
+														'no-configuration-detected'
+													)}
+												/>
+											)}
+										</ClayPanel.Body>
+									</ClayPanel>
+
+									<section className="content-site-generator-refine__section">
+										<h3 className="content-site-generator-refine__section-heading">
+											{Liferay.Language.get('content-by-template-type')}
+										</h3>
+
+										{templates.length ? (
+											templates.map((template, index) => (
+												<ClayPanel
+													className="content-site-generator-refine__template"
+													displayType="secondary"
+													key={index}
+												>
+													<ClayPanel.Body>
+														<ClayLayout.ContentRow>
+															<ClayLayout.Col size={1}>
+																<ClayIcon symbol={template.icon} />
+															</ClayLayout.Col>
+
+															<ClayLayout.ContentCol expand>
+																<h5 className="content-site-generator-refine__template-name">
+																	{template.name}
+																</h5>
+
+																<span className="content-site-generator-refine__template-entries text-secondary">
+																	{sub(
+																		Liferay.Language.get(
+																			'x-entries'
+																		),
+																		template.entries
+																	)}
+																</span>
+
+																<div className="content-site-generator-refine__template-labels">
+																	{template.labels.map((label, i) => (
+																		<ClayLabel
+																			displayType={label.type}
+																			key={i}
+																		>
+																			{label.text}
+																		</ClayLabel>
+																	))}
+																</div>
+															</ClayLayout.ContentCol>
+														</ClayLayout.ContentRow>
+													</ClayPanel.Body>
+												</ClayPanel>
+											))
+										) : (
+											<ClayEmptyState
+												description={Liferay.Language.get(
+													'template-breakdown-will-appear-here'
+												)}
+												small
+												title={Liferay.Language.get('no-templates-detected')}
 											/>
-										</ClayList.ItemField>
+										)}
+									</section>
 
-										<ClayList.ItemField expand>
-											<ClayList.ItemText>
-												<strong>{item.title}</strong>
+									<section className="content-site-generator-refine__section">
+										<h3 className="content-site-generator-refine__section-heading">
+											{Liferay.Language.get('content-samples')}
+										</h3>
 
-												{item.description
-													? ` ${item.description}`
-													: ''}
-											</ClayList.ItemText>
-										</ClayList.ItemField>
-									</ClayList.Item>
-								))}
-							</ClayList>
-				) : (
-					<ClayEmptyState
-						description={Liferay.Language.get(
-							'generation-breakdown-will-appear-here'
-						)}
-						small
-						title={Liferay.Language.get('nothing-to-generate-yet')}
-					/>
-				)}
-			</section>
+										<p className="text-secondary">
+											{Liferay.Language.get(
+												'preview-of-how-your-generated-content-will-be-structured'
+											)}
+										</p>
 
-			{showTip && (
-				<ClayAlert
-					className="content-site-generator-refine__tip"
-					displayType="info"
-					onClose={() => setShowTip(false)}
-					title={Liferay.Language.get('tip')}
-				>
-					{Liferay.Language.get(
-						'use-the-chat-on-the-left-to-refine-your-requirements-before-generating-you-can-ask-to-add-more-pages-change-layouts-or-adjust-any-configuration'
-					)}
-				</ClayAlert>
-			)}
+										{contentSamples.length ? (
+											contentSamples.map((sample, index) => (
+												<ContentSampleItem
+													defaultExpanded={index === 0}
+													key={index}
+													sample={sample}
+												/>
+											))
+										) : (
+											<ClayEmptyState
+												description={Liferay.Language.get(
+													'content-previews-will-appear-here'
+												)}
+												small
+												title={Liferay.Language.get(
+													'no-content-samples-available'
+												)}
+											/>
+										)}
+									</section>
+
+									<section>
+										<h3 className="mb-3">
+											{Liferay.Language.get('what-will-be-generated?')}
+										</h3>
+
+										{generatedItems.length ? (
+											<ClayList className="content-site-generator-refine__generated-list">
+												{generatedItems.map((item, index) => (
+													<ClayList.Item flex key={index}>
+														<ClayList.ItemField>
+															<ClayIcon symbol="check" />
+														</ClayList.ItemField>
+
+														<ClayList.ItemField expand>
+															<ClayList.ItemText>
+																<strong>{item.title}</strong>
+
+																{item.description
+																	? ` ${item.description}`
+																	: ''}
+															</ClayList.ItemText>
+														</ClayList.ItemField>
+													</ClayList.Item>
+												))}
+											</ClayList>
+										) : (
+											<ClayEmptyState
+												description={Liferay.Language.get(
+													'generation-breakdown-will-appear-here'
+												)}
+												small
+												title={Liferay.Language.get('nothing-to-generate-yet')}
+											/>
+										)}
+									</section>
+
+									{showTip && (
+										<ClayAlert
+											className="content-site-generator-refine__tip"
+											displayType="info"
+											onClose={() => setShowTip(false)}
+											title={Liferay.Language.get('tip')}
+										>
+											{Liferay.Language.get(
+												'use-the-chat-on-the-left-to-refine-your-requirements-before-generating-you-can-ask-to-add-more-pages-change-layouts-or-adjust-any-configuration'
+											)}
+										</ClayAlert>
+									)}
+								</>
+							)}
 
 							<StepActions
-								backLabel={Liferay.Language.get(
-									'back-to-prompt'
-								)}
+								backLabel={Liferay.Language.get('back-to-prompt')}
 								onBack={handleBack}
 								onCancel={handleCancel}
 								onContinue={handleContinue}

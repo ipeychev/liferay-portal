@@ -20,6 +20,8 @@ ViewContentSitesDisplayContext viewContentSitesDisplayContext = (ViewContentSite
 			"cancelURL", viewContentSitesDisplayContext.getBackURL()
 		).put(
 			"continueURL", viewContentSitesDisplayContext.getReviewStepURL()
+		).put(
+			"runId", viewContentSitesDisplayContext.getRunId()
 		).build()
 	%>'
 />
