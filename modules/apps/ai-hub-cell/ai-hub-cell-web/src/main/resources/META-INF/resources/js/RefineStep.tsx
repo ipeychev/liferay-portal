@@ -303,16 +303,35 @@ export default function RefineStep({
 				}
 
 				const runJson = await runResponse.json();
+
+				if (cancelled) {
+					return;
+				}
+
+				const statusKey =
+					runJson?.runStatus?.key?.toString().toLowerCase() ?? '';
+
+				if (
+					continueURL &&
+					(statusKey === 'committed' || statusKey === 'generating')
+				) {
+					const separator = continueURL.includes('?') ? '&' : '?';
+
+					cancelled = true;
+
+					Liferay.Util.navigate(
+						`${continueURL}${separator}runId=${runId}`
+					);
+
+					return;
+				}
+
 				const artifactsJson = artifactsResponse.ok
 					? await artifactsResponse.json()
 					: {items: []};
 				const attachmentsJson = attachmentsResponse.ok
 					? await attachmentsResponse.json()
 					: {items: []};
-
-				if (cancelled) {
-					return;
-				}
 
 				setRun(runJson);
 				setArtifacts(artifactsJson.items ?? []);
@@ -337,7 +356,7 @@ export default function RefineStep({
 		return () => {
 			cancelled = true;
 		};
-	}, [runId]);
+	}, [continueURL, runId]);
 
 	const handleBack = () => {
 		if (onBack) {
