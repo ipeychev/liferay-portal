@@ -8,37 +8,65 @@ import ClayIcon from '@clayui/icon';
 import React from 'react';
 
 interface IProps {
+	backDisabled?: boolean;
 	backLabel: string;
+	cancelDisabled?: boolean;
 	cancelLabel?: string;
+	continueDisabled?: boolean;
 	continueLabel?: string;
+	continueLoading?: boolean;
 	onBack: () => void;
 	onCancel: () => void;
 	onContinue: () => void;
 }
 
 export default function StepActions({
+	backDisabled,
 	backLabel,
+	cancelDisabled,
 	cancelLabel = Liferay.Language.get('cancel'),
+	continueDisabled,
 	continueLabel = Liferay.Language.get('continue'),
+	continueLoading,
 	onBack,
 	onCancel,
 	onContinue,
 }: IProps) {
 	return (
 		<div className="content-site-generator__step-actions">
-			<ClayButton displayType="link" onClick={onBack}>
+			<ClayButton
+				disabled={backDisabled}
+				displayType="link"
+				onClick={onBack}
+			>
 				<ClayIcon className="mr-1" symbol="angle-left" />
 
 				{backLabel}
 			</ClayButton>
 
 			<div className="content-site-generator__step-actions-end">
-				<ClayButton displayType="secondary" onClick={onCancel}>
+				<ClayButton
+					disabled={cancelDisabled}
+					displayType="secondary"
+					onClick={onCancel}
+				>
 					{cancelLabel}
 				</ClayButton>
 
-				<ClayButton displayType="primary" onClick={onContinue}>
+				<ClayButton
+					className="content-site-generator__step-actions-continue"
+					disabled={continueDisabled || continueLoading}
+					displayType="primary"
+					onClick={onContinue}
+				>
 					{continueLabel}
+
+					{continueLoading && (
+						<span
+							aria-hidden="true"
+							className="content-site-generator__step-actions-spinner loading-animation loading-animation-sm"
+						/>
+					)}
 				</ClayButton>
 			</div>
 		</div>

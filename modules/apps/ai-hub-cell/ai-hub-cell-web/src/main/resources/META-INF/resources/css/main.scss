@@ -232,6 +232,134 @@
 	}
 }
 
+.content-site-generator-review {
+	&__header {
+		margin-bottom: 1.5rem;
+
+		h3 {
+			font-weight: 600;
+			margin-bottom: 0.25rem;
+		}
+
+		p {
+			margin-bottom: 0;
+		}
+	}
+
+	&__summary {
+		margin-bottom: 2rem;
+	}
+
+	&__phases {
+		list-style: none;
+		margin: 0 0 2rem;
+		padding: 0;
+	}
+
+	&__phase {
+		border: 1px solid $gray-200;
+		border-radius: 0.25rem;
+		margin-bottom: 0.75rem;
+		padding: 0.875rem 1rem;
+
+		&--complete {
+			border-color: $success;
+		}
+
+		&--pending {
+			background-color: $gray-100;
+			color: $gray-500;
+		}
+
+		&--failed {
+			border-color: $danger;
+		}
+	}
+
+	&__phase-header {
+		align-items: center;
+		display: flex;
+		gap: 0.625rem;
+	}
+
+	&__phase-icon {
+		align-items: center;
+		display: inline-flex;
+		flex-shrink: 0;
+		height: 1.25rem;
+		justify-content: center;
+		width: 1.25rem;
+
+		.lexicon-icon {
+			height: 1.25rem;
+			width: 1.25rem;
+		}
+
+		.content-site-generator-review__phase--complete & .lexicon-icon {
+			color: $success;
+		}
+
+		.content-site-generator-review__phase--failed & .lexicon-icon {
+			color: $danger;
+		}
+	}
+
+	&__phase-dot {
+		background-color: $primary;
+		border-radius: 50%;
+		display: inline-block;
+		height: 0.875rem;
+		width: 0.875rem;
+
+		&--pending {
+			background-color: $gray-300;
+		}
+	}
+
+	&__phase-label {
+		flex: 1;
+		font-weight: 600;
+	}
+
+	&__phase-bar {
+		align-items: center;
+		background-color: $gray-200;
+		border-radius: 0.25rem;
+		display: flex;
+		gap: 0.75rem;
+		height: 0.5rem;
+		margin-top: 0.625rem;
+		overflow: visible;
+		position: relative;
+	}
+
+	&__phase-bar-fill {
+		background-color: $primary;
+		border-radius: 0.25rem;
+		height: 100%;
+		transition: width 0.2s ease-in-out;
+
+		.content-site-generator-review__phase--complete & {
+			background-color: $success;
+		}
+	}
+
+	&__phase-bar-check {
+		color: $success;
+		flex-shrink: 0;
+		height: 1rem;
+		margin-left: auto;
+		width: 1rem;
+	}
+
+	&__phase-bar-percentage {
+		color: $secondary;
+		flex-shrink: 0;
+		font-size: 0.75rem;
+		margin-left: auto;
+	}
+}
+
 .content-site-generator-refine {
 	&__section,
 	&__summary {

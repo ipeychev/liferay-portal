@@ -8,11 +8,12 @@ import ClayButton from '@clayui/button';
 import ClayEmptyState from '@clayui/empty-state';
 import ClayIcon from '@clayui/icon';
 import ClayLabel from '@clayui/label';
-import {ClayPaginationWithBasicItems} from '@clayui/pagination';
-import ClayPaginationBar from '@clayui/pagination-bar';
-import ClayTable from '@clayui/table';
+import ClayLayout from '@clayui/layout';
 import {fetch as liferayFetch} from 'frontend-js-web';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
+
+import StepActions from './components/StepActions';
+import SummaryCard from './components/SummaryCard';
 
 const SPRITEMAP = `${Liferay.ThemeDisplay.getPathThemeImages()}/lexicon/icons.svg`;
 
@@ -24,41 +25,24 @@ const POLL_INTERVAL_MS = 2_000;
 
 const POLL_TIMEOUT_MS = 10 * 60 * 1_000;
 
-const TYPE_DEFINITIONS: Array<{
-	className: string;
-	icon: string;
-	labelKey: string;
-}> = [
-	{
-		className: 'com.liferay.headless.admin.site.dto.v1_0.Site',
-		icon: 'sites',
-		labelKey: 'site',
-	},
-	{
-		className: 'com.liferay.headless.delivery.dto.v1_0.SitePage',
-		icon: 'page',
-		labelKey: 'site-page',
-	},
-	{
-		className: 'com.liferay.headless.delivery.dto.v1_0.Layout',
-		icon: 'page',
-		labelKey: 'site-page',
-	},
-	{
-		className: 'com.liferay.headless.delivery.dto.v1_0.StructuredContent',
-		icon: 'document',
-		labelKey: 'structured-content',
-	},
-	{
-		className: 'com.liferay.headless.admin.fragment.dto.v1_0.FragmentSet',
-		icon: 'code',
-		labelKey: 'fragment',
-	},
+const PAGE_CLASS_NAMES = [
+	'com.liferay.headless.admin.site.dto.v1_0.SitePage',
+	'com.liferay.headless.delivery.dto.v1_0.SitePage',
 ];
 
 const LANGUAGE_FROM_FILENAME = /-([a-z]{2})(?:[-_][A-Z]{2})?\.json$/i;
 
 const LANGUAGE_FROM_I18N = /"[a-zA-Z]+_i18n"\s*:\s*\{\s*"([a-z]{2})/;
+
+const PHASE_KEYS = [
+	'analyzing-reference-documents',
+	'extracting-key-topics-and-features',
+	'generating-contents',
+	'generating-content-pages',
+	'localizing-to-target-languages',
+	'tbd',
+	'seo-optimization',
+];
 
 interface Artifact {
 	className?: string;
@@ -84,18 +68,6 @@ interface IProps {
 const sleep = (ms: number) =>
 	new Promise<void>((resolve) => setTimeout(resolve, ms));
 
-const getTypeDefinition = (className?: string) =>
-	TYPE_DEFINITIONS.find((definition) => definition.className === className);
-
-const getTypeLabel = (className?: string) => {
-	const labelKey = getTypeDefinition(className)?.labelKey;
-
-	return labelKey ? Liferay.Language.get(labelKey) : (className ?? '');
-};
-
-const getTypeIcon = (className?: string) =>
-	getTypeDefinition(className)?.icon ?? 'document';
-
 const getArtifactLanguage = (artifact: Artifact): string | null => {
 	const fromFilename = artifact.fileName?.match(LANGUAGE_FROM_FILENAME);
 
@@ -105,11 +77,7 @@ const getArtifactLanguage = (artifact: Artifact): string | null => {
 
 	const fromJson = artifact.json?.match(LANGUAGE_FROM_I18N);
 
-	if (fromJson) {
-		return fromJson[1].toLowerCase();
-	}
-
-	return null;
+	return fromJson ? fromJson[1].toLowerCase() : null;
 };
 
 const getItemCount = (artifact: Artifact): number => {
@@ -131,18 +99,6 @@ const getItemCount = (artifact: Artifact): number => {
 	return 1;
 };
 
-const buildTitle = (artifact: Artifact) => {
-	const className = artifact.className;
-	const language = getArtifactLanguage(artifact);
-	const typeLabel = getTypeLabel(className);
-
-	if (artifact.fileName) {
-		return artifact.fileName;
-	}
-
-	return language ? `${typeLabel} (${language.toUpperCase()})` : typeLabel;
-};
-
 export default function ReviewAndPublishStep({
 	cancelURL,
 	onBack,
@@ -150,12 +106,13 @@ export default function ReviewAndPublishStep({
 }: IProps) {
 	const [artifacts, setArtifacts] = useState<Artifact[]>([]);
 	const [error, setError] = useState<string | null>(null);
+	const [failed, setFailed] = useState(false);
 	const [loading, setLoading] = useState(true);
-	const [page, setPage] = useState(1);
-	const [pageSize, setPageSize] = useState(10);
-	const [publishing, setPublishing] = useState(false);
+	const [mode, setMode] = useState<'generating' | 'review'>('generating');
+	const [phaseIndex, setPhaseIndex] = useState(0);
 	const [run, setRun] = useState<Run | null>(null);
-	const [totalCount, setTotalCount] = useState(0);
+
+	const pollingRef = useRef(false);
 
 	useEffect(() => {
 		if (!runId) {
@@ -175,8 +132,8 @@ export default function ReviewAndPublishStep({
 				const [runResponse, artifactsResponse] = await Promise.all([
 					liferayFetch(`${RUNS_URL}/${runId}`),
 					liferayFetch(
-						`${RUNS_URL}/${runId}/artifacts?page=${page}` +
-							`&pageSize=${pageSize}&sort=loadOrder:asc`
+						`${RUNS_URL}/${runId}/artifacts?pageSize=100` +
+							`&sort=loadOrder:asc`
 					),
 				]);
 
@@ -186,7 +143,7 @@ export default function ReviewAndPublishStep({
 					);
 				}
 
-				const runJson = await runResponse.json();
+				const runJson: Run = await runResponse.json();
 				const artifactsJson = await artifactsResponse.json();
 
 				if (cancelled) {
@@ -195,7 +152,22 @@ export default function ReviewAndPublishStep({
 
 				setRun(runJson);
 				setArtifacts(artifactsJson.items ?? []);
-				setTotalCount(artifactsJson.totalCount ?? 0);
+
+				const status = runJson.runStatus?.key;
+
+				if (status === 'committed') {
+					setPhaseIndex(PHASE_KEYS.length);
+					setMode('review');
+				}
+				else if (status === 'failed') {
+					setFailed(true);
+					setError(
+						runJson.failureReason ||
+							Liferay.Language.get(
+								'failed-to-generate-please-try-again'
+							)
+					);
+				}
 			}
 			catch (exception) {
 				if (!cancelled) {
@@ -216,13 +188,125 @@ export default function ReviewAndPublishStep({
 		return () => {
 			cancelled = true;
 		};
-	}, [page, pageSize, runId]);
+	}, [runId]);
 
-	const handleCancel = () => {
-		if (cancelURL) {
-			Liferay.Util.navigate(cancelURL);
+	useEffect(() => {
+		if (!runId || loading || mode !== 'generating' || failed) {
+			return;
 		}
-	};
+
+		if (pollingRef.current) {
+			return;
+		}
+
+		pollingRef.current = true;
+
+		let cancelled = false;
+
+		(async () => {
+			const deadline = Date.now() + POLL_TIMEOUT_MS;
+
+			while (!cancelled && Date.now() < deadline) {
+				await sleep(POLL_INTERVAL_MS);
+
+				if (cancelled) {
+					return;
+				}
+
+				setPhaseIndex((current) =>
+					Math.min(current + 1, PHASE_KEYS.length - 1)
+				);
+
+				try {
+					const pollResponse = await liferayFetch(
+						`${RUNS_URL}/${runId}`
+					);
+
+					if (!pollResponse.ok) {
+						throw new Error(
+							`Failed to poll run (${pollResponse.status})`
+						);
+					}
+
+					const pollRun: Run = await pollResponse.json();
+					const pollStatus = pollRun.runStatus?.key;
+
+					if (cancelled) {
+						return;
+					}
+
+					setRun(pollRun);
+
+					if (pollStatus === 'committed') {
+						setPhaseIndex(PHASE_KEYS.length);
+
+						return;
+					}
+
+					if (pollStatus === 'failed') {
+						setFailed(true);
+						setError(
+							pollRun.failureReason ||
+								Liferay.Language.get(
+									'failed-to-generate-please-try-again'
+								)
+						);
+
+						return;
+					}
+				}
+				catch (exception) {
+					if (cancelled) {
+						return;
+					}
+
+					setError(
+						exception instanceof Error
+							? exception.message
+							: String(exception)
+					);
+
+					return;
+				}
+			}
+
+			if (!cancelled) {
+				setError(
+					Liferay.Language.get(
+						'generation-timed-out-please-try-again'
+					)
+				);
+			}
+		})();
+
+		return () => {
+			cancelled = true;
+			pollingRef.current = false;
+		};
+	}, [failed, loading, mode, runId]);
+
+	const status = run?.runStatus?.key ?? 'draft';
+
+	const generationComplete = phaseIndex >= PHASE_KEYS.length;
+
+	const languages = new Set<string>();
+
+	for (const artifact of artifacts) {
+		const language = getArtifactLanguage(artifact);
+
+		if (language) {
+			languages.add(language);
+		}
+	}
+
+	const totalItems = artifacts.reduce(
+		(sum, artifact) => sum + getItemCount(artifact),
+		0
+	);
+
+	const pageCount = artifacts.filter((artifact) =>
+		PAGE_CLASS_NAMES.includes(artifact.className ?? '')
+	).length;
 
 	const handleBack = () => {
 		if (onBack) {
@@ -230,84 +314,29 @@ export default function ReviewAndPublishStep({
 		}
 	};
 
-	const handlePublish = async () => {
-		if (!runId || publishing) {
-			return;
-		}
-
-		setPublishing(true);
-		setError(null);
-
-		try {
-			const commitResponse = await liferayFetch(
-				`${RUNS_URL}/${runId}/object-actions/commit`,
-				{
-					headers: {'Content-Type': 'application/json'},
-					method: 'PUT',
-				}
-			);
-
-			if (!commitResponse.ok) {
-				throw new Error(
-					`Failed to start commit (${commitResponse.status})`
-				);
-			}
-
-			const deadline = Date.now() + POLL_TIMEOUT_MS;
-
-			while (Date.now() < deadline) {
-				await sleep(POLL_INTERVAL_MS);
-
-				const pollResponse = await liferayFetch(
-					`${RUNS_URL}/${runId}`
-				);
-
-				if (!pollResponse.ok) {
-					throw new Error(
-						`Failed to poll run (${pollResponse.status})`
-					);
-				}
-
-				const pollRun: Run = await pollResponse.json();
-				const status = pollRun.runStatus?.key;
-
-				setRun(pollRun);
-
-				if (status === 'committed') {
-					await navigateToResultingSite(pollRun);
-
-					return;
-				}
-
-				if (status === 'failed') {
-					throw new Error(
-						pollRun.failureReason ||
-							Liferay.Language.get(
-								'failed-to-publish-please-try-again'
-							)
-					);
-				}
-			}
-
-			throw new Error(
-				Liferay.Language.get('publishing-timed-out-please-try-again')
-			);
-		}
-		catch (exception) {
-			setError(
-				exception instanceof Error
-					? exception.message
-					: String(exception)
-			);
-			setPublishing(false);
+	const handleCancel = () => {
+		if (cancelURL) {
+			Liferay.Util.navigate(cancelURL);
 		}
 	};
 
-	const navigateToResultingSite = async (resolvedRun: Run) => {
-		const externalReferenceCode = resolvedRun.resultingSiteERC;
+	const handleContinue = async () => {
+		if (mode === 'generating') {
+			if (!generationComplete || failed) {
+				return;
+			}
+
+			setMode('review');
+
+			return;
+		}
+
+		const externalReferenceCode = run?.resultingSiteERC;
 
 		if (!externalReferenceCode) {
-			setPublishing(false);
+			if (cancelURL) {
+				Liferay.Util.navigate(cancelURL);
+			}
 
 			return;
 		}
@@ -331,53 +360,59 @@ export default function ReviewAndPublishStep({
 			// Fall through to cancelURL.
 		}
 
-		setPublishing(false);
-
 		if (cancelURL) {
 			Liferay.Util.navigate(cancelURL);
 		}
 	};
 
-	const status = run?.runStatus?.key ?? 'draft';
-	const languages = new Set<string>();
-
-	for (const artifact of artifacts) {
-		const language = getArtifactLanguage(artifact);
-
-		if (language) {
-			languages.add(language);
-		}
-	}
-
-	const totalItems = artifacts.reduce(
-		(sum, artifact) => sum + getItemCount(artifact),
-		0
-	);
-
 	if (loading) {
 		return (
-			<ClayEmptyState
-				description={Liferay.Language.get(
-					'loading-the-generated-content'
-				)}
-				spritemap={SPRITEMAP}
-				title=""
-			/>
+			<div className="content-site-generator-review">
+				<ClayEmptyState
+					description={Liferay.Language.get(
+						'loading-the-generated-content'
+					)}
+					small
+					title=""
+				/>
+			</div>
 		);
 	}
 
+	const summary = [
+		{
+			icon: 'document',
+			title: Liferay.Language.get('content-entries'),
+			value: totalItems,
+		},
+		{
+			icon: 'page',
+			title: Liferay.Language.get('content-pages'),
+			value: pageCount,
+		},
+		{
+			icon: 'automatic-translate',
+			title: Liferay.Language.get('languages'),
+			value: languages.size,
+		},
+	];
+
 	return (
-		<div className="content-site-generator__review">
-			<div className="content-site-generator__review-header">
-				<h3 className="content-site-generator__section-title">
-					{Liferay.Language.get('review-and-publish')}
+		<div className="content-site-generator-review">
+			<div className="content-site-generator-review__header">
+				<h3>
+					{mode === 'review'
+						? Liferay.Language.get('review-and-publish')
+						: Liferay.Language.get('generate')}
 				</h3>
 
-				<p className="text-secondary">
-					{Liferay.Language.get(
-						'review-generated-pages-before-publishing-to-cms'
-					)}
-				</p>
+				{mode === 'review' && (
+					<p className="text-secondary">
+						{Liferay.Language.get(
+							'your-site-is-ready-open-it-when-you-are-done-here'
+						)}
+					</p>
+				)}
 			</div>
 
 			{error && (
@@ -390,221 +425,142 @@ export default function ReviewAndPublishStep({
 				</ClayAlert>
 			)}
 
-			<div className="content-site-generator__stats">
-				<div className="content-site-generator__stat">
-					<div className="content-site-generator__stat-label">
-						<ClayIcon
-							className="mr-2 text-secondary"
-							spritemap={SPRITEMAP}
-							symbol="document"
+			<ClayLayout.Row className="content-site-generator-review__summary">
+				{summary.map((item, index) => (
+					<ClayLayout.Col key={index} md={4}>
+						<SummaryCard
+							icon={item.icon}
+							title={item.title}
+							value={item.value}
 						/>
+					</ClayLayout.Col>
+				))}
+			</ClayLayout.Row>
 
-						{Liferay.Language.get('total-items')}
-					</div>
+			{mode === 'generating' && (
+				<ul className="content-site-generator-review__phases">
+					{PHASE_KEYS.map((key, index) => {
+						const isComplete = index < phaseIndex;
+						const isActive = index === phaseIndex && !failed;
+						const isFailed = index === phaseIndex && failed;
+						const percentage = isComplete
+							? 100
+							: isActive
+								? 10
+								: 0;
 
-					<div className="content-site-generator__stat-value">
-						{totalItems}
-					</div>
-				</div>
+						const stateClassName = isComplete
+							? 'content-site-generator-review__phase--complete'
+							: isFailed
+								? 'content-site-generator-review__phase--failed'
+								: isActive
+									? 'content-site-generator-review__phase--active'
+									: 'content-site-generator-review__phase--pending';
 
-				<div className="content-site-generator__stat">
-					<div className="content-site-generator__stat-label">
-						<ClayIcon
-							className="mr-2 text-secondary"
-							spritemap={SPRITEMAP}
-							symbol="globe"
-						/>
-
-						{Liferay.Language.get('languages')}
-					</div>
-
-					<div className="content-site-generator__stat-value">
-						{languages.size}
-					</div>
-				</div>
-
-				<div className="content-site-generator__stat">
-					<div className="content-site-generator__stat-label">
-						<ClayIcon
-							className="mr-2 text-secondary"
-							spritemap={SPRITEMAP}
-							symbol="info-circle"
-						/>
-
-						{Liferay.Language.get('status')}
-					</div>
-
-					<div className="content-site-generator__stat-value">
-						<ClayLabel
-							displayType={
-								status === 'committed' ? 'success' : 'secondary'
-							}
-						>
-							{Liferay.Language.get(status).toUpperCase()}
-						</ClayLabel>
-					</div>
-				</div>
-			</div>
-
-			{!artifacts.length ? (
-				<ClayEmptyState
-					description={Liferay.Language.get(
-						'no-generated-content-found'
-					)}
-					spritemap={SPRITEMAP}
-					title={Liferay.Language.get('no-items-yet')}
-				/>
-			) : (
-				<>
-					<ClayTable className="content-site-generator__table">
-						<ClayTable.Head>
-							<ClayTable.Row>
-								<ClayTable.Cell headingCell>
-									{Liferay.Language.get('title')}
-								</ClayTable.Cell>
-
-								<ClayTable.Cell headingCell>
-									{Liferay.Language.get('type')}
-								</ClayTable.Cell>
-
-								<ClayTable.Cell headingCell>
-									{Liferay.Language.get('language')}
-								</ClayTable.Cell>
-
-								<ClayTable.Cell headingCell>
-									{Liferay.Language.get('items')}
-								</ClayTable.Cell>
-							</ClayTable.Row>
-						</ClayTable.Head>
-
-						<ClayTable.Body>
-							{artifacts.map((artifact) => {
-								const language = getArtifactLanguage(artifact);
-
-								return (
-									<ClayTable.Row key={artifact.id}>
-										<ClayTable.Cell>
+						return (
+							<li
+								className={`content-site-generator-review__phase ${stateClassName}`}
+								key={key}
+							>
+								<div className="content-site-generator-review__phase-header">
+									<span className="content-site-generator-review__phase-icon">
+										{isComplete && (
 											<ClayIcon
-												className="mr-2 text-secondary"
 												spritemap={SPRITEMAP}
-												symbol={getTypeIcon(
-													artifact.className
-												)}
+												symbol="check-circle-full"
 											/>
-
-											{buildTitle(artifact)}
-										</ClayTable.Cell>
-
-										<ClayTable.Cell>
-											{getTypeLabel(artifact.className)}
-										</ClayTable.Cell>
-
-										<ClayTable.Cell>
-											{language
-												? language.toUpperCase()
-												: Liferay.Language.get(
-														'none-detected'
-													)}
-										</ClayTable.Cell>
-
-										<ClayTable.Cell>
-											{getItemCount(artifact)}
-										</ClayTable.Cell>
-									</ClayTable.Row>
-								);
-							})}
-						</ClayTable.Body>
-					</ClayTable>
-
-					{totalCount > pageSize && (
-						<ClayPaginationBar>
-							<ClayPaginationBar.DropDown
-								items={[10, 20, 30, 50].map((size) => ({
-									label: String(size),
-									onClick: () => {
-										setPageSize(size);
-										setPage(1);
-									},
-								}))}
-								trigger={
-									<ClayButton displayType="unstyled">
-										{Liferay.Util.sub(
-											Liferay.Language.get('x-items'),
-											String(pageSize)
 										)}
 
-										<ClayIcon
-											className="ml-1"
-											spritemap={SPRITEMAP}
-											symbol="caret-bottom"
+										{isActive && (
+											<span
+												aria-hidden="true"
+												className="content-site-generator-review__phase-dot"
+											/>
+										)}
+
+										{isFailed && (
+											<ClayIcon
+												spritemap={SPRITEMAP}
+												symbol="exclamation-circle"
+											/>
+										)}
+
+										{!isComplete &&
+											!isActive &&
+											!isFailed && (
+												<span
+													aria-hidden="true"
+													className="content-site-generator-review__phase-dot content-site-generator-review__phase-dot--pending"
+												/>
+											)}
+									</span>
+
+									<span className="content-site-generator-review__phase-label">
+										{Liferay.Language.get(key)}
+									</span>
+
+									{(isComplete || isActive) && (
+										<ClayLabel
+											displayType={
+												isComplete ? 'success' : 'info'
+											}
+										>
+											{`${percentage}%`}
+										</ClayLabel>
+									)}
+								</div>
+
+								{(isActive || isComplete) && (
+									<div className="content-site-generator-review__phase-bar">
+										<div
+											className="content-site-generator-review__phase-bar-fill"
+											style={{
+												width: `${percentage}%`,
+											}}
 										/>
-									</ClayButton>
-								}
-							/>
 
-							<ClayPaginationBar.Results>
-								{Liferay.Util.sub(
-									Liferay.Language.get(
-										'showing-x-to-x-of-x-entries'
-									),
-									String((page - 1) * pageSize + 1),
-									String(
-										Math.min(page * pageSize, totalCount)
-									),
-									String(totalCount)
+										{isComplete && (
+											<ClayIcon
+												className="content-site-generator-review__phase-bar-check"
+												spritemap={SPRITEMAP}
+												symbol="check-circle-full"
+											/>
+										)}
+
+										{isActive && (
+											<span className="content-site-generator-review__phase-bar-percentage">
+												{`${percentage}%`}
+											</span>
+										)}
+									</div>
 								)}
-							</ClayPaginationBar.Results>
-
-							<ClayPaginationWithBasicItems
-								activePage={page}
-								ellipsisBuffer={1}
-								onPageChange={setPage}
-								totalPages={Math.ceil(totalCount / pageSize)}
-							/>
-						</ClayPaginationBar>
-					)}
-				</>
+							</li>
+						);
+					})}
+				</ul>
 			)}
 
-			<div className="content-site-generator__actions mt-4">
-				<ClayButton
-					disabled={publishing}
-					displayType="secondary"
-					onClick={handleBack}
-				>
-					{Liferay.Language.get('back')}
-				</ClayButton>
+			{mode === 'review' && !run?.resultingSiteERC && (
+				<ClayAlert className="mb-3" displayType="warning">
+					{Liferay.Language.get('no-resulting-site-was-recorded')}
+				</ClayAlert>
+			)}
 
-				<ClayButton
-					disabled={publishing}
-					displayType="secondary"
-					onClick={handleCancel}
-				>
-					{Liferay.Language.get('cancel')}
-				</ClayButton>
-
-				<ClayButton
-					className="content-site-generator__analyze"
-					disabled={
-						publishing ||
-						!artifacts.length ||
-						status === 'committed'
-					}
-					displayType="primary"
-					onClick={handlePublish}
-				>
-					{publishing
-						? Liferay.Language.get('publishing')
-						: Liferay.Language.get('publish')}
-
-					{publishing && (
-						<span
-							aria-hidden="true"
-							className="content-site-generator__analyze-spinner loading-animation loading-animation-sm"
-						/>
-					)}
-				</ClayButton>
-			</div>
+			<StepActions
+				backDisabled={false}
+				backLabel={Liferay.Language.get('back-to-refine')}
+				continueDisabled={
+					mode === 'generating' && (!generationComplete || failed)
+				}
+				continueLabel={
+					mode === 'review'
+						? Liferay.Language.get('view-site')
+						: Liferay.Language.get('continue')
+				}
+				onBack={handleBack}
+				onCancel={handleCancel}
+				onContinue={handleContinue}
+			/>
 		</div>
 	);
 }

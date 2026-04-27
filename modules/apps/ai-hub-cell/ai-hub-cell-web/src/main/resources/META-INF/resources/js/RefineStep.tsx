@@ -273,6 +273,7 @@ export default function RefineStep({
 	const [artifacts, setArtifacts] = useState<Artifact[]>([]);
 	const [attachments, setAttachments] = useState<Attachment[]>([]);
 	const [error, setError] = useState<string | null>(null);
+	const [generating, setGenerating] = useState(false);
 	const [loading, setLoading] = useState(!!runId);
 	const [run, setRun] = useState<Run | null>(null);
 	const [showTip, setShowTip] = useState(true);
@@ -371,21 +372,58 @@ export default function RefineStep({
 		}
 	};
 
-	const handleContinue = () => {
+	const handleContinue = async () => {
+		if (generating) {
+			return;
+		}
+
 		if (onContinue) {
 			onContinue();
 
 			return;
 		}
 
-		if (continueURL) {
-			const separator = continueURL.includes('?') ? '&' : '?';
+		if (!runId) {
+			if (continueURL) {
+				Liferay.Util.navigate(continueURL);
+			}
 
-			Liferay.Util.navigate(
-				runId
-					? `${continueURL}${separator}runId=${runId}`
-					: continueURL
+			return;
+		}
+
+		setGenerating(true);
+		setError(null);
+
+		try {
+			const commitResponse = await liferayFetch(
+				`${RUNS_URL}/${runId}/object-actions/commit`,
+				{
+					headers: {'Content-Type': 'application/json'},
+					method: 'PUT',
+				}
 			);
+
+			if (!commitResponse.ok) {
+				throw new Error(
+					`Failed to start generation (${commitResponse.status})`
+				);
+			}
+
+			if (continueURL) {
+				const separator = continueURL.includes('?') ? '&' : '?';
+
+				Liferay.Util.navigate(
+					`${continueURL}${separator}runId=${runId}`
+				);
+			}
+		}
+		catch (exception) {
+			setError(
+				exception instanceof Error
+					? exception.message
+					: String(exception)
+			);
+			setGenerating(false);
 		}
 	};
 
@@ -725,7 +763,12 @@ export default function RefineStep({
 							)}
 
 							<StepActions
+								backDisabled={generating}
 								backLabel={Liferay.Language.get('back-to-prompt')}
+								cancelDisabled={generating}
+								continueDisabled={loading || !runId}
+								continueLabel={Liferay.Language.get('generate')}
+								continueLoading={generating}
 								onBack={handleBack}
 								onCancel={handleCancel}
 								onContinue={handleContinue}
