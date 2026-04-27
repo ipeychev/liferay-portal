@@ -3,9 +3,11 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
+import ClayAlert from '@clayui/alert';
 import ClayButton from '@clayui/button';
 import ClayIcon from '@clayui/icon';
 import ClayLayout from '@clayui/layout';
+import {fetch as liferayFetch} from 'frontend-js-web';
 import React, {useRef, useState} from 'react';
 
 import MultiStepProgress from './components/MultiStepProgress';
@@ -44,16 +46,127 @@ interface IProps {
 	refineStepURL?: string;
 }
 
+const RUNS_URL = '/o/content-site-generator/runs';
+
+const POLL_INTERVAL_MS = 1500;
+
+const POLL_TIMEOUT_MS = 5 * 60 * 1000;
+
+const buildRunName = (prompt: string) => {
+	const trimmed = prompt.trim().split(/\s+/).slice(0, 6).join(' ');
+
+	return trimmed.length > 60 ? `${trimmed.slice(0, 57)}...` : trimmed;
+};
+
+const sleep = (ms: number) =>
+	new Promise<void>((resolve) => setTimeout(resolve, ms));
+
 export default function ContentSiteGenerator({refineStepURL}: IProps) {
 	const [prompt, setPrompt] = useState('');
 	const [attachedFiles, setAttachedFiles] = useState<File[]>([]);
+	const [error, setError] = useState<string | null>(null);
+	const [loading, setLoading] = useState(false);
 	const fileInputRef = useRef<HTMLInputElement>(null);
 
 	const hasText = !!prompt.trim().length;
 
-	const handleAnalyze = () => {
-		if (refineStepURL) {
-			Liferay.Util.navigate(refineStepURL);
+	const handleAnalyze = async () => {
+		if (!hasText || loading) {
+			return;
+		}
+
+		setError(null);
+		setLoading(true);
+
+		try {
+			const createResponse = await liferayFetch(RUNS_URL, {
+				body: JSON.stringify({
+					name: buildRunName(prompt) || 'Generator',
+					prompt,
+					runStatus: 'refining',
+				}),
+				headers: {'Content-Type': 'application/json'},
+				method: 'POST',
+			});
+
+			if (!createResponse.ok) {
+				throw new Error(
+					`Failed to create run (${createResponse.status})`
+				);
+			}
+
+			const run = await createResponse.json();
+			const runId: number = run.id;
+
+			// TODO: upload attachments via POST /o/content-site-generator/attachments
+			// (multipart with FK r_attachments_l_contentGeneratorRunId).
+
+			const analyzeResponse = await liferayFetch(
+				`${RUNS_URL}/${runId}/object-actions/analyze`,
+				{
+					headers: {'Content-Type': 'application/json'},
+					method: 'PUT',
+				}
+			);
+
+			if (!analyzeResponse.ok) {
+				throw new Error(
+					`Failed to start analysis (${analyzeResponse.status})`
+				);
+			}
+
+			const deadline = Date.now() + POLL_TIMEOUT_MS;
+
+			while (Date.now() < deadline) {
+				await sleep(POLL_INTERVAL_MS);
+
+				const pollResponse = await liferayFetch(
+					`${RUNS_URL}/${runId}`
+				);
+
+				if (!pollResponse.ok) {
+					throw new Error(
+						`Failed to poll run (${pollResponse.status})`
+					);
+				}
+
+				const pollRun = await pollResponse.json();
+				const status = pollRun?.runStatus?.key;
+
+				if (status === 'ready') {
+					if (refineStepURL) {
+						const separator = refineStepURL.includes('?')
+							? '&'
+							: '?';
+
+						Liferay.Util.navigate(
+							`${refineStepURL}${separator}runId=${runId}`
+						);
+					}
+
+					return;
+				}
+
+				if (status === 'failed') {
+					throw new Error(
+						Liferay.Language.get(
+							'analysis-failed-please-try-again'
+						)
+					);
+				}
+			}
+
+			throw new Error(
+				Liferay.Language.get('analysis-timed-out-please-try-again')
+			);
+		}
+		catch (exception) {
+			setError(
+				exception instanceof Error
+					? exception.message
+					: String(exception)
+			);
+			setLoading(false);
 		}
 	};
 
@@ -106,6 +219,7 @@ export default function ContentSiteGenerator({refineStepURL}: IProps) {
 								'describe-your-content'
 							)}
 							className="content-site-generator__textarea form-control"
+							disabled={loading}
 							onChange={(event) => setPrompt(event.target.value)}
 							placeholder={Liferay.Language.get(
 								'prompt-example-placeholder'
@@ -114,8 +228,19 @@ export default function ContentSiteGenerator({refineStepURL}: IProps) {
 							value={prompt}
 						/>
 
+						{error && (
+							<ClayAlert
+								className="mt-3"
+								displayType="danger"
+								onClose={() => setError(null)}
+							>
+								{error}
+							</ClayAlert>
+						)}
+
 						<div className="content-site-generator__actions">
 							<ClayButton
+								disabled={loading}
 								displayType="secondary"
 								onClick={handleAttachFiles}
 							>
@@ -143,17 +268,29 @@ export default function ContentSiteGenerator({refineStepURL}: IProps) {
 							/>
 
 							<ClayButton
-								disabled={!hasText}
+								className="content-site-generator__analyze"
+								disabled={!hasText || loading}
 								displayType={hasText ? 'primary' : 'secondary'}
 								onClick={handleAnalyze}
 							>
-								{Liferay.Language.get('analyze-and-configure')}
+								{loading
+									? Liferay.Language.get('analyzing')
+									: Liferay.Language.get(
+											'analyze-and-configure'
+										)}
 
-								<ClayIcon
-									className="ml-2"
-									spritemap={SPRITEMAP}
-									symbol="magic"
-								/>
+								{loading ? (
+									<span
+										aria-hidden="true"
+										className="content-site-generator__analyze-spinner loading-animation loading-animation-sm"
+									/>
+								) : (
+									<ClayIcon
+										className="ml-2"
+										spritemap={SPRITEMAP}
+										symbol="magic"
+									/>
+								)}
 							</ClayButton>
 						</div>
 
@@ -165,10 +302,19 @@ export default function ContentSiteGenerator({refineStepURL}: IProps) {
 							<ul className="list-group">
 								{EXAMPLES.map((example, index) => (
 									<li
+										aria-disabled={loading}
 										className="content-site-generator__example list-group-item"
 										key={index}
-										onClick={() => setPrompt(example.label)}
+										onClick={() => {
+											if (!loading) {
+												setPrompt(example.label);
+											}
+										}}
 										onKeyDown={(event) => {
+											if (loading) {
+												return;
+											}
+
 											if (
 												event.key === 'Enter' ||
 												event.key === ' '
@@ -178,7 +324,7 @@ export default function ContentSiteGenerator({refineStepURL}: IProps) {
 											}
 										}}
 										role="button"
-										tabIndex={0}
+										tabIndex={loading ? -1 : 0}
 									>
 										<ClayIcon
 											className="mr-2 text-secondary"

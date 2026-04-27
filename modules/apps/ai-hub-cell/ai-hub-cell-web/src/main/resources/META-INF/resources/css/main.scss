@@ -28,6 +28,22 @@
 		margin-top: 1rem;
 	}
 
+	&__analyze {
+		align-items: center;
+		display: inline-flex;
+		justify-content: center;
+		min-width: 13rem;
+	}
+
+	&__analyze-spinner.loading-animation.loading-animation-sm {
+		border-width: 0.125rem;
+		flex-shrink: 0;
+		height: 1rem;
+		margin: 0 0 0 0.5rem;
+		vertical-align: middle;
+		width: 1rem;
+	}
+
 	&__examples {
 		margin-top: 2rem;
 
