@@ -8,7 +8,7 @@ import ClayButton from '@clayui/button';
 import ClayIcon from '@clayui/icon';
 import ClayLayout from '@clayui/layout';
 import {fetch as liferayFetch} from 'frontend-js-web';
-import React, {useRef, useState} from 'react';
+import React, {useState} from 'react';
 
 import MultiStepProgress from './components/MultiStepProgress';
 import {Example} from './types/Example';
@@ -63,10 +63,8 @@ const sleep = (ms: number) =>
 
 export default function ContentSiteGenerator({refineStepURL}: IProps) {
 	const [prompt, setPrompt] = useState('');
-	const [attachedFiles, setAttachedFiles] = useState<File[]>([]);
 	const [error, setError] = useState<string | null>(null);
 	const [loading, setLoading] = useState(false);
-	const fileInputRef = useRef<HTMLInputElement>(null);
 
 	const hasText = !!prompt.trim().length;
 
@@ -170,20 +168,6 @@ export default function ContentSiteGenerator({refineStepURL}: IProps) {
 		}
 	};
 
-	const handleAttachFiles = () => {
-		fileInputRef.current?.click();
-	};
-
-	const handleFilesSelected = (
-		event: React.ChangeEvent<HTMLInputElement>
-	) => {
-		const files = event.target.files;
-
-		if (files) {
-			setAttachedFiles(Array.from(files));
-		}
-	};
-
 	return (
 		<div className="content-site-generator">
 			<ClayLayout.ContainerFluid view>
@@ -239,34 +223,6 @@ export default function ContentSiteGenerator({refineStepURL}: IProps) {
 						)}
 
 						<div className="content-site-generator__actions">
-							<ClayButton
-								disabled={loading}
-								displayType="secondary"
-								onClick={handleAttachFiles}
-							>
-								{Liferay.Language.get('attach-files')}
-
-								<ClayIcon
-									className="ml-2"
-									spritemap={SPRITEMAP}
-									symbol="paperclip"
-								/>
-
-								{!!attachedFiles.length && (
-									<span className="ml-2 text-secondary">
-										{`(${attachedFiles.length})`}
-									</span>
-								)}
-							</ClayButton>
-
-							<input
-								className="d-none"
-								multiple
-								onChange={handleFilesSelected}
-								ref={fileInputRef}
-								type="file"
-							/>
-
 							<ClayButton
 								className="content-site-generator__analyze"
 								disabled={!hasText || loading}
