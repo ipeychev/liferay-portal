@@ -27,7 +27,7 @@ public interface WorkflowNode {
 	public enum Type {
 
 		AI_DECISION, CONDITION, FORK, INITIAL_STATE, JOIN, JOIN_XOR, LLM, STATE,
-		TASK, TERMINAL_STATE
+		TASK, TERMINAL_STATE, TOOL
 
 	}
 

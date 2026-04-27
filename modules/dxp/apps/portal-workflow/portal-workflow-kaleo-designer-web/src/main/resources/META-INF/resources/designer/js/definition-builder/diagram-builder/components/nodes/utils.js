@@ -14,6 +14,7 @@ import JoinNode from './JoinNode';
 import JoinXorNode from './JoinXorNode';
 import LLMNode from './LLMNode';
 import TaskNode from './TaskNode';
+import ToolNode from './ToolNode';
 import EndNode from './state/EndNode';
 import StartNode from './state/StartNode';
 import StateNode from './state/StateNode';
@@ -52,6 +53,7 @@ const nodeDescription = {
 	'start': Liferay.Language.get('begin-a-workflow'),
 	'state': Liferay.Language.get('execute-actions-in-the-workflow'),
 	'task': Liferay.Language.get('ask-a-user-to-work-on-the-item'),
+	'tool': Liferay.Language.get('execute-a-tool-directly-without-llm'),
 };
 
 let nodeTypes = {
@@ -68,6 +70,7 @@ let nodeTypes = {
 if (Liferay.FeatureFlags['LPD-62272']) {
 	nodeTypes = insertNodeAt(nodeTypes, 'ai-decision', AIDecisionNode, 1);
 	nodeTypes = insertNodeAt(nodeTypes, 'llm', LLMNode, 6);
+	nodeTypes = insertNodeAt(nodeTypes, 'tool', ToolNode, 8);
 }
 
 export {defaultNodes, nodeDescription, nodeTypes};

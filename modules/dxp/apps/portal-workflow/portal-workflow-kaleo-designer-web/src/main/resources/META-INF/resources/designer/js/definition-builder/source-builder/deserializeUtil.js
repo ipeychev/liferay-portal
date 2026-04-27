@@ -156,6 +156,28 @@ DeserializeUtil.prototype = {
 					data.userMessage = node['user-message'] || '';
 				}
 
+				if (type === 'tool') {
+					data.toolName = node['tool-name'] || '';
+
+					data.inputVariables = (() => {
+						try {
+							return JSON.parse(node['input-variables']);
+						}
+						catch (error) {
+							return [];
+						}
+					})();
+
+					data.outputVariables = (() => {
+						try {
+							return JSON.parse(node['output-variables']);
+						}
+						catch (error) {
+							return [];
+						}
+					})();
+				}
+
 				data.actions = node.actions?.length && parseActions(node);
 
 				data.notifications =

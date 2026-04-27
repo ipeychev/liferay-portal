@@ -374,6 +374,7 @@ XMLDefinition.prototype = {
 				},
 				'output-variables',
 				'rag',
+				'tool-name',
 				'script',
 				{
 					key: 'scriptLanguage',

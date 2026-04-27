@@ -276,7 +276,7 @@ public class Node implements Serializable {
 		AI_DECISION("AI_DECISION"), CONDITION("CONDITION"), FORK("FORK"),
 		INITIAL_STATE("INITIAL_STATE"), JOIN("JOIN"), JOIN_XOR("JOIN_XOR"),
 		LLM("LLM"), STATE("STATE"), TASK("TASK"),
-		TERMINAL_STATE("TERMINAL_STATE");
+		TERMINAL_STATE("TERMINAL_STATE"), TOOL("TOOL");
 
 		@JsonCreator
 		public static Type create(String value) {

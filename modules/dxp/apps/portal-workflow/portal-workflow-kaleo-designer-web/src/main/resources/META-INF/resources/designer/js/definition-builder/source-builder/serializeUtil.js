@@ -719,6 +719,27 @@ function serializeDefinition(xmlNamespace, metadata, nodes, transitions) {
 			);
 		}
 
+		if (item.type === 'tool') {
+			buffer.push(
+				XMLUtil.create(
+					'tool-name',
+					item.data.toolName ? item.data.toolName : ''
+				)
+			);
+			buffer.push(
+				XMLUtil.create(
+					'input-variables',
+					cdata(jsonStringify(item.data.inputVariables))
+				)
+			);
+			buffer.push(
+				XMLUtil.create(
+					'output-variables',
+					cdata(jsonStringify(item.data.outputVariables))
+				)
+			);
+		}
+
 		const nodeTransitions = transitions.filter(
 			(transition) => transition.source === name
 		);

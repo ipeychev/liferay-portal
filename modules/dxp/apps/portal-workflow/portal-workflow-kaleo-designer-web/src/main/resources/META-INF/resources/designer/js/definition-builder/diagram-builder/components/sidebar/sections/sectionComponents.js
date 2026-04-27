@@ -17,6 +17,7 @@ import RAGSummary from './rag/RAGSummary';
 import TimerSourceCode from './timers/TimerSourceCode';
 import Timers from './timers/Timers';
 import TimersSummary from './timers/TimersSummary';
+import ToolConfigSummary from './toolConfig/ToolConfigSummary';
 import ToolsSummary from './tools/ToolsSummary';
 
 const sectionComponents = {
@@ -34,6 +35,7 @@ const sectionComponents = {
 	timerSourceCode: TimerSourceCode,
 	timers: Timers,
 	timersSummary: TimersSummary,
+	toolConfigSummary: ToolConfigSummary,
 	toolsSummary: ToolsSummary,
 };
 

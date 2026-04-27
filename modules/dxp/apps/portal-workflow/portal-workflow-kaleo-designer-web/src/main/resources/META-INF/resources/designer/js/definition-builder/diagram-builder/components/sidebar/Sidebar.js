@@ -158,6 +158,11 @@ if (Liferay.FeatureFlags['LPD-62272']) {
 		showDeleteButton: true,
 		title: Liferay.Language.get('llm-node'),
 	};
+	contents['tool'] = {
+		sections: ['nodeInformation', 'toolConfigSummary'],
+		showDeleteButton: true,
+		title: Liferay.Language.get('tool-node'),
+	};
 }
 
 const errorsDefaultValues = {
