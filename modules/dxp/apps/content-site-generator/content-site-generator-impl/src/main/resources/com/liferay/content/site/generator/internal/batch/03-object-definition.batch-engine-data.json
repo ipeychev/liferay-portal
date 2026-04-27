@@ -161,6 +161,22 @@
 				{
 					"active": true,
 					"errorMessage": {
+						"en_US": "Unable to analyze run"
+					},
+					"externalReferenceCode": "L_CSG_RUN_ANALYZE",
+					"label": {
+						"en_US": "Analyze"
+					},
+					"name": "analyze",
+					"objectActionExecutorKey": "analyze-content-site-generator-run",
+					"objectActionTriggerKey": "standalone",
+					"parameters": {
+					},
+					"system": true
+				},
+				{
+					"active": true,
+					"errorMessage": {
 						"en_US": "Unable to commit run"
 					},
 					"externalReferenceCode": "L_CSG_RUN_COMMIT",
