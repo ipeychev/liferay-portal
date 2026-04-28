@@ -247,46 +247,6 @@ const buildGeneratedItems = (
 	return items;
 };
 
-const buildInitialAssistantReply = (
-	totalEntries: number,
-	templates: Template[],
-	languageLabels: string[]
-): string => {
-	if (!totalEntries && !templates.length && !languageLabels.length) {
-		return Liferay.Language.get(
-			'all-done-your-configuration-is-ready-let-me-know-if-you-would-like-to-refine-anything'
-		);
-	}
-
-	const parts: string[] = [];
-
-	if (totalEntries) {
-		parts.push(sub(Liferay.Language.get('x-entries'), totalEntries));
-	}
-
-	if (templates.length) {
-		parts.push(
-			sub(
-				Liferay.Language.get('across-x'),
-				templates.map((template) => template.name).join(', ')
-			)
-		);
-	}
-
-	if (languageLabels.length) {
-		parts.push(
-			sub(Liferay.Language.get('in-x'), languageLabels.join(', '))
-		);
-	}
-
-	return sub(
-		Liferay.Language.get(
-			'all-done-i-have-prepared-x-let-me-know-if-you-would-like-to-refine-anything'
-		),
-		parts.join(' ')
-	);
-};
-
 export default function RefineStep({
 	backURL,
 	cancelURL,
@@ -296,7 +256,6 @@ export default function RefineStep({
 	onContinue,
 	runId,
 }: IProps) {
-	const [agentReady, setAgentReady] = useState(false);
 	const [artifacts, setArtifacts] = useState<Artifact[]>([]);
 	const [attachments, setAttachments] = useState<Attachment[]>([]);
 	const [error, setError] = useState<string | null>(null);
@@ -494,14 +453,6 @@ export default function RefineStep({
 			attachment.title ?? `${Liferay.Language.get('attachment')} ${index + 1}`
 	);
 
-	const initialAssistantReply = run
-		? buildInitialAssistantReply(
-				artifacts.length,
-				templates,
-				languages.map(getLanguageLabel)
-			)
-		: '';
-
 	const getChatContext = useCallback(
 		(): ChatContext => ({
 			context: {prompt: promptText, runId},
@@ -542,7 +493,6 @@ export default function RefineStep({
 							embedded
 							externalEventTypes={REGENERATION_EVENT_TYPES}
 							getContext={getChatContext}
-							initialAssistantReply={initialAssistantReply}
 							initialMessage={promptText}
 							onExternalEvent={handleChatExternalEvent}
 							onSubscribe={handleChatSubscribe}
@@ -677,7 +627,7 @@ export default function RefineStep({
 								backDisabled={generating}
 								backLabel={Liferay.Language.get('back-to-prompt')}
 								cancelDisabled={generating}
-								continueDisabled={loading || !runId || !agentReady}
+								continueDisabled={loading || !runId}
 								continueLabel={Liferay.Language.get('generate')}
 								continueLoading={generating}
 								onBack={handleBack}
