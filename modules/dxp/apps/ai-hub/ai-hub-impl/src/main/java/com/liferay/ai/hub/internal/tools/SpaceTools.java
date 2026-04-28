@@ -31,15 +31,15 @@ import java.util.Map;
 /**
  * @author Feliphe Marinho
  */
-public class CMSBlogTools {
+public class SpaceTools {
 
 	@Tool(
-		"Add a batch of CMSBlog items to the current chat's pending import. Accepts a JSON array of CMSBlog DTOs and persists the whole batch as a single artifact. Returns the saved artifact's externalReferenceCode."
+		"Add a batch of Space (asset library) items to the current chat's pending import. Accepts a JSON array of AssetLibrary DTOs and persists the whole batch as a single artifact. Returns the saved artifact's externalReferenceCode."
 	)
 	public String addItems(
 			InvocationParameters invocationParameters,
 			@P(
-				"A string containing a JSON array of CMSBlog DTOs to import (e.g. [{...}, {...}])"
+				"A string containing a JSON array of AssetLibrary DTOs to import (e.g. [{...}, {...}])"
 			)
 			String items)
 		throws Exception {
@@ -76,11 +76,11 @@ public class CMSBlogTools {
 		options.setBody(
 			JSONUtil.put(
 				"className",
-				"com.liferay.object.rest.dto.v1_0.ObjectEntry"
+				"com.liferay.headless.asset.library.dto.v1_0.AssetLibrary"
 			).put(
-				"delegateName", "CMSBlog"
+				"delegateName", "AssetLibrary"
 			).put(
-				"fileName", "blogs-batch.json"
+				"fileName", "spaces-batch.json"
 			).put(
 				"json", items
 			).put(

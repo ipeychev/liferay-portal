@@ -73,6 +73,9 @@ public class ToolsUtil {
 			if (Objects.equals(name, "cmsBlog")) {
 				tools.add(new CMSBlogTools());
 			}
+			else if (Objects.equals(name, "space")) {
+				tools.add(new SpaceTools());
+			}
 			else if (Objects.equals(name, "workflowNode")) {
 				tools.add(new WorkflowNodeTools(workflowNodeManager));
 			}

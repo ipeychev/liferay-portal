@@ -53,7 +53,9 @@ import org.osgi.service.component.annotations.Reference;
 /**
  * Standalone Object Action that commits a Content Generator Run by merging the
  * JSON of its artifacts into a single array and submitting it to the Headless
- * Batch Engine through the "CMSBlog" task item delegate.
+ * Batch Engine. The batch routing values (className, delegateName, fileName)
+ * are read from the artifact, so each agent (CMS Blog Builder, Space Builder,
+ * etc.) decides at emit time which batch delegate processes the items.
  *
  * Invoked by the auto-generated endpoint:
  *   PUT /o/content-site-generator/runs/by-external-reference-code/{erc}/object-actions/commit
@@ -245,6 +247,28 @@ public class CommitContentSiteGeneratorRunObjectActionExecutor
 					"Run " + runERC + " has no items to commit");
 			}
 
+			Map<String, Serializable> firstArtifactValues = artifactValues.get(
+				artifacts.get(
+					0
+				).getObjectEntryId());
+
+			String className = GetterUtil.getString(
+				firstArtifactValues.get("className"));
+			String delegateName = GetterUtil.getString(
+				firstArtifactValues.get("delegateName"));
+			String fileName = GetterUtil.getString(
+				firstArtifactValues.get("fileName"));
+
+			if (Validator.isBlank(className) || Validator.isBlank(delegateName) ||
+				Validator.isBlank(fileName)) {
+
+				throw new PortalException(
+					StringBundler.concat(
+						"Run ", runERC,
+						" artifact is missing batch routing values ",
+						"(className, delegateName, fileName)"));
+			}
+
 			Map<String, Serializable> runValues =
 				_objectEntryLocalService.getValues(runId);
 
@@ -259,29 +283,35 @@ public class CommitContentSiteGeneratorRunObjectActionExecutor
 			BatchEngineTaskItemDelegate<?> batchEngineTaskItemDelegate =
 				_batchEngineTaskItemDelegateRegistry.
 					getBatchEngineTaskItemDelegate(
-						companyId, _OBJECT_ENTRY_CLASS_NAME, _DELEGATE_NAME);
+						companyId, className, delegateName);
 
 			if (batchEngineTaskItemDelegate == null) {
 				throw new PortalException(
 					StringBundler.concat(
 						"No batch engine task item delegate registered for ",
-						_OBJECT_ENTRY_CLASS_NAME, " / ", _DELEGATE_NAME));
+						className, " / ", delegateName));
 			}
 
 			Map<String, Serializable> parameters = new HashMap<>();
 
 			parameters.put("createStrategy", "UPSERT");
-			parameters.put("siteExternalReferenceCode", "Space1");
 			parameters.put("updateStrategy", "UPDATE");
+
+			String resultingSiteERC = GetterUtil.getString(
+				runValues.get("resultingSiteERC"));
+
+			if (Validator.isNotNull(resultingSiteERC)) {
+				parameters.put(
+					"siteExternalReferenceCode", resultingSiteERC);
+			}
 
 			BatchEngineImportTask batchEngineImportTask =
 				_batchEngineImportTaskLocalService.addBatchEngineImportTask(
-					null, companyId, userId, 100, null,
-					_OBJECT_ENTRY_CLASS_NAME,
-					_zipJSON(_FILE_NAME, jsonArray.toString()), "JSON",
+					null, companyId, userId, 100, null, className,
+					_zipJSON(fileName, jsonArray.toString()), "JSON",
 					BatchEngineTaskExecuteStatus.INITIAL.name(), null,
 					BatchEngineImportTaskConstants.IMPORT_STRATEGY_ON_ERROR_FAIL,
-					"CREATE", parameters, _DELEGATE_NAME);
+					"CREATE", parameters, delegateName);
 
 			_batchEngineImportTaskExecutor.execute(
 				batchEngineImportTask, batchEngineTaskItemDelegate, true);
@@ -329,13 +359,6 @@ public class CommitContentSiteGeneratorRunObjectActionExecutor
 
 	private static final String _ARTIFACT_RUN_FK_FIELD =
 		"r_artifacts_l_contentGeneratorRunId";
-
-	private static final String _DELEGATE_NAME = "CMSBlog";
-
-	private static final String _FILE_NAME = "blogs.json";
-
-	private static final String _OBJECT_ENTRY_CLASS_NAME =
-		"com.liferay.object.rest.dto.v1_0.ObjectEntry";
 
 	private static final long _POLL_INTERVAL_MS = 2_000L;
 

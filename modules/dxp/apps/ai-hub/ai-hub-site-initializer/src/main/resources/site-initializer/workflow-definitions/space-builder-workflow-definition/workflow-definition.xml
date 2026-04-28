@@ -1,0 +1,176 @@
+<?xml version="1.0"?>
+
+<workflow-definition
+	xmlns="urn:liferay.com:liferay-workflow_7.4.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="urn:liferay.com:liferay-workflow_7.4.0 http://www.liferay.com/dtd/liferay-workflow-definition_7_4_0.xsd"
+>
+	<name>Space Builder</name>
+	<version>1</version>
+	<llm>
+		<name>spaceBuilder</name>
+		<metadata>
+			<![CDATA[
+				{
+					"xy": [
+						276,
+						242
+					]
+				}
+			]]>
+		</metadata>
+		<labels>
+			<label language-id="en_US">
+				Space Builder
+			</label>
+		</labels>
+		<input-variables>
+			<![CDATA[
+[
+	{
+		"name": "request",
+		"type": "string"
+	}
+]
+]]>
+		</input-variables>
+		<output-variables>
+			<![CDATA[
+[
+	{
+		"name": "response",
+		"type": "string"
+	}
+]
+]]>
+		</output-variables>
+		<prompt>
+			<![CDATA[# Role
+
+You are a Space-builder for Liferay. You receive a **natural-language request** (e.g. "Create a space called Marketing" or "Create 5 spaces for our regional teams") and you produce a JSON array of AssetLibrary request bodies. Each element of the array is one Space.
+
+If the request specifies N spaces, emit exactly N items. If the count is not specified, emit a single-item array.
+
+# Required space shape (per array element)
+
+{
+	"description": "<short description, may be empty string>",
+	"name": "<display name>",
+	"settings": {"logoColor": "outline-0"},
+	"type": "Space"
+}
+
+Hard rules:
+- The top-level output is ALWAYS a JSON array, even when there is only one space.
+- `name` is REQUIRED and must be unique within the array. Trim whitespace.
+- `description` is REQUIRED — emit an empty string `""` when the request does not provide one.
+- `type` is ALWAYS the literal string `"Space"`.
+- `settings.logoColor` defaults to `"outline-0"` unless the request specifies one of: `outline-0`, `outline-1`, `outline-2`, `outline-3`, `outline-4`, `outline-5`, `outline-6`.
+- NEVER emit read-only fields: `id`, `dateCreated`, `dateModified`, `creator`, `key`, `actions`, `assetLibraryType`, `parentSiteId`, `x-class-name`, `x-schema-name`.
+
+# Naming scheme
+
+- `name`: human-readable. If the request gives a base name and a count (e.g. "5 spaces for regional teams"), enumerate sensibly (e.g. "Regional Team — North", "Regional Team — South", ...). Don't append numeric suffixes unless the request asks for them.
+
+# Worked example
+
+## Input: "Create 2 spaces, one for Marketing and one for Engineering"
+
+Output:
+[
+	{
+		"description": "",
+		"name": "Marketing",
+		"settings": {"logoColor": "outline-0"},
+		"type": "Space"
+	},
+	{
+		"description": "",
+		"name": "Engineering",
+		"settings": {"logoColor": "outline-0"},
+		"type": "Space"
+	}
+]
+
+# Output policy
+
+- After producing the JSON array of AssetLibrary bodies matching the schema above, call the `addItems` tool with `items` set to the full JSON array serialized as a single JSON string.
+- The tool's return value is the agent's final answer. Emit it VERBATIM — no surrounding prose, no commentary, no markdown fences.
+- Never invent fields not listed in the schema. If the request can't be fulfilled, do NOT call the tool — output {"_error": "<reason>"} as plain text instead.]]>
+		</prompt>
+		<tools>
+			<![CDATA[
+				[
+					{
+						"name": "space"
+					}
+				]
+			]]>
+		</tools>
+		<transitions>
+			<transition>
+				<labels>
+					<label language-id="en_US">
+						End
+					</label>
+				</labels>
+				<name>end</name>
+				<target>end</target>
+				<default>true</default>
+			</transition>
+		</transitions>
+		<user-message>
+			<![CDATA[Request: {{request}}]]>
+		</user-message>
+	</llm>
+	<state>
+		<name>start</name>
+		<metadata>
+			<![CDATA[
+				{
+					"xy": [
+						273,
+						25
+					]
+				}
+			]]>
+		</metadata>
+		<initial>true</initial>
+		<labels>
+			<label language-id="en_US">
+				Start
+			</label>
+		</labels>
+		<transitions>
+			<transition>
+				<labels>
+					<label language-id="en_US">
+						Space Builder
+					</label>
+				</labels>
+				<name>spaceBuilder</name>
+				<target>spaceBuilder</target>
+				<default>true</default>
+			</transition>
+		</transitions>
+	</state>
+	<state>
+		<name>end</name>
+		<metadata>
+			<![CDATA[
+				{
+					"terminal": true,
+					"xy": [
+						277,
+						459
+					]
+				}
+			]]>
+		</metadata>
+		<labels>
+			<label language-id="en_US">
+				End
+			</label>
+		</labels>
+	</state>
+</workflow-definition>

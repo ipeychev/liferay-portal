@@ -55,6 +55,22 @@
 					"type": "String"
 				},
 				{
+					"DBType": "String",
+					"businessType": "Text",
+					"externalReferenceCode": "L_CSG_ARTIFACT_DELEGATE_NAME",
+					"indexed": true,
+					"indexedAsKeyword": false,
+					"indexedLanguageId": "en_US",
+					"label": {
+						"en_US": "Delegate Name"
+					},
+					"name": "delegateName",
+					"required": true,
+					"state": false,
+					"system": true,
+					"type": "String"
+				},
+				{
 					"DBType": "Clob",
 					"businessType": "LongText",
 					"externalReferenceCode": "L_CSG_ARTIFACT_JSON",

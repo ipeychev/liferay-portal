@@ -17,6 +17,7 @@ import React, {useEffect, useRef, useState} from 'react';
 import {createEventSource, postChatByExternalReferenceCodeMessage} from './api';
 import ContentSampleItem from './components/ContentSampleItem';
 import MultiStepProgress from './components/MultiStepProgress';
+import RefineChat, {ChatMessage} from './components/RefineChat';
 import StepActions from './components/StepActions';
 import SummaryCard from './components/SummaryCard';
 import {ContentSample} from './types/ContentSample';
@@ -276,6 +277,8 @@ export default function RefineStep({
 	const [artifacts, setArtifacts] = useState<Artifact[]>([]);
 	const [attachments, setAttachments] = useState<Attachment[]>([]);
 	const [chatERC, setChatERC] = useState<string | null>(null);
+	const [chatGenerating, setChatGenerating] = useState(false);
+	const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
 	const [error, setError] = useState<string | null>(null);
 	const [generating, setGenerating] = useState(false);
 	const [loading, setLoading] = useState(!!runId);
@@ -376,8 +379,28 @@ export default function RefineStep({
 				setChatERC(event.data);
 			});
 
-			eventSource.addEventListener('Chat Message Sent', () => {
+			eventSource.addEventListener('Chat Message Sent', (event) => {
 				setAgentReady(true);
+				setChatGenerating(false);
+
+				try {
+					const dataJSON = JSON.parse(event.data);
+
+					if (dataJSON?.data) {
+						setChatMessages((previous) => [
+							...previous,
+							{
+								sender: 'assistant',
+								text: String(dataJSON.data),
+							},
+						]);
+					}
+				}
+				catch {
+
+					// The event payload is not always JSON; ignore parse errors.
+
+				}
 			});
 		});
 	}, []);
@@ -393,6 +416,9 @@ export default function RefineStep({
 		}
 
 		messageSentRef.current = true;
+
+		setChatMessages([{sender: 'user', text: run.prompt}]);
+		setChatGenerating(true);
 
 		(async () => {
 			try {
@@ -414,6 +440,7 @@ export default function RefineStep({
 				});
 			}
 			catch (exception) {
+				setChatGenerating(false);
 				setError(
 					exception instanceof Error
 						? exception.message
@@ -422,6 +449,27 @@ export default function RefineStep({
 			}
 		})();
 	}, [chatERC, run, runId]);
+
+	const handleChatSendMessage = (text: string) => {
+		if (!chatERC) {
+			return;
+		}
+
+		setChatMessages((previous) => [
+			...previous,
+			{sender: 'user', text},
+		]);
+		setChatGenerating(true);
+
+		postChatByExternalReferenceCodeMessage({
+			chatContext: {
+				context: {},
+				instructionDefinitionScope: '',
+			},
+			eventSourceReference: chatERC,
+			message: text,
+		});
+	};
 
 	const handleBack = () => {
 		if (onBack) {
@@ -543,8 +591,17 @@ export default function RefineStep({
 	return (
 		<div className="content-site-generator">
 			<ClayLayout.ContainerFluid view>
-				<ClayLayout.Row justify="center">
-					<ClayLayout.Col md={10} xl={8}>
+				<ClayLayout.Row>
+					<ClayLayout.Col md={3}>
+						<RefineChat
+							disabled={!chatERC}
+							isGenerating={chatGenerating}
+							messages={chatMessages}
+							onSendMessage={handleChatSendMessage}
+						/>
+					</ClayLayout.Col>
+
+					<ClayLayout.Col md={9}>
 						<div className="content-site-generator__progress">
 							<MultiStepProgress
 								activeStep={1}
