@@ -7,10 +7,10 @@ import ClayAlert from '@clayui/alert';
 import ClayButton from '@clayui/button';
 import ClayIcon from '@clayui/icon';
 import ClayLayout from '@clayui/layout';
-import {fetch as liferayFetch} from 'frontend-js-web';
 import React, {useState} from 'react';
 
 import MultiStepProgress from './components/MultiStepProgress';
+import {analyzeRun, createRun, getRun} from './services/runs';
 import {Example} from './types/Example';
 
 const SPRITEMAP = `${Liferay.ThemeDisplay.getPathThemeImages()}/lexicon/icons.svg`;
@@ -46,13 +46,18 @@ interface IProps {
 	refineStepURL?: string;
 }
 
-const RUNS_URL = '/o/content-site-generator/runs';
+const POLL_INTERVAL_MS = 1500;
+
+const POLL_TIMEOUT_MS = 5 * 60 * 1000;
 
 const buildRunName = (prompt: string) => {
 	const trimmed = prompt.trim().split(/\s+/).slice(0, 6).join(' ');
 
 	return trimmed.length > 60 ? `${trimmed.slice(0, 57)}...` : trimmed;
 };
+
+const sleep = (ms: number) =>
+	new Promise<void>((resolve) => setTimeout(resolve, ms));
 
 export default function ContentSiteGenerator({refineStepURL}: IProps) {
 	const [prompt, setPrompt] = useState('');
@@ -70,23 +75,12 @@ export default function ContentSiteGenerator({refineStepURL}: IProps) {
 		setLoading(true);
 
 		try {
-			const createResponse = await liferayFetch(RUNS_URL, {
-				body: JSON.stringify({
-					name: buildRunName(prompt) || 'Generator',
-					prompt,
-					runStatus: 'refining',
-				}),
-				headers: {'Content-Type': 'application/json'},
-				method: 'POST',
+			const run = await createRun({
+				name: buildRunName(prompt) || 'Generator',
+				prompt,
+				runStatus: 'refining',
 			});
 
-			if (!createResponse.ok) {
-				throw new Error(
-					`Failed to create run (${createResponse.status})`
-				);
-			}
-
-			const run = await createResponse.json();
 			const runId: number = run.id;
 
 			// TODO: upload attachments via POST /o/content-site-generator/attachments

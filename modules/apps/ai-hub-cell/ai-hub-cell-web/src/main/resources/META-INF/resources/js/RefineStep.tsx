@@ -5,24 +5,28 @@
 
 import ClayAlert from '@clayui/alert';
 import ClayEmptyState from '@clayui/empty-state';
-import ClayIcon from '@clayui/icon';
 import ClayLabel from '@clayui/label';
 import ClayLayout from '@clayui/layout';
-import ClayList from '@clayui/list';
 import ClayPanel from '@clayui/panel';
-import {EventSource} from 'eventsource';
-import {fetch as liferayFetch, sub} from 'frontend-js-web';
-import React, {useEffect, useRef, useState} from 'react';
+import {
+	AIAssistantChat,
+	ChatContext,
+} from '@liferay/ai-hub-cell-js-components-web';
+import {sub} from 'frontend-js-web';
+import React, {useCallback, useEffect, useState} from 'react';
 
-import {createEventSource, postChatByExternalReferenceCodeMessage} from './api';
-import ContentSampleItem from './components/ContentSampleItem';
+import ContentPreviewForm from './components/ContentPreviewForm';
 import MultiStepProgress from './components/MultiStepProgress';
-import RefineChat, {ChatMessage} from './components/RefineChat';
 import StepActions from './components/StepActions';
-import SummaryCard from './components/SummaryCard';
+import {getArtifacts} from './services/artifacts';
+import {getAttachments} from './services/attachments';
+import {commitRun, deleteRun, getRun} from './services/runs';
+import {Artifact} from './types/Artifact';
+import {Attachment} from './types/Attachment';
 import {ContentSample} from './types/ContentSample';
 import {DetectedConfigItem} from './types/DetectedConfigItem';
 import {GeneratedItem} from './types/GeneratedItem';
+import {Run} from './types/Run';
 import {SummaryItem} from './types/SummaryItem';
 import {Template} from './types/Template';
 
@@ -36,28 +40,7 @@ interface IProps {
 	runId?: number;
 }
 
-interface Artifact {
-	className?: string;
-	fileName?: string;
-	id: number;
-	json?: string;
-	loadOrder?: number;
-}
-
-interface Attachment {
-	id: number;
-	title?: string;
-}
-
-interface Run {
-	id: number;
-	name?: string;
-	prompt?: string;
-	runStatus?: {key?: string};
-	targetLanguages?: string;
-}
-
-const RUNS_URL = '/o/content-site-generator/runs';
+const REGENERATION_EVENT_TYPES = ['Run Updated', 'Artifacts Updated'];
 
 const PAGE_CLASS_NAMES = [
 	'com.liferay.headless.admin.site.dto.v1_0.SitePage',
@@ -264,6 +247,46 @@ const buildGeneratedItems = (
 	return items;
 };
 
+const buildInitialAssistantReply = (
+	totalEntries: number,
+	templates: Template[],
+	languageLabels: string[]
+): string => {
+	if (!totalEntries && !templates.length && !languageLabels.length) {
+		return Liferay.Language.get(
+			'all-done-your-configuration-is-ready-let-me-know-if-you-would-like-to-refine-anything'
+		);
+	}
+
+	const parts: string[] = [];
+
+	if (totalEntries) {
+		parts.push(sub(Liferay.Language.get('x-entries'), totalEntries));
+	}
+
+	if (templates.length) {
+		parts.push(
+			sub(
+				Liferay.Language.get('across-x'),
+				templates.map((template) => template.name).join(', ')
+			)
+		);
+	}
+
+	if (languageLabels.length) {
+		parts.push(
+			sub(Liferay.Language.get('in-x'), languageLabels.join(', '))
+		);
+	}
+
+	return sub(
+		Liferay.Language.get(
+			'all-done-i-have-prepared-x-let-me-know-if-you-would-like-to-refine-anything'
+		),
+		parts.join(' ')
+	);
+};
+
 export default function RefineStep({
 	backURL,
 	cancelURL,
@@ -276,16 +299,12 @@ export default function RefineStep({
 	const [agentReady, setAgentReady] = useState(false);
 	const [artifacts, setArtifacts] = useState<Artifact[]>([]);
 	const [attachments, setAttachments] = useState<Attachment[]>([]);
-	const [chatERC, setChatERC] = useState<string | null>(null);
-	const [chatGenerating, setChatGenerating] = useState(false);
-	const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
 	const [error, setError] = useState<string | null>(null);
 	const [generating, setGenerating] = useState(false);
 	const [loading, setLoading] = useState(!!runId);
+	const [previewLoading, setPreviewLoading] = useState(false);
 	const [run, setRun] = useState<Run | null>(null);
 	const [showTip, setShowTip] = useState(true);
-	const eventSourceRef = useRef<EventSource | null>(null);
-	const messageSentRef = useRef(false);
 
 	useEffect(() => {
 		if (!runId) {
@@ -296,55 +315,20 @@ export default function RefineStep({
 
 		(async () => {
 			try {
-				const [runResponse, artifactsResponse, attachmentsResponse] =
+				const [runJson, artifactItems, attachmentItems] =
 					await Promise.all([
-						liferayFetch(`${RUNS_URL}/${runId}`),
-						liferayFetch(`${RUNS_URL}/${runId}/artifacts?pageSize=100`),
-						liferayFetch(
-							`${RUNS_URL}/${runId}/attachments?pageSize=100`
-						),
+						getRun(runId),
+						getArtifacts(runId),
+						getAttachments(runId),
 					]);
-
-				if (!runResponse.ok) {
-					throw new Error(
-						`Failed to load run ${runId} (${runResponse.status})`
-					);
-				}
-
-				const runJson = await runResponse.json();
 
 				if (cancelled) {
 					return;
 				}
 
-				const statusKey =
-					runJson?.runStatus?.key?.toString().toLowerCase() ?? '';
-
-				if (
-					continueURL &&
-					(statusKey === 'committed' || statusKey === 'generating')
-				) {
-					const separator = continueURL.includes('?') ? '&' : '?';
-
-					cancelled = true;
-
-					Liferay.Util.navigate(
-						`${continueURL}${separator}runId=${runId}`
-					);
-
-					return;
-				}
-
-				const artifactsJson = artifactsResponse.ok
-					? await artifactsResponse.json()
-					: {items: []};
-				const attachmentsJson = attachmentsResponse.ok
-					? await attachmentsResponse.json()
-					: {items: []};
-
 				setRun(runJson);
-				setArtifacts(artifactsJson.items ?? []);
-				setAttachments(attachmentsJson.items ?? []);
+				setArtifacts(artifactItems);
+				setAttachments(attachmentItems);
 			}
 			catch (exception) {
 				if (!cancelled) {
@@ -367,109 +351,43 @@ export default function RefineStep({
 		};
 	}, [continueURL, runId]);
 
-	useEffect(() => {
-		createEventSource().then((eventSource) => {
-			if (!eventSource) {
-				return;
-			}
-
-			eventSourceRef.current = eventSource;
-
-			eventSource.addEventListener('Subscribe', (event) => {
-				setChatERC(event.data);
-			});
-
-			eventSource.addEventListener('Chat Message Sent', (event) => {
-				setAgentReady(true);
-				setChatGenerating(false);
-
-				try {
-					const dataJSON = JSON.parse(event.data);
-
-					if (dataJSON?.data) {
-						setChatMessages((previous) => [
-							...previous,
-							{
-								sender: 'assistant',
-								text: String(dataJSON.data),
-							},
-						]);
-					}
-				}
-				catch {
-
-					// The event payload is not always JSON; ignore parse errors.
-
-				}
-			});
-		});
-	}, []);
-
-	useEffect(() => {
-		if (
-			!chatERC ||
-			!run?.prompt ||
-			!runId ||
-			messageSentRef.current
-		) {
+	const refreshPreview = useCallback(async () => {
+		if (!runId) {
 			return;
 		}
 
-		messageSentRef.current = true;
+		setPreviewLoading(true);
+		setError(null);
 
-		setChatMessages([{sender: 'user', text: run.prompt}]);
-		setChatGenerating(true);
+		try {
+			const [runJson, artifactItems] = await Promise.all([
+				getRun(runId),
+				getArtifacts(runId),
+			]);
 
-		(async () => {
-			try {
-				await liferayFetch(`${RUNS_URL}/${runId}`, {
-					body: JSON.stringify({
-						externalReferenceCode: chatERC,
-					}),
-					headers: {'Content-Type': 'application/json'},
-					method: 'PATCH',
-				});
-
-				postChatByExternalReferenceCodeMessage({
-					chatContext: {
-						context: {},
-						instructionDefinitionScope: '',
-					},
-					eventSourceReference: chatERC,
-					message: run.prompt,
-				});
-			}
-			catch (exception) {
-				setChatGenerating(false);
-				setError(
-					exception instanceof Error
-						? exception.message
-						: String(exception)
-				);
-			}
-		})();
-	}, [chatERC, run, runId]);
-
-	const handleChatSendMessage = (text: string) => {
-		if (!chatERC) {
-			return;
+			setRun(runJson);
+			setArtifacts(artifactItems);
 		}
+		catch (exception) {
+			setError(
+				exception instanceof Error
+					? exception.message
+					: String(exception)
+			);
+		}
+		finally {
+			setPreviewLoading(false);
+		}
+	}, [runId]);
 
-		setChatMessages((previous) => [
-			...previous,
-			{sender: 'user', text},
-		]);
-		setChatGenerating(true);
-
-		postChatByExternalReferenceCodeMessage({
-			chatContext: {
-				context: {},
-				instructionDefinitionScope: '',
-			},
-			eventSourceReference: chatERC,
-			message: text,
-		});
-	};
+	const handleChatExternalEvent = useCallback(
+		(type: string) => {
+			if (REGENERATION_EVENT_TYPES.includes(type)) {
+				refreshPreview();
+			}
+		},
+		[refreshPreview]
+	);
 
 	const handleBack = () => {
 		if (onBack) {
@@ -492,7 +410,7 @@ export default function RefineStep({
 
 		if (runId) {
 			try {
-				await liferayFetch(`${RUNS_URL}/${runId}`, {method: 'DELETE'});
+				await deleteRun(runId);
 			}
 			catch (exception) {
 				// Best effort: still navigate away.
@@ -527,19 +445,7 @@ export default function RefineStep({
 		setError(null);
 
 		try {
-			const commitResponse = await liferayFetch(
-				`${RUNS_URL}/${runId}/object-actions/commit`,
-				{
-					headers: {'Content-Type': 'application/json'},
-					method: 'PUT',
-				}
-			);
-
-			if (!commitResponse.ok) {
-				throw new Error(
-					`Failed to start generation (${commitResponse.status})`
-				);
-			}
+			await commitRun(runId);
 
 			if (continueURL) {
 				const separator = continueURL.includes('?') ? '&' : '?';
@@ -588,20 +494,43 @@ export default function RefineStep({
 			attachment.title ?? `${Liferay.Language.get('attachment')} ${index + 1}`
 	);
 
+	const initialAssistantReply = run
+		? buildInitialAssistantReply(
+				artifacts.length,
+				templates,
+				languages.map(getLanguageLabel)
+			)
+		: '';
+
+	const getChatContext = useCallback(
+		(): ChatContext => ({
+			context: {prompt: promptText, runId},
+			instructionDefinitionScope: 'content-site-generator',
+		}),
+		[promptText, runId]
+	);
+
 	return (
 		<div className="content-site-generator">
 			<ClayLayout.ContainerFluid view>
 				<ClayLayout.Row>
-					<ClayLayout.Col md={3}>
-						<RefineChat
-							disabled={!chatERC}
-							isGenerating={chatGenerating}
-							messages={chatMessages}
-							onSendMessage={handleChatSendMessage}
+					<ClayLayout.Col
+						className="content-site-generator-refine__sidebar"
+						md={3}
+					>
+						<AIAssistantChat
+							embedded
+							externalEventTypes={REGENERATION_EVENT_TYPES}
+							getContext={getChatContext}
+							initialAssistantReply={initialAssistantReply}
+							initialMessage={promptText}
+							onExternalEvent={handleChatExternalEvent}
 						/>
 					</ClayLayout.Col>
 
 					<ClayLayout.Col md={9}>
+						<ClayLayout.Row justify="center">
+							<ClayLayout.Col md={12} xl={10}>
 						<div className="content-site-generator__progress">
 							<MultiStepProgress
 								activeStep={1}
@@ -648,28 +577,6 @@ export default function RefineStep({
 								/>
 							) : (
 								<>
-									{summary.length ? (
-										<ClayLayout.Row className="content-site-generator-refine__summary">
-											{summary.map((item, index) => (
-												<ClayLayout.Col key={index} md={3}>
-													<SummaryCard
-														icon={item?.icon}
-														title={item?.title}
-														value={item?.value}
-													/>
-												</ClayLayout.Col>
-											))}
-										</ClayLayout.Row>
-									) : (
-										<ClayEmptyState
-											description={Liferay.Language.get(
-												'configuration-summary-will-appear-here'
-											)}
-											small
-											title={Liferay.Language.get('no-summary-available')}
-										/>
-									)}
-
 									<ClayPanel
 										className="content-site-generator-refine__section"
 										displayType="secondary"
@@ -721,172 +628,14 @@ export default function RefineStep({
 										</ClayPanel.Body>
 									</ClayPanel>
 
-									<ClayPanel
-										className="content-site-generator-refine__section"
-										displayType="secondary"
-									>
-										<ClayPanel.Body>
-											<h4 className="content-site-generator-refine__section-title">
-												{Liferay.Language.get('detected-configuration')}
-											</h4>
-
-											{detectedConfig.length ? (
-												<ClayList className="border-0 content-site-generator-refine__config-list">
-													{detectedConfig.map((item, index) => (
-														<ClayList.Item className="px-0" flex key={index}>
-															<ClayList.ItemField className="p-0" expand>
-																<ClayList.ItemText>
-																	{item.label}
-																</ClayList.ItemText>
-															</ClayList.ItemField>
-
-															<ClayList.ItemField>
-																<ClayList.ItemText>
-																	{item.value}
-																</ClayList.ItemText>
-															</ClayList.ItemField>
-														</ClayList.Item>
-													))}
-												</ClayList>
-											) : (
-												<ClayEmptyState
-													description={Liferay.Language.get(
-														'detected-settings-will-appear-here'
-													)}
-													small
-													title={Liferay.Language.get(
-														'no-configuration-detected'
-													)}
-												/>
-											)}
-										</ClayPanel.Body>
-									</ClayPanel>
-
-									<section className="content-site-generator-refine__section">
-										<h3 className="content-site-generator-refine__section-heading">
-											{Liferay.Language.get('content-by-template-type')}
-										</h3>
-
-										{templates.length ? (
-											templates.map((template, index) => (
-												<ClayPanel
-													className="content-site-generator-refine__template"
-													displayType="secondary"
-													key={index}
-												>
-													<ClayPanel.Body>
-														<ClayLayout.ContentRow>
-															<ClayLayout.Col size={1}>
-																<ClayIcon symbol={template.icon} />
-															</ClayLayout.Col>
-
-															<ClayLayout.ContentCol expand>
-																<h5 className="content-site-generator-refine__template-name">
-																	{template.name}
-																</h5>
-
-																<span className="content-site-generator-refine__template-entries text-secondary">
-																	{sub(
-																		Liferay.Language.get(
-																			'x-entries'
-																		),
-																		template.entries
-																	)}
-																</span>
-
-																<div className="content-site-generator-refine__template-labels">
-																	{template.labels.map((label, i) => (
-																		<ClayLabel
-																			displayType={label.type}
-																			key={i}
-																		>
-																			{label.text}
-																		</ClayLabel>
-																	))}
-																</div>
-															</ClayLayout.ContentCol>
-														</ClayLayout.ContentRow>
-													</ClayPanel.Body>
-												</ClayPanel>
-											))
-										) : (
-											<ClayEmptyState
-												description={Liferay.Language.get(
-													'template-breakdown-will-appear-here'
-												)}
-												small
-												title={Liferay.Language.get('no-templates-detected')}
-											/>
-										)}
-									</section>
-
-									<section className="content-site-generator-refine__section">
-										<h3 className="content-site-generator-refine__section-heading">
-											{Liferay.Language.get('content-samples')}
-										</h3>
-
-										<p className="text-secondary">
-											{Liferay.Language.get(
-												'preview-of-how-your-generated-content-will-be-structured'
-											)}
-										</p>
-
-										{contentSamples.length ? (
-											contentSamples.map((sample, index) => (
-												<ContentSampleItem
-													defaultExpanded={index === 0}
-													key={index}
-													sample={sample}
-												/>
-											))
-										) : (
-											<ClayEmptyState
-												description={Liferay.Language.get(
-													'content-previews-will-appear-here'
-												)}
-												small
-												title={Liferay.Language.get(
-													'no-content-samples-available'
-												)}
-											/>
-										)}
-									</section>
-
-									<section>
-										<h3 className="mb-3">
-											{Liferay.Language.get('what-will-be-generated?')}
-										</h3>
-
-										{generatedItems.length ? (
-											<ClayList className="content-site-generator-refine__generated-list">
-												{generatedItems.map((item, index) => (
-													<ClayList.Item flex key={index}>
-														<ClayList.ItemField>
-															<ClayIcon symbol="check" />
-														</ClayList.ItemField>
-
-														<ClayList.ItemField expand>
-															<ClayList.ItemText>
-																<strong>{item.title}</strong>
-
-																{item.description
-																	? ` ${item.description}`
-																	: ''}
-															</ClayList.ItemText>
-														</ClayList.ItemField>
-													</ClayList.Item>
-												))}
-											</ClayList>
-										) : (
-											<ClayEmptyState
-												description={Liferay.Language.get(
-													'generation-breakdown-will-appear-here'
-												)}
-												small
-												title={Liferay.Language.get('nothing-to-generate-yet')}
-											/>
-										)}
-									</section>
+									<ContentPreviewForm
+										contentSamples={contentSamples}
+										detectedConfig={detectedConfig}
+										generatedItems={generatedItems}
+										loading={previewLoading}
+										summary={summary}
+										templates={templates}
+									/>
 
 									{showTip && (
 										<ClayAlert
@@ -915,6 +664,8 @@ export default function RefineStep({
 								onContinue={handleContinue}
 							/>
 						</div>
+							</ClayLayout.Col>
+						</ClayLayout.Row>
 					</ClayLayout.Col>
 				</ClayLayout.Row>
 			</ClayLayout.ContainerFluid>

@@ -5,10 +5,7 @@
 
 import ClayButton from '@clayui/button';
 import ClayDropDown from '@clayui/drop-down';
-import ClayForm from '@clayui/form';
 import ClayIcon from '@clayui/icon';
-import ClayLayout from '@clayui/layout';
-import ClayLoadingIndicator from '@clayui/loading-indicator';
 import {EventSource} from 'eventsource';
 import React, {useEffect, useRef, useState} from 'react';
 
@@ -17,51 +14,67 @@ import {
 	createEventSource,
 	postChatByExternalReferenceCodeMessage,
 } from './api';
-import AIAssistantMessageBalloon from './components/AIAssistantMessageBalloon';
-import UserMessageBalloon from './components/UserMessageBalloon';
+import AIAssistantChatBody, {Message} from './components/AIAssistantChatBody';
 
 import './chat.scss';
 
-interface message {
-	sender: string;
-	text: string;
-}
-
 interface AIAssistantChatProps {
 	compact?: boolean;
+	embedded?: boolean;
 	externalEventTypes?: string[];
 	getContext: () => ChatContext;
+	initialAssistantReply?: string;
+	initialMessage?: string;
 	onExternalEvent?: (type: string, data: string) => void;
 }
 
 const AIAssistantChat: React.FC<AIAssistantChatProps> = ({
 	compact = false,
+	embedded = false,
 	externalEventTypes,
 	getContext,
+	initialAssistantReply,
+	initialMessage,
 	onExternalEvent,
 }) => {
 	const [active, setActive] = useState<boolean>(false);
 	const [isGenerating, setIsGenerating] = useState<boolean>(false);
-	const [messages, setMessages] = useState<message[]>([]);
+	const [messages, setMessages] = useState<Message[]>([]);
 	const [message, setMessage] = useState<string>('');
 	const eventSourceRef = useRef<EventSource | null>(null);
 	const eventSourceReference = useRef<string | null>(null);
-	const messagesEndRef = useRef<HTMLDivElement | null>(null);
+	const initialMessageAppliedRef = useRef<boolean>(false);
 	const triggerRef = useRef<HTMLButtonElement | null>(null);
-	const textAreaRef = useRef<HTMLTextAreaElement | null>(null);
 
-	function onSubmit(event: React.FormEvent<HTMLFormElement>) {
-		event.preventDefault();
-		if (!message.trim()) {
+	useEffect(() => {
+		if (initialMessageAppliedRef.current) {
 			return;
 		}
-		setMessages((previousMessages) => {
-			setTimeout(() => {
-				messagesEndRef.current?.scrollIntoView({behavior: 'smooth'});
-			}, 0);
 
-			return [...previousMessages, {sender: 'user', text: message}];
-		});
+		const trimmedMessage = initialMessage?.trim();
+
+		if (!trimmedMessage) {
+			return;
+		}
+
+		initialMessageAppliedRef.current = true;
+
+		const seeded: Message[] = [{sender: 'user', text: trimmedMessage}];
+
+		const trimmedReply = initialAssistantReply?.trim();
+
+		if (trimmedReply) {
+			seeded.push({sender: 'assistant', text: trimmedReply});
+		}
+
+		setMessages(seeded);
+	}, [initialAssistantReply, initialMessage]);
+
+	function onSendMessage(text: string) {
+		setMessages((previousMessages) => [
+			...previousMessages,
+			{sender: 'user', text},
+		]);
 
 		setMessage('');
 
@@ -71,64 +84,8 @@ const AIAssistantChat: React.FC<AIAssistantChatProps> = ({
 			postChatByExternalReferenceCodeMessage({
 				chatContext: getContext(),
 				eventSourceReference: eventSourceReference.current,
-				message,
+				message: text,
 			});
-		}
-	}
-
-	function adjustTextAreaHeight(element: HTMLTextAreaElement) {
-		const textArea = element ?? textAreaRef.current;
-
-		if (!textArea) {
-			return;
-		}
-
-		const style = window.getComputedStyle(textArea);
-		const lineHeight =
-			parseFloat(style.lineHeight) || parseFloat(style.fontSize) * 1.2;
-		const maxHeight = lineHeight * 4;
-
-		textArea.style.height = 'auto';
-		const newHeight = Math.min(textArea.scrollHeight, maxHeight);
-		textArea.style.height = `${newHeight}px`;
-		textArea.style.overflowY =
-			textArea.scrollHeight > maxHeight ? 'auto' : 'hidden';
-	}
-
-	function handleTextAreaKeyDown(
-		event: React.KeyboardEvent<HTMLTextAreaElement>
-	) {
-		if (event.key !== 'Enter') {
-			event.stopPropagation();
-
-			return;
-		}
-
-		if (event.shiftKey) {
-			setTimeout(
-				() => adjustTextAreaHeight(event.target as HTMLTextAreaElement),
-				0
-			);
-
-			return;
-		}
-
-		event.preventDefault();
-
-		const form = (event.target as HTMLElement).closest(
-			'form'
-		) as HTMLFormElement | null;
-
-		if (form?.requestSubmit) {
-			form.requestSubmit();
-		}
-		else {
-			form?.dispatchEvent(
-				new Event('submit', {
-					bubbles: true,
-					cancelable: true,
-				})
-			);
 		}
 	}
 
@@ -143,25 +100,15 @@ const AIAssistantChat: React.FC<AIAssistantChatProps> = ({
 			eventSourceRef.current.addEventListener(
 				'Chat Message Sent',
 				(event) => {
-					setMessages((previousMessages) => {
-						setTimeout(() => {
-							messagesEndRef.current?.scrollIntoView({
-								behavior: 'smooth',
-							});
-						}, 0);
+					const dataJSON = JSON.parse(event.data);
 
-						const dataJSON = JSON.parse(event.data);
-
-						return [
-							...previousMessages,
-							{
-								sender: 'assistant',
-								text: dataJSON['data'],
-							},
-						];
-					});
-
-					setMessage('');
+					setMessages((previousMessages) => [
+						...previousMessages,
+						{
+							sender: 'assistant',
+							text: dataJSON['data'],
+						},
+					]);
 
 					setIsGenerating(false);
 				}
@@ -192,6 +139,19 @@ const AIAssistantChat: React.FC<AIAssistantChatProps> = ({
 			closeAIAssistantChatConnection();
 		};
 	}, []);
+
+	if (embedded) {
+		return (
+			<AIAssistantChatBody
+				embedded={embedded}
+				isGenerating={isGenerating}
+				message={message}
+				messages={messages}
+				onSendMessage={onSendMessage}
+				setMessage={setMessage}
+			/>
+		);
+	}
 
 	return (
 		<ClayDropDown
@@ -236,108 +196,15 @@ const AIAssistantChat: React.FC<AIAssistantChatProps> = ({
 				</ClayButton>
 			}
 		>
-			<div className="ai-assistant-chat__dropdown-container d-flex flex-column">
-				<div className="flex-shrink-0 p-3">
-					<ClayLayout.ContentRow className="align-items-center border-bottom justify-content-between mb-3 pb-2">
-						<ClayLayout.ContentCol className="ai-assistant-chat__dropdown-title font-weight-semi-bold">
-							{Liferay.Language.get('ai-assistant')}
-						</ClayLayout.ContentCol>
-
-						<ClayLayout.ContentCol>
-							<ClayButton
-								aria-label={Liferay.Language.get('close')}
-								borderless
-								displayType="unstyled"
-								onClick={() => setActive(false)}
-							>
-								<ClayIcon
-									className="ai-assistant-chat__dropdown-close-button"
-									spritemap={Liferay.Icons.spritemap}
-									symbol="times"
-								/>
-							</ClayButton>
-						</ClayLayout.ContentCol>
-					</ClayLayout.ContentRow>
-				</div>
-
-				<div className="ai-assistant-chat__messages-container flex-grow-1 overflow-auto px-3">
-					<AIAssistantMessageBalloon
-						error={false}
-						message="Hi! I can help you generate content, titles, tags, or
-						translate your work. What would you like to do?"
-					/>
-
-					{messages.map((item, index) =>
-						item.sender === 'user' ? (
-							<UserMessageBalloon
-								key={index}
-								message={item.text}
-							/>
-						) : (
-							<AIAssistantMessageBalloon
-								error={false}
-								key={index}
-								message={item.text}
-							/>
-						)
-					)}
-
-					{isGenerating && (
-						<div className="ai-assistant-chat-balloon d-flex flex-row mb-2 rounded">
-							<div className="align-items-center d-flex ml-2">
-								<ClayLoadingIndicator />
-							</div>
-
-							<span className="ai-assistant-chat__generating-loading-text font-weight-semi-bold m-2 tex">
-								{Liferay.Language.get('generating')}
-							</span>
-						</div>
-					)}
-
-					<div ref={messagesEndRef} />
-				</div>
-
-				<ClayForm
-					className="flex-shrink-0 p-3"
-					onSubmit={(event) => onSubmit(event)}
-				>
-					<div className="align-items-end border-top d-flex flex-row pt-4">
-						<textarea
-							className="ai-assistant-chat__input form-control mr-2"
-							disabled={isGenerating}
-							id="assistant-user-input"
-							onChange={(event) => {
-								setMessage(event.target.value);
-								adjustTextAreaHeight(event.target);
-							}}
-							onKeyDown={(
-								event: React.KeyboardEvent<HTMLTextAreaElement>
-							) => {
-								handleTextAreaKeyDown(event);
-							}}
-							placeholder="Ask me anything..."
-							ref={textAreaRef}
-							rows={1}
-							value={message}
-						/>
-
-						<ClayButton
-							disabled={!message.trim()}
-							displayType="primary"
-							type="submit"
-						>
-							<ClayIcon
-								height={12}
-								spritemap={Liferay.Icons.spritemap}
-								symbol={
-									isGenerating ? 'square' : 'order-arrow-up'
-								}
-								width={12}
-							/>
-						</ClayButton>
-					</div>
-				</ClayForm>
-			</div>
+			<AIAssistantChatBody
+				embedded={embedded}
+				isGenerating={isGenerating}
+				message={message}
+				messages={messages}
+				onCloseClick={() => setActive(false)}
+				onSendMessage={onSendMessage}
+				setMessage={setMessage}
+			/>
 		</ClayDropDown>
 	);
 };

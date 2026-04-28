@@ -91,6 +91,14 @@ public class ViewContentSitesDisplayContext {
 		).buildString();
 	}
 
+	public String getReviewStepURL() {
+		return PortletURLBuilder.createRenderURL(
+			_liferayPortletResponse
+		).setMVCPath(
+			"/view_review_step.jsp"
+		).buildString();
+	}
+
 	public long getRunId() {
 		long runId = ParamUtil.getLong(_httpServletRequest, "runId");
 
@@ -104,36 +112,24 @@ public class ViewContentSitesDisplayContext {
 			).getParameter("runId"));
 	}
 
-	public String getReviewStepURL() {
-		return PortletURLBuilder.createRenderURL(
-			_liferayPortletResponse
-		).setMVCPath(
-			"/view_review_step.jsp"
-		).buildString();
-	}
-
 	public List<FDSActionDropdownItem> getFDSActionDropdownItems()
 		throws Exception {
 
 		return List.of(
 			new FDSActionDropdownItem(
-				_getViewRunURL(), "view", "view",
+				PortletURLBuilder.createRenderURL(
+					_liferayPortletResponse
+				).setMVCPath(
+					"/view_review_step.jsp"
+				).setParameter(
+					"runId", "{id}"
+				).buildString(), "view", "view",
 				LanguageUtil.get(_httpServletRequest, "view"), "get", null,
 				null),
 			new FDSActionDropdownItem(
 				getAPIURL() + "/{id}", "trash", "delete",
 				LanguageUtil.get(_httpServletRequest, "delete"), "delete",
 				"delete", "async"));
-	}
-
-	private String _getViewRunURL() {
-		return PortletURLBuilder.createRenderURL(
-			_liferayPortletResponse
-		).setMVCPath(
-			"/view_refine_step.jsp"
-		).setParameter(
-			"runId", "{id}"
-		).buildString();
 	}
 
 	private final HttpServletRequest _httpServletRequest;

@@ -9,17 +9,17 @@ import ClayEmptyState from '@clayui/empty-state';
 import ClayIcon from '@clayui/icon';
 import ClayLabel from '@clayui/label';
 import ClayLayout from '@clayui/layout';
-import {fetch as liferayFetch} from 'frontend-js-web';
 import React, {useEffect, useRef, useState} from 'react';
 
 import StepActions from './components/StepActions';
 import SummaryCard from './components/SummaryCard';
+import {getArtifacts} from './services/artifacts';
+import {getRun} from './services/runs';
+import {getSiteByExternalReferenceCode} from './services/sites';
+import {Artifact} from './types/Artifact';
+import {Run as RunType} from './types/Run';
 
 const SPRITEMAP = `${Liferay.ThemeDisplay.getPathThemeImages()}/lexicon/icons.svg`;
-
-const RUNS_URL = '/o/content-site-generator/runs';
-
-const SITES_URL = '/o/headless-admin-site/v1.0/sites';
 
 const POLL_INTERVAL_MS = 2_000;
 
@@ -42,20 +42,7 @@ const PHASE_KEYS = [
 	'localizing-to-target-languages',
 ];
 
-interface Artifact {
-	className?: string;
-	fileName?: string;
-	id: number;
-	json?: string;
-	loadOrder?: number;
-}
-
-interface Run {
-	committedAt?: string;
-	failureReason?: string;
-	resultingSiteERC?: string;
-	runStatus?: {key?: string};
-}
+type Run = RunType;
 
 interface IProps {
 	cancelURL?: string;
@@ -127,29 +114,17 @@ export default function ReviewAndPublishStep({
 			setError(null);
 
 			try {
-				const [runResponse, artifactsResponse] = await Promise.all([
-					liferayFetch(`${RUNS_URL}/${runId}`),
-					liferayFetch(
-						`${RUNS_URL}/${runId}/artifacts?pageSize=100` +
-							`&sort=loadOrder:asc`
-					),
+				const [runJson, artifactItems] = await Promise.all([
+					getRun(runId),
+					getArtifacts(runId, {sort: 'loadOrder:asc'}),
 				]);
-
-				if (!runResponse.ok || !artifactsResponse.ok) {
-					throw new Error(
-						`Failed to load run (${runResponse.status}/${artifactsResponse.status})`
-					);
-				}
-
-				const runJson: Run = await runResponse.json();
-				const artifactsJson = await artifactsResponse.json();
 
 				if (cancelled) {
 					return;
 				}
 
 				setRun(runJson);
-				setArtifacts(artifactsJson.items ?? []);
+				setArtifacts(artifactItems);
 
 				const status = runJson.runStatus?.key;
 
@@ -216,17 +191,7 @@ export default function ReviewAndPublishStep({
 				);
 
 				try {
-					const pollResponse = await liferayFetch(
-						`${RUNS_URL}/${runId}`
-					);
-
-					if (!pollResponse.ok) {
-						throw new Error(
-							`Failed to poll run (${pollResponse.status})`
-						);
-					}
-
-					const pollRun: Run = await pollResponse.json();
+					const pollRun = await getRun(runId);
 					const pollStatus = pollRun.runStatus?.key;
 
 					if (cancelled) {
@@ -340,18 +305,14 @@ export default function ReviewAndPublishStep({
 		}
 
 		try {
-			const siteResponse = await liferayFetch(
-				`${SITES_URL}/${encodeURIComponent(externalReferenceCode)}`
+			const site = await getSiteByExternalReferenceCode(
+				externalReferenceCode
 			);
 
-			if (siteResponse.ok) {
-				const site = await siteResponse.json();
+			if (site?.friendlyUrlPath) {
+				Liferay.Util.navigate(`/web${site.friendlyUrlPath}`);
 
-				if (site?.friendlyUrlPath) {
-					Liferay.Util.navigate(`/web${site.friendlyUrlPath}`);
-
-					return;
-				}
+				return;
 			}
 		}
 		catch (exception) {
