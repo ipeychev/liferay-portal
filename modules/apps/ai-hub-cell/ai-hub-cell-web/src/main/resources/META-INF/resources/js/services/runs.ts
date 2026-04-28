@@ -39,6 +39,21 @@ export async function getRun(runId: number): Promise<Run> {
 	return response.json();
 }
 
+export async function patchRun(
+	runId: number,
+	updates: Partial<Run>
+): Promise<void> {
+	const response = await liferayFetch(`${RUNS_URL}/${runId}`, {
+		body: JSON.stringify(updates),
+		headers: {'Content-Type': 'application/json'},
+		method: 'PATCH',
+	});
+
+	if (!response.ok) {
+		throw new Error(`Failed to update run ${runId} (${response.status})`);
+	}
+}
+
 export async function deleteRun(runId: number): Promise<void> {
 	await liferayFetch(`${RUNS_URL}/${runId}`, {method: 'DELETE'});
 }

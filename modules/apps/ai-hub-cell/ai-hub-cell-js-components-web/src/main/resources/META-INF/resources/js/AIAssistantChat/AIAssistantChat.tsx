@@ -19,6 +19,7 @@ import AIAssistantChatBody, {Message} from './components/AIAssistantChatBody';
 import './chat.scss';
 
 interface AIAssistantChatProps {
+	autoSendInitialMessage?: boolean;
 	compact?: boolean;
 	embedded?: boolean;
 	externalEventTypes?: string[];
@@ -26,9 +27,11 @@ interface AIAssistantChatProps {
 	initialAssistantReply?: string;
 	initialMessage?: string;
 	onExternalEvent?: (type: string, data: string) => void;
+	onSubscribe?: (eventSourceReference: string) => void;
 }
 
 const AIAssistantChat: React.FC<AIAssistantChatProps> = ({
+	autoSendInitialMessage = false,
 	compact = false,
 	embedded = false,
 	externalEventTypes,
@@ -36,6 +39,7 @@ const AIAssistantChat: React.FC<AIAssistantChatProps> = ({
 	initialAssistantReply,
 	initialMessage,
 	onExternalEvent,
+	onSubscribe,
 }) => {
 	const [active, setActive] = useState<boolean>(false);
 	const [isGenerating, setIsGenerating] = useState<boolean>(false);
@@ -44,7 +48,19 @@ const AIAssistantChat: React.FC<AIAssistantChatProps> = ({
 	const eventSourceRef = useRef<EventSource | null>(null);
 	const eventSourceReference = useRef<string | null>(null);
 	const initialMessageAppliedRef = useRef<boolean>(false);
+	const initialMessagePostedRef = useRef<boolean>(false);
+	const autoSendInitialMessageRef = useRef(autoSendInitialMessage);
+	const getContextRef = useRef(getContext);
+	const initialMessageRef = useRef(initialMessage);
+	const onSubscribeRef = useRef(onSubscribe);
 	const triggerRef = useRef<HTMLButtonElement | null>(null);
+
+	useEffect(() => {
+		autoSendInitialMessageRef.current = autoSendInitialMessage;
+		getContextRef.current = getContext;
+		initialMessageRef.current = initialMessage;
+		onSubscribeRef.current = onSubscribe;
+	}, [autoSendInitialMessage, getContext, initialMessage, onSubscribe]);
 
 	useEffect(() => {
 		if (initialMessageAppliedRef.current) {
@@ -69,6 +85,32 @@ const AIAssistantChat: React.FC<AIAssistantChatProps> = ({
 
 		setMessages(seeded);
 	}, [initialAssistantReply, initialMessage]);
+
+	useEffect(() => {
+		if (
+			!autoSendInitialMessage ||
+			initialMessagePostedRef.current ||
+			!eventSourceReference.current
+		) {
+			return;
+		}
+
+		const trimmedMessage = initialMessage?.trim();
+
+		if (!trimmedMessage) {
+			return;
+		}
+
+		initialMessagePostedRef.current = true;
+
+		setIsGenerating(true);
+
+		postChatByExternalReferenceCodeMessage({
+			chatContext: getContext(),
+			eventSourceReference: eventSourceReference.current,
+			message: trimmedMessage,
+		});
+	}, [autoSendInitialMessage, getContext, initialMessage]);
 
 	function onSendMessage(text: string) {
 		setMessages((previousMessages) => [
@@ -116,6 +158,28 @@ const AIAssistantChat: React.FC<AIAssistantChatProps> = ({
 
 			eventSourceRef.current.addEventListener('Subscribe', (event) => {
 				eventSourceReference.current = event.data;
+
+				onSubscribeRef.current?.(event.data);
+
+				if (
+					autoSendInitialMessageRef.current &&
+					!initialMessagePostedRef.current
+				) {
+					const trimmedMessage =
+						initialMessageRef.current?.trim();
+
+					if (trimmedMessage) {
+						initialMessagePostedRef.current = true;
+
+						setIsGenerating(true);
+
+						postChatByExternalReferenceCodeMessage({
+							chatContext: getContextRef.current(),
+							eventSourceReference: event.data,
+							message: trimmedMessage,
+						});
+					}
+				}
 			});
 
 			externalEventTypes?.forEach((type) => {

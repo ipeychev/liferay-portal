@@ -20,7 +20,7 @@ import MultiStepProgress from './components/MultiStepProgress';
 import StepActions from './components/StepActions';
 import {getArtifacts} from './services/artifacts';
 import {getAttachments} from './services/attachments';
-import {commitRun, deleteRun, getRun} from './services/runs';
+import {commitRun, deleteRun, getRun, patchRun} from './services/runs';
 import {Artifact} from './types/Artifact';
 import {Attachment} from './types/Attachment';
 import {ContentSample} from './types/ContentSample';
@@ -505,9 +505,28 @@ export default function RefineStep({
 	const getChatContext = useCallback(
 		(): ChatContext => ({
 			context: {prompt: promptText, runId},
-			instructionDefinitionScope: 'content-site-generator',
+			instructionDefinitionScope: '',
 		}),
 		[promptText, runId]
+	);
+
+	const handleChatSubscribe = useCallback(
+		(eventSourceReference: string) => {
+			if (!runId) {
+				return;
+			}
+
+			patchRun(runId, {externalReferenceCode: eventSourceReference}).catch(
+				(exception) => {
+					setError(
+						exception instanceof Error
+							? exception.message
+							: String(exception)
+					);
+				}
+			);
+		},
+		[runId]
 	);
 
 	return (
@@ -519,12 +538,14 @@ export default function RefineStep({
 						md={3}
 					>
 						<AIAssistantChat
+							autoSendInitialMessage
 							embedded
 							externalEventTypes={REGENERATION_EVENT_TYPES}
 							getContext={getChatContext}
 							initialAssistantReply={initialAssistantReply}
 							initialMessage={promptText}
 							onExternalEvent={handleChatExternalEvent}
+							onSubscribe={handleChatSubscribe}
 						/>
 					</ClayLayout.Col>
 

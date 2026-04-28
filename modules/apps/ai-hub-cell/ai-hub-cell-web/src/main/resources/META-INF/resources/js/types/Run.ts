@@ -5,6 +5,7 @@
 
 export interface Run {
 	committedAt?: string;
+	externalReferenceCode?: string;
 	failureReason?: string;
 	id: number;
 	name?: string;
