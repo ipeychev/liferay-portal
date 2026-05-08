@@ -139,7 +139,8 @@ public class VertexAiGeminiUtil {
 			return PredictionServiceClient.create(predictionServiceSettings);
 		}
 		catch (IOException ioException) {
-			throw new IllegalStateException(ioException);
+			throw new IllegalStateException(
+				"Failed to create the prediction service client", ioException);
 		}
 	}
 
