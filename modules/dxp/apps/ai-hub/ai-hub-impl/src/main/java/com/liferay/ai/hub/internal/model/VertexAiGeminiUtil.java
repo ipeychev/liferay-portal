@@ -147,17 +147,21 @@ public class VertexAiGeminiUtil {
 		Map<String, String> labels,
 		VertexAIConfiguration vertexAIConfiguration) {
 
-		String location = vertexAIConfiguration.location();
+		String apiEndpoint;
 
-		String apiEndpoint =
-			Objects.equals(location, "global") ? "aiplatform.googleapis.com" :
-				location + "-aiplatform.googleapis.com";
+		if (Objects.equals(vertexAIConfiguration.location(), "global")) {
+			apiEndpoint = "aiplatform.googleapis.com";
+		}
+		else {
+			apiEndpoint =
+				vertexAIConfiguration.location() + "-aiplatform.googleapis.com";
+		}
 
 		return new VertexAI.Builder(
 		).setApiEndpoint(
 			apiEndpoint
 		).setLocation(
-			location
+			vertexAIConfiguration.location()
 		).setPredictionClientSupplier(
 			() -> _createPredictionServiceClient(apiEndpoint, labels)
 		).setProjectId(
