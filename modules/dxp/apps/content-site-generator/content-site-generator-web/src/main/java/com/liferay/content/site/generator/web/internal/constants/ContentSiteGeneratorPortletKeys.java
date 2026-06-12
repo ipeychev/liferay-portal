@@ -14,4 +14,12 @@ public class ContentSiteGeneratorPortletKeys {
 		"com_liferay_content_site_generator_web_internal_portlet_" +
 			"ContentSiteGeneratorPortlet";
 
+	public static final String JSP_PATH_VIEW = "/view.jsp";
+
+	public static final String JSP_PATH_VIEW_IDEATE_STEP =
+		"/view_ideate_step.jsp";
+
+	public static final String JSP_PATH_VIEW_REFINE_STEP =
+		"/view_refine_step.jsp";
+
 }

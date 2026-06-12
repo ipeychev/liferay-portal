@@ -5,6 +5,7 @@
 
 package com.liferay.content.site.generator.web.internal.display.context;
 
+import com.liferay.content.site.generator.web.internal.constants.ContentSiteGeneratorPortletKeys;
 import com.liferay.frontend.data.set.model.FDSActionDropdownItem;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.CreationMenu;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.CreationMenuBuilder;
@@ -94,11 +95,38 @@ public class ViewGenerationsDisplayContext {
 			"generationId");
 	}
 
+	public Map<String, Object> getWizardProps() {
+		return HashMapBuilder.<String, Object>put(
+			"apiURL", getAPIURL()
+		).put(
+			"generationId",
+			() -> {
+				long generationId = getGenerationId();
+
+				if (generationId > 0) {
+					return generationId;
+				}
+
+				return null;
+			}
+		).put(
+			"generationsURL", _getViewGenerationsRenderURL()
+		).build();
+	}
+
+	private String _getViewGenerationsRenderURL() {
+		return PortletURLBuilder.createRenderURL(
+			_liferayPortletResponse
+		).setMVCPath(
+			ContentSiteGeneratorPortletKeys.JSP_PATH_VIEW
+		).buildString();
+	}
+
 	private String _getViewIdeateStepRenderURL() {
 		return PortletURLBuilder.createRenderURL(
 			_liferayPortletResponse
 		).setMVCPath(
-			"/view_ideate_step.jsp"
+			ContentSiteGeneratorPortletKeys.JSP_PATH_VIEW_IDEATE_STEP
 		).buildString();
 	}
 
@@ -106,7 +134,7 @@ public class ViewGenerationsDisplayContext {
 		return PortletURLBuilder.createRenderURL(
 			_liferayPortletResponse
 		).setMVCPath(
-			"/view_refine_step.jsp"
+			ContentSiteGeneratorPortletKeys.JSP_PATH_VIEW_REFINE_STEP
 		).setParameter(
 			"generationId", "{id}"
 		).buildString();
