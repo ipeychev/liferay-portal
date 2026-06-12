@@ -50,6 +50,7 @@ export default function ReviewStep({
 	const [search, setSearch] = useState('');
 	const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
 	const [siteFriendlyURL, setSiteFriendlyURL] = useState<string | null>(null);
+	const [urlColumnVisible, setUrlColumnVisible] = useState(true);
 
 	const committed = generation.generationStatus.key === 'committed';
 
@@ -157,7 +158,9 @@ export default function ReviewStep({
 		page * pageSize
 	);
 
-	const showURL = pages.some((generatedPage) => generatedPage.url);
+	const hasURL = pages.some((generatedPage) => generatedPage.url);
+
+	const showURL = hasURL && urlColumnVisible;
 
 	const allSelected =
 		!!visiblePages.length &&
@@ -363,11 +366,11 @@ export default function ReviewStep({
 								</ClayTable.Cell>
 
 								<ClayTable.Cell headingCell>
-									{Liferay.Language.get('type')}
+									{Liferay.Language.get('language')}
 								</ClayTable.Cell>
 
 								<ClayTable.Cell headingCell>
-									{Liferay.Language.get('languages')}
+									{Liferay.Language.get('items')}
 								</ClayTable.Cell>
 
 								{showURL && (
@@ -377,9 +380,35 @@ export default function ReviewStep({
 								)}
 
 								<ClayTable.Cell headingCell>
-									<span className="sr-only">
-										{Liferay.Language.get('actions')}
-									</span>
+									<ClayDropDown
+										trigger={
+											<ClayButtonWithIcon
+												aria-label={Liferay.Language.get(
+													'columns'
+												)}
+												displayType="unstyled"
+												size="sm"
+												spritemap={
+													Liferay.Icons.spritemap
+												}
+												symbol="caret-bottom"
+											/>
+										}
+									>
+										<ClayDropDown.ItemList>
+											<ClayDropDown.Item
+												active={urlColumnVisible}
+												disabled={!hasURL}
+												onClick={() =>
+													setUrlColumnVisible(
+														(visible) => !visible
+													)
+												}
+											>
+												{Liferay.Language.get('url')}
+											</ClayDropDown.Item>
+										</ClayDropDown.ItemList>
+									</ClayDropDown>
 								</ClayTable.Cell>
 							</ClayTable.Row>
 						</ClayTable.Head>
@@ -422,13 +451,13 @@ export default function ReviewStep({
 										</ClayTable.Cell>
 
 										<ClayTable.Cell>
-											{generatedPage.templateLabel}
-										</ClayTable.Cell>
-
-										<ClayTable.Cell>
 											{generatedPage.languages
 												.map(getLanguageLabel)
 												.join(', ')}
+										</ClayTable.Cell>
+
+										<ClayTable.Cell>
+											{generatedPage.itemCount}
 										</ClayTable.Cell>
 
 										{showURL && (

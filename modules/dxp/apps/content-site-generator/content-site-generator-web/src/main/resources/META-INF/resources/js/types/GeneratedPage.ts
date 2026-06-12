@@ -6,6 +6,7 @@
 export interface GeneratedPage {
 	icon: string;
 	id: string;
+	itemCount: number;
 	languages: string[];
 	templateLabel: string;
 	title: string;

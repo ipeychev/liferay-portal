@@ -71,6 +71,7 @@ const pages: GeneratedPage[] = [
 	{
 		icon: 'page',
 		id: '1-0',
+		itemCount: 1,
 		languages: ['en', 'es'],
 		templateLabel: 'page',
 		title: 'Home Page',
@@ -79,6 +80,7 @@ const pages: GeneratedPage[] = [
 	{
 		icon: 'document-text',
 		id: '2-0',
+		itemCount: 1,
 		languages: ['en'],
 		templateLabel: 'blog-article',
 		title: 'First Blog',
@@ -87,6 +89,7 @@ const pages: GeneratedPage[] = [
 	{
 		icon: 'document-text',
 		id: '2-1',
+		itemCount: 1,
 		languages: ['en'],
 		templateLabel: 'blog-article',
 		title: 'Second Blog',
@@ -120,7 +123,7 @@ describe('ReviewStep', () => {
 
 		expect(screen.getByText('/home')).toBeInTheDocument();
 		expect(screen.getByText('/first-blog')).toBeInTheDocument();
-		expect(screen.getByText('url')).toBeInTheDocument();
+		expect(screen.getAllByText('url').length).toBeGreaterThan(0);
 
 		expect(screen.getByText('total-items')).toBeInTheDocument();
 		expect(screen.getByText('draft')).toBeInTheDocument();

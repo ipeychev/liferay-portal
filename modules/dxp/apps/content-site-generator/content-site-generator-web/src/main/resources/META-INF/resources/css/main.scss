@@ -169,7 +169,9 @@
 
 	.content-site-generator__review-url {
 		color: $secondary;
-		word-break: break-word;
+		display: inline-block;
+		overflow-wrap: break-word;
+		width: 14rem;
 	}
 
 	.content-site-generator__template-list {

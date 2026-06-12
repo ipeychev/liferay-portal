@@ -332,6 +332,7 @@ export function buildPages(
 	return entries.map((entry, index) => ({
 		icon,
 		id: `${item.id}-${index}`,
+		itemCount: 1,
 		languages,
 		templateLabel,
 		title: getEntryTitle(entry) || `${templateLabel} ${index + 1}`,
