@@ -12,6 +12,7 @@ import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.json.JSONUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 
 import java.util.ArrayList;
@@ -46,10 +47,9 @@ public class SitePlanBatchFileBuilder {
 					i18nMatcher.group(1));
 
 				while (localeMatcher.find()) {
-					locales.add(
-						localeMatcher.group(
-							1
-						).toLowerCase());
+					String locale = localeMatcher.group(1);
+
+					locales.add(StringUtil.toLowerCase(locale));
 				}
 			}
 		}
@@ -58,10 +58,9 @@ public class SitePlanBatchFileBuilder {
 			Matcher matcher = _fileNameLanguagePattern.matcher(fileName);
 
 			if (matcher.find()) {
-				locales.add(
-					matcher.group(
-						1
-					).toLowerCase());
+				String locale = matcher.group(1);
+
+				locales.add(StringUtil.toLowerCase(locale));
 			}
 		}
 

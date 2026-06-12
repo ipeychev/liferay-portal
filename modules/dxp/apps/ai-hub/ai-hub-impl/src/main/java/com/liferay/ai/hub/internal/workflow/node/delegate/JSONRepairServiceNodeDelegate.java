@@ -12,7 +12,9 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 
 import java.io.Serializable;
 
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 import org.osgi.service.component.annotations.Component;
@@ -41,9 +43,11 @@ public class JSONRepairServiceNodeDelegate implements ServiceNodeDelegate {
 			return "";
 		}
 
-		Map.Entry<String, String> entry = inputVariables.entrySet(
-		).iterator(
-		).next();
+		Set<Map.Entry<String, String>> entrySet = inputVariables.entrySet();
+
+		Iterator<Map.Entry<String, String>> iterator = entrySet.iterator();
+
+		Map.Entry<String, String> entry = iterator.next();
 
 		return _repairJSON(_stripMarkdownFences(entry.getValue()));
 	}

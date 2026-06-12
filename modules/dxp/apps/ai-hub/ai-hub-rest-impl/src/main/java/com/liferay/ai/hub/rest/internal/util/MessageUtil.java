@@ -5,6 +5,7 @@
 
 package com.liferay.ai.hub.rest.internal.util;
 
+import com.liferay.petra.string.StringBundler;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.Validator;
 
@@ -25,8 +26,9 @@ public class MessageUtil {
 			return text;
 		}
 
-		StringBuilder sb = new StringBuilder(text);
+		StringBundler sb = new StringBundler();
 
+		sb.append(text);
 		sb.append("\n\n# Context\n");
 
 		Map<String, ?> sortedContext = new TreeMap<>(context);

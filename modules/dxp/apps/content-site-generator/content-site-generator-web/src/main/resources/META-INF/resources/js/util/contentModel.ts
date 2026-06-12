@@ -67,24 +67,31 @@ export function getLanguageLabel(code: string): string {
 }
 
 export function getTemplateLabel(fileName: string): string {
-	switch (getFileToken(fileName)) {
-		case 'asset-library':
-			return Liferay.Language.get('asset-library');
-		case 'blogs':
-			return Liferay.Language.get('blog-article');
-		case 'connected-site':
-			return Liferay.Language.get('connected-site');
-		case 'fragment-set':
-			return Liferay.Language.get('fragment-set');
-		case 'fragments':
-			return Liferay.Language.get('fragment');
-		case 'pages':
-			return Liferay.Language.get('page');
-		case 'site':
-			return Liferay.Language.get('site');
-		default:
-			return fileName;
+	const token = getFileToken(fileName);
+
+	if (token === 'asset-library') {
+		return Liferay.Language.get('asset-library');
 	}
+	else if (token === 'blogs') {
+		return Liferay.Language.get('blog-article');
+	}
+	else if (token === 'connected-site') {
+		return Liferay.Language.get('connected-site');
+	}
+	else if (token === 'fragment-set') {
+		return Liferay.Language.get('fragment-set');
+	}
+	else if (token === 'fragments') {
+		return Liferay.Language.get('fragment');
+	}
+	else if (token === 'pages') {
+		return Liferay.Language.get('page');
+	}
+	else if (token === 'site') {
+		return Liferay.Language.get('site');
+	}
+
+	return fileName;
 }
 
 export function getTemplateIcon(fileName: string): string {
@@ -206,21 +213,23 @@ export function buildDetectedConfig(
 }
 
 function getKnownFieldLabel(key: string): string | null {
-	switch (key) {
-		case 'excerpt':
-			return Liferay.Language.get('excerpt');
-		case 'friendlyURLPath':
-		case 'urlTitle':
-			return Liferay.Language.get('url');
-		case 'h1Heading':
-			return Liferay.Language.get('h1-heading');
-		case 'metaDescription':
-			return Liferay.Language.get('meta-description');
-		case 'seoTitle':
-			return Liferay.Language.get('seo-title');
-		default:
-			return null;
+	if (key === 'excerpt') {
+		return Liferay.Language.get('excerpt');
 	}
+	else if (key === 'friendlyURLPath' || key === 'urlTitle') {
+		return Liferay.Language.get('url');
+	}
+	else if (key === 'h1Heading') {
+		return Liferay.Language.get('h1-heading');
+	}
+	else if (key === 'metaDescription') {
+		return Liferay.Language.get('meta-description');
+	}
+	else if (key === 'seoTitle') {
+		return Liferay.Language.get('seo-title');
+	}
+
+	return null;
 }
 
 function humanizeKey(key: string): string {

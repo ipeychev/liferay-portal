@@ -480,11 +480,11 @@ Output:
 			</label>
 		</labels>
 		<input-variables>
-			<![CDATA[[{"name":"sitePlan"}]]]>
+			<![CDATA[[{"name": "sitePlan"}]]]>
 		</input-variables>
 		<java-delegate>com.liferay.ai.hub.internal.workflow.node.delegate.JSONRepairServiceNodeDelegate#execute</java-delegate>
 		<output-variables>
-			<![CDATA[[{"name":"sitePlan"}]]]>
+			<![CDATA[[{"name": "sitePlan"}]]]>
 		</output-variables>
 		<transitions>
 			<transition>
@@ -502,7 +502,7 @@ Output:
 		</labels>
 		<java-delegate>com.liferay.ai.hub.internal.workflow.node.delegate.AcknowledgeAgentServiceNodeDelegate#execute</java-delegate>
 		<output-variables>
-			<![CDATA[[{"name":"output"}]]]>
+			<![CDATA[[{"name": "output"}]]]>
 		</output-variables>
 		<transitions>
 			<transition>
@@ -519,11 +519,11 @@ Output:
 			</label>
 		</labels>
 		<input-variables>
-			<![CDATA[[{"name":"response"}]]]>
+			<![CDATA[[{"name": "response"}]]]>
 		</input-variables>
 		<java-delegate>com.liferay.ai.hub.internal.workflow.node.delegate.JSONRepairServiceNodeDelegate#execute</java-delegate>
 		<output-variables>
-			<![CDATA[[{"name":"enrichedSitePlan"}]]]>
+			<![CDATA[[{"name": "enrichedSitePlan"}]]]>
 		</output-variables>
 		<transitions>
 			<transition>
@@ -540,11 +540,11 @@ Output:
 			</label>
 		</labels>
 		<input-variables>
-			<![CDATA[[{"name":"enrichedSitePlan"},{"name":"blogEntries"},{"name":"generationExternalReferenceCode"}]]]>
+			<![CDATA[[{"name": "enrichedSitePlan"}, {"name": "blogEntries"}, {"name": "generationExternalReferenceCode"}]]]>
 		</input-variables>
 		<java-delegate>com.liferay.content.site.generator.internal.workflow.node.delegate.WriteCSGGenerationItemsServiceNodeDelegate#execute</java-delegate>
 		<output-variables>
-			<![CDATA[[{"name":"itemsResult"}]]]>
+			<![CDATA[[{"name": "itemsResult"}]]]>
 		</output-variables>
 		<transitions>
 			<transition>
@@ -561,11 +561,11 @@ Output:
 			</label>
 		</labels>
 		<input-variables>
-			<![CDATA[[{"name":"generationExternalReferenceCode"}]]]>
+			<![CDATA[[{"name": "generationExternalReferenceCode"}]]]>
 		</input-variables>
 		<java-delegate>com.liferay.content.site.generator.internal.workflow.node.delegate.MarkCSGGenerationReadyServiceNodeDelegate#execute</java-delegate>
 		<output-variables>
-			<![CDATA[[{"name":"output"}]]]>
+			<![CDATA[[{"name": "output"}]]]>
 		</output-variables>
 		<transitions>
 			<transition>

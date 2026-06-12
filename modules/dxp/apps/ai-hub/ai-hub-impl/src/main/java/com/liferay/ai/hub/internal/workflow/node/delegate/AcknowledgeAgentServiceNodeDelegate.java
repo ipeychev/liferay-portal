@@ -41,7 +41,9 @@ public class AcknowledgeAgentServiceNodeDelegate
 		String acknowledgment = inputVariables.get("acknowledgment");
 
 		if (Validator.isNull(acknowledgment)) {
-			acknowledgment = _DEFAULT_ACKNOWLEDGMENT;
+			acknowledgment =
+				"I am generating the content now. The preview will refresh " +
+					"as soon as it is ready.";
 		}
 
 		Message message = new Message();
@@ -59,9 +61,5 @@ public class AcknowledgeAgentServiceNodeDelegate
 
 		return acknowledgment;
 	}
-
-	private static final String _DEFAULT_ACKNOWLEDGMENT =
-		"I am generating the content now. The preview will refresh as soon " +
-			"as it is ready.";
 
 }
