@@ -15,6 +15,7 @@ import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
 	CATEGORIZE_EVENT,
 	CategorizeEventPayload,
+	REQUEST_CATEGORIZE_EVENT,
 } from '../Categorization/events';
 import {ECategorizationAgent} from '../Categorization/types';
 import ReportFeedbackModal from '../ReportFeedback/ReportFeedbackModal';
@@ -46,6 +47,7 @@ interface ReportContext {
 
 interface AIAssistantChatProps {
 	embedded?: boolean;
+	enableCategorizationActions?: boolean;
 	getContext: () => ChatContext;
 	initialMessage?: string;
 	instructionDefinitionScope: string;
@@ -54,6 +56,7 @@ interface AIAssistantChatProps {
 
 const AIAssistantChat: React.FC<AIAssistantChatProps> = ({
 	embedded = false,
+	enableCategorizationActions = false,
 	getContext,
 	initialMessage,
 	instructionDefinitionScope,
@@ -131,6 +134,12 @@ const AIAssistantChat: React.FC<AIAssistantChatProps> = ({
 				message: text,
 			}).catch(() => setIsGenerating(false));
 		}
+	}, []);
+
+	const requestCategorize = useCallback((agent: ECategorizationAgent) => {
+		setActive(true);
+
+		Liferay.fire(REQUEST_CATEGORIZE_EVENT, {agent});
 	}, []);
 
 	function onSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -337,6 +346,34 @@ const AIAssistantChat: React.FC<AIAssistantChatProps> = ({
 		};
 	}, []);
 
+	const quickActionItems = [
+		...(quickActions ?? []).map((quickAction) => ({
+			key: quickAction,
+			label: quickAction,
+			onClick: () => sendMessage(quickAction),
+		})),
+		...(enableCategorizationActions
+			? [
+					{
+						key: ECategorizationAgent.AUTO_CATEGORIZE,
+						label: Liferay.Language.get('add-categories'),
+						onClick: () =>
+							requestCategorize(
+								ECategorizationAgent.AUTO_CATEGORIZE
+							),
+					},
+					{
+						key: ECategorizationAgent.GENERATE_TAGS,
+						label: Liferay.Language.get('generate-tags'),
+						onClick: () =>
+							requestCategorize(
+								ECategorizationAgent.GENERATE_TAGS
+							),
+					},
+				]
+			: []),
+	];
+
 	const chatSurface = (
 		<>
 			<div className="ai-assistant-chat__messages-container flex-grow-1 overflow-auto px-3">
@@ -408,20 +445,20 @@ const AIAssistantChat: React.FC<AIAssistantChatProps> = ({
 				<div ref={messagesEndRef} />
 			</div>
 
-			{!!quickActions?.length && (
+			{!!quickActionItems.length && (
 				<div className="ai-assistant-chat__quick-actions flex-shrink-0 px-3">
 					<span className="ai-assistant-chat__quick-actions-title small text-secondary">
 						{Liferay.Language.get('quick-actions')}
 					</span>
 
 					<div className="d-flex flex-wrap">
-						{quickActions.map((quickAction) => (
+						{quickActionItems.map((quickActionItem) => (
 							<ClayButton
 								className="mb-1 mr-1"
 								disabled={isGenerating}
 								displayType="secondary"
-								key={quickAction}
-								onClick={() => sendMessage(quickAction)}
+								key={quickActionItem.key}
+								onClick={quickActionItem.onClick}
 								size="xs"
 							>
 								<ClayIcon
@@ -432,7 +469,7 @@ const AIAssistantChat: React.FC<AIAssistantChatProps> = ({
 									width={12}
 								/>
 
-								{quickAction}
+								{quickActionItem.label}
 							</ClayButton>
 						))}
 					</div>

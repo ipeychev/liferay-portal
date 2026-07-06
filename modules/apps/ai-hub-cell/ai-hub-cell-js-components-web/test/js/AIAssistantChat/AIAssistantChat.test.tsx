@@ -156,4 +156,48 @@ describe('AIAssistantChat', () => {
 			screen.queryByRole('button', {name: 'report-bad-result'})
 		).not.toBeInTheDocument();
 	});
+
+	it('renders the categorization quick actions and fires the request event', async () => {
+		const fire = jest.fn();
+
+		(global as any).Liferay.fire = fire;
+
+		await act(async () => {
+			render(
+				<AIAssistantChat
+					{...defaultProps}
+					enableCategorizationActions
+				/>
+			);
+		});
+
+		await act(async () => {
+			screen
+				.getByRole('button', {name: 'ai-assistant'})
+				.dispatchEvent(new MouseEvent('click', {bubbles: true}));
+		});
+
+		fireEvent.click(screen.getByRole('button', {name: 'add-categories'}));
+
+		expect(fire).toHaveBeenCalledWith('cms:aiAssistant:requestCategorize', {
+			agent: 'L_AUTO_CATEGORIZE',
+		});
+
+		fireEvent.click(screen.getByRole('button', {name: 'generate-tags'}));
+
+		expect(fire).toHaveBeenCalledWith('cms:aiAssistant:requestCategorize', {
+			agent: 'L_GENERATE_TAGS',
+		});
+	});
+
+	it('hides the categorization quick actions by default', async () => {
+		await renderAndOpen();
+
+		expect(
+			screen.queryByRole('button', {name: 'add-categories'})
+		).not.toBeInTheDocument();
+		expect(
+			screen.queryByRole('button', {name: 'generate-tags'})
+		).not.toBeInTheDocument();
+	});
 });

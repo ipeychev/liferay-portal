@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
-import React, {useCallback} from 'react';
+import React, {useCallback, useEffect} from 'react';
 
 import {IAssetObjectEntry} from '../../../common/types/AssetType';
 import AssetCategorization from '../../../main_view/info_panel/components/AssetCategorization';
@@ -19,6 +19,7 @@ export default function CategorizationPanel({
 	cmsGroupId,
 	contentAPIURL,
 	hasUpdatePermission,
+	onCategorizationMountedChange,
 	onUpdateCategorization,
 }: {
 	assetLibraryId: number | string;
@@ -27,8 +28,17 @@ export default function CategorizationPanel({
 	cmsGroupId: number | string;
 	contentAPIURL: string;
 	hasUpdatePermission: boolean;
+	onCategorizationMountedChange?: (mounted: boolean) => void;
 	onUpdateCategorization: (props: UpdateCategorizationProps) => void;
 }) {
+	useEffect(() => {
+		onCategorizationMountedChange?.(true);
+
+		return () => {
+			onCategorizationMountedChange?.(false);
+		};
+	}, [onCategorizationMountedChange]);
+
 	const updateCategorization = useCallback(
 		({keywords = [], taxonomyCategoryBriefs = []}: IAssetObjectEntry) => {
 			const fields: CategorizationFields = {
