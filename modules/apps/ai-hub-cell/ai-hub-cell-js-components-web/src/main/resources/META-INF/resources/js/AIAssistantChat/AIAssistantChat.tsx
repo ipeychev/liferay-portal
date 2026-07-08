@@ -15,7 +15,9 @@ import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
 	CATEGORIZE_EVENT,
 	CategorizeEventPayload,
+	REQUEST_CATEGORIZE_EVENT,
 } from '../Categorization/events';
+import {classifyCategorizationIntent} from '../Categorization/services/classifyCategorizationIntent';
 import {ECategorizationAgent} from '../Categorization/types';
 import ReportFeedbackModal from '../ReportFeedback/ReportFeedbackModal';
 import submitPositiveReportFeedback from '../ReportFeedback/submitPositiveReportFeedback';
@@ -49,6 +51,7 @@ type AIState = 'focused' | 'result' | 'result-readonly' | 'working';
 interface AIAssistantChatProps {
 	aiState?: AIState;
 	embedded?: boolean;
+	enableFreeFormCategorization?: boolean;
 	getContext: () => ChatContext;
 	initialMessage?: string;
 	instructionDefinitionScope: string;
@@ -58,6 +61,7 @@ interface AIAssistantChatProps {
 const AIAssistantChat: React.FC<AIAssistantChatProps> = ({
 	aiState,
 	embedded = false,
+	enableFreeFormCategorization = false,
 	getContext,
 	initialMessage,
 	instructionDefinitionScope,
@@ -90,6 +94,9 @@ const AIAssistantChat: React.FC<AIAssistantChatProps> = ({
 			surface: 'aiAssistant',
 		});
 	};
+	const enableFreeFormCategorizationRef = useRef<boolean>(
+		enableFreeFormCategorization
+	);
 	const eventSourceRef = useRef<EventSource | null>(null);
 	const eventSourceReference = useRef<string | null>(null);
 	const getContextRef = useRef<() => ChatContext>(getContext);
@@ -103,9 +110,10 @@ const AIAssistantChat: React.FC<AIAssistantChatProps> = ({
 	const textAreaRef = useRef<HTMLTextAreaElement | null>(null);
 
 	useEffect(() => {
+		enableFreeFormCategorizationRef.current = enableFreeFormCategorization;
 		getContextRef.current = getContext;
 		instructionDefinitionScopeRef.current = instructionDefinitionScope;
-	}, [getContext, instructionDefinitionScope]);
+	}, [enableFreeFormCategorization, getContext, instructionDefinitionScope]);
 
 	const sendMessage = useCallback((text: string) => {
 		if (!text.trim()) {
@@ -122,19 +130,43 @@ const AIAssistantChat: React.FC<AIAssistantChatProps> = ({
 
 		setMessage('');
 
-		if (eventSourceReference.current) {
-			setIsGenerating(true);
+		if (!eventSourceReference.current) {
+			return;
+		}
 
-			const getCurrentContext = getContextRef.current;
+		setIsGenerating(true);
 
+		const postToChat = () => {
 			postChatByExternalReferenceCodeMessage({
-				chatContext: getCurrentContext(),
-				eventSourceReference: eventSourceReference.current,
+				chatContext: getContextRef.current(),
+				eventSourceReference: eventSourceReference.current as string,
 				instructionDefinitionScope:
 					instructionDefinitionScopeRef.current,
 				message: text,
 			}).catch(() => setIsGenerating(false));
+		};
+
+		if (!enableFreeFormCategorizationRef.current) {
+			postToChat();
+
+			return;
 		}
+
+		classifyCategorizationIntent(text)
+			.then((verdict) => {
+				if (verdict.passthrough || !verdict.actions.length) {
+					postToChat();
+
+					return;
+				}
+
+				setIsGenerating(false);
+
+				Liferay.fire(REQUEST_CATEGORIZE_EVENT, {
+					actions: verdict.actions,
+				});
+			})
+			.catch(() => postToChat());
 	}, []);
 
 	function onSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -319,6 +351,16 @@ const AIAssistantChat: React.FC<AIAssistantChatProps> = ({
 					});
 				}, 0);
 
+				const categorizationMessage = {
+					categorization: payload,
+					sender: 'assistant',
+					text: '',
+				};
+
+				if (payload.suppressUserMessage) {
+					return [...previousMessages, categorizationMessage];
+				}
+
 				return [
 					...previousMessages,
 					{
@@ -329,7 +371,7 @@ const AIAssistantChat: React.FC<AIAssistantChatProps> = ({
 								? Liferay.Language.get('add-categories')
 								: Liferay.Language.get('generate-tags'),
 					},
-					{categorization: payload, sender: 'assistant', text: ''},
+					categorizationMessage,
 				];
 			});
 		};

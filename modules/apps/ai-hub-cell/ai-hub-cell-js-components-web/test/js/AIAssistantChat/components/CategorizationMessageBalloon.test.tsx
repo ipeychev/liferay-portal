@@ -366,4 +366,77 @@ describe('CategorizationMessageBalloon', () => {
 			screen.queryByText(/Great! I have added/)
 		).not.toBeInTheDocument();
 	});
+
+	it('resolves a named category target without invoking the model', async () => {
+		mockGetCandidateCategories.mockResolvedValue([
+			{id: 39001, name: 'Fishing', vocabulary: 'Topic'},
+			{id: 39002, name: 'Travel', vocabulary: 'Topic'},
+		]);
+
+		await act(async () => {
+			render(
+				<CategorizationMessageBalloon
+					agent={ECategorizationAgent.AUTO_CATEGORIZE}
+					cmsGroupId={20124}
+					content="Japan"
+					scopeId={555}
+					targets={['fishing']}
+				/>
+			);
+		});
+
+		expect(screen.getByText('Fishing')).toBeInTheDocument();
+		expect(
+			screen.getByRole('button', {name: 'save-categories'})
+		).toBeInTheDocument();
+		expect(mockCreateEventSource).not.toHaveBeenCalled();
+	});
+
+	it('shows the empty state when a category target does not match', async () => {
+		mockGetCandidateCategories.mockResolvedValue([
+			{id: 39002, name: 'Travel', vocabulary: 'Topic'},
+		]);
+
+		await act(async () => {
+			render(
+				<CategorizationMessageBalloon
+					agent={ECategorizationAgent.AUTO_CATEGORIZE}
+					cmsGroupId={20124}
+					content="Japan"
+					scopeId={555}
+					targets={['Fishing']}
+				/>
+			);
+		});
+
+		expect(
+			screen.getByText(
+				'i-have-not-found-any-matching-categories-what-would-you-like-to-do'
+			)
+		).toBeInTheDocument();
+	});
+
+	it('marks unknown tag targets as new and known ones as existing', async () => {
+		mockGetExistingTags.mockResolvedValue(['japan']);
+
+		await act(async () => {
+			render(
+				<CategorizationMessageBalloon
+					agent={ECategorizationAgent.GENERATE_TAGS}
+					cmsGroupId={20124}
+					content="Japan"
+					scopeId={555}
+					targets={['kayaking', 'Japan']}
+				/>
+			);
+		});
+
+		expect(screen.getByText('kayaking')).toBeInTheDocument();
+		expect(screen.getByText('japan')).toBeInTheDocument();
+		expect(screen.queryByText('Japan')).not.toBeInTheDocument();
+		expect(
+			screen.getByText('i-found-x-existing-tags-and-suggest-x-new-tags')
+		).toBeInTheDocument();
+		expect(mockCreateEventSource).not.toHaveBeenCalled();
+	});
 });

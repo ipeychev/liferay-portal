@@ -216,6 +216,7 @@ export default function ContentEditorToolbar({
 				<>
 					<Toolbar.Item>
 						<AIAssistantChat
+							enableFreeFormCategorization
 							getContext={() => ({})}
 							instructionDefinitionScope="cms"
 						/>

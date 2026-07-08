@@ -32,11 +32,12 @@ export default function CategorizationMessageBalloon({
 	currentCategoryIds,
 	currentTagNames,
 	scopeId,
+	targets,
 }: CategorizeEventPayload) {
 	const [committed, setCommitted] = useState(false);
 	const [dismissed, setDismissed] = useState<string[]>([]);
 
-	const {regenerate, run, status, suggestions} =
+	const {regenerate, resolveTargets, run, status, suggestions} =
 		useCategorizationAgent(agent);
 
 	useEffect(() => {
@@ -78,7 +79,14 @@ export default function CategorizationMessageBalloon({
 					? await fetchCandidateCategories()
 					: await fetchExistingTags();
 
-			if (active) {
+			if (!active) {
+				return;
+			}
+
+			if (targets?.length) {
+				resolveTargets({content, count, ...data}, targets);
+			}
+			else {
 				run({content, count, ...data});
 			}
 		})();
@@ -86,7 +94,17 @@ export default function CategorizationMessageBalloon({
 		return () => {
 			active = false;
 		};
-	}, [agent, classNameId, cmsGroupId, content, count, run, scopeId]);
+	}, [
+		agent,
+		classNameId,
+		cmsGroupId,
+		content,
+		count,
+		resolveTargets,
+		run,
+		scopeId,
+		targets,
+	]);
 
 	const visibleSuggestions = suggestions.filter(
 		(suggestion) => !dismissed.includes(getKey(suggestion))
