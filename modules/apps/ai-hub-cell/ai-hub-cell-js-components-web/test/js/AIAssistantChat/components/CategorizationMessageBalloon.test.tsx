@@ -77,6 +77,12 @@ describe('CategorizationMessageBalloon', () => {
 		} as never;
 	});
 
+	afterEach(() => {
+		(Liferay.Language.get as jest.Mock).mockImplementation(
+			(key: string) => key
+		);
+	});
+
 	it('fetches candidates, renders suggestions, and fires the commit event', async () => {
 		const fakeEventSource = createFakeEventSource();
 
@@ -127,8 +133,61 @@ describe('CategorizationMessageBalloon', () => {
 
 		expect(mockFire).toHaveBeenCalledWith('cms:aiAssistant:commit', {
 			agent: 'L_AUTO_CATEGORIZE',
+			scopeId: 555,
 			suggestions: [{id: 39001, name: 'International'}],
 		});
+	});
+
+	it('shows a confirmation message with a link to open the categorization panel after committing', async () => {
+		(Liferay.Language.get as jest.Mock).mockImplementation((key: string) =>
+			key ===
+			'great-i-have-added-x-categories-to-your-content-x-to-see-them'
+				? 'Great! I have added {0} categories to your content. {1} to see them.'
+				: key
+		);
+
+		const fakeEventSource = createFakeEventSource();
+
+		mockCreateEventSource.mockResolvedValue(fakeEventSource as never);
+		mockGetCandidateCategories.mockResolvedValue([
+			{id: 39001, name: 'International', vocabulary: 'Travel'},
+		]);
+
+		await act(async () => {
+			render(
+				<CategorizationMessageBalloon
+					agent={ECategorizationAgent.AUTO_CATEGORIZE}
+					cmsGroupId={20124}
+					content="Japan"
+					scopeId={555}
+				/>
+			);
+		});
+
+		await act(async () => {
+			fakeEventSource.emit('Subscribe', 'sink-1');
+		});
+
+		await act(async () => {
+			fakeEventSource.emit(
+				'L_AUTO_CATEGORIZE',
+				JSON.stringify({
+					data: '{"suggestions":[{"id":39001,"confidence":0.9}]}',
+					nodeName: 'llm',
+				})
+			);
+		});
+
+		fireEvent.click(screen.getByRole('button', {name: 'save-categories'}));
+
+		expect(screen.getByText(/Great! I have added/)).toBeInTheDocument();
+
+		fireEvent.click(screen.getByRole('button', {name: 'click-here'}));
+
+		expect(mockFire).toHaveBeenCalledWith(
+			'cms:aiAssistant:openCategorizationPanel',
+			{}
+		);
 	});
 
 	it('uses the tags fetcher for the generate tags agent', async () => {
@@ -162,5 +221,149 @@ describe('CategorizationMessageBalloon', () => {
 				sseEventSinkKey: 'sink-2',
 			})
 		);
+	});
+
+	it('counts only the tags not already on the content in the confirmation', async () => {
+		(Liferay.Language.get as jest.Mock).mockImplementation((key: string) =>
+			key === 'great-i-have-added-x-tags-to-your-content-x-to-see-them'
+				? 'Great! I have added {0} tags to your content. {1} to see them.'
+				: key
+		);
+
+		const fakeEventSource = createFakeEventSource();
+
+		mockCreateEventSource.mockResolvedValue(fakeEventSource as never);
+		mockGetExistingTags.mockResolvedValue(['Japan']);
+
+		await act(async () => {
+			render(
+				<CategorizationMessageBalloon
+					agent={ECategorizationAgent.GENERATE_TAGS}
+					cmsGroupId={20124}
+					content="Japan"
+					currentTagNames={['Japan']}
+					scopeId={555}
+				/>
+			);
+		});
+
+		await act(async () => {
+			fakeEventSource.emit('Subscribe', 'sink-3');
+		});
+
+		await act(async () => {
+			fakeEventSource.emit(
+				'L_GENERATE_TAGS',
+				JSON.stringify({
+					data: '{"suggestions":[{"name":"Japan","isNew":false},{"name":"Culture","isNew":true},{"name":"Tradition","isNew":true}]}',
+					nodeName: 'llm',
+				})
+			);
+		});
+
+		fireEvent.click(screen.getByRole('button', {name: 'add-tags'}));
+
+		expect(
+			screen.getByText(/Great! I have added 2 tags/)
+		).toBeInTheDocument();
+		expect(screen.queryByText(/added 3 tags/)).not.toBeInTheDocument();
+	});
+
+	it('excludes already-attached categories from the confirmation count', async () => {
+		(Liferay.Language.get as jest.Mock).mockImplementation((key: string) =>
+			key ===
+			'great-i-have-added-x-categories-to-your-content-x-to-see-them'
+				? 'Great! I have added {0} categories to your content. {1} to see them.'
+				: key
+		);
+
+		const fakeEventSource = createFakeEventSource();
+
+		mockCreateEventSource.mockResolvedValue(fakeEventSource as never);
+		mockGetCandidateCategories.mockResolvedValue([
+			{id: 39001, name: 'International', vocabulary: 'Travel'},
+			{id: 39002, name: 'Roadtrip', vocabulary: 'Travel'},
+		]);
+
+		await act(async () => {
+			render(
+				<CategorizationMessageBalloon
+					agent={ECategorizationAgent.AUTO_CATEGORIZE}
+					cmsGroupId={20124}
+					content="Japan"
+					currentCategoryIds={[39001]}
+					scopeId={555}
+				/>
+			);
+		});
+
+		await act(async () => {
+			fakeEventSource.emit('Subscribe', 'sink-4');
+		});
+
+		await act(async () => {
+			fakeEventSource.emit(
+				'L_AUTO_CATEGORIZE',
+				JSON.stringify({
+					data: '{"suggestions":[{"id":39001,"confidence":0.9},{"id":39002,"confidence":0.8}]}',
+					nodeName: 'llm',
+				})
+			);
+		});
+
+		fireEvent.click(screen.getByRole('button', {name: 'save-categories'}));
+
+		expect(
+			screen.getByText(/Great! I have added 1 categories/)
+		).toBeInTheDocument();
+	});
+
+	it('does not show a confirmation when no new categories are added', async () => {
+		(Liferay.Language.get as jest.Mock).mockImplementation((key: string) =>
+			key ===
+			'great-i-have-added-x-categories-to-your-content-x-to-see-them'
+				? 'Great! I have added {0} categories to your content. {1} to see them.'
+				: key
+		);
+
+		const fakeEventSource = createFakeEventSource();
+
+		mockCreateEventSource.mockResolvedValue(fakeEventSource as never);
+		mockGetCandidateCategories.mockResolvedValue([
+			{id: 39001, name: 'International', vocabulary: 'Travel'},
+			{id: 39002, name: 'Roadtrip', vocabulary: 'Travel'},
+		]);
+
+		await act(async () => {
+			render(
+				<CategorizationMessageBalloon
+					agent={ECategorizationAgent.AUTO_CATEGORIZE}
+					cmsGroupId={20124}
+					content="Japan"
+					currentCategoryIds={[39001, 39002]}
+					scopeId={555}
+				/>
+			);
+		});
+
+		await act(async () => {
+			fakeEventSource.emit('Subscribe', 'sink-5');
+		});
+
+		await act(async () => {
+			fakeEventSource.emit(
+				'L_AUTO_CATEGORIZE',
+				JSON.stringify({
+					data: '{"suggestions":[{"id":39001,"confidence":0.9},{"id":39002,"confidence":0.8}]}',
+					nodeName: 'llm',
+				})
+			);
+		});
+
+		fireEvent.click(screen.getByRole('button', {name: 'save-categories'}));
+
+		expect(
+			screen.queryByText(/Great! I have added/)
+		).not.toBeInTheDocument();
 	});
 });
