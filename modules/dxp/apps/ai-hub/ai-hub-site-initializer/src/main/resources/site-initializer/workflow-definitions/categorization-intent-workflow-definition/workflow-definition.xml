@@ -1,0 +1,151 @@
+<?xml version="1.0"?>
+
+<workflow-definition
+	xmlns="urn:liferay.com:liferay-workflow_7.4.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="urn:liferay.com:liferay-workflow_7.4.0 http://www.liferay.com/dtd/liferay-workflow-definition_7_4_0.xsd"
+>
+	<name>Categorization Intent</name>
+	<version>1</version>
+	<llm>
+		<name>categorizationIntent</name>
+		<metadata>
+			<![CDATA[
+				{
+					"xy": [
+						276,
+						242
+					]
+				}
+			]]>
+		</metadata>
+		<labels>
+			<label language-id="en_US">
+				Categorization Intent
+			</label>
+		</labels>
+		<input-variables>
+			<![CDATA[
+				[
+					{
+						"name": "message",
+						"type": "string"
+					}
+				]
+			]]>
+		</input-variables>
+		<output-variables>
+			<![CDATA[
+				[
+					{
+						"name": "intent",
+						"type": "string"
+					}
+				]
+			]]>
+		</output-variables>
+		<prompt>
+			<![CDATA[# Role
+
+You decide whether a user message is purely a request to categorize and/or tag the content the user is currently editing. The message may be written in any language. You never categorize or tag anything yourself; you only report the detected intent as structured data.
+
+# Inputs
+
+- message: the raw text the user typed into the assistant chat.
+
+# Hard rules
+
+- "categorize" means assigning the content to existing categories or vocabularies. "tag" means attaching free form keywords. A message may ask for one, both, or neither.
+- Set passthrough to true and return an empty actions array whenever the message is anything other than a pure request to categorize and/or tag. This includes questions ("what tags fit this?"), removals ("remove the tag travel"), requests that combine categorization with unrelated work ("tag this and shorten the intro"), and anything ambiguous. A missed request is harmless because the message simply continues to the normal assistant, but a wrong match hijacks the conversation, so prefer passthrough whenever in doubt.
+- When the message is a pure request to categorize and/or tag, set passthrough to false and return one action per requested operation.
+- For each action, set agent to "categorize" or "tag". Copy any explicitly named categories or tags verbatim into targets as separate strings; when the message names none, return an empty targets array. Copy an explicitly requested number into count; when the message states no number, set count to null.
+- When the message requests both categorizing and tagging, return the categorize action before the tag action.
+
+# Output policy
+
+- Output a SINGLE raw JSON object and nothing else.
+- DO NOT wrap the JSON in markdown fences (no ```json, no ```).
+- DO NOT add prose, commentary, or trailing text.
+- Shape:
+
+{
+	"actions": [
+		{
+			"agent": "categorize" | "tag",
+			"count": <number or null>,
+			"targets": ["<string>"]
+		}
+	],
+	"passthrough": <boolean>
+}]]>
+		</prompt>
+		<tools>
+			<![CDATA[[]]]>
+		</tools>
+		<transitions>
+			<transition>
+				<labels>
+					<label language-id="en_US">
+						End
+					</label>
+				</labels>
+				<name>end</name>
+				<target>end</target>
+				<default>true</default>
+			</transition>
+		</transitions>
+		<user-message>
+			<![CDATA[{{message}}]]>
+		</user-message>
+	</llm>
+	<state>
+		<name>start</name>
+		<metadata>
+			<![CDATA[
+				{
+					"xy": [
+						273,
+						25
+					]
+				}
+			]]>
+		</metadata>
+		<initial>true</initial>
+		<labels>
+			<label language-id="en_US">
+				Start
+			</label>
+		</labels>
+		<transitions>
+			<transition>
+				<labels>
+					<label language-id="en_US">
+						Categorization Intent
+					</label>
+				</labels>
+				<name>categorizationIntent</name>
+				<target>categorizationIntent</target>
+				<default>true</default>
+			</transition>
+		</transitions>
+	</state>
+	<state>
+		<name>end</name>
+		<metadata>
+			<![CDATA[
+				{
+					"terminal": true,
+					"xy": [
+						277,
+						459
+					]
+				}
+			]]>
+		</metadata>
+		<labels>
+			<label language-id="en_US">
+				End
+			</label>
+		</labels>
+	</state>
+</workflow-definition>

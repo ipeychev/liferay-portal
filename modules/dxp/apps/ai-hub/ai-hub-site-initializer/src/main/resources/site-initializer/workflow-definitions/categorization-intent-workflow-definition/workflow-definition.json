@@ -1,0 +1,11 @@
+{
+	"active": true,
+	"externalReferenceCode": "L_CATEGORIZATION_INTENT",
+	"groupExternalReferenceCode": "[$ACCOUNT_ENTRY_GROUP_ERC:L_AI_HUB$]",
+	"name": "Categorization Intent",
+	"scope": "ai",
+	"title": "Categorization Intent",
+	"title_i18n": {
+		"en_US": "Categorization Intent"
+	}
+}
