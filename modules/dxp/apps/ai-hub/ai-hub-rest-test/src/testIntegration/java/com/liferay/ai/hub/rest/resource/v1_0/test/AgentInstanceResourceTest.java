@@ -319,6 +319,7 @@ public class AgentInstanceResourceTest
 			_testPostAgentInstanceWithTypeAIDecisionNodeWithToolWorkflowDefinition();
 			_testPostAgentInstanceWithTypeAIDecisionNodeWorkflowDefinition();
 			_testPostAgentInstanceWithTypeAutoCategorize();
+			_testPostAgentInstanceWithTypeCategorizationIntent();
 			_testPostAgentInstanceWithTypeFixSpellingAndGrammarWithInstruction();
 			_testPostAgentInstanceWithTypeGenerateTags();
 			_testPostAgentInstanceWithTypeHTTPRequestNodeWithLLMNodeWorkflowDefinition();
@@ -698,6 +699,50 @@ public class AgentInstanceResourceTest
 		_assertContains(data, "Technology", "confidence", "suggestions");
 
 		Assert.assertTrue(data, StringUtil.count(data, "confidence") <= 2);
+	}
+
+	private void _testPostAgentInstanceWithTypeCategorizationIntent()
+		throws Exception {
+
+		// Tag only
+
+		String data = _postAndAwaitAgentInstance(
+			"L_CATEGORIZATION_INTENT",
+			JSONUtil.put("message", "tag this article"));
+
+		_assertContains(data, "\"tag\"");
+
+		Assert.assertFalse(data, data.contains("\"categorize\""));
+
+		// Categorize and tag
+
+		data = _postAndAwaitAgentInstance(
+			"L_CATEGORIZATION_INTENT",
+			JSONUtil.put("message", "categorize and tag this"));
+
+		_assertContains(data, "\"categorize\"", "\"tag\"");
+
+		Assert.assertTrue(
+			data, data.indexOf("\"categorize\"") < data.indexOf("\"tag\""));
+
+		// Named category target
+
+		data = _postAndAwaitAgentInstance(
+			"L_CATEGORIZATION_INTENT",
+			JSONUtil.put("message", "add the category Travel"));
+
+		_assertContains(data, "\"categorize\"", "Travel");
+
+		// Passthrough
+
+		data = _postAndAwaitAgentInstance(
+			"L_CATEGORIZATION_INTENT",
+			JSONUtil.put("message", "what is Liferay?"));
+
+		_assertContains(data, "passthrough", "true");
+
+		Assert.assertFalse(data, data.contains("\"categorize\""));
+		Assert.assertFalse(data, data.contains("\"tag\""));
 	}
 
 	private void _testPostAgentInstanceWithTypeFixSpellingAndGrammarWithInstruction()
