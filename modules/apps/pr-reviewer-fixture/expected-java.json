@@ -1,0 +1,374 @@
+[
+	{
+		"file": "modules/apps/pr-reviewer-fixture/pr-reviewer-fixture-impl/src/main/java/com/liferay/pr/reviewer/fixture/internal/FixtureEntryService.java",
+		"line": 39,
+		"rule": "001",
+		"note": "activateFixtureEntry logs without the isDebugEnabled guard every other log call in the class uses"
+	},
+	{
+		"file": "modules/apps/pr-reviewer-fixture/pr-reviewer-fixture-impl/src/main/java/com/liferay/pr/reviewer/fixture/internal/FixtureEntryService.java",
+		"line": 102,
+		"rule": "002",
+		"note": "Verb first log message beside the subject first messages used elsewhere in the class"
+	},
+	{
+		"file": "modules/apps/pr-reviewer-fixture/pr-reviewer-fixture-impl/src/main/java/com/liferay/pr/reviewer/fixture/internal/FixtureEntryExporter.java",
+		"line": 97,
+		"rule": "101",
+		"note": "_toCsvRow capitalizes only the first letter of CSV"
+	},
+	{
+		"file": "modules/apps/pr-reviewer-fixture/pr-reviewer-fixture-impl/src/main/java/com/liferay/pr/reviewer/fixture/internal/FixtureEntryService.java",
+		"line": 64,
+		"rule": "102",
+		"note": "Boolean presence test named contains instead of has"
+	},
+	{
+		"file": "modules/apps/pr-reviewer-fixture/pr-reviewer-fixture-impl/src/main/java/com/liferay/pr/reviewer/fixture/internal/FixtureEntryService.java",
+		"line": 191,
+		"rule": "103",
+		"note": "FixtureEntry local named result after its role instead of fixtureEntry"
+	},
+	{
+		"file": "modules/apps/pr-reviewer-fixture/pr-reviewer-fixture-impl/src/main/java/com/liferay/pr/reviewer/fixture/internal/FixtureEntryService.java",
+		"line": 218,
+		"rule": "104",
+		"note": "Primitive int local carries a type suffix"
+	},
+	{
+		"file": "modules/apps/pr-reviewer-fixture/pr-reviewer-fixture-impl/src/main/java/com/liferay/pr/reviewer/fixture/internal/FixtureEntryService.java",
+		"line": 71,
+		"rule": "105",
+		"note": "deactivateFixtureEntry archives the entry, so its name misdescribes the body"
+	},
+	{
+		"file": "modules/apps/pr-reviewer-fixture/pr-reviewer-fixture-impl/src/test/java/com/liferay/pr/reviewer/fixture/internal/FixtureEntryServiceTest.java",
+		"line": 271,
+		"rule": "106",
+		"note": "Test named IllegalStateDenied does not mirror IllegalStateException like its two exception named siblings"
+	},
+	{
+		"file": "modules/apps/pr-reviewer-fixture/pr-reviewer-fixture-impl/src/main/java/com/liferay/pr/reviewer/fixture/internal/FixtureEntryService.java",
+		"line": 90,
+		"rule": "107",
+		"note": "Value of getName is named label instead of name"
+	},
+	{
+		"file": "modules/apps/pr-reviewer-fixture/pr-reviewer-fixture-impl/src/main/java/com/liferay/pr/reviewer/fixture/internal/FixtureEntryService.java",
+		"line": 234,
+		"rule": "108",
+		"note": "_ARCHIVED_STATUS does not share the _STATUS_ lead of its sibling _STATUS_ACTIVE"
+	},
+	{
+		"file": "modules/apps/pr-reviewer-fixture/pr-reviewer-fixture-impl/src/main/java/com/liferay/pr/reviewer/fixture/internal/FixtureEntryImporter.java",
+		"line": 61,
+		"rule": "109",
+		"note": "Lone index variable qualified as equalsIndex instead of index"
+	},
+	{
+		"file": "modules/apps/pr-reviewer-fixture/pr-reviewer-fixture-impl/src/main/java/com/liferay/pr/reviewer/fixture/internal/FixtureEntryService.java",
+		"line": 149,
+		"rule": "110",
+		"note": "Map entry loop variable named fixtureEntryMapEntry instead of entry"
+	},
+	{
+		"file": "modules/apps/pr-reviewer-fixture/pr-reviewer-fixture-impl/src/main/java/com/liferay/pr/reviewer/fixture/internal/FixtureEntryService.java",
+		"line": 201,
+		"rule": "111",
+		"note": "Collection returning method uses the collective noun Inventory instead of the plural getFixtureEntries"
+	},
+	{
+		"file": "modules/apps/pr-reviewer-fixture/pr-reviewer-fixture-impl/src/main/java/com/liferay/pr/reviewer/fixture/internal/FixtureEntryService.java",
+		"line": 172,
+		"rule": "112",
+		"note": "Count method drops the ByStatus qualifier its getFixtureEntriesByStatus sibling carries"
+	},
+	{
+		"file": "modules/apps/pr-reviewer-fixture/pr-reviewer-fixture-impl/src/main/java/com/liferay/pr/reviewer/fixture/internal/FixtureEntryService.java",
+		"line": 55,
+		"rule": "113",
+		"note": "Lambda parameter named k instead of name"
+	},
+	{
+		"file": "modules/apps/pr-reviewer-fixture/pr-reviewer-fixture-impl/src/main/java/com/liferay/pr/reviewer/fixture/internal/FixtureEntryService.java",
+		"line": 42,
+		"rule": "114",
+		"note": "entryCount counts entries so the noun before Count should be plural"
+	},
+	{
+		"file": "modules/apps/pr-reviewer-fixture/pr-reviewer-fixture-impl/src/test/java/com/liferay/pr/reviewer/fixture/internal/FixtureEntryImporterTest.java",
+		"line": 91,
+		"rule": "201",
+		"note": "Grouped rejectedFile and file declarations are not in alphabetical order"
+	},
+	{
+		"file": "modules/apps/pr-reviewer-fixture/pr-reviewer-fixture-impl/src/main/java/com/liferay/pr/reviewer/fixture/internal/FixtureEntryService.java",
+		"line": 74,
+		"rule": "202",
+		"note": "Setter block on fixtureEntry has setStatus before setModifiedTime"
+	},
+	{
+		"file": "modules/apps/pr-reviewer-fixture/pr-reviewer-fixture-impl/src/main/java/com/liferay/pr/reviewer/fixture/internal/FixtureEntryExporter.java",
+		"line": 40,
+		"rule": "203",
+		"note": "path is declared at the top of export and first used at its last statement"
+	},
+	{
+		"file": "modules/apps/pr-reviewer-fixture/pr-reviewer-fixture-impl/src/test/java/com/liferay/pr/reviewer/fixture/internal/FixtureEntryServiceTest.java",
+		"line": 200,
+		"rule": "205",
+		"note": "Comment labelled blocks Archived and Active are out of alphabetical order"
+	},
+	{
+		"file": "modules/apps/pr-reviewer-fixture/pr-reviewer-fixture-impl/src/main/java/com/liferay/pr/reviewer/fixture/internal/FixtureEntry.java",
+		"line": 20,
+		"rule": "206",
+		"note": "Conditional _count assignment parked at the end of the copy constructor instead of its alphabetical slot before _modifiedTime"
+	},
+	{
+		"file": "modules/apps/pr-reviewer-fixture/pr-reviewer-fixture-impl/src/test/java/com/liferay/pr/reviewer/fixture/internal/FixtureEntryServiceTest.java",
+		"line": 165,
+		"rule": "207",
+		"note": "Run of _addFixtureEntry calls is not in flattened text order"
+	},
+	{
+		"file": "modules/apps/pr-reviewer-fixture/pr-reviewer-fixture-impl/src/test/java/com/liferay/pr/reviewer/fixture/internal/FixtureEntryServiceTest.java",
+		"line": 171,
+		"rule": "208",
+		"note": "Sibling assertions on counts are not sorted by key"
+	},
+	{
+		"file": "modules/apps/pr-reviewer-fixture/pr-reviewer-fixture-impl/src/main/java/com/liferay/pr/reviewer/fixture/internal/FixtureEntryImporter.java",
+		"line": 70,
+		"rule": "301",
+		"note": "Integer.parseInt where GetterUtil.getInteger applies"
+	},
+	{
+		"file": "modules/apps/pr-reviewer-fixture/pr-reviewer-fixture-impl/src/main/java/com/liferay/pr/reviewer/fixture/internal/FixtureEntryService.java",
+		"line": 83,
+		"rule": "302",
+		"note": "Hand written null or empty array check instead of ArrayUtil.isEmpty"
+	},
+	{
+		"file": "modules/apps/pr-reviewer-fixture/pr-reviewer-fixture-impl/src/main/java/com/liferay/pr/reviewer/fixture/internal/FixtureEntryService.java",
+		"line": 87,
+		"rule": "303",
+		"note": "Array wrapped in a list only to call contains instead of ArrayUtil.contains"
+	},
+	{
+		"file": "modules/apps/pr-reviewer-fixture/pr-reviewer-fixture-impl/src/main/java/com/liferay/pr/reviewer/fixture/internal/FixtureEntryExporter.java",
+		"line": 81,
+		"rule": "304",
+		"note": "Loop adds one mapped element per iteration to a new list instead of TransformUtil.transform"
+	},
+	{
+		"file": "modules/apps/pr-reviewer-fixture/pr-reviewer-fixture-impl/src/main/java/com/liferay/pr/reviewer/fixture/internal/FixtureEntryExporter.java",
+		"line": 114,
+		"rule": "305",
+		"note": "JSON built by hand from an injected JSONFactory instead of JSONUtil"
+	},
+	{
+		"file": "modules/apps/pr-reviewer-fixture/pr-reviewer-fixture-impl/src/main/java/com/liferay/pr/reviewer/fixture/internal/FixtureEntryExporter.java",
+		"line": 69,
+		"rule": "305",
+		"note": "JSONObject built with JSONUtil.put into a local that the return only serializes, instead of chaining toString onto the expression"
+	},
+	{
+		"file": "modules/apps/pr-reviewer-fixture/pr-reviewer-fixture-impl/src/main/java/com/liferay/pr/reviewer/fixture/internal/FixtureEntryExporter.java",
+		"line": 98,
+		"rule": "306",
+		"note": "StringBuilder instead of StringBundler"
+	},
+	{
+		"file": "modules/apps/pr-reviewer-fixture/pr-reviewer-fixture-impl/src/main/java/com/liferay/pr/reviewer/fixture/internal/FixtureEntryExporter.java",
+		"line": 47,
+		"rule": "401",
+		"note": "switch statement instead of an if else chain"
+	},
+	{
+		"file": "modules/apps/pr-reviewer-fixture/pr-reviewer-fixture-impl/src/main/java/com/liferay/pr/reviewer/fixture/internal/FixtureEntryImporter.java",
+		"line": 63,
+		"rule": "402",
+		"note": "trim chained on the result of substring"
+	},
+	{
+		"file": "modules/apps/pr-reviewer-fixture/pr-reviewer-fixture-impl/src/main/java/com/liferay/pr/reviewer/fixture/internal/FixtureEntryService.java",
+		"line": 175,
+		"rule": "403",
+		"note": "Explicit Iterator with a while hasNext loop instead of an enhanced for loop"
+	},
+	{
+		"file": "modules/apps/pr-reviewer-fixture/pr-reviewer-fixture-impl/src/main/java/com/liferay/pr/reviewer/fixture/internal/FixtureEntryImporter.java",
+		"line": 50,
+		"rule": "404",
+		"note": "Pattern compiled inside the loop on every line"
+	},
+	{
+		"file": "modules/apps/pr-reviewer-fixture/pr-reviewer-fixture-impl/src/main/java/com/liferay/pr/reviewer/fixture/internal/FixtureEntryService.java",
+		"line": 45,
+		"rule": "407",
+		"note": "do while whose guard could run before the first iteration"
+	},
+	{
+		"file": "modules/apps/pr-reviewer-fixture/pr-reviewer-fixture-impl/src/main/java/com/liferay/pr/reviewer/fixture/internal/FixtureEntryImporter.java",
+		"line": 49,
+		"rule": "408",
+		"note": "Positive if wraps the whole loop body instead of a continue guard"
+	},
+	{
+		"file": "modules/apps/pr-reviewer-fixture/pr-reviewer-fixture-impl/src/main/java/com/liferay/pr/reviewer/fixture/internal/FixtureEntryExporter.java",
+		"line": 93,
+		"rule": "409",
+		"note": "IOException caught only to be wrapped in a RuntimeException"
+	},
+	{
+		"file": "modules/apps/pr-reviewer-fixture/pr-reviewer-fixture-impl/src/test/java/com/liferay/pr/reviewer/fixture/internal/FixtureEntryServiceTest.java",
+		"line": 67,
+		"rule": "501",
+		"note": "assertNotNull immediately followed by a dereference of fixtureEntry"
+	},
+	{
+		"file": "modules/apps/pr-reviewer-fixture/pr-reviewer-fixture-impl/src/main/java/com/liferay/pr/reviewer/fixture/internal/FixtureEntryImporter.java",
+		"line": 80,
+		"rule": "502",
+		"note": "Private constant referenced once"
+	},
+	{
+		"file": "modules/apps/pr-reviewer-fixture/pr-reviewer-fixture-impl/src/main/java/com/liferay/pr/reviewer/fixture/internal/FixtureEntryService.java",
+		"line": 112,
+		"rule": "503",
+		"note": "Anonymous class assigned to a local used once as the removeIf argument"
+	},
+	{
+		"file": "modules/apps/pr-reviewer-fixture/pr-reviewer-fixture-impl/src/main/java/com/liferay/pr/reviewer/fixture/internal/FixtureEntryExporter.java",
+		"line": 88,
+		"rule": "504",
+		"note": "Single caller helper wrapping one Files.write call and named for its effect"
+	},
+	{
+		"file": "modules/apps/pr-reviewer-fixture/pr-reviewer-fixture-impl/src/test/java/com/liferay/pr/reviewer/fixture/internal/FixtureEntryServiceTest.java",
+		"line": 46,
+		"rule": "505",
+		"note": "Narrative message on assertFalse"
+	},
+	{
+		"file": "modules/apps/pr-reviewer-fixture/pr-reviewer-fixture-impl/src/main/java/com/liferay/pr/reviewer/fixture/internal/FixtureEntryService.java",
+		"line": 236,
+		"rule": "506",
+		"note": "L suffix on an int range literal in a long slot"
+	},
+	{
+		"file": "modules/apps/pr-reviewer-fixture/pr-reviewer-fixture-impl/src/main/java/com/liferay/pr/reviewer/fixture/internal/FixtureEntryService.java",
+		"line": 134,
+		"rule": "507",
+		"note": "Math.ceil on a whole millisecond interval divided by 1000"
+	},
+	{
+		"file": "modules/apps/pr-reviewer-fixture/pr-reviewer-fixture-impl/src/test/java/com/liferay/pr/reviewer/fixture/internal/FixtureEntryImporterTest.java",
+		"line": 69,
+		"rule": "601",
+		"note": "Four trivial test methods each only call _testImportFixtureEntriesWithRejectedLine with a different line"
+	},
+	{
+		"file": "modules/apps/pr-reviewer-fixture/pr-reviewer-fixture-impl/src/test/java/com/liferay/pr/reviewer/fixture/internal/FixtureEntryServiceTest.java",
+		"line": 114,
+		"rule": "602",
+		"note": "Hardcoded name alpha that no assertion checks"
+	},
+	{
+		"file": "modules/apps/pr-reviewer-fixture/pr-reviewer-fixture-impl/src/test/java/com/liferay/pr/reviewer/fixture/internal/FixtureEntryServiceTest.java",
+		"line": 89,
+		"rule": "603",
+		"note": "Test of isArchived drops the is prefix"
+	},
+	{
+		"file": "modules/apps/pr-reviewer-fixture/pr-reviewer-fixture-impl/src/test/java/com/liferay/pr/reviewer/fixture/internal/model/FixtureEntryTest.java",
+		"line": 6,
+		"rule": "604",
+		"note": "Unit test placed in a model subpackage instead of the package of FixtureEntry"
+	},
+	{
+		"file": "modules/apps/pr-reviewer-fixture/pr-reviewer-fixture-impl/src/test/java/com/liferay/pr/reviewer/fixture/internal/FixtureEntryExporterTest.java",
+		"line": 61,
+		"rule": "606",
+		"note": "Two sibling test methods on the JSON export each carry @Ignore"
+	},
+	{
+		"file": "modules/apps/pr-reviewer-fixture/pr-reviewer-fixture-impl/src/test/java/com/liferay/pr/reviewer/fixture/internal/FixtureEntryExporterTest.java",
+		"line": 38,
+		"rule": "607",
+		"note": "Cheap exporter fixture built in @BeforeClass instead of @Before"
+	},
+	{
+		"file": "modules/apps/pr-reviewer-fixture/pr-reviewer-fixture-impl/src/test/java/com/liferay/pr/reviewer/fixture/internal/FixtureEntryServiceTest.java",
+		"line": 74,
+		"rule": "608",
+		"note": "Boxed Integer unboxed with intValue to compare against a primitive"
+	},
+	{
+		"file": "modules/apps/pr-reviewer-fixture/pr-reviewer-fixture-impl/src/main/java/com/liferay/pr/reviewer/fixture/internal/FixtureEntry.java",
+		"line": 30,
+		"rule": "703",
+		"note": "Exception message is a lone sentence ending with a period"
+	},
+	{
+		"file": "modules/apps/pr-reviewer-fixture/pr-reviewer-fixture-impl/src/main/java/com/liferay/pr/reviewer/fixture/internal/FixtureEntryExporter.java",
+		"line": 58,
+		"rule": "709",
+		"note": "Literal tokens csv and json unquoted in an exception message"
+	},
+	{
+		"file": "modules/apps/pr-reviewer-fixture/pr-reviewer-fixture-impl/src/main/java/com/liferay/pr/reviewer/fixture/internal/FixtureEntryService.java",
+		"line": 195,
+		"rule": "710",
+		"note": "Exception message omits its linking verb was"
+	},
+	{
+		"file": "modules/apps/pr-reviewer-fixture/pr-reviewer-fixture-impl/src/main/java/com/liferay/pr/reviewer/fixture/internal/FixtureEntryExporter.java",
+		"line": 78,
+		"rule": "801",
+		"note": "Package visible toCSV is only called from inside its own class"
+	},
+	{
+		"file": "modules/apps/pr-reviewer-fixture/pr-reviewer-fixture-impl/src/main/java/com/liferay/pr/reviewer/fixture/internal/FixtureEntry.java",
+		"line": 39,
+		"rule": "802",
+		"note": "compareTo implements Comparable without @Override"
+	},
+	{
+		"file": "modules/apps/pr-reviewer-fixture/pr-reviewer-fixture-impl/src/main/java/com/liferay/pr/reviewer/fixture/internal/FixtureEntryService.java",
+		"line": 231,
+		"rule": "901",
+		"note": "Substring contains check where an exact equals applies"
+	},
+	{
+		"file": "modules/apps/pr-reviewer-fixture/pr-reviewer-fixture-impl/src/main/java/com/liferay/pr/reviewer/fixture/internal/FixtureEntryExporter.java",
+		"line": 65,
+		"rule": "902",
+		"note": "Path literal ends with a trailing slash"
+	},
+	{
+		"file": "modules/apps/pr-reviewer-fixture/pr-reviewer-fixture-impl/src/main/java/com/liferay/pr/reviewer/fixture/internal/FixtureEntryService.java",
+		"line": 111,
+		"rule": "905",
+		"note": "Inline comment starts lowercase and has no blank line before or after"
+	},
+	{
+		"file": "modules/apps/pr-reviewer-fixture/pr-reviewer-fixture-impl/src/main/java/com/liferay/pr/reviewer/fixture/internal/FixtureEntryExporter.java",
+		"line": 111,
+		"rule": "906",
+		"note": "Inline JSON with no space after each colon and comma"
+	},
+	{
+		"file": "modules/apps/pr-reviewer-fixture/pr-reviewer-fixture-impl/src/test/java/com/liferay/pr/reviewer/fixture/internal/FixtureEntryServiceTest.java",
+		"line": 239,
+		"rule": "909",
+		"note": "Blank line splits the paired alphaFixtureEntry and betaFixtureEntry declarations"
+	},
+	{
+		"file": "modules/apps/pr-reviewer-fixture/pr-reviewer-fixture-impl/src/main/java/com/liferay/pr/reviewer/fixture/internal/FixtureEntryImporter.java",
+		"line": 44,
+		"rule": "910",
+		"note": "Dependent printWriter resource follows the independent resources with no blank line"
+	}
+]

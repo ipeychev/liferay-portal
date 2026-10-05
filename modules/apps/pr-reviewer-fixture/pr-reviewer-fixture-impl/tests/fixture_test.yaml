@@ -1,0 +1,27 @@
+suite: Fixture entry export
+templates:
+    -   templates/cronjob.yaml
+tests:
+    -   asserts:
+            -   equal:
+                    path: spec.schedule
+                    value: 0 2 * * *
+        it: Schedules the prune job nightly
+        set:
+            prune:
+                schedule: 0 2 * * *
+    -   asserts:
+            -   hasDocuments:
+                    count: 0
+        it: Omits the prune job when pruning is disabled
+        set:
+            prune:
+                enabled: false
+    -   asserts:
+            -   equal:
+                    path: spec.jobTemplate.spec.template.spec.containers[0].args[1]
+                    value: "5"
+        it: Passes the retention count to the prune command
+        set:
+            prune:
+                retain: 5
