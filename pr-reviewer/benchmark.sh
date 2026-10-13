@@ -36,32 +36,32 @@ function main {
 
 	while [ ${#} -gt 0 ]
 	do
-		if [ "${1}" == "--group" ]
+		if [[ ${1} == --group ]]
 		then
 			group_args=(--group ${2})
 
 			shift
-		elif [ "${1}" == "--manifest" ]
+		elif [[ ${1} == --manifest ]]
 		then
 			manifests+=(${2})
 
 			shift
-		elif [ "${1}" == "--runs" ]
+		elif [[ ${1} == --runs ]]
 		then
 			runs=${2}
 
 			shift
-		elif [ "${1}" == "--staged" ]
+		elif [[ ${1} == --staged ]]
 		then
 			diff_range=--staged
-		elif [ "${1}" == "--tolerance" ]
+		elif [[ ${1} == --tolerance ]]
 		then
 			tolerance=${2}
 
 			shift
 		elif [[ ${1} == --* ]]
 		then
-			echo "Unknown option ${1}." >&2
+			echo "Unknown option ${1}" >&2
 
 			exit 2
 		else
@@ -84,7 +84,7 @@ function main {
 
 	if [ ${#manifests[@]} -eq 0 ]
 	then
-		echo "No manifest found. Pass --manifest <file>." >&2
+		echo "No manifest was found. Pass \"--manifest\" <file>." >&2
 
 		exit 2
 	fi
