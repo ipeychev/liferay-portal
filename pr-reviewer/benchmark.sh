@@ -36,39 +36,37 @@ function main {
 
 	while [ ${#} -gt 0 ]
 	do
-		case ${1} in
-			--group)
-				group_args=(--group ${2})
+		if [ "${1}" == "--group" ]
+		then
+			group_args=(--group ${2})
 
-				shift
-				;;
-			--manifest)
-				manifests+=(${2})
+			shift
+		elif [ "${1}" == "--manifest" ]
+		then
+			manifests+=(${2})
 
-				shift
-				;;
-			--runs)
-				runs=${2}
+			shift
+		elif [ "${1}" == "--runs" ]
+		then
+			runs=${2}
 
-				shift
-				;;
-			--staged)
-				diff_range=--staged
-				;;
-			--tolerance)
-				tolerance=${2}
+			shift
+		elif [ "${1}" == "--staged" ]
+		then
+			diff_range=--staged
+		elif [ "${1}" == "--tolerance" ]
+		then
+			tolerance=${2}
 
-				shift
-				;;
-			--*)
-				echo "Unknown option ${1}." >&2
+			shift
+		elif [[ ${1} == --* ]]
+		then
+			echo "Unknown option ${1}." >&2
 
-				exit 2
-				;;
-			*)
-				diff_range=${1}
-				;;
-		esac
+			exit 2
+		else
+			diff_range=${1}
+		fi
 
 		shift
 	done
