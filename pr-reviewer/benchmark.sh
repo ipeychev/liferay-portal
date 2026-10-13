@@ -100,9 +100,9 @@ function main {
 
 	local work_dir
 
-	work_dir=$(mktemp --directory)
+	work_dir=$(mktemp -d)
 
-	trap "rm --force --recursive ${work_dir}" EXIT
+	trap "rm -fr ${work_dir}" EXIT
 
 	jq --slurp '[.[][]] | sort_by([.rule, .file, .line])' "${manifests[@]}" > ${work_dir}/expected.json
 
@@ -143,7 +143,7 @@ function main {
 
 		if [ ${status} -eq 2 ] || ! jq --exit-status ".violations" ${work_dir}/run-${run}.json > /dev/null 2>&1
 		then
-			echo "Run ${run} produced no verdict: $(head --bytes=300 ${work_dir}/run-${run}.err)" >&2
+			echo "Run ${run} produced no verdict: $(head -c 300 ${work_dir}/run-${run}.err)" >&2
 
 			exit 1
 		fi
