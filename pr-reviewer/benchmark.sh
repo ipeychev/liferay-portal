@@ -170,7 +170,7 @@ function main {
 function _print_summary {
 	local summary_json
 
-	summary_json=$(jq --slurp --argjson tolerance ${tolerance} --slurpfile expected ${work_dir}/expected.json '
+	summary_json=$(jq --argjson tolerance ${tolerance} --slurp --slurpfile expected ${work_dir}/expected.json '
 		def matches($e; $r):
 			($e.file == $r.file) and ($e.rule == $r.rule) and (($e.line - $r.line) | fabs) <= $tolerance;
 
